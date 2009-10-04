@@ -1,0 +1,5 @@
+Received: from example.com
+Received: from example.com
+Received: from example.com
+
+This mail has many Received headers indicating a loop

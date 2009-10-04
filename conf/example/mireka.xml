@@ -1,0 +1,130 @@
+<web-app xmlns="http://caucho.com/ns/resin"
+	xmlns:resin="urn:java:com.caucho.resin"
+	xmlns:mireka="urn:java:mireka"
+	xmlns:subetha="urn:java:org.subethamail.smtp.server"
+	>
+	
+	<system-property mireka.home="${mirekaHome}"/>
+	<system-property logback.configurationFile="${__DIR__}/logback.xml"/>
+	<dependency path="${__DIR__}/logback.xml" />
+
+	<mireka:InlineDomainRegistry>
+	 	<Named>localDomains</Named>
+		<ApplicationScoped/>
+		
+		<resin:import path="${__DIR__}/domains.xml" />
+		
+	</mireka:InlineDomainRegistry>
+	
+	<mireka:InlineRecipientRegistry>
+	 	<Named>validSimpleRecipients</Named>
+		
+		<resin:import path="${__DIR__}/users.xml" />
+		
+	</mireka:InlineRecipientRegistry>
+	
+	<mireka:RecipientSpecifications>
+		<Named>validRecipients</Named>
+		
+		<mireka:specification>
+			#{validSimpleRecipients}
+		</mireka:specification>
+		
+		<resin:import path="${__DIR__}/wildcard-addresses.xml" />
+		
+	</mireka:RecipientSpecifications>
+	
+	<subetha:SMTPServer>
+		<ApplicationScoped/>
+		<new>
+			<mireka:MessageHandlerFactoryImpl/>
+		</new>
+		<subetha:hostName>mx1.example.com</subetha:hostName>
+		<subetha:hideTLS>true</subetha:hideTLS>
+	</subetha:SMTPServer>
+	
+	<mireka:SMTPService>
+		<!-- <mireka:bindAddress>192.0.2.0</mireka:bindAddress> -->
+	</mireka:SMTPService>
+	
+	<mireka:BackendServer>
+		<Named>backendServer</Named>
+		
+		<mireka:host>backend.example.com</mireka:host>
+		<mireka:client>
+			<mireka:helo>mx1.example.com</mireka:helo>
+			<!-- <mireka:bind>192.0.2.0</mireka:bind> -->
+		</mireka:client>
+	</mireka:BackendServer>
+	
+	<resource name="trafficSummary" mbean-name="mireka:type=TrafficSummary"
+			type="mireka.filter.builtin.TrafficSummary" />
+	
+	<mireka:Filters>
+		<mireka:filter>
+			<mireka:MeasureTraffic>
+				<mireka:trafficSummary>
+					#{trafficSummary}
+				</mireka:trafficSummary>
+			</mireka:MeasureTraffic>
+		</mireka:filter>
+		<mireka:filter>
+			<mireka:RejectLargeMail/>
+		</mireka:filter>
+		<mireka:filter>
+			<mireka:AddReceivedSpfHeader/>
+		</mireka:filter>
+		<mireka:filter>
+			<mireka:TarpitOnGlobalRejections/>
+		</mireka:filter>
+		<mireka:filter>
+			<mireka:AcceptGlobalPostmaster/>
+		</mireka:filter>
+		<mireka:filter>
+			<mireka:ProhibitRelaying>
+				<mireka:localDomainSpecification>
+					#{localDomains}
+				</mireka:localDomainSpecification>
+			</mireka:ProhibitRelaying>
+		</mireka:filter>
+		<mireka:filter>
+			<mireka:AcceptDomainPostmaster/>
+		</mireka:filter>
+		<mireka:filter>
+			<mireka:RefuseBlacklistedRecipient>
+				<mireka:blacklist>
+					<mireka:Dnsbl>
+						<mireka:domain>zen.spamhaus.org.</mireka:domain>
+					</mireka:Dnsbl>
+				</mireka:blacklist>
+			</mireka:RefuseBlacklistedRecipient>
+		</mireka:filter>
+		<mireka:filter>
+			<mireka:RefuseUnknownRecipient>
+				<mireka:recipientSpecification>
+					#{validRecipients}
+				</mireka:recipientSpecification>
+			</mireka:RefuseUnknownRecipient>
+		</mireka:filter>
+		<mireka:filter>
+			<mireka:RejectOnFailedSpfCheck />
+		</mireka:filter>
+		<mireka:filter>
+			<mireka:AcceptAllRecipient />
+		</mireka:filter>
+		<mireka:filter>
+			<mireka:SavePostmasterMail>
+				<mireka:dir>${mirekaHome}/postmaster</mireka:dir>
+			</mireka:SavePostmasterMail>
+		</mireka:filter>
+		<mireka:filter>
+			<mireka:StopLoop />
+		</mireka:filter>
+		<mireka:filter>
+			<mireka:RelayMailTransaction>
+				<backendServer>#{backendServer}</backendServer>
+			</mireka:RelayMailTransaction>
+		</mireka:filter>
+	</mireka:Filters>
+	
+</web-app>

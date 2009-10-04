@@ -1,0 +1,9 @@
+<web-app xmlns="http://caucho.com/ns/resin"
+	xmlns:resin="urn:java:com.caucho.resin"
+	xmlns:cfg="urn:java:com.caucho.config"
+	xmlns:jms="urn:java:com.caucho.jms"
+	xmlns:ejb="urn:java:com.caucho.ejb.cfg"
+	>
+
+	<resin:import path="${mirekaHome}/conf/mireka.xml" />
+</web-app>

@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+
+<project name="mireka" default="war" basedir=".">
+        <property name="name" value="${ant.project.name}" />
+
+        <property file="user.properties" />
+        <property file="${user.home}/build.properties" />
+        <property file="build.properties" />
+
+        <property name="build.debug" value="on" />
+        <property name="build.deprecation" value="on" />
+
+        <property name="ant.build.javac.target" value="1.6" />
+        <property name="ant.build.javac.source" value="1.6" />
+        <property name="ant.build.javac.encoding" value="UTF-8" />
+
+        <property name="build.dir" location="build" />
+        <property name="build.classes.dir" location="${build.dir}/classes" />
+        <property name="build.war.file" location="${build.dir}/mireka.war" />
+
+        <property name="docs.dir" value="${build.dir}/docs" />
+
+        <property name="resin.dir" location="/java/resin-4.0.0/" />
+        <property name="deploy.dir" location="${resin.dir}/webapps" />
+        <property name="expandedWar.dir" location="${deploy.dir}/mireka" />
+
+        <property name="src.dir" location="src" />
+        <property name="web.dir" location="web" />
+        <property name="lib.dir" location="lib" />
+
+        <path id="master.classpath">
+                <fileset dir="${lib.dir}">
+                        <include name="**/*.jar" />
+                </fileset>
+
+                <fileset dir="${resin.dir}/lib">
+                        <include name="**/*.jar" />
+                </fileset>
+        </path>
+
+        <target name="init">
+                <!--		
+<svn><info path="${basedir}" revisionProperty="revisionVersion" /></svn>
+-->
+                <!--  A hack because svnant does not respect Ant's properties can't be overwritten rule. -->
+                <property name="version" value="${revisionVersion}" />
+        </target>
+
+
+        <target name="classes" depends="init">
+                <mkdir dir="${build.classes.dir}" />
+
+                <javac srcdir="${src.dir}"
+                       destdir="${build.classes.dir}"
+                       debug="${build.debug}"
+                       deprecation="${build.deprecation}">
+                        <classpath refid="master.classpath" />
+                </javac>
+        </target>
+
+        <target name="war" depends="classes">
+                <war destfile="${build.war.file}" needxmlfile="false">
+                        
+                        <webinf dir="conf" >
+                                <include name="resin-web-pre.xml"/>
+                                <include name="resin-web.xml"/>
+                        </webinf>
+
+                        <classes dir="${build.classes.dir}" />
+
+                        <classes dir="${src.dir}">
+                                <include name="META-INF/**" />
+                                <include name="**/*.vm" />
+                        </classes>
+
+                        <lib dir="${lib.dir}">
+                                <exclude name="build-only/**" />
+                        </lib>
+                </war>
+        </target>
+
+        <target name="deploy" depends="war">
+                <copy file="${build.war.file}" todir="${deploy.dir}" />
+        </target>
+
+        <target name="clean">
+                <delete dir="${build.dir}" />
+        </target>
+</project>

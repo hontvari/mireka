@@ -1,0 +1,10 @@
+<web-app xmlns="http://caucho.com/ns/resin"
+	xmlns:resin="urn:java:com.caucho.resin"
+	xmlns:mireka="urn:java:mireka"
+	xmlns:subetha="urn:java:org.subethamail.smtp.server"
+	>
+
+		<mireka:address>john@example.com</mireka:address>
+		<mireka:address>jack@example.com</mireka:address>
+
+</web-app>

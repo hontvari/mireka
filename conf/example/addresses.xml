@@ -1,0 +1,20 @@
+<web-app xmlns="http://caucho.com/ns/resin"
+	xmlns:resin="urn:java:com.caucho.resin"
+	xmlns:mireka="urn:java:mireka"
+	xmlns:subetha="urn:java:org.subethamail.smtp.server"
+	>
+
+		<mireka:specification>
+			<mireka:AnyDomainRecipient>
+				<mireka:localPart>anonymous</mireka:localPart>
+			</mireka:AnyDomainRecipient>
+		</mireka:specification>
+		
+		<mireka:specification>
+			<mireka:RegexAddressSpecification>
+				<mireka:localPartRegex>.*-bounces-.*</mireka:localPartRegex>
+				<mireka:remotePart>lists.example.com</mireka:remotePart>
+			</mireka:RegexAddressSpecification>
+		</mireka:specification>
+
+</web-app>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+	<property name="log.dir" value="${mireka.home}/log" />
+
+	<jmxConfigurator />
+
+	<!-- <consolePlugin /> -->
+
+	<appender class="ch.qos.logback.core.ConsoleAppender"
+		name="STDERR">
+		<target>System.err</target>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>info</level>
+		</filter>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>%date %-23([%.21thread]) %-5level %logger{20} %m %ex%n</pattern>
+		</layout>
+	</appender>
+
+	<evaluator name="SUPRESS_TRACE_EVAL" class="ch.qos.logback.classic.boolex.JaninoEventEvaluator">
+		<Expression>throwable != null &amp;&amp; (
+			message.startsWith("Cannot receive more commands:") ||
+			message.startsWith("Line too long"))
+		</Expression>
+	</evaluator>
+	
+	<appender class="ch.qos.logback.core.FileAppender"
+		name="Access">
+		<file>${log.dir}/access.log</file>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>%date %-23([%.21thread]) %-5level %logger{20} %m %ex{full, SUPRESS_TRACE_EVAL}%n</pattern>
+		</layout>
+	</appender>
+
+	<!--
+	<appender class="ch.qos.logback.core.FileAppender"
+		name="UnknownUser">
+		<file>${log.dir}/unknown-user.log</file>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>all</level>
+		</filter>
+		<filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+			<evaluator name="myEval" class="ch.qos.logback.classic.boolex.JaninoEventEvaluator">
+				<expression>message.contains("User unknown")</expression>
+			</evaluator>
+			<OnMismatch>DENY</OnMismatch>
+			<OnMatch>ACCEPT</OnMatch>
+		</filter>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>%date %-23([%.21thread]) %-5level %logger{20} %m %ex%n</pattern>
+		</layout>
+	</appender>
+	-->
+
+	<root>
+		<level value="warn" />
+		<appender-ref ref="STDERR" />
+		<appender-ref ref="Access" />
+	</root>
+
+	<logger name="mireka">
+		<level value="debug" />
+	</logger>
+	<logger name="org.subethamail.smtp">
+		<level value="debug" />
+		<!--
+		<appender-ref ref="UnknownUser" />
+		-->
+	</logger>
+	<logger name="org.apache.james.jspf">
+		<level value="error" />
+	</logger>
+	<logger name="org.apache.james.mime4j">
+		<level value="error" />
+	</logger>
+
+</configuration>
