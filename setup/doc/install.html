@@ -1,0 +1,51 @@
+<html>
+	<head>
+		<title>Installation</title>
+	</head>
+
+	<body>
+		<h1>How to Install Mireka</h1>
+These instructions describe setting up a single, standalone instance of Mireka. 
+You should have have installed JDK 1.6+.		
+<ol>
+	<li><a href="http://www.caucho.com/download/">Download</a> and install 
+	<a href="http://caucho.com/resin/">Resin</a> 4.0 snapshot (alpha) open source edition 
+	as per the Resin instructions. The Resin install directory is referenced in this document 
+	as <dfn>${resin.dir}</dfn>.
+	</li>
+	<li>Download and unzip the Mireka distribution. The installation directory 
+	may be for example <kbd>"C:\Program&nbsp;Files\Mireka"</kbd> on Windows or 
+	<kbd>/var/lib/mireka</kbd> on Ubuntu.
+	This directory is referenced in this document as <dfn>${mirekaHome}</dfn}.
+	</li>
+	<li>Configure the <var>mirekaHome</var> variable in Resin. 
+	To do this, edit <kbd>${resin.dir}/conf/resin.xml</kbd>. After the line:<br>
+	<code>&lt;host id="" root-directory="."&gt;</code><br>
+	insert this line:<br>
+	<code>&lt;resin:set var="mirekaHome" value="YOUR_DIR" /&gt;</code><br>
+	where <code>YOUR_DIR</code> should be the ${mirekaHome} directory.
+	</li>
+	<li>Copy <kbd>mireka.war</kbd> to <kbd>${resin.dir}/webapps/</kbd></li>
+	<li>Configure Mireka by editing its configuration files in the 
+	<kbd>${mirekaHome}/conf/</kbd> directory. 
+	<p>The primary configuration file is
+	<kbd>mireka.xml</kbd>, which is included by mireka.war during runtime. 
+	<kbd>mireka.xml</kbd> in turn imports most of the other files. These 
+	configuration files will be read and processed by Resin. 
+	For more information on the syntax, see the Resin documentation. 
+	The configuration files also refer Mireka classes. For more information 
+	on Mireka classes, see the javadoc in <kbd>${mirekaHome}/javadoc</kbd>.
+	<p><kbd>logback.xml</kbd> configures logging. 
+	For more information on this see the documentation of 
+	<a href="http://logback.qos.ch/">Logback</a>.
+	</li>
+	<li>Start Resin. For more information on this, see the documentation of Resin.</li>
+</ol>
+
+<p>
+To verify that everyting is going well look at the log files in 
+<kbd>${resin.dir>/log</kbd> and <kbd>${mirekaHome}/log</kbd>.
+</p>
+
+	</body>
+</html>
