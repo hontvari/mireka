@@ -104,8 +104,7 @@
                 <copy file="${build.war.file}" todir="${deploy.dir}" />
         </target>
 
-        <target name="test.compile"
-                depends="compile">
+        <target name="test.compile" depends="compile">
                 <mkdir dir="${build.dir}/test" />
                 <javac srcdir="${test.dir}"
                        debug="on"
@@ -140,7 +139,7 @@
                 </junit>
         </target>
 
-        <target name="javadoc" depends="init-dist, compile">
+        <target name="javadoc" depends="init-dist">
                 <javadoc destdir="${build.dir}/javadoc"
                          packagenames="*"
                          classpathref="javadoc.classpath"
@@ -154,11 +153,26 @@
                         </fileset>
 
                         <doctitle>&lt;h1&gt;Mireka ${build.version}&lt;/h1&gt;</doctitle>
-
                 </javadoc>
+                <fixcrlf srcdir="${build.dir}/javadoc"
+                         includes="**/*.html,**/*.css" />
         </target>
 
+        <!-- - - - - - - - - - - - - - - - - - 
+          target: doc                      
+         - - - - - - - - - - - - - - - - - -->
+        <target name="doc" depends="clean, init-dist, javadoc">
+                <copy todir="${build.dir}/doc">
+                        <fileset dir="${setup.dir}/doc" />
+                        <fileset dir="${build.dir}">
+                                <include name="javadoc/**" />
+                        </fileset>
+                </copy>
+        </target>
 
+        <!-- - - - - - - - - - - - - - - - - - 
+          target: init-dist                    
+         - - - - - - - - - - - - - - - - - -->
         <target name="init-dist">
                 <input addproperty="build.version" message="Version number?" />
                 <property name="dist.name" value="${name}-${build.version}" />
@@ -169,16 +183,20 @@
                           location="${build.dir}/${dist.name}.zip" />
         </target>
 
-        <target name="dist" depends="clean, init-dist, war, javadoc">
+        <!-- ================================= 
+          target: dist              
+         ================================= -->
+        <target name="dist"
+                depends="clean, init-dist, war, doc"
+                description="Prepares distibution archives using clean build">
                 <copy todir="${build.dist.dir}">
-                        <fileset dir="${setup.dir}" />
-
-                        <fileset dir="${build.dir}">
-                                <include name="*.war" />
+                        <fileset dir="${setup.dir}">
+                                <exclude name="doc" />
                         </fileset>
 
                         <fileset dir="${build.dir}">
-                                <include name="javadoc/**" />
+                                <include name="*.war" />
+                                <include name="doc/**" />
                         </fileset>
 
                         <fileset dir=".">
