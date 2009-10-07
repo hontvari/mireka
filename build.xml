@@ -98,17 +98,14 @@
                 </war>
         </target>
 
-        <target name="deploy" depends="war">
-                <copy file="${build.war.file}" todir="${deploy.dir}" />
-        </target>
-
-        <target name="deploy-dist" depends="clean, init-dist, war">
+        <target name="deploy"
+                depends="war"
+                description="Deploys war on local app server">
                 <copy file="${build.war.file}" todir="${deploy.dir}" />
         </target>
 
         <target name="test.compile"
-                depends="compile"
-                description="Compile test source.">
+                depends="compile">
                 <mkdir dir="${build.dir}/test" />
                 <javac srcdir="${test.dir}"
                        debug="on"
@@ -213,7 +210,7 @@
                 </zip>
         </target>
 
-        <target name="clean">
+        <target name="clean" description="Cleans all previous build artifacts">
                 <delete dir="${build.dir}" />
         </target>
 </project>
