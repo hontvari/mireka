@@ -34,5 +34,22 @@ filter publishes statistics in a JMX MBean object under the name
 It can be displayed either in the  
 administration pages of Resin, or using the jconsole application of the JDK.  
 
+<h3>Postmaster mails</h3>
+
+<p>
+All mails sent to the special <kbd>Postmaster</kbd> addresses are saved into the
+<kbd>{mirekaHome}/postmaster</kbd> directory. They are relayed to 
+the back-end server as well. There are two types of postmaster addresses. In the 
+first form, no domain is specified. This is always accepted. In the second form, 
+domain part is also specified. These are only accepted if the domain is a local 
+domain. This feature is useful for debugging. The saved file shows the content 
+of the message before any processing. The mails are saved even if the back-end 
+server cannot be connected. 
+</p>
+
+<p>
+You may need to clear the directory occasionally.
+</p>
+
 </body>
 </html>
