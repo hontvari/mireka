@@ -1,0 +1,59 @@
+<html>
+<head>
+<title>Configuration</title>
+<style>
+table          { border-collapse: collapse;
+                 border: 1px solid; 
+		 margin-left: 2em;
+		 margin-right: 2em
+	       }	
+td             { border: 1px solid; padding: 1em; }
+th             { border: 1px solid; padding: 1em; }
+</style>
+</head>
+
+<body>
+<h1>How to Configure Mireka</h1>
+		
+<p>Mireka is using the Resin application server for configuration and startup.
+Therefore it is distibuted in a standard Java Web Application archive, although 
+currently it has no web interface. In the unlikely event, that some additonal  
+configuration of Resin is needed, other than what was already done during 
+installation, you can find more information about Resin on its web site at
+<a href="http://www.caucho.com/products/resin/">http://www.caucho.com/products/resin/</a>.
+In the following only configuration options related to Mireka itself are described.
+</p>
+
+<p>
+Mireka configuration files are located in the <kbd>${mirekaHome}/conf/</kbd> 
+directory.
+</p>
+
+<table>
+<tr><th><a href="mireka.xml.html">mireka.xml</a></th><td>configures the SMTP service, 
+the filter chain, and most filter parameters.</td></tr>
+<tr><th>domains.xml</th><td>list of local domain names. 
+If the domain part of a recipient is not in this list, then the recipient will 
+be rejected.
+<p>This file is imported by <kbd>mireka.xml</kbd>.</p></td></tr>
+<tr><th>users.xml</th><td>simple user addresses, like 
+<kbd>john@example.com</kbd>. If a recipient equals with a user adress supplied  
+here then it will be accepted (assuming other conditions are also met). 
+<p>This file is imported by <kbd>mireka.xml</kbd>.</p>  </td></tr>
+<tr><th>addresses.xml</th><td>more complex address specificatons, like
+<cite>"any recipient which includes <kbd>bounce</kbd> in its local part, and of which 
+remote part is <kbd>lists.example.com</kbd>"</cite>.
+<p>This file is imported by <kbd>mireka.xml</kbd>.</p></td></tr>
+<tr><th>logback.xml</th><td>configures logging.
+For more information, see the documentation of 
+<a href="http://logback.qos.ch/">Logback</a>.</td></tr>
+
+</table>
+
+<p>
+The import structure of configuration files should be considered as an example. 
+It is possible to include all data in <kbd>mireka.xml</kbd>. It is also possible 
+to divide the configuration into more files than what is supplied by default.  
+
+</body>
+</html>

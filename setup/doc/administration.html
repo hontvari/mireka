@@ -1,0 +1,38 @@
+<html>
+<head>
+<title>Administration</title>
+</head>
+
+<body>
+<h1>Administration</h1>
+	
+<p>
+For the administration of the Resin application server, see the 
+<a href="http://www.caucho.com/resin/">documentation</a> of Resin.
+</p>
+
+Log files are located in two places: 
+<ul>
+<li><kbd>${resin.dir>/log</kbd>
+<li><kbd>${mirekaHome}/log</kbd>
+</ul>
+
+<h3>${resin.dir>/log/jvm-default.log</h3>
+It contains errors and warnings. If everything goes well, it should only contain
+startup and shutdown messages.
+
+<h3>${mirekaHome}/log/access.log</h3>
+It contains every SMTP command received or send and some additional info from 
+filters. It contains errors and warnings as well. If you have more then 100 000 
+mail transactions per day, then you may want to switch on buffering on this log.
+
+<h3>Traffic statistics</h3>
+
+The <a href="javadoc/index.html?mireka/filter/builtin/MeasureTraffic.html"><code>MeasureTraffic</code></a>
+filter publishes statistics in a JMX MBean object under the name 
+<kbd>mireka:type=TrafficSummary</kbd>. 
+It can be displayed either in the  
+administration pages of Resin, or using the jconsole application of the JDK.  
+
+</body>
+</html>

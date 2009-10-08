@@ -1,0 +1,42 @@
+<html>
+<head>
+<title>mireka.xml</title>
+</head>
+
+<body>
+<h1>mireka.xml</h1>
+		
+<kbd>mireka.xml</kbd> is the primary configuration file of Mireka. 
+It configures the SMTP service, 
+the filter chain, and most filter parameters. It is imported by 
+<kbd>resin-web.xml</kbd> in the Mireka web application archive during runtime. 
+<kbd>mireka.xml</kbd> in turn imports most of the other configuration 
+files. 
+
+<p>
+These configuration files will be read and processed by Resin. 
+Essentially, they control what objects must be created in runtime. The name of a tag 
+is a Java class name. An element assigns a value to a property of the object. 
+It is also possible to specify another objest as a property value, either 
+defining it inline, or referencing it by an EL expression.    
+For more information on the syntax, see the Resin documentation.
+</p>
+
+<h3>Sections</h3>
+<ul>
+<li>valid recipients: These are used by filters.
+<li>SMTP server: accepts incoming connections, sends mail transactions to the 
+filter chain
+<li>backend server: specifies the server, to where mails are relayed for 
+delivery. It is used by the relay filter.
+<li><a href="filters.html">filter chain</a>: Filters are responsible for the 
+processing of incoming mail transactions.
+</ul>
+
+<p>
+For more information on the Mireka classes which are referenced in the 
+configuration, see the <a href="javadoc/index.html">javadoc</a>.
+</p>
+
+</body>
+</html>
