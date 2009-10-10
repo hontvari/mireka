@@ -4,7 +4,6 @@ import java.util.regex.Pattern;
 
 import mireka.mailaddress.Address;
 import mireka.mailaddress.MailAddressFactory;
-import mireka.mailaddress.Recipient;
 import mireka.mailaddress.RemotePart;
 import mireka.mailaddress.RemotePartContainingRecipient;
 
@@ -15,14 +14,7 @@ public class RegexAddressSpecification implements RecipientSpecification {
     private String remotePartString;
 
     @Override
-    public boolean isSatisfiedBy(Recipient recipient) {
-        if (recipient.isPostmaster())
-            return false;
-        else
-            return isSatisfiedBy((RemotePartContainingRecipient) recipient);
-    }
-
-    private boolean isSatisfiedBy(RemotePartContainingRecipient recipient) {
+    public boolean isSatisfiedBy(RemotePartContainingRecipient recipient) {
         Address recipientAddress = recipient.getAddress();
         boolean remotePartMatch =
                 remotePartObject.equals(recipient.getAddress().getRemotePart());
