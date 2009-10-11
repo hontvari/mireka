@@ -1,8 +1,8 @@
 package mireka.mailaddress;
 
 /**
- * represents the special "Postmaster" recipient. This is always treated
- * case-insensitively.
+ * represents the special "Postmaster" recipient (without a domain). This is
+ * always treated case-insensitively.
  * 
  * @see <a href="http://tools.ietf.org/html/rfc5321#section-4.1.1.3">RFC 5321
  *      4.1.1.3</a>

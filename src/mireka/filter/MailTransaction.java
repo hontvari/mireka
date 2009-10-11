@@ -10,7 +10,10 @@ import org.subethamail.smtp.MessageContext;
 public interface MailTransaction {
 
     /**
-     * null if not yet received, empty string in case of a null reverse path
+     * Returns the accepted reverse-path supplied in the MAIL SMTP command.
+     * 
+     * @return null if is is not yet received, or if it was rejected, empty
+     *         string in case of a null reverse-path
      */
     String getFrom();
 
