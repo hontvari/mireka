@@ -26,7 +26,7 @@ public abstract class AbstractFilter implements Filter {
     }
 
     @Override
-    public void from(String from) {
+    public void from(String from) throws RejectException {
         chain.from(from);
     }
 

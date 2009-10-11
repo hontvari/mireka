@@ -33,7 +33,7 @@ public final class DataRecipientFilterAdapter implements Filter {
     }
 
     @Override
-    public void from(String from) {
+    public void from(String from) throws RejectException {
         filter.from(from);
         chain.from(from);
     }

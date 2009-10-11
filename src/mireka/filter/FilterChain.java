@@ -10,7 +10,7 @@ import org.subethamail.smtp.TooMuchDataException;
 public interface FilterChain {
     void begin();
 
-    void from(String from);
+    void from(String from) throws RejectException;
 
     FilterReply verifyRecipient(Recipient recipient) throws RejectException;
 
