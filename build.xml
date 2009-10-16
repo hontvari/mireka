@@ -81,7 +81,7 @@
         <target name="war" depends="compile">
                 <war destfile="${build.war.file}" needxmlfile="false">
 
-                        <webinf dir="conf">
+                        <webinf dir="webapp/WEB-INF">
                                 <include name="resin-web-pre.xml" />
                                 <include name="resin-web.xml" />
                         </webinf>
