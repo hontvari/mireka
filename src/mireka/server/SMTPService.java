@@ -16,7 +16,6 @@ import org.subethamail.smtp.server.SMTPServer;
 @ApplicationScoped
 public class SMTPService {
     private final Logger logger = LoggerFactory.getLogger(SMTPService.class);
-    public static final int DEFAULT_PORT = 25;
     private SMTPServer smtpServer;
     /**
      * Corresponds to the similar attribute in SMTPServer, but stored as a
@@ -24,17 +23,24 @@ public class SMTPService {
      */
     private String bindAddress;
 
-    // @Inject
-    public SMTPService(SMTPServer smtpServer) {
-        this.smtpServer = smtpServer;
-    }
-
     @PostConstruct
     public void start() {
         smtpServer.setBindAddress(getBindInetAddress());
         logger.info("Starting SMTP service {}", getName());
         smtpServer.start();
         logger.info("SMTP service {} started", getName());
+    }
+
+    /**
+     * converts {@link #bindAddress} to InetAddress without checked exception,
+     * CDI will deal with it anyway.
+     */
+    private InetAddress getBindInetAddress() {
+        try {
+            return InetAddress.getByName(bindAddress);
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private String getName() {
@@ -51,15 +57,17 @@ public class SMTPService {
     }
 
     /**
-     * converts {@link #bindAddress} to InetAddress without checked exception,
-     * CDI will deal with it anyway.
+     * @category GETSET
      */
-    private InetAddress getBindInetAddress() {
-        try {
-            return InetAddress.getByName(bindAddress);
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        }
+    public SMTPServer getSmtpServer() {
+        return smtpServer;
+    }
+
+    /**
+     * @category GETSET
+     */
+    public void setSmtpServer(SMTPServer smtpServer) {
+        this.smtpServer = smtpServer;
     }
 
     public String getBindAddress() {

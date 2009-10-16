@@ -8,45 +8,13 @@
 	<system-property logback.configurationFile="${__DIR__}/logback.xml"/>
 	<dependency path="${__DIR__}/logback.xml" />
 
-	<mireka:InlineDomainRegistry>
-	 	<Named>localDomains</Named>
-		<ApplicationScoped/>
+	<!--
+		uncomment to run the RFC 4409 message submission service
+	-->
+	<!--
+	<system-property messageSubmissionActive="true"/>
+	-->
 		
-		<resin:import path="${__DIR__}/domains.xml" />
-		
-	</mireka:InlineDomainRegistry>
-	
-	<mireka:InlineRecipientRegistry>
-	 	<Named>validSimpleRecipients</Named>
-		
-		<resin:import path="${__DIR__}/users.xml" />
-		
-	</mireka:InlineRecipientRegistry>
-	
-	<mireka:RecipientSpecifications>
-		<Named>validRecipients</Named>
-		
-		<mireka:specification>
-			#{validSimpleRecipients}
-		</mireka:specification>
-		
-		<resin:import path="${__DIR__}/wildcard-addresses.xml" />
-		
-	</mireka:RecipientSpecifications>
-	
-	<subetha:SMTPServer>
-		<ApplicationScoped/>
-		<new>
-			<mireka:MessageHandlerFactoryImpl/>
-		</new>
-		<subetha:hostName>mx1.example.com</subetha:hostName>
-		<subetha:hideTLS>true</subetha:hideTLS>
-	</subetha:SMTPServer>
-	
-	<mireka:SMTPService>
-		<!-- <mireka:bindAddress>192.0.2.0</mireka:bindAddress> -->
-	</mireka:SMTPService>
-	
 	<mireka:BackendServer>
 		<Named>backendServer</Named>
 		
@@ -57,74 +25,23 @@
 		</mireka:client>
 	</mireka:BackendServer>
 	
-	<resource name="trafficSummary" mbean-name="mireka:type=TrafficSummary"
-			type="mireka.filter.builtin.TrafficSummary" />
+	<resin:if test="${messageSubmissionActive}">
+		<!-- 
+			global-users of the submission service are accepted 
+			recipients in the MX service
+		-->  
+		<resin:import path="${__DIR__}/submission/global-users.xml" />
+	</resin:if>
 	
-	<mireka:Filters>
-		<mireka:filter>
-			<mireka:MeasureTraffic>
-				<mireka:trafficSummary>
-					#{trafficSummary}
-				</mireka:trafficSummary>
-			</mireka:MeasureTraffic>
-		</mireka:filter>
-		<mireka:filter>
-			<mireka:RejectLargeMail/>
-		</mireka:filter>
-		<mireka:filter>
-			<mireka:AddReceivedSpfHeader/>
-		</mireka:filter>
-		<mireka:filter>
-			<mireka:TarpitOnGlobalRejections/>
-		</mireka:filter>
-		<mireka:filter>
-			<mireka:AcceptGlobalPostmaster/>
-		</mireka:filter>
-		<mireka:filter>
-			<mireka:ProhibitRelaying>
-				<mireka:localDomainSpecification>
-					#{localDomains}
-				</mireka:localDomainSpecification>
-			</mireka:ProhibitRelaying>
-		</mireka:filter>
-		<mireka:filter>
-			<mireka:AcceptDomainPostmaster/>
-		</mireka:filter>
-		<mireka:filter>
-			<mireka:RefuseBlacklistedRecipient>
-				<mireka:blacklist>
-					<mireka:Dnsbl>
-						<mireka:domain>zen.spamhaus.org.</mireka:domain>
-					</mireka:Dnsbl>
-				</mireka:blacklist>
-			</mireka:RefuseBlacklistedRecipient>
-		</mireka:filter>
-		<mireka:filter>
-			<mireka:RefuseUnknownRecipient>
-				<mireka:recipientSpecification>
-					#{validRecipients}
-				</mireka:recipientSpecification>
-			</mireka:RefuseUnknownRecipient>
-		</mireka:filter>
-		<mireka:filter>
-			<mireka:RejectOnFailedSpfCheck />
-		</mireka:filter>
-		<mireka:filter>
-			<mireka:AcceptAllRecipient />
-		</mireka:filter>
-		<mireka:filter>
-			<mireka:SavePostmasterMail>
-				<mireka:dir>${mirekaHome}/postmaster</mireka:dir>
-			</mireka:SavePostmasterMail>
-		</mireka:filter>
-		<mireka:filter>
-			<mireka:StopLoop />
-		</mireka:filter>
-		<mireka:filter>
-			<mireka:RelayMailTransaction>
-				<backendServer>#{backendServer}</backendServer>
-			</mireka:RelayMailTransaction>
-		</mireka:filter>
-	</mireka:Filters>
+	<!--
+		uncomment to run the MX proxy
+	-->
+	<!--
+	<resin:import path="${__DIR__}/mx/mx.xml" />
+	-->
+	
+	<resin:if test="${messageSubmissionActive}">	
+		<resin:import path="${__DIR__}/submission/submission.xml" />
+	</resin:if>
 	
 </web-app>

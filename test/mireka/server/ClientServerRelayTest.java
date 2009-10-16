@@ -49,7 +49,8 @@ public class ClientServerRelayTest {
         handlerFactoryImpl.setFilters(filters);
         SMTPServer smtpServer = new SMTPServer(handlerFactoryImpl);
         smtpServer.setPort(8025);
-        smtpService = new SMTPService(smtpServer);
+        smtpService = new SMTPService();
+        smtpService.setSmtpServer(smtpServer);
         smtpService.start();
     }
 

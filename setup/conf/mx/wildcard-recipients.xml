@@ -4,6 +4,7 @@
 	xmlns:subetha="urn:java:org.subethamail.smtp.server"
 	>
 
+	<!--
 		<mireka:specification>
 			<mireka:AnyDomainRecipient>
 				<mireka:localPart>anonymous</mireka:localPart>
@@ -16,5 +17,6 @@
 				<mireka:remotePart>lists.example.com</mireka:remotePart>
 			</mireka:RegexAddressSpecification>
 		</mireka:specification>
+	-->
 
 </web-app>

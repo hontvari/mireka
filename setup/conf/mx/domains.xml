@@ -4,7 +4,9 @@
 	xmlns:subetha="urn:java:org.subethamail.smtp.server"
 	>
 
+	<!--
 		<mireka:domain>example.com</mireka:domain>
 		<mireka:domain>example.org</mireka:domain>
+	-->
 
 </web-app>
