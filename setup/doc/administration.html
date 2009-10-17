@@ -26,6 +26,13 @@ It contains every SMTP command received or send and some additional info from
 filters. It contains errors and warnings as well. If you have more then 100 000 
 mail transactions per day, then you may want to switch on buffering on this log.
 
+<h3>${mirekaHome}/log/unknown-user.log</h3>
+Every recipients, which are rejected because they are not in the list of 
+valid recipients, although they are addressed to a local domain, are logged in 
+this file. This log file is useful on a fresh installation of Mireka, to
+make sure that no valid recipients are rejected because of wrong configuration. 
+It can be switched off later.
+
 <h3>Traffic statistics</h3>
 
 The <a href="javadoc/index.html?mireka/filter/builtin/MeasureTraffic.html"><code>MeasureTraffic</code></a>

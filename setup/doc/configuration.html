@@ -15,45 +15,79 @@ th             { border: 1px solid; padding: 1em; }
 <body>
 <h1>How to Configure Mireka</h1>
 		
+<h3>Container: Resin Application Server</h3>
 <p>Mireka is using the Resin application server for configuration and startup.
 Therefore it is distibuted in a standard Java Web Application archive, although 
 currently it has no web interface. In the unlikely event, that some additonal  
 configuration of Resin is needed, other than what was already done during 
 installation, you can find more information about Resin on its web site at
 <a href="http://www.caucho.com/products/resin/">http://www.caucho.com/products/resin/</a>.
-In the following only configuration options related to Mireka itself are described.
 </p>
 
+<h3>Mail services</h3>
 <p>
 Mireka configuration files are located in the <kbd>${mirekaHome}/conf/</kbd> 
 directory.
 </p>
 
-<table>
-<tr><th><a href="mireka.xml.html">mireka.xml</a></th><td>configures the SMTP service, 
-the filter chain, and most filter parameters.</td></tr>
-<tr><th>domains.xml</th><td>list of local domain names. 
-If the domain part of a recipient is not in this list, then the recipient will 
-be rejected.
-<p>This file is imported by <kbd>mireka.xml</kbd>.</p></td></tr>
-<tr><th>users.xml</th><td>simple user addresses, like 
-<kbd>john@example.com</kbd>. If a recipient equals with a user adress supplied  
-here then it will be accepted (assuming other conditions are also met). 
-<p>This file is imported by <kbd>mireka.xml</kbd>.</p>  </td></tr>
-<tr><th>addresses.xml</th><td>more complex address specificatons, like
-<cite>"any recipient which includes <kbd>bounce</kbd> in its local part, and of which 
-remote part is <kbd>lists.example.com</kbd>"</cite>.
-<p>This file is imported by <kbd>mireka.xml</kbd>.</p></td></tr>
-<tr><th>logback.xml</th><td>configures logging.
-For more information, see the documentation of 
-<a href="http://logback.qos.ch/">Logback</a>.</td></tr>
+<p>
+<kbd>mireka.xml</kbd> is the primary configuration file of Mireka. 
+It is imported by 
+<kbd>resin-web.xml</kbd> in the Mireka web application archive during runtime. 
+<kbd>mireka.xml</kbd> in turn imports most of the other configuration 
+files. 
+</p>
 
-</table>
+<p>
+These configuration files will be read and processed by Resin. 
+Essentially, they control what objects must be created in runtime. The name of a tag 
+is a Java class name. An element assigns a value to a property of the object. 
+It is also possible to specify another objest as a property value, either 
+defining it inline, or referencing it by an EL expression.    
+For more information on the syntax, see the Resin documentation.
+</p>
+
+<p>
+For more information on the Mireka classes which are referenced in the 
+configuration, see the <a href="javadoc/index.html">javadoc</a>.
+</p>
 
 <p>
 The import structure of configuration files should be considered as an example. 
 It is possible to include all data in <kbd>mireka.xml</kbd>. It is also possible 
 to divide the configuration into more files than what is supplied by default.  
+</p>
+
+<table>
+<tr><th>mireka.xml</th><td>Enables/disables MX and 
+Submission services. It contains a few elements used by both services:
+<ul>
+<li>the backend server. It specifies the server, to where mails are relayed for 
+delivery or submission. It is used by the relay filter. By default both sevices 
+use the same backend server, however this is not required. 
+<li>the list of users of the Submission service. Although this list is primarily 
+used in the Submision service, the users also appear as valid recipients in the 
+MX service.
+</ul>
+</td></tr>
+<tr><th><a href="mx.html">mx</a></th><td>Configuration files related to the MX 
+service, which receives mails sent to the local domains by any server on the 
+internet. The service, in turn, relays all received mails to the backend server.
+</td></tr>
+<tr><th><a href="submission.html">submission</a></th><td>Configuration files 
+related to the Submission service, used by local users to send mails to either 
+other local users, or to other domains on the internet. The service, in turn, 
+relays all submitted mails to the backend server.
+</td></tr>
+</table>
+
+<h3>Logging</h3>
+<p>
+<kbd>${mirekaHome}/conf/logback.xml</kbd> configures logging.
+For more information, see the documentation of 
+<a href="http://logback.qos.ch/">Logback</a> and the  
+<a href="administration.html">Administration</a> section.
+</p>
 
 </body>
 </html>

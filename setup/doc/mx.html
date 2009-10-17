@@ -1,0 +1,71 @@
+<html>
+<head>
+<title>MX Service Configuration</title>
+<style>
+table          { border-collapse: collapse;
+                 border: 1px solid; 
+		 margin-left: 2em;
+		 margin-right: 2em
+	       }	
+td             { border: 1px solid; padding: 1em; }
+th             { border: 1px solid; padding: 1em; }
+</style>
+</head>
+
+<body>
+<h1>How to Configure the MX Service</h1>
+		
+<p>The MX service receives mails sent to the local domains by any server on the 
+internet. The service, in turn, relays all received mails to the backend server.
+It always runs on port 25, and its address must be published in a DNS MX 
+record.
+</p>
+
+<p>
+Configuration files specific to the MX service are located in the 
+<kbd>${mirekaHome}/conf/mx</kbd> directory.
+</p>
+
+<table>
+<tr><th>mx.xml</th><td>primary configuration file of the MX 
+service. It configures the SMTP service, 
+the filter chain, and most filter parameters. 
+In turn, it imports all the other configuration files of 
+the MX service.
+<ul>
+<li>SMTP server: accepts incoming connections, sends mail transactions to the 
+filter chain
+<li><a href="filters.html">filter chain</a>: filters are responsible for the 
+processing of incoming mail transactions.
+<li>valid recipients: used by filters. This section itself doesn't contain
+concrete recipient specifications, but imports them from several other 
+configuration files.
+</ul>
+</td></tr>
+<tr><th>domains.xml</th><td>list of local domain names. 
+If the domain part of a recipient is not in this list, then the recipient will 
+be rejected.
+<p>This file is imported by <kbd>mx.xml</kbd>.</p></td></tr>
+<tr><th>individual-recipients.xml</th><td>simple recipient addresses, like 
+<kbd>john@example.com</kbd>. If a recipient sent by the client equals with a 
+recipient adress supplied  
+here then it will be accepted (assuming other conditions are also met). 
+<p>This file is imported by <kbd>mx.xml</kbd>.</p>  </td></tr>
+<tr><th>wildcard-recipients.xml</th><td>more complex address specificatons, like
+<cite>"any recipient which includes <kbd>bounce</kbd> in its local part, and of which 
+remote part is <kbd>lists.example.com</kbd>"</cite>.
+<p>This file is imported by <kbd>mx.xml</kbd>.</p></td></tr>
+<tr><th>*submission/global-users.xml</th><td>If the submission service is 
+enabled, then the users listed here become valid wildcard recipients in the MX 
+service too. The list contains the local-part of addresses only, and they 
+will be accepted with any local domain on their right side. For example, the 
+list contains the user <kbd>john</kbd>, and <kbd>example.com</kbd> and 
+<kbd>example.org</kbd> are both local domains. In this case the MX service 
+accepts both <kbd>john@example.com</kbd> and <kbd>john@example.org</kbd>.
+<p>This file is part of the Submission service configuration, but it is imported
+by <kbd>mireka.xml</kbd>, so both MX and Submission service can use it.
+</p></td></tr>
+</table> 
+
+</body>
+</html>
