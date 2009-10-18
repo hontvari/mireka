@@ -13,13 +13,13 @@
 			<level>info</level>
 		</filter>
 		<layout class="ch.qos.logback.classic.PatternLayout">
-			<pattern>%date %-23([%.21thread]) %-5level %logger{20} %m %ex%n</pattern>
+			<pattern>%date %-29([%3.3X{smtpServerLocalSocketAddress}] [%.21thread]) %-5level %logger{20} %m %ex%n</pattern>
 		</layout>
 	</appender>
 
 	<evaluator name="SUPRESS_TRACE_EVAL" class="ch.qos.logback.classic.boolex.JaninoEventEvaluator">
 		<Expression>throwable != null &amp;&amp; (
-			message.startsWith("Cannot receive more commands:") ||
+			message.startsWith("Error reading client command:") ||
 			message.startsWith("Line too long"))
 		</Expression>
 	</evaluator>
@@ -28,7 +28,7 @@
 		name="Access">
 		<file>${log.dir}/access.log</file>
 		<layout class="ch.qos.logback.classic.PatternLayout">
-			<pattern>%date %-23([%.21thread]) %-5level %logger{20} %m %ex{full, SUPRESS_TRACE_EVAL}%n</pattern>
+			<pattern>%date %-29([%3.3X{smtpServerLocalSocketAddress}] [%.21thread]) %-5level %logger{20} %m %ex{full, SUPRESS_TRACE_EVAL}%n</pattern>
 		</layout>
 	</appender>
 
@@ -47,7 +47,7 @@
 			<OnMatch>ACCEPT</OnMatch>
 		</filter>
 		<layout class="ch.qos.logback.classic.PatternLayout">
-			<pattern>%date %-23([%.21thread]) %-5level %logger{20} %m %ex%n</pattern>
+			<pattern>%date %-29([%3.3X{smtpServerLocalSocketAddress}] [%.21thread]) %-5level %logger{20} %m %ex%n</pattern>
 		</layout>
 	</appender>
 	-->

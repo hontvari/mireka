@@ -20,6 +20,7 @@ public class SMTPService {
     /**
      * Corresponds to the similar attribute in SMTPServer, but stored as a
      * String instead of InetAddress, so it could be configured using CanDI.
+     * Null means all interfaces.
      */
     private String bindAddress;
 
@@ -34,8 +35,12 @@ public class SMTPService {
     /**
      * converts {@link #bindAddress} to InetAddress without checked exception,
      * CDI will deal with it anyway.
+     * 
+     * @return null if the server must bind to all interfaces
      */
     private InetAddress getBindInetAddress() {
+        if (bindAddress == null)
+            return null;
         try {
             return InetAddress.getByName(bindAddress);
         } catch (UnknownHostException e) {
