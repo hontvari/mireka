@@ -24,9 +24,14 @@
 		</Expression>
 	</evaluator>
 	
-	<appender class="ch.qos.logback.core.FileAppender"
+	<appender class="ch.qos.logback.core.rolling.RollingFileAppender"
 		name="Access">
 		<file>${log.dir}/access.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${log.dir}/access.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<!-- keep specified number of log files of history -->
+			<MaxHistory>90</MaxHistory>
+		</rollingPolicy>		
 		<layout class="ch.qos.logback.classic.PatternLayout">
 			<pattern>%date %-29([%3.3X{smtpServerLocalSocketAddress}] [%.21thread]) %-5level %logger{20} %m %ex{full, SUPRESS_TRACE_EVAL}%n</pattern>
 		</layout>
