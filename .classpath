@@ -29,6 +29,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/logback-classic-0.9.17.jar">
 		<accessrules>
+			<accessrule kind="accessible" pattern="ch/qos/logback/classic/LoggerContext"/>
 			<accessrule kind="nonaccessible" pattern="**"/>
 		</accessrules>
 	</classpathentry>
