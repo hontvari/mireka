@@ -2,9 +2,9 @@ package mireka.filter.builtin.local;
 
 import javax.enterprise.context.Dependent;
 
+import mireka.address.Recipient;
 import mireka.filter.FilterReply;
 import mireka.filter.StatelessFilterType;
-import mireka.mailaddress.Recipient;
 
 import org.subethamail.smtp.RejectException;
 

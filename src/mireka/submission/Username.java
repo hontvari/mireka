@@ -2,19 +2,19 @@ package mireka.submission;
 
 import java.util.Locale;
 
-import net.jcip.annotations.ThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * case-insensitive user name, where case-insensitivity is defined by the en_US
- * locale. Note that in a general case case-insensitivity depends on locale,
- * but basic SMTP, without Unicode extensions, only allows ASCII local parts in
- * mail addresses.
+ * locale. Note that in a general case case-insensitivity depends on locale, but
+ * basic SMTP, without Unicode extensions, only allows ASCII local parts in mail
+ * addresses.
  */
 @ThreadSafe
 public class Username {
     private final String name;
     private final String nameInLowerCase;
-    
+
     public Username(String name) {
         this.name = name;
         this.nameInLowerCase = name.toLowerCase(Locale.US);

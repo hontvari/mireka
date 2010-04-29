@@ -138,8 +138,6 @@ public abstract class ThresholdingInputStream extends FilterInputStream {
      * 
      * @param current
      *            is the current number of bytes that have been written
-     * @param predicted
-     *            is the total number after the write completes
      */
     abstract protected void thresholdReached(int current) throws IOException;
 

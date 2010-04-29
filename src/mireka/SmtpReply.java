@@ -3,6 +3,14 @@ package mireka;
 import java.text.MessageFormat;
 import java.util.Locale;
 
+/**
+ * the SMTP reply which was sent or which is to be sent by an SMTP server, or a
+ * template for such a reply to be sent. In the latter case it is used to
+ * specify a custom reply for specific event in the configuration.
+ * <p>
+ * TODO: separate these two responsibility into two classes. Use the
+ * {@link org.subethamail.smtp.client.SMTPClient.Response} class.
+ */
 public class SmtpReply {
     /**
      * 0 means default

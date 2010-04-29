@@ -2,12 +2,14 @@ package mireka.filter.builtin;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
+import mireka.MailData;
 import mireka.filter.AbstractFilter;
 import mireka.filter.Filter;
 import mireka.filter.FilterType;
-import mireka.filter.MailData;
 import mireka.filter.MailTransaction;
+import mireka.util.StreamCopier;
 
 import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.TooMuchDataException;
@@ -48,16 +50,26 @@ public class RejectLargeMail implements FilterType {
     }
 
     private final class LengthLimitingMailData implements MailData {
-        private final MailData mailData;
+        private final MailData wrappedMailData;
 
-        public LengthLimitingMailData(MailData mailData) {
-            this.mailData = mailData;
+        public LengthLimitingMailData(MailData sourceMailData) {
+            this.wrappedMailData = sourceMailData;
         }
 
         @Override
-        public InputStream getInputStream() {
-            return new LengthLimitingInputStream(mailData.getInputStream(),
-                    maxAllowedSize);
+        public InputStream getInputStream() throws IOException {
+            return new LengthLimitingInputStream(wrappedMailData
+                    .getInputStream(), maxAllowedSize);
+        }
+
+        @Override
+        public void writeTo(OutputStream out) throws IOException {
+            StreamCopier.writeMailDataInputStreamIntoOutputStream(this, out);
+        }
+
+        @Override
+        public void dispose() {
+            wrappedMailData.dispose();
         }
 
     }

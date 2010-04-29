@@ -3,12 +3,11 @@ package mireka.server;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.enterprise.inject.Initializer;
 import javax.mail.internet.ParseException;
 
+import mireka.address.MailAddressFactory;
+import mireka.address.Recipient;
 import mireka.filterchain.FilterInstances;
-import mireka.mailaddress.MailAddressFactory;
-import mireka.mailaddress.Recipient;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,6 @@ public class FilterChainMessageHandler implements MessageHandler {
     private final FilterInstances filterChain;
     private final MailTransactionImpl mailTransaction;
 
-    @Initializer
     public FilterChainMessageHandler(FilterInstances filterChain,
             MailTransactionImpl mailTransactionImpl) {
         this.filterChain = filterChain;
@@ -67,8 +65,8 @@ public class FilterChainMessageHandler implements MessageHandler {
             mailTransaction.setData(deferredFileMailData);
             filterChain.getHead().data(mailTransaction.getData());
         } finally {
-            if (deferredFileMailData != null)
-                deferredFileMailData.close();
+            if (mailTransaction.getData() != null)
+                mailTransaction.getData().dispose();
             if (deferredFileOutputStream != null)
                 deferredFileOutputStream.close();
         }

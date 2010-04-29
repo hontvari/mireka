@@ -2,11 +2,11 @@ package mireka.filter.builtin;
 
 import java.io.IOException;
 
-import mireka.ExampleMails;
+import mireka.ExampleMailData;
+import mireka.MailData;
 import mireka.MailDataWithSameContent;
 import mireka.filter.Filter;
 import mireka.filter.FilterChain;
-import mireka.filter.MailData;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,14 +20,14 @@ import org.subethamail.smtp.TooMuchDataException;
 import static org.mockito.Mockito.verify;
 
 public class RejectLargeMailTest {
-    @Mock 
+    @Mock
     private FilterChain chain;
     private Filter filter;
 
     @Before
-    public void setup() { 
+    public void setup() {
         MockitoAnnotations.initMocks(this);
-        
+
         RejectLargeMail rejectLargeMail = new RejectLargeMail();
         rejectLargeMail.setMaxAllowedSize(3000);
         filter = rejectLargeMail.createInstance(null);
@@ -37,20 +37,20 @@ public class RejectLargeMailTest {
     @Test
     public void testSmallMail() throws TooMuchDataException, RejectException,
             IOException {
-        filter.data(ExampleMails.simple());
+        filter.data(ExampleMailData.simple());
 
         verify(chain).data(exampleSimpleMail());
     }
 
     private MailData exampleSimpleMail() {
-        return Matchers.argThat(new MailDataWithSameContent(ExampleMails
+        return Matchers.argThat(new MailDataWithSameContent(ExampleMailData
                 .simple()));
     }
 
     @Test(expected = TooMuchDataException.class)
     public void testLargeMail() throws TooMuchDataException, RejectException,
             IOException {
-        filter.data(ExampleMails.mail4k());
+        filter.data(ExampleMailData.mail4k());
 
         ArgumentCaptor<MailData> producedMailDataArgument =
                 ArgumentCaptor.forClass(MailData.class);

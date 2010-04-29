@@ -5,9 +5,9 @@ import java.util.Set;
 
 import javax.mail.internet.ParseException;
 
-import mireka.mailaddress.Recipient;
-import mireka.mailaddress.MailAddressFactory;
-import mireka.mailaddress.RemotePartContainingRecipient;
+import mireka.address.MailAddressFactory;
+import mireka.address.Recipient;
+import mireka.address.RemotePartContainingRecipient;
 
 public class InlineRecipientRegistry implements RecipientSpecification {
     private final Set<Recipient> recipients = new HashSet<Recipient>();

@@ -5,15 +5,11 @@ import java.net.UnknownHostException;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.ejb.Startup;
-import javax.enterprise.context.ApplicationScoped;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.subethamail.smtp.server.SMTPServer;
 
-@Startup
-@ApplicationScoped
 public class SMTPService {
     private final Logger logger = LoggerFactory.getLogger(SMTPService.class);
     private SMTPServer smtpServer;
@@ -26,8 +22,8 @@ public class SMTPService {
 
     @PostConstruct
     public void start() {
-        smtpServer.setBindAddress(getBindInetAddress());
         logger.info("Starting SMTP service {}", getName());
+        smtpServer.setBindAddress(getBindInetAddress());
         smtpServer.start();
         logger.info("SMTP service {} started", getName());
     }

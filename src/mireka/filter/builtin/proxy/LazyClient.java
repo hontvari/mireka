@@ -3,9 +3,7 @@ package mireka.filter.builtin.proxy;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.enterprise.inject.Initializer;
-
-import mireka.mailaddress.Recipient;
+import mireka.address.Recipient;
 
 import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.TooMuchDataException;
@@ -17,7 +15,6 @@ public class LazyClient {
     private final LazyBackendConnector backend;
     private String from;
 
-    @Initializer
     public LazyClient(LazyBackendConnector backend) {
         this.backend = backend;
     }

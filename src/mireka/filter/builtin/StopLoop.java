@@ -2,7 +2,7 @@ package mireka.filter.builtin;
 
 import java.io.IOException;
 
-import mireka.filter.MailData;
+import mireka.MailData;
 import mireka.filter.StatelessFilterType;
 
 import org.apache.james.mime4j.MimeException;
@@ -22,15 +22,15 @@ public class StopLoop extends StatelessFilterType {
             TooMuchDataException, IOException {
         try {
             if (receivedHeaderCount(data) > maxReceivedHeaders)
-                throw new RejectException(554,
-                        "Routing loop detected");
+                throw new RejectException(554, "Routing loop detected");
         } catch (MimeException e) {
             logger.debug("Cannot determine Received header count", e);
             throw new RejectException(554, "Invalid message content");
         } catch (MaxLineLimitException e) {
-            logger.debug("Line too long, cannot determine Received header count", e);
+            logger.debug(
+                    "Line too long, cannot determine Received header count", e);
             throw new RejectException(554, "Line too long");
-        } 
+        }
     }
 
     private int receivedHeaderCount(MailData data) throws IOException,

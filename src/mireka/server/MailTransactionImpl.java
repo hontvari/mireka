@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mireka.filter.MailData;
+import mireka.MailData;
+import mireka.address.Recipient;
 import mireka.filter.MailTransaction;
-import mireka.mailaddress.Recipient;
 
 import org.subethamail.smtp.MessageContext;
 

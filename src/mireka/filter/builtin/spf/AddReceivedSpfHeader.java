@@ -2,12 +2,14 @@ package mireka.filter.builtin.spf;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
+import mireka.MailData;
 import mireka.filter.AbstractFilter;
 import mireka.filter.Filter;
 import mireka.filter.FilterType;
-import mireka.filter.MailData;
 import mireka.filter.MailTransaction;
+import mireka.util.StreamCopier;
 
 import org.apache.james.jspf.executor.SPFResult;
 import org.subethamail.smtp.RejectException;
@@ -53,13 +55,21 @@ public class AddReceivedSpfHeader implements FilterType {
         }
 
         @Override
-        public InputStream getInputStream() {
+        public InputStream getInputStream() throws IOException {
             InputStream originalMailDataInputStream =
                     originalMailData.getInputStream();
             return new PrependingInputStream(headerOctets,
                     originalMailDataInputStream);
         }
 
-    }
+        @Override
+        public void writeTo(OutputStream out) throws IOException {
+            StreamCopier.writeMailDataInputStreamIntoOutputStream(this, out);
+        }
 
+        @Override
+        public void dispose() {
+            originalMailData.dispose();
+        }
+    }
 }

@@ -5,13 +5,13 @@ import java.util.List;
 
 import mireka.RejectExceptionExt;
 import mireka.SmtpReply;
+import mireka.address.Recipient;
 import mireka.filter.AbstractDataRecipientFilter;
 import mireka.filter.DataRecipientFilterAdapter;
 import mireka.filter.Filter;
 import mireka.filter.FilterReply;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
-import mireka.mailaddress.Recipient;
 
 import org.subethamail.smtp.RejectException;
 

@@ -3,8 +3,6 @@ package mireka.filter.builtin.proxy;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-import javax.enterprise.inject.Initializer;
-
 import org.subethamail.smtp.client.SMTPException;
 import org.subethamail.smtp.client.SmartClient;
 
@@ -17,7 +15,6 @@ public class LazyBackendConnector {
      */
     private SmartClient connection;
 
-    @Initializer
     public LazyBackendConnector(BackendServer server) {
         this.server = server;
     }

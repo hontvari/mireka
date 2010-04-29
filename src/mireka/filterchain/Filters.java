@@ -14,8 +14,7 @@ public class Filters {
         filters.add(filter);
     }
 
-    public FilterInstances createInstanceChain(
-            MailTransaction mailTransaction) {
+    public FilterInstances createInstanceChain(MailTransaction mailTransaction) {
         FilterInstances instanceChain = new FilterInstances(mailTransaction);
         for (FilterType filterType : filters) {
             Filter filter = filterType.createInstance(mailTransaction);

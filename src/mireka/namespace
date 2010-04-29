@@ -8,3 +8,8 @@ mireka.filter.builtin.spf
 mireka.filterchain
 mireka.server
 mireka.submission
+mireka.transmission
+mireka.transmission.dsn
+mireka.transmission.queue
+mireka.transmission.queuing
+mireka.transmission.immediate

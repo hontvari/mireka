@@ -20,7 +20,7 @@
 
         <property name="docs.dir" value="${build.dir}/docs" />
 
-        <property name="resin.dir" location="/java/resin-4.0.0/" />
+        <property name="resin.dir" location="/java/resin-4.0.6/" />
         <property name="deploy.dir" location="${resin.dir}/webapps" />
         <property name="expandedWar.dir" location="${deploy.dir}/mireka" />
 
@@ -34,8 +34,10 @@
         </tstamp>
 
         <path id="compile.classpath">
+                <pathelement location="${lib.dir}/build-only/jmockit.jar" />
                 <fileset dir="${lib.dir}">
                         <include name="**/*.jar" />
+                        <exclude name="build-only/jmockit.jar" />
                 </fileset>
 
                 <fileset dir="${resin.dir}/lib">
@@ -46,7 +48,6 @@
         <path id="javadoc.classpath">
                 <fileset dir="${lib.dir}">
                         <include name="**/*.jar" />
-                        <exclude name="build-only/**" />
                 </fileset>
 
                 <fileset dir="${resin.dir}/lib">
@@ -125,17 +126,37 @@
         <target name="test"
                 depends="test.compile"
                 description="Execute JUnit tests.">
-                <junit haltonerror="true" haltonfailure="true">
+                <condition property="quick.tests">
+                        <not>
+                                <or>
+                                        <isset property="all.test" />
+                                        <isset property="test" />
+                                </or>
+                        </not>
+                </condition>
+                <mkdir dir="build/junit" />
+                <junit haltonerror="true"
+                       haltonfailure="true"
+                       fork="true"
+                       forkmode="once"
+                       printsummary="yes">
+                        <sysproperty key="jmockit-coverage-outputDir"
+                                     file="build/coverage-report" />
                         <classpath>
                                 <pathelement location="${build.dir}/test" />
                                 <pathelement location="${build.dir}/classes" />
                                 <path refid="compile.classpath" />
                         </classpath>
-                        <batchtest>
+                        <test name="mireka.QuickTests"
+                              todir="build/junit"
+                              if="quick.tests" />
+                        <test name="${test}" todir="build/junit" if="test" />
+                        <batchtest if="all.test" todir="build/junit">
                                 <fileset dir="${test.dir}">
                                         <include name="**/*Test*.java" />
                                 </fileset>
                         </batchtest>
+                        <formatter type="plain" />
                 </junit>
         </target>
 
@@ -153,6 +174,8 @@
                         </fileset>
 
                         <doctitle>&lt;h1&gt;Mireka ${build.version}&lt;/h1&gt;</doctitle>
+                        <tag name="category" />
+                        <excludepackage name="org.subethamail.smtp.*" />
                 </javadoc>
                 <fixcrlf srcdir="${build.dir}/javadoc"
                          includes="**/*.html,**/*.css" />

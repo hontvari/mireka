@@ -3,10 +3,15 @@ package mireka.filter;
 import java.net.InetAddress;
 import java.util.List;
 
-import mireka.mailaddress.Recipient;
+import mireka.MailData;
+import mireka.address.Recipient;
 
 import org.subethamail.smtp.MessageContext;
 
+/**
+ * It follows an incoming mail transaction, it makes data available as the
+ * transaction - which consists of several steps - progresses.
+ */
 public interface MailTransaction {
 
     /**

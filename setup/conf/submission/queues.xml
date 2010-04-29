@@ -1,0 +1,161 @@
+<web-app xmlns="http://caucho.com/ns/resin"
+	xmlns:resin="urn:java:com.caucho.resin"
+	xmlns:mireka="urn:java:mireka"
+	xmlns:subetha="urn:java:org.subethamail.smtp.server"
+	xmlns:subethaauth="urn:java:org.subethamail.smtp.auth"
+	xmlns:concurrent="urn:java:java.util.concurrent"
+	xmlns:address="urn:java:org.apache.james.mime4j.field.address"
+	xmlns:ee="urn:java:ee"
+	>
+				
+	<address:Mailbox>
+		<Named>mailerdaemon</Named>
+		<new>
+			<value>Mail Delivery Subsystem</value>
+			<value>mailer-daemon</value>
+			<value>example.com</value>
+		</new>
+	</address:Mailbox>
+	
+	<mireka:ScheduleFileDirQueue>
+		<Named>submittedMailQueue</Named>
+		<mireka:store>
+			<mireka:FileDirStore>
+				<dir>${mirekaHome}/queues/submitted</dir>
+			</mireka:FileDirStore>
+		</mireka:store>
+		<mireka:mailProcessorFactory>
+			#{primaryTransmitter}
+		</mireka:mailProcessorFactory>
+		<mireka:executor>
+				<concurrent:ScheduledThreadPoolExecutor>
+					<new><value>10</value></new>
+				</concurrent:ScheduledThreadPoolExecutor>
+		</mireka:executor>
+	</mireka:ScheduleFileDirQueue>
+
+	<mireka:ScheduleFileDirQueue>
+		<Named>retryMailQueue</Named>
+		<mireka:store>
+			<mireka:FileDirStore>
+				<dir>${mirekaHome}/queues/retry</dir>
+			</mireka:FileDirStore>
+		</mireka:store>
+		<mireka:mailProcessorFactory>
+			#{retryTransmitter}
+		</mireka:mailProcessorFactory>
+		<mireka:executor>
+				<concurrent:ScheduledThreadPoolExecutor>
+					<new><value>5</value></new>
+				</concurrent:ScheduledThreadPoolExecutor>
+		</mireka:executor>
+	</mireka:ScheduleFileDirQueue>
+	
+	<mireka:ScheduleFileDirQueue>
+		<Named>dsnMailQueue</Named>
+		<mireka:store>
+			<mireka:FileDirStore>
+				<dir>${mirekaHome}/queues/dsn</dir>
+			</mireka:FileDirStore>
+		</mireka:store>
+		<mireka:mailProcessorFactory>
+			#{dsnTransmitter}
+		</mireka:mailProcessorFactory>
+		<mireka:executor>
+				<concurrent:ScheduledThreadPoolExecutor>
+					<new><value>5</value></new>
+				</concurrent:ScheduledThreadPoolExecutor>
+		</mireka:executor>
+	</mireka:ScheduleFileDirQueue>
+
+	<mireka:LogIdFactory>
+		<Named>logIdFactory</Named>
+	</mireka:LogIdFactory>
+
+	<mireka:MailToHostTransmitterFactory>
+		<Named>mailToHostTransmitterFactory</Named>
+		<mireka:clientFactory>
+			#{clientFactory}
+		</mireka:clientFactory>
+		<mireka:logIdFactory>
+			#{logIdFactory}
+		</mireka:logIdFactory>
+	</mireka:MailToHostTransmitterFactory>
+	
+	<mireka:ImmediateSenderFactory>
+		<Named>immediateSenderFactory</Named>
+		<mireka:mailToHostTransmitterFactory>
+			#{mailToHostTransmitterFactory}
+		</mireka:mailToHostTransmitterFactory>
+	</mireka:ImmediateSenderFactory>
+
+	<mireka:DsnMailCreator>
+		<Named>dsnMailCreator</Named>
+		<new>
+			<value>${helo}</value> <!-- reportingMtaName -->
+			<value>${mailerdaemon}</value><!-- fromAddress -->
+		</new>
+	</mireka:DsnMailCreator>
+	
+	<mireka:RetryPolicy>
+		<Named>retryPolicy</Named>
+		<mireka:dsnMailCreator>
+			#{dsnMailCreator}
+		</mireka:dsnMailCreator>
+		<mireka:dsnTransmitter>
+			#{dsnTransmitter}
+		</mireka:dsnTransmitter>
+		<mireka:retryTransmitter>
+			#{retryTransmitter}
+		</mireka:retryTransmitter>
+	</mireka:RetryPolicy>
+	
+	<mireka:QueuingTransmitter>
+		<Named>primaryTransmitter</Named>
+		<mireka:queue>
+			#{submittedMailQueue}
+		</mireka:queue>
+		<mireka:immediateSenderFactory>
+			#{immediateSenderFactory}
+		</mireka:immediateSenderFactory>
+		<mireka:retryPolicy>
+			#{retryPolicy}
+		</mireka:retryPolicy>
+		<mireka:logIdFactory>
+			#{logIdFactory}
+		</mireka:logIdFactory>
+	</mireka:QueuingTransmitter>
+	
+	<mireka:QueuingTransmitter>
+		<Named>dsnTransmitter</Named>
+		<mireka:queue>
+			#{dsnMailQueue}
+		</mireka:queue>
+		<mireka:immediateSenderFactory>
+			#{immediateSenderFactory}
+		</mireka:immediateSenderFactory>
+		<mireka:retryPolicy>
+			#{retryPolicy}
+		</mireka:retryPolicy>
+		<mireka:logIdFactory>
+			#{logIdFactory}
+		</mireka:logIdFactory>
+	</mireka:QueuingTransmitter>
+	
+	<mireka:QueuingTransmitter>
+		<Named>retryTransmitter</Named>
+		<mireka:queue>
+			#{retryMailQueue}
+		</mireka:queue>
+		<mireka:immediateSenderFactory>
+			#{immediateSenderFactory}
+		</mireka:immediateSenderFactory>
+		<mireka:retryPolicy>
+			#{retryPolicy}
+		</mireka:retryPolicy>
+		<mireka:logIdFactory>
+			#{logIdFactory}
+		</mireka:logIdFactory>
+	</mireka:QueuingTransmitter>
+	
+</web-app>

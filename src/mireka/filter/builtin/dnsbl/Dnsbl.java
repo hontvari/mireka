@@ -69,7 +69,8 @@ public class Dnsbl {
             queryDomain = reversedOctets(address) + "." + domain;
             InetAddress replyAddress = queryARecord();
             if (replyAddress == null) {
-                logger.debug("DNSBL checked: NOT LISTED, dnsbl={}, address: {}",
+                logger.debug(
+                        "DNSBL checked: NOT LISTED, dnsbl={}, address: {}",
                         domain, address);
                 return DnsblResult.NOT_LISTED;
             }

@@ -13,30 +13,57 @@
 	<listener listener-class="mireka.server.LogFlushingServletContextListener" />
 	-->
 
+	<system-property helo="mx1.example.com"/>
+
+	<mireka:ClientFactory>
+		<Named>clientFactory</Named>
+		<mireka:helo>${helo}</mireka:helo>
+		<!-- <mireka:bind>192.0.2.0</mireka:bind> -->
+	</mireka:ClientFactory>
+	
 	<!--
-		uncomment to run the RFC 4409 message submission service
+		the next element can be commented out if none of the proxy 
+		services are enabled
 	-->
-	<!--
-	<system-property messageSubmissionActive="true"/>
-	-->
-		
 	<mireka:BackendServer>
 		<Named>backendServer</Named>
 		
 		<mireka:host>backend.example.com</mireka:host>
-		<mireka:client>
-			<mireka:helo>mx1.example.com</mireka:helo>
-			<!-- <mireka:bind>192.0.2.0</mireka:bind> -->
-		</mireka:client>
+		<mireka:clientFactory>
+			#{clientFactory}
+		</mireka:clientFactory>
 	</mireka:BackendServer>
 	
-	<resin:if test="${messageSubmissionActive}">
-		<!-- 
-			global-users of the submission service are accepted 
-			recipients in the MX service
-		-->  
-		<resin:import path="${__DIR__}/submission/global-users.xml" />
-	</resin:if>
+	<!--
+		uncomment to run the RFC 4409 message submission PROXY service
+		
+		This service transmits messages to the backend server. 
+		
+		global-users of this submission service are accepted 
+		recipients in the MX service
+
+	-->
+	<!--
+	<system-property submissionServiceActive="true"/>
+	<resin:import path="${__DIR__}/submission-proxy/global-users.xml" />
+	<resin:import path="${__DIR__}/submission-proxy/submission.xml" />
+	-->
+	
+	<!--
+		uncomment to run the RFC 4409 message submission NON-PROXY 
+		service
+
+		This service directly transmits messages to the 
+		mail servers of the recipient on the internet.
+		
+		global-users of this submission service are accepted 
+		recipients in the MX service
+	-->
+	<!--
+	<system-property submissionServiceActive="true"/>
+	<resin:import path="${__DIR__}/submission/global-users.xml" />
+	<resin:import path="${__DIR__}/submission/submission.xml" />
+	-->
 	
 	<!--
 		uncomment to run the MX proxy
@@ -44,9 +71,5 @@
 	<!--
 	<resin:import path="${__DIR__}/mx/mx.xml" />
 	-->
-	
-	<resin:if test="${messageSubmissionActive}">	
-		<resin:import path="${__DIR__}/submission/submission.xml" />
-	</resin:if>
 	
 </web-app>

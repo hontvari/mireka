@@ -2,8 +2,8 @@ package mireka.filter.builtin;
 
 import java.io.IOException;
 
-import mireka.ExampleMails;
-import mireka.filter.MailData;
+import mireka.ExampleMailData;
+import mireka.MailData;
 
 import org.junit.Test;
 import org.subethamail.smtp.RejectException;
@@ -16,7 +16,8 @@ public class StopLoopTest {
             IOException {
         StopLoop stopLoop = new StopLoop();
         stopLoop.setMaxReceivedHeaders(2);
-        MailData bouncedMail = ExampleMails.fromResource(getClass(), "looping.eml");
+        MailData bouncedMail =
+                ExampleMailData.fromResource(getClass(), "looping.eml");
         stopLoop.data(bouncedMail);
     }
 
@@ -25,6 +26,6 @@ public class StopLoopTest {
             RejectException, IOException {
         StopLoop stopLoop = new StopLoop();
         stopLoop.setMaxReceivedHeaders(2);
-        stopLoop.data(ExampleMails.simple());
+        stopLoop.data(ExampleMailData.simple());
     }
 }

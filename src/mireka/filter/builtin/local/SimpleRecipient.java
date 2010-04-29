@@ -1,7 +1,7 @@
 package mireka.filter.builtin.local;
 
-import mireka.mailaddress.Recipient;
-import mireka.mailaddress.RemotePartContainingRecipient;
+import mireka.address.Recipient;
+import mireka.address.RemotePartContainingRecipient;
 
 public class SimpleRecipient implements RecipientSpecification {
     private Recipient recipient;
@@ -14,5 +14,5 @@ public class SimpleRecipient implements RecipientSpecification {
     public SimpleRecipient(Recipient recipient) {
         this.recipient = recipient;
     }
-    
+
 }

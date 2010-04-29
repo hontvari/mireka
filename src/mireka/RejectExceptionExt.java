@@ -4,7 +4,7 @@ import org.subethamail.smtp.RejectException;
 
 public class RejectExceptionExt extends RejectException {
     private static final long serialVersionUID = 1530775593602824560L;
-    
+
     private final SmtpReply reply;
 
     public RejectExceptionExt(SmtpReply smtpReply) {

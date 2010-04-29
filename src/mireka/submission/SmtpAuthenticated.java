@@ -8,7 +8,8 @@ public class SmtpAuthenticated implements MailTransactionSpecification {
 
     @Override
     public boolean isSatisfiedBy(MailTransaction mailTransaction) {
-        AuthenticationHandler authenticationHandler = mailTransaction.getMessageContext().getAuthenticationHandler();
+        AuthenticationHandler authenticationHandler =
+                mailTransaction.getMessageContext().getAuthenticationHandler();
         return authenticationHandler != null;
     }
 }

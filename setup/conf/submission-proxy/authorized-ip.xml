@@ -1,0 +1,13 @@
+<web-app xmlns="http://caucho.com/ns/resin"
+	xmlns:resin="urn:java:com.caucho.resin"
+	xmlns:mireka="urn:java:mireka"
+	xmlns:subetha="urn:java:org.subethamail.smtp.server"
+	xmlns:subethaauth="urn:java:org.subethamail.smtp.auth"
+	>
+
+	<!--
+	<mireka:address>192.0.2.128</mireka:address>
+	<mireka:address>192.0.2.0/28</mireka:address>
+	-->
+
+</web-app>

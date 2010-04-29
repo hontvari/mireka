@@ -2,10 +2,12 @@ package mireka.server;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.subethamail.smtp.io.DeferredFileOutputStream;
 
-import mireka.filter.MailData;
+import mireka.MailData;
+import mireka.util.StreamCopier;
 
 public class DeferredFileMailData implements MailData {
     private final DeferredFileOutputStream deferredFileOutputStream;
@@ -24,7 +26,18 @@ public class DeferredFileMailData implements MailData {
         }
     }
 
-    public void close() throws IOException {
-        deferredFileOutputStream.close();
+    @Override
+    public void writeTo(OutputStream out) throws IOException {
+        StreamCopier.writeMailDataInputStreamIntoOutputStream(this, out);
+    }
+
+    @Override
+    public void dispose() {
+        try {
+            deferredFileOutputStream.close();
+        } catch (IOException e) {
+            throw new RuntimeException(
+                    "Unexpected exception while closing stream", e);
+        }
     }
 }

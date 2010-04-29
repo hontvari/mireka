@@ -2,12 +2,14 @@ package mireka.filter;
 
 import java.io.IOException;
 
-import mireka.mailaddress.Recipient;
+import mireka.MailData;
+import mireka.address.Recipient;
 
 import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.TooMuchDataException;
 
-public abstract class AbstractDataRecipientFilter implements DataRecipientFilter {
+public abstract class AbstractDataRecipientFilter implements
+        DataRecipientFilter {
     protected final MailTransaction mailTransaction;
 
     protected AbstractDataRecipientFilter(MailTransaction mailTransaction) {

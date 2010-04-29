@@ -2,7 +2,8 @@ package mireka.filter;
 
 import java.io.IOException;
 
-import mireka.mailaddress.Recipient;
+import mireka.MailData;
+import mireka.address.Recipient;
 
 import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.TooMuchDataException;

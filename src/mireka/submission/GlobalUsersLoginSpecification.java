@@ -18,8 +18,7 @@ public class GlobalUsersLoginSpecification implements LoginSpecification {
     }
 
     @Override
-    public LoginResult evaluate(String usernameString,
-            String password) {
+    public LoginResult evaluate(String usernameString, String password) {
         Username username = new Username(usernameString);
         String actualPassword = usernamePasswordMap.get(username);
         if (actualPassword == null) {

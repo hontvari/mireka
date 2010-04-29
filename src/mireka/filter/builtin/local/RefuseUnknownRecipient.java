@@ -6,10 +6,10 @@ import java.util.List;
 import org.subethamail.smtp.RejectException;
 
 import mireka.UnknownUserException;
+import mireka.address.Recipient;
+import mireka.address.RemotePartContainingRecipient;
 import mireka.filter.FilterReply;
 import mireka.filter.StatelessFilterType;
-import mireka.mailaddress.Recipient;
-import mireka.mailaddress.RemotePartContainingRecipient;
 
 public class RefuseUnknownRecipient extends StatelessFilterType {
     private List<RecipientSpecification> specifications =

@@ -1,13 +1,14 @@
 package mireka.filter.builtin;
 
+import javax.annotation.concurrent.GuardedBy;
+
 import mireka.UnknownUserException;
+import mireka.address.Recipient;
 import mireka.filter.AbstractFilter;
 import mireka.filter.Filter;
 import mireka.filter.FilterReply;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
-import mireka.mailaddress.Recipient;
-import net.jcip.annotations.GuardedBy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

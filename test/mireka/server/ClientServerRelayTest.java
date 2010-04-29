@@ -3,9 +3,9 @@ package mireka.server;
 import java.io.IOException;
 
 import mireka.ArrayEndsWith;
-import mireka.ExampleMails;
+import mireka.ExampleMailData;
+import mireka.ClientFactory;
 import mireka.filter.builtin.local.AcceptAllRecipient;
-import mireka.filter.builtin.proxy.BackendClient;
 import mireka.filter.builtin.proxy.BackendServer;
 import mireka.filter.builtin.proxy.RelayMailTransaction;
 import mireka.filterchain.Filters;
@@ -35,11 +35,11 @@ public class ClientServerRelayTest {
         Filters filters = new Filters();
         filters.addFilter(new AcceptAllRecipient());
 
-        BackendClient client = new BackendClient();
+        ClientFactory client = new ClientFactory();
         BackendServer backendServer = new BackendServer();
         backendServer.setHost("localhost");
         backendServer.setPort(8026);
-        backendServer.setClient(client);
+        backendServer.setClientFactory(client);
         RelayMailTransaction relayFilter = new RelayMailTransaction();
         relayFilter.setBackendServer(backendServer);
         filters.addFilter(relayFilter);
@@ -66,7 +66,7 @@ public class ClientServerRelayTest {
         client.from("john@example.com");
         client.to("jane@example.com");
         client.dataStart();
-        byte[] exampleMail = ExampleMails.simple().bytes;
+        byte[] exampleMail = ExampleMailData.simple().bytes;
         client.dataWrite(exampleMail, exampleMail.length);
         client.dataEnd();
         client.quit();

@@ -1,41 +1,40 @@
 package mireka.filter.builtin.proxy;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import javax.enterprise.context.ApplicationScoped;
+
+import mireka.ClientFactory;
 
 import org.subethamail.smtp.client.SMTPException;
 import org.subethamail.smtp.client.SmartClient;
 
 @ApplicationScoped
 public class BackendServer {
-    private BackendClient client;
+    private ClientFactory clientFactory;
     private String host;
     private int port = 25;
 
     public SmartClient connect() throws UnknownHostException, SMTPException,
             IOException {
-        SocketAddress bindpoint =
-                client.getBind() == null ? null : new InetSocketAddress(client
-                        .getBind(), 0);
-        return new SmartClient(host, port, bindpoint, client.getHelo());
+        InetAddress inetAddress = InetAddress.getByName(host);
+        return clientFactory.create(inetAddress, port);
     }
 
     /**
      * @category GETSET
      */
-    public BackendClient getClient() {
-        return client;
+    public ClientFactory getClientFactory() {
+        return clientFactory;
     }
 
     /**
      * @category GETSET
      */
-    public void setClient(BackendClient client) {
-        this.client = client;
+    public void setClientFactory(ClientFactory clientFactory) {
+        this.clientFactory = clientFactory;
     }
 
     /**

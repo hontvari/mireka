@@ -8,9 +8,9 @@ import java.io.OutputStream;
 
 import javax.enterprise.context.Dependent;
 
-import mireka.filter.MailData;
+import mireka.MailData;
+import mireka.address.Recipient;
 import mireka.filter.StatelessFilterType;
-import mireka.mailaddress.Recipient;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

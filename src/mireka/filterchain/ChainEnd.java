@@ -5,12 +5,12 @@ import java.io.IOException;
 import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.TooMuchDataException;
 
+import mireka.MailData;
 import mireka.UnknownUserException;
+import mireka.address.Recipient;
 import mireka.filter.FilterChain;
 import mireka.filter.FilterReply;
-import mireka.filter.MailData;
 import mireka.filter.MailTransaction;
-import mireka.mailaddress.Recipient;
 
 class ChainEnd implements FilterChain {
     private final MailTransaction mailTransaction;

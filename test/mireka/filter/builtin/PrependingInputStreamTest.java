@@ -41,7 +41,7 @@ public class PrependingInputStreamTest {
                 new PrependingInputStream(header, bodyStream);
         byte[] buffer = new byte[100];
         int cRead = stream.read(buffer);
-        
+
         assertTrue(cRead != -1);
         byte[] actual = Arrays.copyOf(buffer, cRead);
         assertArrayEquals(expected, actual);

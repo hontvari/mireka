@@ -1,11 +1,11 @@
 package mireka.filter.builtin.spf;
 
+import mireka.address.Recipient;
 import mireka.filter.AbstractFilter;
 import mireka.filter.Filter;
 import mireka.filter.FilterReply;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
-import mireka.mailaddress.Recipient;
 
 import org.apache.james.jspf.core.exceptions.SPFErrorConstants;
 import org.apache.james.jspf.executor.SPFResult;
@@ -51,16 +51,17 @@ public class RejectOnFailedSpfCheck implements FilterType {
                 String statusText;
                 if (spfResult.getExplanation().isEmpty())
                     statusText = "Blocked by SPF";
-                else 
+                else
                     statusText = "Blocked - see: " + spfResult.getExplanation();
                 throw new RejectException(550, statusText);
             } else if (spfResult.equals(SPFErrorConstants.TEMP_ERROR_CONV)) {
                 throw new RejectException(451,
                         "Temporarily rejected: Problem on SPF lookup");
-            } else if (rejectOnPermanentError && spfResultCode.equals(SPFErrorConstants.PERM_ERROR_CONV)) {
+            } else if (rejectOnPermanentError
+                    && spfResultCode.equals(SPFErrorConstants.PERM_ERROR_CONV)) {
                 throw new RejectException(550, "Blocked - invalid SPF record");
             }
-            
+
             return chain.verifyRecipient(recipient);
         }
     }

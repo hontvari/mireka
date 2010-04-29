@@ -2,6 +2,7 @@
 	xmlns:resin="urn:java:com.caucho.resin"
 	xmlns:mireka="urn:java:mireka"
 	xmlns:subetha="urn:java:org.subethamail.smtp.server"
+	xmlns:ee="urn:java:ee"
 	>
 	
 	<mireka:InlineDomainRegistry>
@@ -19,7 +20,7 @@
 			</mireka:InlineRecipientRegistry>
 		</mireka:specification>
 	
-		<resin:if test="${messageSubmissionActive}">	
+		<resin:if test="${submissionServiceActive}">	
 		<mireka:specification>
 			<mireka:GlobalUsersRecipientSpecification>
 				<mireka:users>#{globalUsers}</mireka:users>
@@ -119,6 +120,7 @@
 	
 	<mireka:SMTPService>
 		<Named>mx</Named>
+		<ee:Startup/>
 		<mireka:smtpServer>#{mxServer}</mireka:smtpServer>
 		<!-- <mireka:bindAddress>192.0.2.0</mireka:bindAddress> -->
 	</mireka:SMTPService>

@@ -3,9 +3,9 @@ package mireka.submission;
 import java.util.HashSet;
 import java.util.Set;
 
+import mireka.address.LocalPart;
+import mireka.address.RemotePartContainingRecipient;
 import mireka.filter.builtin.local.RecipientSpecification;
-import mireka.mailaddress.LocalPart;
-import mireka.mailaddress.RemotePartContainingRecipient;
 
 public class GlobalUsersRecipientSpecification implements
         RecipientSpecification {
@@ -15,7 +15,7 @@ public class GlobalUsersRecipientSpecification implements
     public void setUsers(GlobalUsers users) {
         if (!usernamesAsLocalParts.isEmpty())
             throw new IllegalStateException();
-        
+
         for (GlobalUser user : users) {
             usernamesAsLocalParts.add(new LocalPart(user.getUsername()
                     .toString()));

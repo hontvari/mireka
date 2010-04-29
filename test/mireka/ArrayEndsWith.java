@@ -21,8 +21,9 @@ public class ArrayEndsWith extends ArgumentMatcher<byte[]> {
             return false;
         if (argumentArray.length < expectedEnd.length)
             return false;
-        byte[] actualEnd = Arrays.copyOfRange(argumentArray, argumentArray.length
-                - expectedEnd.length, argumentArray.length);
+        byte[] actualEnd =
+                Arrays.copyOfRange(argumentArray, argumentArray.length
+                        - expectedEnd.length, argumentArray.length);
         return Arrays.equals(expectedEnd, actualEnd);
     }
 }

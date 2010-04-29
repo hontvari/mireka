@@ -3,11 +3,11 @@ package mireka.filter.builtin.local;
 import java.util.ArrayList;
 import java.util.List;
 
+import mireka.address.Recipient;
+import mireka.address.RemotePart;
+import mireka.address.RemotePartContainingRecipient;
 import mireka.filter.FilterReply;
 import mireka.filter.StatelessFilterType;
-import mireka.mailaddress.Recipient;
-import mireka.mailaddress.RemotePart;
-import mireka.mailaddress.RemotePartContainingRecipient;
 
 import org.subethamail.smtp.RejectException;
 

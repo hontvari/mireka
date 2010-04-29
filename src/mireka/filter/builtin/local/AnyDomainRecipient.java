@@ -1,7 +1,7 @@
 package mireka.filter.builtin.local;
 
-import mireka.mailaddress.LocalPart;
-import mireka.mailaddress.RemotePartContainingRecipient;
+import mireka.address.LocalPart;
+import mireka.address.RemotePartContainingRecipient;
 
 public class AnyDomainRecipient implements RecipientSpecification {
     private LocalPart localPart;

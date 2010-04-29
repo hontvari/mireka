@@ -2,13 +2,13 @@ package mireka.filter.builtin.proxy;
 
 import java.io.IOException;
 
+import mireka.MailData;
+import mireka.address.Recipient;
 import mireka.filter.AbstractDataRecipientFilter;
 import mireka.filter.DataRecipientFilterAdapter;
 import mireka.filter.Filter;
 import mireka.filter.FilterType;
-import mireka.filter.MailData;
 import mireka.filter.MailTransaction;
-import mireka.mailaddress.Recipient;
 
 import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.TooMuchDataException;
