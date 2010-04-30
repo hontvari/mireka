@@ -222,6 +222,7 @@ public class DsnMailCreator {
                 }
             }
             headers.add("Last-Attempt-Date", failure.failureDate);
+            headers.add("Final-Log-ID", failure.logId);
             return headers.toString();
         }
 
