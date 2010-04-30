@@ -3,7 +3,10 @@ package mireka.address;
 import javax.mail.internet.ParseException;
 
 /**
- * Corresponds to the Mailbox production in RFC 5321.
+ * Corresponds to the Mailbox production in RFC 5321.<br>
+ * Note: RFC 5322 Internet Message Format also contains a mailbox production,
+ * but with different content. The addr-spec production of that RFC is the
+ * production which corresponds to this class.
  * 
  * This is a draft implementation. Apache Mailet has a seemingly complete
  * address implementation in the MailAddress class.

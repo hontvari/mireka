@@ -4,18 +4,16 @@
 	xmlns:subetha="urn:java:org.subethamail.smtp.server"
 	xmlns:subethaauth="urn:java:org.subethamail.smtp.auth"
 	xmlns:concurrent="urn:java:java.util.concurrent"
-	xmlns:address="urn:java:org.apache.james.mime4j.field.address"
 	xmlns:ee="urn:java:ee"
 	>
 				
-	<address:Mailbox>
+	<mireka:NameAddr>
 		<Named>mailerdaemon</Named>
 		<new>
 			<value>Mail Delivery Subsystem</value>
-			<value>mailer-daemon</value>
-			<value>example.com</value>
+			<value>mailer-daemon@example.com</value>
 		</new>
-	</address:Mailbox>
+	</mireka:NameAddr>
 	
 	<mireka:ScheduleFileDirQueue>
 		<Named>submittedMailQueue</Named>

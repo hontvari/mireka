@@ -24,7 +24,6 @@ import mireka.transmission.Mail;
 import mireka.transmission.immediate.RemoteMta;
 import mireka.transmission.immediate.Rfc821Status;
 
-import org.apache.james.mime4j.field.address.Mailbox;
 import org.apache.james.mime4j.message.Message;
 import org.junit.Test;
 import org.subethamail.smtp.client.SMTPClient.Response;
@@ -49,9 +48,9 @@ public class DsnMailCreatorTest {
     }
 
     static DsnMailCreator createDsnMailCreator() {
-        Mailbox from =
-                new Mailbox("Mail Delivery Subsystem", "mailer-daemon",
-                        "example.com");
+        NameAddr from =
+                new NameAddr("Mail Delivery Subsystem",
+                        "mailer-daemon@example.com");
         return new DsnMailCreator(IP2.getHostName(), from);
     }
 

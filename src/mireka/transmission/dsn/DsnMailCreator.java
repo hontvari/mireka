@@ -44,9 +44,9 @@ public class DsnMailCreator {
      * MTA. It appears in the report.
      */
     private final String reportingMtaName;
-    private final Mailbox fromAddress;
+    private final NameAddr fromAddress;
 
-    public DsnMailCreator(String reportingMtaName, Mailbox fromAddress) {
+    public DsnMailCreator(String reportingMtaName, NameAddr fromAddress) {
         this.reportingMtaName = reportingMtaName;
         this.fromAddress = fromAddress;
     }
@@ -107,7 +107,7 @@ public class DsnMailCreator {
 
             message.createMessageId(reportingMtaName);
             message.setSubject("Delivery Status Notification");
-            message.setFrom(fromAddress);
+            message.setFrom(fromAddress.toMime4jMailbox());
             message.setTo(Mailbox.parse(originalMail.from));
 
             Multipart report = multipartReport();
@@ -332,6 +332,7 @@ public class DsnMailCreator {
             add(name, value);
         }
 
+        @Override
         public String toString() {
             return buffer.toString();
         }
