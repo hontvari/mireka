@@ -10,7 +10,7 @@
 	<resin:import path="${__DIR__}/queues.xml" />
 	
 	<resource name="submissionTrafficSummary" 
-			mbean-name="mireka:type=TrafficSummary,name=Submission"
+			mbean-name="mireka:type=SubmissionTraffic,name=Submission"
 			type="mireka.filter.builtin.TrafficSummary" />
 			
 	<mireka:Filters>

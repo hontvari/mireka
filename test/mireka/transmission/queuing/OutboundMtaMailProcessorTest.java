@@ -9,6 +9,7 @@ import mireka.transmission.immediate.ImmediateSender;
 import mireka.transmission.immediate.ImmediateSenderFactory;
 import mireka.transmission.immediate.RecipientsWereRejectedException;
 import mireka.transmission.immediate.SendException;
+import mireka.transmission.queue.TransmitterSummary;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +25,8 @@ public class OutboundMtaMailProcessorTest {
     @Mock
     private ImmediateSender immediateSender;
 
+    private TransmitterSummary transmitterSummary = new TransmitterSummary();
+
     private Mail mail = ExampleMail.simple();
 
     OutboundMtaMailProcessor processor;
@@ -33,7 +36,7 @@ public class OutboundMtaMailProcessorTest {
         when(immediateSenderFactory.create()).thenReturn(immediateSender);
         processor =
                 new OutboundMtaMailProcessor(immediateSenderFactory, null,
-                        null, mail);
+                        null, transmitterSummary, mail);
     }
 
     @Test

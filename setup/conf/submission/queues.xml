@@ -108,6 +108,10 @@
 		</mireka:retryTransmitter>
 	</mireka:RetryPolicy>
 	
+	<resource name="submissionTransmitterSummary"
+			type="mireka.transmission.queue.TransmitterSummary"
+			mbean-name="mireka:type=TransmitterTraffic,name=submission" />
+
 	<mireka:QueuingTransmitter>
 		<Named>primaryTransmitter</Named>
 		<mireka:queue>
@@ -122,8 +126,13 @@
 		<mireka:logIdFactory>
 			#{logIdFactory}
 		</mireka:logIdFactory>
+		<mireka:summary>#{submissionTransmitterSummary}</mireka:summary>
 	</mireka:QueuingTransmitter>
 	
+	<resource name="dsnTransmitterSummary"
+			type="mireka.transmission.queue.TransmitterSummary"
+			mbean-name="mireka:type=TransmitterTraffic,name=dsn" />
+
 	<mireka:QueuingTransmitter>
 		<Named>dsnTransmitter</Named>
 		<mireka:queue>
@@ -138,8 +147,13 @@
 		<mireka:logIdFactory>
 			#{logIdFactory}
 		</mireka:logIdFactory>
+		<mireka:summary>#{dsnTransmitterSummary}</mireka:summary>
 	</mireka:QueuingTransmitter>
 	
+	<resource name="retryTransmitterSummary"
+			type="mireka.transmission.queue.TransmitterSummary"
+			mbean-name="mireka:type=TransmitterTraffic,name=retry" />
+
 	<mireka:QueuingTransmitter>
 		<Named>retryTransmitter</Named>
 		<mireka:queue>
@@ -154,6 +168,7 @@
 		<mireka:logIdFactory>
 			#{logIdFactory}
 		</mireka:logIdFactory>
+		<mireka:summary>#{retryTransmitterSummary}</mireka:summary>
 	</mireka:QueuingTransmitter>
 	
 </web-app>

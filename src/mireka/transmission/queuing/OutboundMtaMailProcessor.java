@@ -7,6 +7,7 @@ import mireka.transmission.immediate.ImmediateSenderFactory;
 import mireka.transmission.immediate.RecipientsWereRejectedException;
 import mireka.transmission.immediate.SendException;
 import mireka.transmission.queue.MailProcessor;
+import mireka.transmission.queue.TransmitterSummary;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,14 +19,17 @@ class OutboundMtaMailProcessor implements MailProcessor {
     private final RetryPolicy retryPolicy;
     private final LogIdFactory logIdFactory;
     private final Mail mail;
+    private final TransmitterSummary summary;
 
     public OutboundMtaMailProcessor(
             ImmediateSenderFactory immediateSenderFactory,
-            RetryPolicy retryPolicy, LogIdFactory logIdFactory, Mail mail) {
+            RetryPolicy retryPolicy, LogIdFactory logIdFactory, TransmitterSummary summary,
+            Mail mail) {
         this.immediateSenderFactory = immediateSenderFactory;
         this.mail = mail;
         this.retryPolicy = retryPolicy;
         this.logIdFactory = logIdFactory;
+        this.summary = summary;
     }
 
     @Override
@@ -35,6 +39,8 @@ class OutboundMtaMailProcessor implements MailProcessor {
         } catch (Throwable e) {
             logger.error("Abandoning " + mail + " after unexpected exception. "
                     + "You may have to correct mail stores manually.", e);
+            summary.lastError = e;
+            summary.errors.incrementAndGet();
         }
 
     }
@@ -43,8 +49,12 @@ class OutboundMtaMailProcessor implements MailProcessor {
         ImmediateSender sender = immediateSenderFactory.create();
         try {
             logger.debug("Sending mail " + mail + "...");
+            summary.mailTransactions.incrementAndGet();
+
             sender.send(mail);
+
             logger.debug("Sent successfully");
+            summary.successfulMailTransactions.incrementAndGet();
         } catch (SendException e) {
             handleSendException(e);
         } catch (RecipientsWereRejectedException e) {
@@ -56,8 +66,13 @@ class OutboundMtaMailProcessor implements MailProcessor {
             throws LocalMailSystemException {
         String logId = logIdFactory.next();
         e.initLogId(logId);
+
         logger.debug("Send failed. Log-ID=" + logId
                 + ". Executing retry policy...", e);
+        summary.failures.incrementAndGet();
+        summary.lastFailure = e.toString();
+        increaseTransientOrPermanentFailureCount(e);
+
         retryPolicy.actOnEntireMailFailure(mail, e);
     }
 
@@ -66,14 +81,27 @@ class OutboundMtaMailProcessor implements MailProcessor {
         if (mail.recipients.size() == 1) {
             logger.debug("The single recipient was rejected. "
                     + "Executing retry policy...");
+            summary.failures.incrementAndGet();
         } else if (mail.recipients.size() == e.rejections.size()) {
             logger.debug("All " + mail.recipients.size()
                     + " recipients were rejected. "
                     + "Executing retry policy...");
+            summary.failures.incrementAndGet();
         } else {
             logger.debug("Some, but not all recipients were rejected. "
                     + "Executing retry policy...");
+            summary.partialFailures.incrementAndGet();
         }
+        increaseTransientOrPermanentFailureCount(e.rejections.get(0).sendException);
+        summary.lastFailure = e.toString();
+
         retryPolicy.actOnRecipientsWereRejected(mail, e);
+    }
+
+    private void increaseTransientOrPermanentFailureCount(SendException e) {
+        if (e.errorStatus().shouldRetry())
+            summary.transientFailures.incrementAndGet();
+        else
+            summary.permanentFailures.incrementAndGet();
     }
 }

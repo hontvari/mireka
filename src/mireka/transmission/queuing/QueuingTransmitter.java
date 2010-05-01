@@ -15,12 +15,14 @@ import mireka.transmission.queue.MailProcessor;
 import mireka.transmission.queue.MailProcessorFactory;
 import mireka.transmission.queue.QueueStorageException;
 import mireka.transmission.queue.ScheduleFileDirQueue;
+import mireka.transmission.queue.TransmitterSummary;
 
 public class QueuingTransmitter implements Transmitter, MailProcessorFactory {
     private ScheduleFileDirQueue queue;
     private ImmediateSenderFactory immediateSenderFactory;
     private RetryPolicy retryPolicy;
     private LogIdFactory logIdFactory;
+    private TransmitterSummary summary;
 
     public void transmit(Mail mail) throws QueueStorageException {
         queueByRemotePart(mail);
@@ -56,7 +58,7 @@ public class QueuingTransmitter implements Transmitter, MailProcessorFactory {
     @Override
     public MailProcessor create(Mail mail) {
         return new OutboundMtaMailProcessor(immediateSenderFactory,
-                retryPolicy, logIdFactory, mail);
+                retryPolicy, logIdFactory, summary, mail);
     }
 
     /**
@@ -92,5 +94,12 @@ public class QueuingTransmitter implements Transmitter, MailProcessorFactory {
      */
     public void setLogIdFactory(LogIdFactory logIdFactory) {
         this.logIdFactory = logIdFactory;
+    }
+
+    /**
+     * @category GETSET
+     */
+    public void setSummary(TransmitterSummary summary) {
+        this.summary = summary;
     }
 }
