@@ -10,7 +10,7 @@ public class TransmitterSummary implements TransmitterSummaryMBean {
     public final AtomicInteger permanentFailures = new AtomicInteger();
     public final AtomicInteger transientFailures = new AtomicInteger();
     public final AtomicInteger partialFailures = new AtomicInteger();
-    public volatile String lastFailure;
+    public volatile Throwable lastFailure;
     public final AtomicInteger errors = new AtomicInteger();
     public volatile Throwable lastError;
 
@@ -71,7 +71,7 @@ public class TransmitterSummary implements TransmitterSummaryMBean {
     }
 
     @Override
-    public String getLastFailure() {
+    public Throwable getLastFailure() {
         return lastFailure;
     }
 

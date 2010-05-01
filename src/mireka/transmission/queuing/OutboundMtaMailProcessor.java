@@ -70,7 +70,7 @@ class OutboundMtaMailProcessor implements MailProcessor {
         logger.debug("Send failed. Log-ID=" + logId
                 + ". Executing retry policy...", e);
         summary.failures.incrementAndGet();
-        summary.lastFailure = e.toString();
+        summary.lastFailure = e;
         increaseTransientOrPermanentFailureCount(e);
 
         retryPolicy.actOnEntireMailFailure(mail, e);
@@ -93,7 +93,7 @@ class OutboundMtaMailProcessor implements MailProcessor {
             summary.partialFailures.incrementAndGet();
         }
         increaseTransientOrPermanentFailureCount(e.rejections.get(0).sendException);
-        summary.lastFailure = e.toString();
+        summary.lastFailure = e;
 
         retryPolicy.actOnRecipientsWereRejected(mail, e);
     }
