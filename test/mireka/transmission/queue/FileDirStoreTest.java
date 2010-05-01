@@ -81,4 +81,28 @@ public class FileDirStoreTest extends TempDirectory {
         assertEquals(2, errorDir.list().length);
     }
 
+    @Test(expected = QueueStorageException.class)
+    public void testFull() throws Exception {
+        FileDirStore store = new FileDirStore(directory, 1);
+
+        Mail mail = ExampleMail.simple();
+        store.save(mail);
+        store.save(mail);
+    }
+
+    /**
+     * This test checks a previous bug.
+     */
+    @Test
+    public void testSizeMaintained() throws Exception {
+        FileDirStore store = new FileDirStore(directory, 1);
+        Mail mail = ExampleMail.simple();
+
+        MailName lastName = store.save(mail);
+        store.delete(lastName);
+
+        // this must not throw an exception, because the first mail was deleted,
+        // so there is still place for a new mail
+        store.save(mail);
+    }
 }

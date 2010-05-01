@@ -225,6 +225,7 @@ public class FileDirStore {
 
             envelopeFile.delete();
             mailDataFile.delete();
+            size.decrementAndGet();
         } catch (IOException e) {
             throw new QueueStorageException(e, EnhancedStatus.MAIL_SYSTEM_FULL);
         }
@@ -242,6 +243,7 @@ public class FileDirStore {
             if (!fSuccess)
                 throw new IOException("Cannot delete mail data file "
                         + mailDataFile);
+            size.decrementAndGet();
         } catch (IOException e) {
             throw new QueueStorageException(e,
                     EnhancedStatus.TRANSIENT_LOCAL_ERROR_IN_PROCESSING);
