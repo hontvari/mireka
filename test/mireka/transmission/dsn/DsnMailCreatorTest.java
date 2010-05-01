@@ -69,6 +69,7 @@ public class DsnMailCreatorTest {
                         "Requested action not taken: mailbox unavailable"));
         f.remoteMta = new RemoteMta(IP3.getHostName());
         f.failureDate = new Date();
+        f.logId = "NO_1_ENTRY";
         return Collections.singletonList(f);
     }
 
