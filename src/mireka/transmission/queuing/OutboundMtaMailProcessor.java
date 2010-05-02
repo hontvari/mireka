@@ -39,7 +39,7 @@ class OutboundMtaMailProcessor implements MailProcessor {
         } catch (Throwable e) {
             logger.error("Abandoning " + mail + " after unexpected exception. "
                     + "You may have to correct mail stores manually.", e);
-            summary.lastError = e;
+            summary.lastError = e.toString();
             summary.errors.incrementAndGet();
         }
 
@@ -70,7 +70,7 @@ class OutboundMtaMailProcessor implements MailProcessor {
         logger.debug("Send failed. Log-ID=" + logId
                 + ". Executing retry policy...", e);
         summary.failures.incrementAndGet();
-        summary.lastFailure = e;
+        summary.lastFailure = e.toString();
         increaseTransientOrPermanentFailureCount(e);
 
         retryPolicy.actOnEntireMailFailure(mail, e);
@@ -93,7 +93,7 @@ class OutboundMtaMailProcessor implements MailProcessor {
             summary.partialFailures.incrementAndGet();
         }
         increaseTransientOrPermanentFailureCount(e.rejections.get(0).sendException);
-        summary.lastFailure = e;
+        summary.lastFailure = e.toString();
 
         retryPolicy.actOnRecipientsWereRejected(mail, e);
     }

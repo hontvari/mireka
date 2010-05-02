@@ -19,9 +19,9 @@ public interface TransmitterSummaryMBean {
 
     double getTransientFailuresPercentage();
 
-    Throwable getLastFailure();
+    String getLastFailure();
 
     int getErrors();
 
-    Throwable getLastError();
+    String getLastError();
 }

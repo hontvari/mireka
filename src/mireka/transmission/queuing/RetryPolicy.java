@@ -32,10 +32,13 @@ public class RetryPolicy {
     private Transmitter dsnTransmitter;
     private Transmitter retryTransmitter;
 
-    //TODO
+    /**
+     * this constructor can be used with setter injection
+     */
     public RetryPolicy() {
-        
+        // nothing to do
     }
+
     public RetryPolicy(DsnMailCreator dsnMailCreator,
             Transmitter dsnTransmitter, Transmitter retryTransmitter) {
         this.dsnMailCreator = dsnMailCreator;
