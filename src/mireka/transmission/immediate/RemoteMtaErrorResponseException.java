@@ -37,9 +37,4 @@ public class RemoteMtaErrorResponseException extends SendException {
     public MailSystemStatus remoteMtaStatus() {
         return remoteMtaStatus;
     }
-
-    @Override
-    public String toString() {
-        return super.toString() + " " + remoteMtaStatus;
-    }
 }
