@@ -11,4 +11,10 @@ public class RecipientRejection {
         this.recipient = recipient;
         this.sendException = sendException;
     }
+
+    @Override
+    public String toString() {
+        return "RecipientRejection [" + recipient + ", " + sendException + "]";
+    }
+
 }
