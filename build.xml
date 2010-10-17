@@ -55,6 +55,10 @@
                 </fileset>
         </path>
 
+        <taskdef classname="net.bluecow.googlecode.ant.GoogleCodeUploadTask"
+                 classpath="lib/build-only/ant-googlecode-0.0.2.jar"
+                 name="gcupload" />
+
         <target name="init">
                 <!--		
 <svn><info path="${basedir}" revisionProperty="revisionVersion" /></svn>
@@ -70,7 +74,8 @@
                 <javac srcdir="${src.dir}"
                        destdir="${build.classes.dir}"
                        debug="${build.debug}"
-                       deprecation="${build.deprecation}">
+                       deprecation="${build.deprecation}"
+                       includeantruntime="false">
                         <classpath refid="compile.classpath" />
                 </javac>
 
@@ -111,7 +116,8 @@
                        debug="on"
                        destdir="${build.dir}/test"
                        source="1.6"
-                       target="1.6">
+                       target="1.6"
+                       includeantruntime="false">
                         <classpath path="${build.dir}/classes" />
                         <classpath refid="compile.classpath" />
                 </javac>
@@ -250,6 +256,29 @@
                         </zipfileset>
                 </zip>
         </target>
+
+        <!-- ================================= 
+          target: release              
+         ================================= -->
+        <target name="release"
+                depends="clean, dist, test"
+                description="Uploads release archives to Google Code">
+                <gcupload username="${gc.username}"
+                          password="${gc.password}"
+                          projectname="mireka"
+                          filename="${build.dir}/${dist.name}-src.zip"
+                          targetfilename="${dist.name}-src.zip"
+                          summary="Mireka ${build.version} Source"
+                          labels="Type-Source" />
+                <gcupload username="${gc.username}"
+                          password="${gc.password}"
+                          projectname="mireka"
+                          filename="${build.dir}/${dist.name}.zip"
+                          targetfilename="${dist.name}.zip"
+                          summary="Mireka ${build.version}"
+                          labels="Featured, Type-Archive, OpSys-All" />
+        </target>
+
 
         <target name="clean" description="Cleans all previous build artifacts">
                 <delete dir="${build.dir}" />
