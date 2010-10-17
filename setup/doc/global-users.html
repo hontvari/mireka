@@ -1,0 +1,41 @@
+<html>
+<head>
+<title>Global Users Configuration File</title>
+<style>
+table          { border-collapse: collapse;
+                 border: 1px solid; 
+		 margin-left: 2em;
+		 margin-right: 2em
+	       }	
+td             { border: 1px solid; padding: 1em; }
+th             { border: 1px solid; padding: 1em; }
+</style>
+</head>
+
+<body>
+<h1>Global Users Configuration File (<kbd>global-users.xml</kbd>)</h1>
+		
+<p>
+<kbd>global-users.xml</kbd> contains the list of users who are authorized to 
+use the submission service. It contains username, password pairs. 
+Message User Agents
+must authenticate in the SMTP session using these accounts before submitting a 
+message.
+</p>
+<p>
+Note: If the MX service is 
+enabled, then the users listed here become valid wildcard recipients in the MX 
+service too. Because the list contains the local-part of addresses only, they 
+will be accepted with any local domain on their right side. For example, the 
+list contains the user <kbd>john</kbd>, and <kbd>example.com</kbd> and 
+<kbd>example.org</kbd> are both local domains. In this case the MX service 
+accepts both <kbd>john@example.com</kbd> and <kbd>john@example.org</kbd>.
+</p>
+<p>This file is part of the Submission service configuration, but it is imported
+by <kbd>mireka.xml</kbd>, so both MX and Submission service can use it.
+It is either in the <kbd>submission</kbd> or 
+in the <kbd>submission-proxy</kbd> configuration directory.
+</p>
+
+</body>
+</html>

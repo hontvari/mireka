@@ -13,7 +13,7 @@
 	<listener listener-class="mireka.server.LogFlushingServletContextListener" />
 	-->
 
-	<system-property helo="mx1.example.com"/>
+	<system-property helo="mail.example.com"/>
 
 	<mireka:ClientFactory>
 		<Named>clientFactory</Named>

@@ -59,15 +59,15 @@ to divide the configuration into more files than what is supplied by default.
 </p>
 
 <table>
-<tr><th>mireka.xml</th><td>Enables/disables MX and 
-Submission services. It contains a few elements used by both services:
+<tr><th>mireka.xml</th><td>Enables/disables MX proxy, submission proxy and 
+submission services. It contains a few common elements used by more than one 
+services:
 <ul>
+<li>the default client factory. Specifies the properties of outgoing SMTP 
+connections.</li>  
 <li>the backend server. It specifies the server, to where mails are relayed for 
-delivery or submission. It is used by the relay filter. By default both sevices 
-use the same backend server, however this is not required. 
-<li>the list of users of the Submission service. Although this list is primarily 
-used in the Submision service, the users also appear as valid recipients in the 
-MX service.
+delivery or submission. It is used by the relay filter. By default both proxy 
+sevices use the same backend server, however this is not required.</li> 
 </ul>
 </td></tr>
 <tr><th><a href="mx.html">mx</a></th><td>Configuration files related to the MX 
@@ -75,9 +75,19 @@ service, which receives mails sent to the local domains by any server on the
 internet. The service, in turn, relays all received mails to the backend server.
 </td></tr>
 <tr><th><a href="submission.html">submission</a></th><td>Configuration files 
-related to the Submission service, used by local users to send mails to either 
-other local users, or to other domains on the internet. The service, in turn, 
-relays all submitted mails to the backend server.
+related to the Submission service, used by local users to send mails either to 
+other local users, or to other domains on the internet. The service directly 
+talks to the SMTP server of the recipient domain. The responsible SMTP server
+is determined by querying the the MX DNS records of the domain.
+If it cannot transmit a mail on the first attempt, then it retries the
+transmission several times. If it eventually decides that the mail is 
+undeliverable, then it sends a delivery status notification message back to the 
+sender.   
+</td></tr>
+<tr><th><a href="submission-proxy.html">submission-proxy</a></th><td>Configuration 
+files related to the Submission Proxy service, used by local users to send mails 
+either to other local users, or to other domains on the internet. The service, 
+in turn, relays all submitted mails to the backend server.
 </td></tr>
 </table>
 

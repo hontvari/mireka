@@ -93,7 +93,7 @@
 			#{authenticationHandlerFactory}
 		</subetha:authenticationHandlerFactory>
 		<subetha:port>587</subetha:port>
-		<subetha:hostName>message-submission.example.com</subetha:hostName>
+		<subetha:hostName>${helo}</subetha:hostName>
 		<subetha:hideTLS>true</subetha:hideTLS>
 	</subetha:SMTPServer>
 	

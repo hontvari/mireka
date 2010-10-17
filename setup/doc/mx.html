@@ -55,15 +55,10 @@ here then it will be accepted (assuming other conditions are also met).
 <cite>"any recipient which includes <kbd>bounce</kbd> in its local part, and of which 
 remote part is <kbd>lists.example.com</kbd>"</cite>.
 <p>This file is imported by <kbd>mx.xml</kbd>.</p></td></tr>
-<tr><th>*submission/global-users.xml</th><td>If the submission service is 
-enabled, then the users listed here become valid wildcard recipients in the MX 
-service too. The list contains the local-part of addresses only, and they 
-will be accepted with any local domain on their right side. For example, the 
-list contains the user <kbd>john</kbd>, and <kbd>example.com</kbd> and 
-<kbd>example.org</kbd> are both local domains. In this case the MX service 
-accepts both <kbd>john@example.com</kbd> and <kbd>john@example.org</kbd>.
-<p>This file is part of the Submission service configuration, but it is imported
-by <kbd>mireka.xml</kbd>, so both MX and Submission service can use it.
+<tr><th>*<a href="global-users.html">submission[-proxy]/global-users.xml</a></th>
+<td>If a submission service is enabled, then the users listed here become valid 
+wildcard recipients in the MX service too. 
+Note: this file is in the directory of the submission service.
 </p></td></tr>
 </table> 
 

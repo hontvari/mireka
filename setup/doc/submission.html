@@ -18,13 +18,22 @@ th             { border: 1px solid; padding: 1em; }
 <p>
 The Submission service is used by local users to send mails to either 
 other local users, or to other domains on the internet. The service, in turn, 
-relays all submitted mails to the backend server. This service is specified by 
+transmits mails to the public SMTP server of the recipient domain. 
+This service is specified by 
 <a href="http://tools.ietf.org/html/rfc4409">RFC 4409, Message Submission for Mail</a>.
-The combination of the Submission service of Mireka and the backend SMTP server 
-constitute a <def>Message Submission Agent (MSA)</def>.
+If this service is enabled, then Mireka becomes a standalone 
+<def>Message Submission Agent (MSA)</def>.
+</p>
+<p>
+If it cannot transmit a mail on the first attempt, then it retries the
+transmission several times. If it eventually decides that the mail is 
+undeliverable, then it sends a delivery status notification message back to the 
+sender.
+</p>
+<p>
 A dedicated MSA is useful for people, who are working outside of the office, 
 and whose internet service provider blocks port 25.
-The service usually runs on port 587. Its address is NOT published as a DNS MX 
+The service usually runs on port 587. Its address is NOT published in a DNS MX 
 record.
 </p>
 
@@ -50,22 +59,33 @@ processing of submitted mail transactions.
 Mails can be submitted from these ip addresses without further authentication of 
 the sender.
 <p>This file is imported by <kbd>submission.xml</kbd>.</p></td></tr>
-<tr><th>global-users.xml</th><td>list of users who are authorized to use this
-Submission service. It contains username, password pairs. Message User Agents
-must authenticate in the SMTP session using these accounts before submitting a 
-message.
-<p>
-Note: If the MX service is 
-enabled, then the users listed here become valid wildcard recipients in the MX 
-service too. Because the list contains the local-part of addresses only, they 
-will be accepted with any local domain on their right side. For example, the 
-list contains the user <kbd>john</kbd>, and <kbd>example.com</kbd> and 
-<kbd>example.org</kbd> are both local domains. In this case the MX service 
-accepts both <kbd>john@example.com</kbd> and <kbd>john@example.org</kbd>.
-</p>
-<p>This file is part of the Submission service configuration, but it is imported
-by <kbd>mireka.xml</kbd>, so both MX and Submission service can use it.
-</p></td></tr>
+<tr><th><a href="global-users.html">global-users.xml</a></th><td>list of users 
+who are authorized to use this submission service.</td></tr>
+<tr><th>queues.xml</th><td>The submission service uses file system based 
+queues to make sure no mails are lost. Until a mail is confirmed to be received
+by the recipient domain the mail stays in a queue. The queues are managed by 
+transmitters.
+In the default configuration there are three transmitters and there are
+three correspongind queues.
+<ul>
+<li>primaryTransmitter: all mails go into the queue of this transmitter. 
+This transmitter is responsible for the first delivery attempt.
+<li>dsnTransmitter: if it becomes clear that a mail cannot be transmitted then 
+the transmitter responsible for the mail generates a Delivery Status Notification
+(DSN) message. This transmitter is responbible for transmitting the DSN messages
+back to the original sender.
+<li>retryTransmitter: if the first attempt to transmit a mail (either a regular
+mail or a DSN message) is unsuccessful, but it seems that the problem is temporary,
+then the original transmitter handles the message to this transmitter. 
+retryTransmitter retries the transmission several times. If it cannot transmit
+the mail after a predefined count of attempts, or if it becomes clear, that 
+no further attempt will be successful, then it generates a DSN message and
+drops the original mail.
+</ul>
+You have to change the mailer daemon address at the top of the file, to reflect 
+your own domain. Otherwise it is unlikely that you have to change other parts 
+of this configuration file. 
+</td></tr>
 </table> 
 
 </body>
