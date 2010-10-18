@@ -1,10 +1,10 @@
 mireka
 mireka.filter
-mireka.filter.builtin
-mireka.filter.builtin.dnsbl
-mireka.filter.builtin.local
-mireka.filter.builtin.proxy
-mireka.filter.builtin.spf
+mireka.filter.misc
+mireka.filter.dnsbl
+mireka.filter.local
+mireka.filter.proxy
+mireka.filter.spf
 mireka.filterchain
 mireka.server
 mireka.submission

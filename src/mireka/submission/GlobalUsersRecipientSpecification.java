@@ -5,7 +5,7 @@ import java.util.Set;
 
 import mireka.address.LocalPart;
 import mireka.address.RemotePartContainingRecipient;
-import mireka.filter.builtin.local.RecipientSpecification;
+import mireka.filter.local.RecipientSpecification;
 
 public class GlobalUsersRecipientSpecification implements
         RecipientSpecification {

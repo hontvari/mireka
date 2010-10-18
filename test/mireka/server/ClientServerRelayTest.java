@@ -5,9 +5,9 @@ import java.io.IOException;
 import mireka.ArrayEndsWith;
 import mireka.ExampleMailData;
 import mireka.ClientFactory;
-import mireka.filter.builtin.local.AcceptAllRecipient;
-import mireka.filter.builtin.proxy.BackendServer;
-import mireka.filter.builtin.proxy.RelayMailTransaction;
+import mireka.filter.local.AcceptAllRecipient;
+import mireka.filter.proxy.BackendServer;
+import mireka.filter.proxy.RelayMailTransaction;
 import mireka.filterchain.Filters;
 
 import org.junit.After;

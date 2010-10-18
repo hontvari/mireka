@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import mireka.ExampleMailData;
 import mireka.MailData;
+import mireka.filter.misc.StopLoop;
 
 import org.junit.Test;
 import org.subethamail.smtp.RejectException;

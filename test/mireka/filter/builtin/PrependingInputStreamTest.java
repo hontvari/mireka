@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import mireka.filter.builtin.spf.PrependingInputStream;
+import mireka.filter.spf.PrependingInputStream;
 
 import org.junit.Test;
 

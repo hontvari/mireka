@@ -7,6 +7,7 @@ import mireka.MailData;
 import mireka.MailDataWithSameContent;
 import mireka.filter.Filter;
 import mireka.filter.FilterChain;
+import mireka.filter.misc.RejectLargeMail;
 
 import org.junit.Before;
 import org.junit.Test;
