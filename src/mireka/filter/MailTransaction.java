@@ -54,4 +54,8 @@ public interface MailTransaction {
 
     void setAttribute(String name, Object value);
 
+    void setDestinationForCurrentRecipient(Destination destination);
+
+    Destination getDestinationForCurrentRecipient();
+
 }

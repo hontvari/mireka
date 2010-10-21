@@ -1,4 +1,4 @@
-package mireka.filter.local;
+package mireka.filter.local.table;
 
 import mireka.address.RemotePart;
 

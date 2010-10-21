@@ -8,6 +8,7 @@ import mireka.address.RemotePart;
 import mireka.address.RemotePartContainingRecipient;
 import mireka.filter.FilterReply;
 import mireka.filter.StatelessFilterType;
+import mireka.filter.local.table.DomainSpecification;
 
 import org.subethamail.smtp.RejectException;
 

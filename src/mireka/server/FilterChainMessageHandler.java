@@ -17,8 +17,8 @@ import org.subethamail.smtp.TooMuchDataException;
 import org.subethamail.smtp.io.DeferredFileOutputStream;
 
 public class FilterChainMessageHandler implements MessageHandler {
-    private final Logger logger =
-            LoggerFactory.getLogger(FilterChainMessageHandler.class);
+    private final Logger logger = LoggerFactory
+            .getLogger(FilterChainMessageHandler.class);
     private final FilterInstances filterChain;
     private final MailTransactionImpl mailTransaction;
 
@@ -36,10 +36,16 @@ public class FilterChainMessageHandler implements MessageHandler {
 
     @Override
     public void recipient(String recipientString) throws RejectException {
-        Recipient recipient = convertToRecipient(recipientString);
-        filterChain.getHead().verifyRecipient(recipient);
-        filterChain.getHead().recipient(recipient);
-        mailTransaction.recipients.add(recipient);
+        try {
+            Recipient recipient = convertToRecipient(recipientString);
+            filterChain.getHead().verifyRecipient(recipient);
+            filterChain.getHead().recipient(recipient);
+            mailTransaction.recipients.add(recipient);
+            mailTransaction.addDestinationForRecipient(recipient,
+                    mailTransaction.getDestinationForCurrentRecipient());
+        } finally {
+            mailTransaction.setDestinationForCurrentRecipient(null);
+        }
     }
 
     private Recipient convertToRecipient(String recipient)

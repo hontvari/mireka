@@ -1,4 +1,4 @@
-package mireka.filter.local;
+package mireka.filter.local.table;
 
 import java.util.HashSet;
 import java.util.Set;

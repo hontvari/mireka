@@ -9,6 +9,7 @@ import java.util.Map;
 
 import mireka.MailData;
 import mireka.address.Recipient;
+import mireka.filter.Destination;
 import mireka.filter.MailTransaction;
 
 import org.subethamail.smtp.MessageContext;
@@ -24,6 +25,17 @@ public class MailTransactionImpl implements MailTransaction {
     public List<Recipient> recipients = new ArrayList<Recipient>();
 
     private MailData data;
+
+    /**
+     * null means uninitialized or "invalid at this state".
+     */
+    private Destination destinationForCurrentRecipient;
+
+    /**
+     * Contains only accepted recipients.
+     */
+    private final Map<Recipient, Destination> recipientDestinationMap =
+            new HashMap<Recipient, Destination>();
 
     public MailTransactionImpl(MessageContext messageContext) {
         super();
@@ -77,4 +89,22 @@ public class MailTransactionImpl implements MailTransaction {
     public Object getAttribute(String name) {
         return attributes.get(name);
     }
+
+    @Override
+    public void setDestinationForCurrentRecipient(Destination destination) {
+        destinationForCurrentRecipient = destination;
+    }
+
+    @Override
+    public Destination getDestinationForCurrentRecipient() {
+        if (destinationForCurrentRecipient == null)
+            throw new IllegalStateException();
+        return destinationForCurrentRecipient;
+    }
+
+    public void addDestinationForRecipient(Recipient recipient,
+            Destination destination) {
+        recipientDestinationMap.put(recipient, destination);
+    }
+
 }

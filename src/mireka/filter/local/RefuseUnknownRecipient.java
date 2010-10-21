@@ -10,6 +10,7 @@ import mireka.address.Recipient;
 import mireka.address.RemotePartContainingRecipient;
 import mireka.filter.FilterReply;
 import mireka.filter.StatelessFilterType;
+import mireka.filter.local.table.RecipientSpecification;
 
 public class RefuseUnknownRecipient extends StatelessFilterType {
     private List<RecipientSpecification> specifications =

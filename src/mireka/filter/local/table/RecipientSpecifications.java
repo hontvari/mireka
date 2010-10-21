@@ -1,4 +1,4 @@
-package mireka.filter.local;
+package mireka.filter.local.table;
 
 import java.util.ArrayList;
 import java.util.List;
