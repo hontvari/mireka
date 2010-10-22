@@ -1,7 +1,6 @@
 package mireka.filter;
 
 import mireka.MailData;
-import mireka.address.Recipient;
 
 import org.subethamail.smtp.RejectException;
 
@@ -16,6 +15,6 @@ public interface DataRecipientFilter extends FilterBase {
      * methods of the next filter will be called only after both methods have
      * been run.
      */
-    void dataRecipient(MailData data, Recipient recipient)
+    void dataRecipient(MailData data, RecipientContext recipientContext)
             throws RejectException;
 }

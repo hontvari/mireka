@@ -4,7 +4,6 @@ import java.net.InetAddress;
 import java.util.List;
 
 import mireka.MailData;
-import mireka.address.Recipient;
 
 import org.subethamail.smtp.MessageContext;
 
@@ -25,7 +24,7 @@ public interface MailTransaction {
     /**
      * accepted recipients
      */
-    List<Recipient> getRecipients();
+    List<RecipientContext> getAcceptedRecipientContexts();
 
     /**
      * null if data is not received yet
@@ -53,9 +52,4 @@ public interface MailTransaction {
     Object getAttribute(String name);
 
     void setAttribute(String name, Object value);
-
-    void setDestinationForCurrentRecipient(Destination destination);
-
-    Destination getDestinationForCurrentRecipient();
-
 }

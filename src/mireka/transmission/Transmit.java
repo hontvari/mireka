@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.util.Date;
 
 import mireka.MailData;
-import mireka.address.Recipient;
 import mireka.filter.AbstractDataRecipientFilter;
 import mireka.filter.DataRecipientFilterAdapter;
 import mireka.filter.Filter;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
+import mireka.filter.RecipientContext;
 import mireka.transmission.queuing.QueuingTransmitter;
 
 import org.slf4j.Logger;
@@ -57,8 +57,8 @@ public class Transmit implements FilterType {
         }
 
         @Override
-        public void recipient(Recipient recipient) throws RejectException {
-            mail.recipients.add(recipient);
+        public void recipient(RecipientContext recipientContext) throws RejectException {
+            mail.recipients.add(recipientContext.recipient);
         }
 
         @Override

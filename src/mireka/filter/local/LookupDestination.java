@@ -1,13 +1,12 @@
 package mireka.filter.local;
 
-import mireka.address.Recipient;
 import mireka.filter.AbstractDataRecipientFilter;
 import mireka.filter.DataRecipientFilterAdapter;
-import mireka.filter.Destination;
 import mireka.filter.Filter;
 import mireka.filter.FilterReply;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
+import mireka.filter.RecipientContext;
 import mireka.filter.local.table.RecipientDestinationMapper;
 
 import org.subethamail.smtp.RejectException;
@@ -43,11 +42,11 @@ public class LookupDestination implements FilterType {
         }
 
         @Override
-        public FilterReply verifyRecipient(Recipient recipient)
+        public FilterReply verifyRecipient(RecipientContext recipientContext)
                 throws RejectException {
-            Destination destination =
-                    recipientDestinationMapper.lookup(recipient);
-            mailTransaction.setDestinationForCurrentRecipient(destination);
+            recipientContext.destination =
+                    recipientDestinationMapper
+                            .lookup(recipientContext.recipient);
             return FilterReply.NEUTRAL;
         }
     }

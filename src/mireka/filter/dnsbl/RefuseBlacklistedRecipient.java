@@ -5,13 +5,13 @@ import java.util.List;
 
 import mireka.RejectExceptionExt;
 import mireka.SmtpReply;
-import mireka.address.Recipient;
 import mireka.filter.AbstractDataRecipientFilter;
 import mireka.filter.DataRecipientFilterAdapter;
 import mireka.filter.Filter;
 import mireka.filter.FilterReply;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
+import mireka.filter.RecipientContext;
 
 import org.subethamail.smtp.RejectException;
 
@@ -47,7 +47,7 @@ public class RefuseBlacklistedRecipient implements FilterType {
         }
 
         @Override
-        public FilterReply verifyRecipient(Recipient recipient)
+        public FilterReply verifyRecipient(RecipientContext recipientContext)
                 throws RejectException {
             DnsblResult dnsblResult = dnsblChecker.getResult();
             if (dnsblResult.isListed) {

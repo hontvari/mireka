@@ -7,6 +7,7 @@ import javax.mail.internet.ParseException;
 
 import mireka.address.MailAddressFactory;
 import mireka.address.Recipient;
+import mireka.filter.RecipientContext;
 import mireka.filterchain.FilterInstances;
 
 import org.slf4j.Logger;
@@ -36,16 +37,11 @@ public class FilterChainMessageHandler implements MessageHandler {
 
     @Override
     public void recipient(String recipientString) throws RejectException {
-        try {
-            Recipient recipient = convertToRecipient(recipientString);
-            filterChain.getHead().verifyRecipient(recipient);
-            filterChain.getHead().recipient(recipient);
-            mailTransaction.recipients.add(recipient);
-            mailTransaction.addDestinationForRecipient(recipient,
-                    mailTransaction.getDestinationForCurrentRecipient());
-        } finally {
-            mailTransaction.setDestinationForCurrentRecipient(null);
-        }
+            RecipientContext recipientContext = new RecipientContext();
+            recipientContext.recipient = convertToRecipient(recipientString);
+            filterChain.getHead().verifyRecipient(recipientContext);
+            filterChain.getHead().recipient(recipientContext);
+            mailTransaction.recipientContexts.add(recipientContext);
     }
 
     private Recipient convertToRecipient(String recipient)

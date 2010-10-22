@@ -11,6 +11,7 @@ import mireka.MailData;
 import mireka.address.Recipient;
 import mireka.filter.Destination;
 import mireka.filter.MailTransaction;
+import mireka.filter.RecipientContext;
 
 import org.subethamail.smtp.MessageContext;
 
@@ -22,14 +23,10 @@ public class MailTransactionImpl implements MailTransaction {
 
     public String from;
 
-    public List<Recipient> recipients = new ArrayList<Recipient>();
+    public List<RecipientContext> recipientContexts =
+            new ArrayList<RecipientContext>();
 
     private MailData data;
-
-    /**
-     * null means uninitialized or "invalid at this state".
-     */
-    private Destination destinationForCurrentRecipient;
 
     /**
      * Contains only accepted recipients.
@@ -70,8 +67,8 @@ public class MailTransactionImpl implements MailTransaction {
     }
 
     @Override
-    public List<Recipient> getRecipients() {
-        return recipients;
+    public List<RecipientContext> getAcceptedRecipientContexts() {
+        return recipientContexts;
     }
 
     @Override
@@ -88,18 +85,6 @@ public class MailTransactionImpl implements MailTransaction {
     @Override
     public Object getAttribute(String name) {
         return attributes.get(name);
-    }
-
-    @Override
-    public void setDestinationForCurrentRecipient(Destination destination) {
-        destinationForCurrentRecipient = destination;
-    }
-
-    @Override
-    public Destination getDestinationForCurrentRecipient() {
-        if (destinationForCurrentRecipient == null)
-            throw new IllegalStateException();
-        return destinationForCurrentRecipient;
     }
 
     public void addDestinationForRecipient(Recipient recipient,

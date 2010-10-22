@@ -3,7 +3,6 @@ package mireka.filter;
 import java.io.IOException;
 
 import mireka.MailData;
-import mireka.address.Recipient;
 
 import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.TooMuchDataException;
@@ -40,23 +39,23 @@ public final class DataRecipientFilterAdapter implements Filter {
     }
 
     @Override
-    public FilterReply verifyRecipient(Recipient recipient)
+    public FilterReply verifyRecipient(RecipientContext recipientContext)
             throws RejectException {
-        FilterReply result = filter.verifyRecipient(recipient);
+        FilterReply result = filter.verifyRecipient(recipientContext);
         switch (result) {
         case ACCEPT:
             return FilterReply.ACCEPT;
         case NEUTRAL:
-            return chain.verifyRecipient(recipient);
+            return chain.verifyRecipient(recipientContext);
         default:
             throw new RuntimeException();
         }
     }
 
     @Override
-    public void recipient(Recipient recipient) throws RejectException {
-        filter.recipient(recipient);
-        chain.recipient(recipient);
+    public void recipient(RecipientContext recipientContext) throws RejectException {
+        filter.recipient(recipientContext);
+        chain.recipient(recipientContext);
     }
 
     @Override
@@ -64,8 +63,9 @@ public final class DataRecipientFilterAdapter implements Filter {
             TooMuchDataException, IOException {
         filter.data(data);
 
-        for (Recipient recipient : mailTransaction.getRecipients()) {
-            filter.dataRecipient(data, recipient);
+        for (RecipientContext recipientContext : mailTransaction
+                .getAcceptedRecipientContexts()) {
+            filter.dataRecipient(data, recipientContext);
         }
 
         chain.data(data);

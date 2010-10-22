@@ -3,12 +3,12 @@ package mireka.filter.proxy;
 import java.io.IOException;
 
 import mireka.MailData;
-import mireka.address.Recipient;
 import mireka.filter.AbstractDataRecipientFilter;
 import mireka.filter.DataRecipientFilterAdapter;
 import mireka.filter.Filter;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
+import mireka.filter.RecipientContext;
 
 import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.TooMuchDataException;
@@ -64,8 +64,8 @@ public class RelayMailTransaction implements FilterType {
         }
 
         @Override
-        public void recipient(Recipient recipient) throws RejectException {
-            backend.recipient(recipient);
+        public void recipient(RecipientContext recipientContext) throws RejectException {
+            backend.recipient(recipientContext.recipient);
         }
 
         @Override

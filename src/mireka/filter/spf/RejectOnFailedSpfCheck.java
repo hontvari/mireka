@@ -1,11 +1,11 @@
 package mireka.filter.spf;
 
-import mireka.address.Recipient;
 import mireka.filter.AbstractFilter;
 import mireka.filter.Filter;
 import mireka.filter.FilterReply;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
+import mireka.filter.RecipientContext;
 
 import org.apache.james.jspf.core.exceptions.SPFErrorConstants;
 import org.apache.james.jspf.executor.SPFResult;
@@ -42,7 +42,7 @@ public class RejectOnFailedSpfCheck implements FilterType {
         }
 
         @Override
-        public FilterReply verifyRecipient(Recipient recipient)
+        public FilterReply verifyRecipient(RecipientContext recipientContext)
                 throws RejectException {
             SPFResult spfResult = spfChecker.getResult();
             String spfResultCode = spfResult.getResult();
@@ -62,7 +62,7 @@ public class RejectOnFailedSpfCheck implements FilterType {
                 throw new RejectException(550, "Blocked - invalid SPF record");
             }
 
-            return chain.verifyRecipient(recipient);
+            return chain.verifyRecipient(recipientContext);
         }
     }
 }

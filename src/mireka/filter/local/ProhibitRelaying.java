@@ -3,10 +3,10 @@ package mireka.filter.local;
 import java.util.ArrayList;
 import java.util.List;
 
-import mireka.address.Recipient;
 import mireka.address.RemotePart;
 import mireka.address.RemotePartContainingRecipient;
 import mireka.filter.FilterReply;
+import mireka.filter.RecipientContext;
 import mireka.filter.StatelessFilterType;
 import mireka.filter.local.table.DomainSpecification;
 
@@ -17,12 +17,12 @@ public class ProhibitRelaying extends StatelessFilterType {
             new ArrayList<DomainSpecification>();
 
     @Override
-    public FilterReply verifyRecipient(Recipient recipient)
+    public FilterReply verifyRecipient(RecipientContext recipientContext)
             throws RejectException {
-        if (recipient.isGlobalPostmaster())
+        if (recipientContext.recipient.isGlobalPostmaster())
             return FilterReply.NEUTRAL;
         else
-            return verifyRemotePartContainingRecipient((RemotePartContainingRecipient) recipient);
+            return verifyRemotePartContainingRecipient((RemotePartContainingRecipient) recipientContext);
     }
 
     private FilterReply verifyRemotePartContainingRecipient(
