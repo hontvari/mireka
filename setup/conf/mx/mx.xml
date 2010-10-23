@@ -31,6 +31,24 @@
 		<resin:import path="${__DIR__}/wildcard-recipients.xml" />
 		
 	</mireka:RecipientSpecifications>
+
+	<mireka:RecipientTable>
+		<Named>recipientTable</Named>
+		<mireka:mapper>
+			<mireka:RecipientSpecificationDestinationPair>
+				<mireka:recipientSpecification>
+					#{validRecipients}
+				</mireka:recipientSpecification>
+				<mireka:destination>
+					<mireka:Relay>
+						<mireka:backendServer>
+							#{backendServer}
+						</mireka:backendServer>
+					</mireka:Relay>
+				</mireka:destination>
+			</mireka:RecipientSpecificationDestinationPair>
+		</mireka:mapper>
+	</mireka:RecipientTable>
 	
 	<resource name="mxTrafficSummary" mbean-name="mireka:type=TrafficSummary,name=MX"
 			type="mireka.filter.builtin.TrafficSummary" />
@@ -44,6 +62,13 @@
 					#{mxTrafficSummary}
 				</mireka:trafficSummary>
 			</mireka:MeasureTraffic>
+		</mireka:filter>
+		<mireka:filter>
+			<mireka:LookupDestination>
+				<mireka:recipientDestinationMapper>
+					#{recipientTable}
+				</mireka:recipientDestinationMapper>
+			</mireka:LookupDestination>
 		</mireka:filter>
 		<mireka:filter>
 			<mireka:RejectLargeMail/>
@@ -77,11 +102,7 @@
 			</mireka:RefuseBlacklistedRecipient>
 		</mireka:filter>
 		<mireka:filter>
-			<mireka:RefuseUnknownRecipient>
-				<mireka:recipientSpecification>
-					#{validRecipients}
-				</mireka:recipientSpecification>
-			</mireka:RefuseUnknownRecipient>
+			<mireka:RefuseUnknownRecipient />
 		</mireka:filter>
 		<mireka:filter>
 			<mireka:RejectOnFailedSpfCheck />

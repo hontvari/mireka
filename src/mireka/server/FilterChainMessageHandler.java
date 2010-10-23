@@ -37,11 +37,11 @@ public class FilterChainMessageHandler implements MessageHandler {
 
     @Override
     public void recipient(String recipientString) throws RejectException {
-            RecipientContext recipientContext = new RecipientContext();
-            recipientContext.recipient = convertToRecipient(recipientString);
-            filterChain.getHead().verifyRecipient(recipientContext);
-            filterChain.getHead().recipient(recipientContext);
-            mailTransaction.recipientContexts.add(recipientContext);
+        Recipient recipient = convertToRecipient(recipientString);
+        RecipientContext recipientContext = new RecipientContext(recipient);
+        filterChain.getHead().verifyRecipient(recipientContext);
+        filterChain.getHead().recipient(recipientContext);
+        mailTransaction.recipientContexts.add(recipientContext);
     }
 
     private Recipient convertToRecipient(String recipient)

@@ -7,8 +7,8 @@ import mireka.address.Recipient;
  * mail transaction.
  */
 public class RecipientContext {
-    public Recipient recipient;
-    public Destination destination;
+    public final Recipient recipient;
+    private Destination destination;
     /**
      * True if the mail has been passed to a reliable service, e.g. a back-end
      * SMTP server. This status flag is only used for recognizing and reporting
@@ -16,4 +16,28 @@ public class RecipientContext {
      * of the filters.
      */
     public boolean isResponsibilityTransferred;
+
+    public RecipientContext(Recipient recipient) {
+        this.recipient = recipient;
+    }
+
+    /**
+     * @category GETSET
+     */
+    public void setDestination(Destination destination) {
+        this.destination = destination;
+    }
+
+    /**
+     * @category GETSET
+     */
+    public Destination getDestination() {
+        if (destination == null)
+            throw new IllegalStateException(
+                    "Destination is not assigned to recipient " + recipient
+                            + " yet, this is likely caused by "
+                            + "wrong configuration");
+        return destination;
+    }
+
 }
