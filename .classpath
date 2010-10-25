@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" output="build/test" path="test"/>
-	<classpathentry kind="lib" path="lib/build-only/jmockit-0.997-preview1.jar"/>
+	<classpathentry kind="lib" path="lib/build-only/jmockit.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="MIREKA_RESIN_HOME/lib/resin.jar" sourcepath="/MIREKA_LIB_DOC/resin-4_0-snap-src.zip"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.5.8.jar"/>
@@ -11,7 +11,7 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/smtp/lib-doc/javamail-1.4.2-docs.zip!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/subethasmtp-UNVERSIONED.jar" sourcepath="lib-doc/subethasmtp-3.1.2-src.zip"/>
+	<classpathentry kind="lib" path="lib/subethasmtp-UNVERSIONED.jar" sourcepath="lib-doc/SubEthaSMTP-src.zip"/>
 	<classpathentry kind="lib" path="lib/dnsjava-2.0.6.jar" sourcepath="lib-doc/dnsjava-2.0.6-src.zip">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/mireka/lib-doc/dnsjava-2.0.6-javadoc.zip!/"/>

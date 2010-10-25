@@ -10,30 +10,26 @@ import org.subethamail.smtp.TooMuchDataException;
 import org.subethamail.smtp.client.SMTPException;
 import org.subethamail.smtp.client.SmartClient;
 
-public class LazyClient {
+/**
+ * ClientWithProxyErrorHandling decorates a SmartClient with exception handling
+ * suitable for a proxy: it converts backend error responses and IO errors to
+ * SMTP errors which are valid from the viewpoint of the original sender.
+ */
+class ClientWithProxyErrorHandling {
 
-    private final LazyBackendConnector backend;
-    private String from;
+    private final BackendServer backend;
+    private final SmartClient smartClient;
 
-    public LazyClient(LazyBackendConnector backend) {
+    public ClientWithProxyErrorHandling(BackendServer backend)
+            throws BackendRejectException, RejectException {
         this.backend = backend;
+        this.smartClient = connect();
     }
 
-    public void from(String from) {
-        this.from = from;
-    }
-
-    public void recipient(Recipient recipient) throws RejectException,
-            BackendRejectException {
-        connectToBackend();
-        sendFromIfNotYetSent();
-        sendRecipient(recipient);
-    }
-
-    private void connectToBackend() throws BackendRejectException,
+    private SmartClient connect() throws BackendRejectException,
             RejectException {
         try {
-            backend.connection();
+            return backend.connect();
         } catch (SMTPException e) {
             throw new BackendRejectException(e,
                     " - Backend rejected connection");
@@ -42,11 +38,10 @@ public class LazyClient {
         }
     }
 
-    private void sendFromIfNotYetSent() throws BackendRejectException,
+    public void from(String from) throws BackendRejectException,
             RejectException {
         try {
-            if (!backend.connection().sentFrom())
-                backend.connection().from(from);
+            smartClient.from(from);
         } catch (SMTPException e) {
             throw new BackendRejectException(e, " - Backend rejected sender");
         } catch (IOException e) {
@@ -54,12 +49,12 @@ public class LazyClient {
         }
     }
 
-    private void sendRecipient(Recipient recipient)
-            throws BackendRejectException, RejectException {
+    public void recipient(Recipient recipient) throws RejectException,
+            BackendRejectException {
         String destinationMailbox = null;
         try {
             destinationMailbox = recipient.sourceRouteStripped();
-            backend.connection().to(destinationMailbox);
+            smartClient.to(destinationMailbox);
         } catch (SMTPException e) {
             throw new BackendRejectException(e, " - Backend rejected recipient");
         } catch (IOException e) {
@@ -77,21 +72,26 @@ public class LazyClient {
     /**
      * Start the DATA command on backend server.
      */
-    private void sendDataStart() throws IOException, BackendRejectException {
-        SmartClient backendConnection = backend.connection();
+    private void sendDataStart() throws RejectException, BackendRejectException {
         try {
-            backendConnection.dataStart();
+            smartClient.dataStart();
         } catch (SMTPException e) {
             throw new BackendRejectException(e, " - Backend rejected DATA");
+        } catch (IOException e) {
+            throw new RejectException(451, e.getMessage());
         }
     }
 
-    private void sendDataStream(InputStream data) throws IOException {
-        SmartClient backendConnection = backend.connection();
+    private void sendDataStream(InputStream data) throws IOException,
+            RejectException {
         byte[] buffer = new byte[8192];
         int numRead;
         while ((numRead = data.read(buffer)) > 0) {
-            backendConnection.dataWrite(buffer, numRead);
+            try {
+                smartClient.dataWrite(buffer, numRead);
+            } catch (IOException e) {
+                throw new RejectException(451, e.getMessage());
+            }
         }
     }
 
@@ -99,18 +99,18 @@ public class LazyClient {
      * Complete the data session on all connected targets. Shut down and remove
      * targets that fail.
      */
-    private void sendDataEnd() throws IOException, BackendRejectException {
-        SmartClient backendConnection = backend.connection();
-
+    private void sendDataEnd() throws RejectException, BackendRejectException {
         try {
-            backendConnection.dataEnd();
+            smartClient.dataEnd();
         } catch (SMTPException e) {
             throw new BackendRejectException(e,
                     " - Backend server rejected at end of data");
+        } catch (IOException e) {
+            throw new RejectException(451, e.getMessage());
         }
     }
 
-    public void done() {
-        backend.done();
+    public void quit() {
+        smartClient.quit();
     }
 }
