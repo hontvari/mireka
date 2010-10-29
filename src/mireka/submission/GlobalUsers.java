@@ -5,7 +5,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * a simple collection, useful in CDI XML configuration
+ * GlobalUsers is a simple collection of GlobalUser instances, this class is
+ * useful in CDI XML configuration.
  */
 public class GlobalUsers implements Iterable<GlobalUser> {
     private final Set<GlobalUser> users = new HashSet<GlobalUser>();

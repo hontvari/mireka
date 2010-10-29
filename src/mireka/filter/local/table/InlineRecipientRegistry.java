@@ -1,29 +1,30 @@
 package mireka.filter.local.table;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.mail.internet.ParseException;
-
-import mireka.address.MailAddressFactory;
 import mireka.address.Recipient;
-import mireka.address.RemotePartContainingRecipient;
 
+/**
+ * InlineRecipientRegistry is a convenience class, it makes easy to specify
+ * valid addresses in the configuration files.
+ */
 public class InlineRecipientRegistry implements RecipientSpecification {
-    private final Set<Recipient> recipients = new HashSet<Recipient>();
+    private final List<RecipientSpecification> recipientSpecifications =
+            new ArrayList<RecipientSpecification>();
 
     public void addAddress(String address) {
-        try {
-            Recipient recipient =
-                    new MailAddressFactory().createRecipient(address);
-            recipients.add(recipient);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+        RecipientSpecification specification =
+                new RecipientSpecificationFactory().create(address);
+        recipientSpecifications.add(specification);
     }
 
     @Override
-    public boolean isSatisfiedBy(RemotePartContainingRecipient recipient) {
-        return recipients.contains(recipient);
+    public boolean isSatisfiedBy(Recipient recipient) {
+        for (RecipientSpecification specification : recipientSpecifications) {
+            if (specification.isSatisfiedBy(recipient))
+                return true;
+        }
+        return false;
     }
 }

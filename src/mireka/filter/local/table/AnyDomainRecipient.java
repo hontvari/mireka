@@ -1,27 +1,31 @@
 package mireka.filter.local.table;
 
-import mireka.address.LocalPart;
-import mireka.address.RemotePartContainingRecipient;
+import mireka.address.Recipient;
 
+/**
+ * AnyDomainRecipient matches any recipient with the specified local part,
+ * irrespective of the remote part. It can even match the special global
+ * postmaster address which has no remote part at all.
+ */
 public class AnyDomainRecipient implements RecipientSpecification {
-    private LocalPart localPart;
+    private LocalPartSpecification localPart;
 
     @Override
-    public boolean isSatisfiedBy(RemotePartContainingRecipient recipient) {
-        return localPart.equals(recipient.getAddress().getLocalPart());
+    public boolean isSatisfiedBy(Recipient recipient) {
+        return localPart.matches(recipient.localPart());
     }
 
     /**
      * @category GETSET
      */
-    public LocalPart getLocalPart() {
+    public LocalPartSpecification getLocalPart() {
         return localPart;
     }
 
     /**
      * @category GETSET
      */
-    public void setLocalPart(LocalPart localPart) {
+    public void setLocalPart(LocalPartSpecification localPart) {
         this.localPart = localPart;
     }
 }

@@ -1,9 +1,13 @@
 package mireka.filter.local.table;
 
 import mireka.address.Recipient;
-import mireka.address.RemotePartContainingRecipient;
 import mireka.filter.Destination;
 
+/**
+ * RecipientSpecificationDestinationPair assigns a {@link Destination} to a
+ * {@link RecipientSpecification}, it is used to configure what to do with mail
+ * sent to the matching mail addresses.
+ */
 public class RecipientSpecificationDestinationPair implements
         RecipientDestinationMapper {
     private RecipientSpecification recipientSpecification;
@@ -11,11 +15,7 @@ public class RecipientSpecificationDestinationPair implements
 
     @Override
     public Destination lookup(Recipient recipient) {
-        if (!(recipient instanceof RemotePartContainingRecipient))
-            return UnknownRecipient.INSTANCE;
-
-        if (recipientSpecification
-                .isSatisfiedBy((RemotePartContainingRecipient) recipient))
+        if (recipientSpecification.isSatisfiedBy(recipient))
             return destination;
         else
             return UnknownRecipient.INSTANCE;

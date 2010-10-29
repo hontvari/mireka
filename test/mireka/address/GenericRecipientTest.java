@@ -13,16 +13,4 @@ public class GenericRecipientTest {
                         "@example.net,@example.org:jane@example.com");
         assertEquals("jane@example.com", recipient.sourceRouteStripped());
     }
-
-    @Test
-    public void testAddressSourceRouteStripped() {
-        GenericRecipient recipientWithForwardPath =
-                new GenericRecipient(
-                        "@example.net,@example.org:jane@example.com");
-        GenericRecipient recipientWithoutForwardPath =
-                new GenericRecipient("jane@example.com");
-        assertTrue(recipientWithoutForwardPath.getAddress().equals(
-                recipientWithForwardPath.getAddress()));
-    }
-
 }

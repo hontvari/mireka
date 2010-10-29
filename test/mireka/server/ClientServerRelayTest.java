@@ -11,8 +11,8 @@ import mireka.ExampleMailData;
 import mireka.filter.local.AcceptAllRecipient;
 import mireka.filter.local.LookupDestination;
 import mireka.filter.local.table.RecipientSpecificationDestinationPair;
+import mireka.filter.local.table.RecipientSpecificationFactory;
 import mireka.filter.local.table.Relay;
-import mireka.filter.local.table.SimpleRecipient;
 import mireka.filter.proxy.BackendServer;
 import mireka.filter.proxy.RelayMailTransaction;
 import mireka.filterchain.Filters;
@@ -62,8 +62,8 @@ public class ClientServerRelayTest {
         RecipientSpecificationDestinationPair recipientDestinationMapper =
                 new RecipientSpecificationDestinationPair();
         recipientDestinationMapper
-                .setRecipientSpecification(new SimpleRecipient(
-                        ExampleAddress.JANE_AS_RECIPIENT));
+                .setRecipientSpecification(new RecipientSpecificationFactory()
+                        .create(ExampleAddress.JANE));
         recipientDestinationMapper.setDestination(relayDestination);
         LookupDestination lookupDestinationFilter = new LookupDestination();
         lookupDestinationFilter

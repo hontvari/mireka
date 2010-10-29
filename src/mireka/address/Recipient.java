@@ -1,6 +1,10 @@
 package mireka.address;
 
 /**
+ * Recipient is the address of the intended recipient of a mail, it is passed in
+ * the RCPT SMTP command. It is either a forward path or one of the special
+ * postmaster mailbox names.
+ * <p>
  * Use {@link MailAddressFactory} to create a new instance.
  * <p>
  * All implementing classes must implement the
@@ -8,6 +12,8 @@ package mireka.address;
  * postmaster recipient.
  * 
  * @see GlobalPostmaster
+ * @see <a href="http://tools.ietf.org/html/rfc5321#section-4.1.1">4.1.1.3.
+ *      RECIPIENT</a>
  */
 public interface Recipient {
 
@@ -16,6 +22,8 @@ public interface Recipient {
     boolean isGlobalPostmaster();
 
     boolean isDomainPostmaster();
+
+    LocalPart localPart();
 
     String sourceRouteStripped();
 }

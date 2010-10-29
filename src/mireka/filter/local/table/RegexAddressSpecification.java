@@ -2,11 +2,16 @@ package mireka.filter.local.table;
 
 import java.util.regex.Pattern;
 
-import mireka.address.Address;
 import mireka.address.MailAddressFactory;
+import mireka.address.Recipient;
 import mireka.address.RemotePart;
 import mireka.address.RemotePartContainingRecipient;
 
+/**
+ * RegexAddressSpecification matches the local part of a recipient address with
+ * a regular expression and it also requires the remote part to be identical
+ * with the specified remote part.
+ */
 public class RegexAddressSpecification implements RecipientSpecification {
     private String localPartRegex;
     private Pattern pattern;
@@ -14,13 +19,16 @@ public class RegexAddressSpecification implements RecipientSpecification {
     private String remotePartString;
 
     @Override
-    public boolean isSatisfiedBy(RemotePartContainingRecipient recipient) {
-        Address recipientAddress = recipient.getAddress();
-        boolean remotePartMatch =
-                remotePartObject.equals(recipient.getAddress().getRemotePart());
-        if (!remotePartMatch)
+    public boolean isSatisfiedBy(Recipient recipient) {
+        if (!(recipient instanceof RemotePartContainingRecipient))
             return false;
-        return pattern.matcher(recipientAddress.getLocalPart().toString())
+
+        RemotePart recipientRemotePart =
+                ((RemotePartContainingRecipient) recipient).getAddress()
+                        .getRemotePart();
+        if (!remotePartObject.equals(recipientRemotePart))
+            return false;
+        return pattern.matcher(recipient.localPart().displayableName())
                 .matches();
     }
 

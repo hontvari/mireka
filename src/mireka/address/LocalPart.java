@@ -1,58 +1,36 @@
 package mireka.address;
 
-import java.util.Locale;
-
 /**
- * This implementation does case-insensitive comparisons using the US locale.
- * The standard SMTP only allows US-ASCII characters. Note that case sensitive
- * mailbox names are also allowed by the standard. An extension allows non-ASCII
- * characters and case insensitivity, but doesn't specify rules for that. E.g.
- * the final delivery mailbox address must also specify a Locale.
- * 
- * @see <a href="http://tools.ietf.org/html/rfc5336">RFC 5336 SMTP Extension for
- *      Internationalized Email Addresses</a>
+ * LocalPart contains the local part of a forward path (usually a mailbox) which
+ * appeared as the recipient in an RCPT command submitted by an SMTP client,
+ * e.g. "john" if the recipient was john@example.com. An SMTP server must
+ * preserve the case of its characters, it must not assume that the
+ * corresponding mailbox name is case insensitive. However, a mailbox name
+ * should indeed be case insensitive.
  */
 public class LocalPart {
-    private final String value;
-    private final String valueLowerCase;
+    private String receivedRawText;
 
-    public LocalPart(String localPart) {
-        this.value = localPart;
-        this.valueLowerCase = localPart.toLowerCase(Locale.US);
+    public LocalPart(String escapedText) {
+        this.receivedRawText = escapedText;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result =
-                prime
-                        * result
-                        + ((valueLowerCase == null) ? 0 : valueLowerCase
-                                .hashCode());
-        return result;
+    /**
+     * Returns the unescaped mailbox name, which means that escaping constructs
+     * are replaced by their represented value. For example if the raw string
+     * received is "Joe\,Smith", then this function returns "Joe,Smith", without
+     * the quotes. However, unescaping is not implemented currently, this
+     * function simply returns the raw text.
+     */
+    public String displayableName() {
+        return receivedRawText;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        LocalPart other = (LocalPart) obj;
-        if (valueLowerCase == null) {
-            if (other.valueLowerCase != null)
-                return false;
-        } else if (!valueLowerCase.equals(other.valueLowerCase))
-            return false;
-        return true;
+    /**
+     * Returns the escaped / quoted local-part string as received from the
+     * remote SMTP client.
+     */
+    public String escapedName() {
+        return receivedRawText;
     }
-
-    @Override
-    public String toString() {
-        return value;
-    }
-
 }

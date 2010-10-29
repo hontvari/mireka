@@ -11,8 +11,7 @@ import org.subethamail.smtp.RejectException;
 /**
  * The RefuseUnknownRecipient filter rejects recipients whose destination has
  * been set to {@link UnknownRecipient} . A destination must be assigned to the
- * recipient before the {@link #verifyRecipient()} method of this class is
- * called.
+ * recipient before the {@link #verifyRecipient} method of this class is called.
  * 
  * @see LookupDestination
  */
