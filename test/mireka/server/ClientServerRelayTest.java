@@ -57,7 +57,8 @@ public class ClientServerRelayTest {
         backendServer.setHost("localhost");
         backendServer.setPort(8026);
         backendServer.setClientFactory(client);
-        Relay relayDestination = new Relay(backendServer);
+        Relay relayDestination = new Relay();
+        relayDestination.setBackendServer(backendServer);
 
         RecipientSpecificationDestinationPair recipientDestinationMapper =
                 new RecipientSpecificationDestinationPair();

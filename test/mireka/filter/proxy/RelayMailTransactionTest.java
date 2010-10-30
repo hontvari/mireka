@@ -38,8 +38,10 @@ public class RelayMailTransactionTest {
 
     @Before
     public void setup() {
-        destinationA = new Relay(backendServerA);
-        destinationB = new Relay(backendServerB);
+        destinationA = new Relay();
+        destinationA.setBackendServer(backendServerA);
+        destinationB = new Relay();
+        destinationB.setBackendServer(backendServerB);
     }
 
     @Test

@@ -10,10 +10,6 @@ import mireka.filter.proxy.BackendServer;
 public class Relay implements Destination {
     private BackendServer backendServer;
 
-    public Relay(BackendServer backendServer) {
-        this.backendServer = backendServer;
-    }
-
     /**
      * @category GETSET
      */
