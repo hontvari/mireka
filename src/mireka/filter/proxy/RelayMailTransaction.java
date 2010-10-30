@@ -65,6 +65,7 @@ public class RelayMailTransaction implements FilterType {
             Destination destination = recipientContext.getDestination();
             if (!(destination instanceof Relay))
                 return;
+            recipientContext.isResponsibilityTransferred = true;
             relayRecipientToServer(recipientContext, (Relay) destination);
         }
 
@@ -74,7 +75,7 @@ public class RelayMailTransaction implements FilterType {
             BackendServer server = destination.getBackendServer();
             BackendClient client = getOrCreateClient(server);
             // if there was an IO error, or the "from" was rejected, then
-            // reject this recipient too (with the same exception?)
+            // this recipient will be rejected too
             client.recipient(recipientContext.recipient);
         }
 
@@ -97,15 +98,10 @@ public class RelayMailTransaction implements FilterType {
         @Override
         public void data(MailData data) throws TooMuchDataException,
                 RejectException, IOException {
-            boolean hasAcceptedRecipient = false;
             for (BackendClient client : serverClientMap.values()) {
                 if (client.hasAcceptedRecipient()) {
-                    hasAcceptedRecipient = true;
                     client.data(data.getInputStream());
                 }
-            }
-            if (!hasAcceptedRecipient) {
-                throw new RejectException(554, "No valid recipients");
             }
         }
 

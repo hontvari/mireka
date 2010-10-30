@@ -66,6 +66,7 @@ public class FilterChainMessageHandler implements MessageHandler {
                     new DeferredFileMailData(deferredFileOutputStream);
             mailTransaction.setData(deferredFileMailData);
             filterChain.getHead().data(mailTransaction.getData());
+            checkResponsibilityHasBeenTakenForAllRecipients();
         } finally {
             if (mailTransaction.getData() != null)
                 mailTransaction.getData().dispose();
@@ -84,6 +85,22 @@ public class FilterChainMessageHandler implements MessageHandler {
             deferredFileOutputStream.write(buffer, 0, cRead);
         }
         return deferredFileOutputStream;
+    }
+
+    private void checkResponsibilityHasBeenTakenForAllRecipients()
+            throws RejectException {
+        for (RecipientContext recipientContext : mailTransaction.recipientContexts) {
+            if (!recipientContext.isResponsibilityTransferred) {
+                logger.error("Configuration error: processing of mail data "
+                        + "completed, but no filter has took the "
+                        + "responsibility for the recipient {}, "
+                        + "whose assigned destination was {}",
+                        recipientContext.recipient,
+                        recipientContext.getDestination());
+                throw new RejectException(554,
+                        "Mail server configuration is wrong");
+            }
+        }
     }
 
     @Override
