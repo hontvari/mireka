@@ -5,6 +5,7 @@ import java.io.InputStream;
 
 import javax.mail.internet.ParseException;
 
+import mireka.ConfigurationException;
 import mireka.address.MailAddressFactory;
 import mireka.address.Recipient;
 import mireka.filter.RecipientContext;
@@ -88,17 +89,15 @@ public class FilterChainMessageHandler implements MessageHandler {
     }
 
     private void checkResponsibilityHasBeenTakenForAllRecipients()
-            throws RejectException {
+            throws ConfigurationException {
         for (RecipientContext recipientContext : mailTransaction.recipientContexts) {
             if (!recipientContext.isResponsibilityTransferred) {
-                logger.error("Configuration error: processing of mail data "
+                throw new ConfigurationException("Processing of mail data "
                         + "completed, but no filter has took the "
-                        + "responsibility for the recipient {}, "
-                        + "whose assigned destination was {}",
-                        recipientContext.recipient,
-                        recipientContext.getDestination());
-                throw new RejectException(554,
-                        "Mail server configuration is wrong");
+                        + "responsibility for the recipient "
+                        + recipientContext.recipient + ", "
+                        + "whose assigned destination was "
+                        + recipientContext.getDestination());
             }
         }
     }

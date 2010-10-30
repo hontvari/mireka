@@ -16,7 +16,10 @@ public class MessageHandlerFactoryImpl implements MessageHandlerFactory {
         MailTransactionImpl mailTransaction = new MailTransactionImpl(ctx);
         FilterInstances filterInstances =
                 filters.createInstanceChain(mailTransaction);
-        return new FilterChainMessageHandler(filterInstances, mailTransaction);
+        FilterChainMessageHandler filterChainMessageHandler =
+                new FilterChainMessageHandler(filterInstances, mailTransaction);
+        return new ErrorHandlerMessageHandler(
+                filterChainMessageHandler);
     }
 
     /**

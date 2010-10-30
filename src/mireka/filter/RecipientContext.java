@@ -1,5 +1,6 @@
 package mireka.filter;
 
+import mireka.ConfigurationException;
 import mireka.address.Recipient;
 
 /**
@@ -33,11 +34,10 @@ public class RecipientContext {
      */
     public Destination getDestination() {
         if (destination == null)
-            throw new IllegalStateException(
+            throw new ConfigurationException(
                     "Destination is not assigned to recipient " + recipient
                             + " yet, this is likely caused by "
                             + "wrong configuration");
         return destination;
     }
-
 }
