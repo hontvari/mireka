@@ -12,7 +12,6 @@ import mireka.filter.Filter;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
-import mireka.filter.local.table.Relay;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

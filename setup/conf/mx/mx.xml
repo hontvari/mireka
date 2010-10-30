@@ -15,6 +15,17 @@
 		<Named>validRecipients</Named>
 		
 		<mireka:specification>
+			<mireka:GlobalPostmasterSpecification />
+		</mireka:specification>
+
+		<!-- this matches Postmaster@... addresses for any domain, not 
+			only for local domains, but non-local ones will be 
+			rejected by the ProhibitRelaying filter anyway --> 
+		<mireka:specification>
+			<mireka:AnyDomainPostmaster />
+		</mireka:specification>		
+		
+		<mireka:specification>
 			<mireka:InlineRecipientRegistry>
 				<resin:import path="${__DIR__}/individual-recipients.xml" />
 			</mireka:InlineRecipientRegistry>
@@ -51,7 +62,7 @@
 	</mireka:RecipientTable>
 	
 	<resource name="mxTrafficSummary" mbean-name="mireka:type=TrafficSummary,name=MX"
-			type="mireka.filter.builtin.TrafficSummary" />
+			type="mireka.filter.misc.TrafficSummary" />
 	
 	<mireka:Filters>
 		<Named>mxFilters</Named>
@@ -119,9 +130,7 @@
 			<mireka:StopLoop />
 		</mireka:filter>
 		<mireka:filter>
-			<mireka:RelayMailTransaction>
-				<backendServer>#{backendServer}</backendServer>
-			</mireka:RelayMailTransaction>
+			<mireka:RelayMailTransaction />
 		</mireka:filter>
 	</mireka:Filters>
 	

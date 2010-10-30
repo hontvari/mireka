@@ -11,15 +11,17 @@ import org.subethamail.smtp.MessageHandler;
 import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.TooMuchDataException;
 
-public class ErrorHandlerMessageHandler implements
-        MessageHandler {
+/**
+ * ErrorHandlerMessageHandler wraps another MessageHandler and decorates it with
+ * handling of RuntimeExceptions.
+ */
+public class ErrorHandlerMessageHandler implements MessageHandler {
     private final Logger logger = LoggerFactory
             .getLogger(ErrorHandlerMessageHandler.class);
 
-    private final FilterChainMessageHandler wrapped;
+    private final MessageHandler wrapped;
 
-    public ErrorHandlerMessageHandler(
-            FilterChainMessageHandler wrappedHandler) {
+    public ErrorHandlerMessageHandler(MessageHandler wrappedHandler) {
         this.wrapped = wrappedHandler;
     }
 

@@ -3,7 +3,6 @@ package mireka.filter.proxy;
 import mireka.ExampleAddress;
 import mireka.ExampleMailData;
 import mireka.filter.RecipientContext;
-import mireka.filter.local.table.Relay;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrict;

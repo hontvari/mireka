@@ -1,7 +1,6 @@
-package mireka.filter.local.table;
+package mireka.filter.proxy;
 
 import mireka.filter.Destination;
-import mireka.filter.proxy.BackendServer;
 
 /**
  * A Relay destination means that the mail must be transmitted to a gateway step

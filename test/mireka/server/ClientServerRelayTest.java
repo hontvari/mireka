@@ -12,8 +12,8 @@ import mireka.filter.local.AcceptAllRecipient;
 import mireka.filter.local.LookupDestination;
 import mireka.filter.local.table.RecipientSpecificationDestinationPair;
 import mireka.filter.local.table.RecipientSpecificationFactory;
-import mireka.filter.local.table.Relay;
 import mireka.filter.proxy.BackendServer;
+import mireka.filter.proxy.Relay;
 import mireka.filter.proxy.RelayMailTransaction;
 import mireka.filterchain.Filters;
 
