@@ -17,7 +17,7 @@ public class BackendClient {
     private final BackendServer backendServer;
     private ClientWithProxyErrorHandling client;
     private RejectException exceptionAffectingConnection;
-    boolean hasAcceptedRecipient;
+    private boolean hasAcceptedRecipient;
 
     public BackendClient(BackendServer backendServer) {
         this.backendServer = backendServer;

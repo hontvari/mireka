@@ -99,7 +99,7 @@ public class RelayMailTransaction implements FilterType {
                 RejectException, IOException {
             boolean hasAcceptedRecipient = false;
             for (BackendClient client : serverClientMap.values()) {
-                if (client.hasAcceptedRecipient) {
+                if (client.hasAcceptedRecipient()) {
                     hasAcceptedRecipient = true;
                     client.data(data.getInputStream());
                 }
