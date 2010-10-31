@@ -8,11 +8,6 @@
 	<system-property logback.configurationFile="${__DIR__}/logback.xml"/>
 	<dependency path="${__DIR__}/logback.xml" />
 
-	<!-- uncomment if you enabled BufferedIO on a Logback log file -->
-	<!--
-	<listener listener-class="mireka.server.LogFlushingServletContextListener" />
-	-->
-
 	<system-property helo="mail.example.com"/>
 
 	<mireka:ClientFactory>
