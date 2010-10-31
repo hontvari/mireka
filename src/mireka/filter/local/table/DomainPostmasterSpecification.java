@@ -13,7 +13,7 @@ public class DomainPostmasterSpecification implements RecipientSpecification {
 
     @Override
     public boolean isSatisfiedBy(Recipient recipient) {
-        if (recipient instanceof DomainPostmaster)
+        if (!(recipient instanceof DomainPostmaster))
             return false;
         RemotePart recipientRemotePart =
                 ((DomainPostmaster) recipient).getAddress().getRemotePart();
