@@ -12,9 +12,9 @@
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 			<level>info</level>
 		</filter>
-		<layout class="ch.qos.logback.classic.PatternLayout">
+		<encoder>
 			<pattern>%date %-29([%3.3X{smtpServerLocalSocketAddress}] [%.21thread]) %-5level %logger{20} %m %ex%n</pattern>
-		</layout>
+		</encoder>
 	</appender>
 
 	<evaluator name="SUPRESS_TRACE_EVAL" class="ch.qos.logback.classic.boolex.JaninoEventEvaluator">
@@ -42,9 +42,9 @@
 			<!-- keep specified number of log files of history -->
 			<MaxHistory>90</MaxHistory>
 		</rollingPolicy>		
-		<layout class="ch.qos.logback.classic.PatternLayout">
+		<encoder>
 			<pattern>%date %-29([%3.3X{smtpServerLocalSocketAddress}] [%.21thread]) %-5level %logger{20} %m %ex{full, SUPRESS_TRACE_EVAL}%n</pattern>
-		</layout>
+		</encoder>
 	</appender>
 
 	<!--
@@ -61,9 +61,9 @@
 			<OnMismatch>DENY</OnMismatch>
 			<OnMatch>ACCEPT</OnMatch>
 		</filter>
-		<layout class="ch.qos.logback.classic.PatternLayout">
+		<encoder>
 			<pattern>%date %-29([%3.3X{smtpServerLocalSocketAddress}] [%.21thread]) %-5level %logger{20} %m %ex%n</pattern>
-		</layout>
+		</encoder>
 	</appender>
 	-->
 
