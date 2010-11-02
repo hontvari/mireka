@@ -40,6 +40,10 @@ processing of incoming mail transactions.
 <li>valid recipients: used by filters. This section itself doesn't contain
 concrete recipient specifications, but imports them from several other 
 configuration files.
+<li>recipient table: specifies where to send which recipient. In the default 
+configuration, all recipients which match the "valid recipients" list are 
+relayed to the default backend server, which is specified in 
+<kbd>mireka.xml</kbd>.
 </ul>
 </td></tr>
 <tr><th>domains.xml</th><td>list of local domain names. 
