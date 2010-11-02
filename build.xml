@@ -131,7 +131,7 @@
          ================================= -->
         <target name="test"
                 depends="test.compile"
-                description="Execute JUnit tests.">
+                description="Execute JUnit tests accorsing to all.test and test properties">
                 <condition property="quick.tests">
                         <not>
                                 <or>
@@ -160,11 +160,25 @@
                         <batchtest if="all.test" todir="build/junit">
                                 <fileset dir="${test.dir}">
                                         <include name="**/*Test*.java" />
+                                        <!-- it seems it takes very long if coverage information is collected -->
+                                        <exclude name="**/DnsMailCreatorLargeOriginalTest.java" />
                                 </fileset>
                         </batchtest>
                         <formatter type="plain" />
                 </junit>
         </target>
+
+        <!-- ================================= 
+          target: all.test              
+         ================================= -->
+        <target name="all.test"
+                depends=""
+                description="Execute all JUnit tests">
+                <antcall target="test">
+                        <param name="all.test" value="true" />
+                </antcall>
+        </target>
+
 
         <target name="javadoc" depends="init-dist">
                 <javadoc destdir="${build.dir}/javadoc"

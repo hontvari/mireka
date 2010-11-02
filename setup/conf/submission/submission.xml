@@ -9,9 +9,23 @@
 	
 	<resin:import path="${__DIR__}/queues.xml" />
 	
+	<mireka:RecipientTable>
+		<Named>submissionRecipientTable</Named>
+		<mireka:mapper>
+			<mireka:RecipientSpecificationDestinationPair>
+				<mireka:recipientSpecification>
+					<mireka:AnyRecipient />
+				</mireka:recipientSpecification>
+				<mireka:destination>
+					<mireka:Transmit />
+				</mireka:destination>
+			</mireka:RecipientSpecificationDestinationPair>
+		</mireka:mapper>
+	</mireka:RecipientTable>
+
 	<resource name="submissionTrafficSummary" 
 			mbean-name="mireka:type=SubmissionTraffic,name=Submission"
-			type="mireka.filter.builtin.TrafficSummary" />
+			type="mireka.filter.misc.TrafficSummary" />
 			
 	<mireka:Filters>
 		<Named>submissionFilters</Named>
@@ -36,6 +50,13 @@
 			</mireka:RejectIfUnauthenticated>
 		</mireka:filter>
 		<mireka:filter>
+			<mireka:LookupDestination>
+				<mireka:recipientDestinationMapper>
+					#{submissionRecipientTable}
+				</mireka:recipientDestinationMapper>
+			</mireka:LookupDestination>
+		</mireka:filter>
+		<mireka:filter>
 			<mireka:RejectLargeMail/>
 		</mireka:filter>
 		<mireka:filter>
@@ -56,11 +77,11 @@
 			<mireka:StopLoop />
 		</mireka:filter>
 		<mireka:filter>
-			<mireka:Transmit>
+			<mireka:TransmitFilter>
 				<mireka:transmitter>
 					#{primaryTransmitter}
 				</mireka:transmitter>
-			</mireka:Transmit>
+			</mireka:TransmitFilter>
 		</mireka:filter>
 	</mireka:Filters>
 	

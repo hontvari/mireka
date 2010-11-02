@@ -2,36 +2,19 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" output="build/test" path="test"/>
-	<classpathentry kind="lib" path="lib/build-only/jmockit-0.997-preview1.jar"/>
+	<classpathentry kind="lib" path="lib/build-only/jmockit.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="MIREKA_RESIN_HOME/lib/resin.jar" sourcepath="/MIREKA_LIB_DOC/resin-4_0-snap-src.zip"/>
-	<classpathentry kind="lib" path="lib/slf4j-api-1.5.8.jar"/>
 	<classpathentry kind="lib" path="lib/mail.jar" sourcepath="lib-doc/javamail-1.4.2-src.zip">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/smtp/lib-doc/javamail-1.4.2-docs.zip!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/subethasmtp-UNVERSIONED.jar" sourcepath="lib-doc/subethasmtp-3.1.2-src.zip"/>
+	<classpathentry kind="lib" path="lib/subethasmtp-UNVERSIONED.jar" sourcepath="lib-doc/SubEthaSMTP-src.zip"/>
 	<classpathentry kind="lib" path="lib/dnsjava-2.0.6.jar" sourcepath="lib-doc/dnsjava-2.0.6-src.zip">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/mireka/lib-doc/dnsjava-2.0.6-javadoc.zip!/"/>
 		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/logback-classic-0.9.17.jar">
-		<accessrules>
-			<accessrule kind="accessible" pattern="ch/qos/logback/classic/LoggerContext"/>
-			<accessrule kind="nonaccessible" pattern="**"/>
-		</accessrules>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/logback-core-0.9.17.jar">
-		<accessrules>
-			<accessrule kind="nonaccessible" pattern="**"/>
-		</accessrules>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/jcl-over-slf4j-1.5.8.jar">
-		<accessrules>
-			<accessrule kind="nonaccessible" pattern="**"/>
-		</accessrules>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/build-only/mockito-core-1.8.0.jar">
 		<attributes>
@@ -50,5 +33,9 @@
 	<classpathentry kind="lib" path="lib/build-only/com.springsource.org.hamcrest.core-1.1.0.jar"/>
 	<classpathentry kind="lib" path="lib/apache-mime4j-core-0.7-SNAPSHOT.jar" sourcepath="lib-doc/apache-mime4j-core-0.7-SNAPSHOT-sources.jar"/>
 	<classpathentry kind="lib" path="lib/build-only/junit-dep-4.7.jar"/>
+	<classpathentry kind="lib" path="lib/jcl-over-slf4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/logback-classic-0.9.26.jar"/>
+	<classpathentry kind="lib" path="lib/logback-core-0.9.26.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.6.1.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

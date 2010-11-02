@@ -12,9 +12,9 @@
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 			<level>info</level>
 		</filter>
-		<layout class="ch.qos.logback.classic.PatternLayout">
+		<encoder>
 			<pattern>%date %-29([%3.3X{smtpServerLocalSocketAddress}] [%.21thread]) %-5level %logger{20} %m %ex%n</pattern>
-		</layout>
+		</encoder>
 	</appender>
 
 	<evaluator name="SUPRESS_TRACE_EVAL" class="ch.qos.logback.classic.boolex.JaninoEventEvaluator">
@@ -26,25 +26,15 @@
 	
 	<appender class="ch.qos.logback.core.rolling.RollingFileAppender"
 		name="Access">
-		<!-- 
-			uncomment if the server receives more than 100 000 mail transactions 
-			and it is busy. In this case the listener section in mireka.xml 
-			should be uncommented too, otherwise on shutdown the last log 
-			messages will be lost. Log messages will be flushed to disk only 
-			after the buffer is completely filled.
-		-->
-		<!-- 
-		<BufferedIO>true</BufferedIO>
-		-->
 		<file>${log.dir}/access.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<FileNamePattern>${log.dir}/access.%d{yyyy-MM-dd}.log</FileNamePattern>
 			<!-- keep specified number of log files of history -->
 			<MaxHistory>90</MaxHistory>
 		</rollingPolicy>		
-		<layout class="ch.qos.logback.classic.PatternLayout">
+		<encoder>
 			<pattern>%date %-29([%3.3X{smtpServerLocalSocketAddress}] [%.21thread]) %-5level %logger{20} %m %ex{full, SUPRESS_TRACE_EVAL}%n</pattern>
-		</layout>
+		</encoder>
 	</appender>
 
 	<!--
@@ -61,9 +51,9 @@
 			<OnMismatch>DENY</OnMismatch>
 			<OnMatch>ACCEPT</OnMatch>
 		</filter>
-		<layout class="ch.qos.logback.classic.PatternLayout">
+		<encoder>
 			<pattern>%date %-29([%3.3X{smtpServerLocalSocketAddress}] [%.21thread]) %-5level %logger{20} %m %ex%n</pattern>
-		</layout>
+		</encoder>
 	</appender>
 	-->
 

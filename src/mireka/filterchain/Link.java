@@ -6,11 +6,11 @@ import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.TooMuchDataException;
 
 import mireka.MailData;
-import mireka.address.Recipient;
 import mireka.filter.Filter;
 import mireka.filter.FilterChain;
 import mireka.filter.FilterReply;
 import mireka.filter.MailTransaction;
+import mireka.filter.RecipientContext;
 
 class Link implements FilterChain {
     private final Filter filter;
@@ -32,14 +32,14 @@ class Link implements FilterChain {
     }
 
     @Override
-    public FilterReply verifyRecipient(Recipient recipient)
+    public FilterReply verifyRecipient(RecipientContext recipientContext)
             throws RejectException {
-        return filter.verifyRecipient(recipient);
+        return filter.verifyRecipient(recipientContext);
     }
 
     @Override
-    public void recipient(Recipient recipient) throws RejectException {
-        filter.recipient(recipient);
+    public void recipient(RecipientContext recipientContext) throws RejectException {
+        filter.recipient(recipientContext);
     }
 
     @Override

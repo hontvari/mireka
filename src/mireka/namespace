@@ -3,6 +3,7 @@ mireka.filter
 mireka.filter.misc
 mireka.filter.dnsbl
 mireka.filter.local
+mireka.filter.local.table
 mireka.filter.proxy
 mireka.filter.spf
 mireka.filterchain

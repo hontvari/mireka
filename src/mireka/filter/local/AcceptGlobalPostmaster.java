@@ -1,7 +1,7 @@
 package mireka.filter.local;
 
-import mireka.address.Recipient;
 import mireka.filter.FilterReply;
+import mireka.filter.RecipientContext;
 import mireka.filter.StatelessFilterType;
 
 import org.subethamail.smtp.RejectException;
@@ -9,9 +9,9 @@ import org.subethamail.smtp.RejectException;
 public class AcceptGlobalPostmaster extends StatelessFilterType {
 
     @Override
-    public FilterReply verifyRecipient(Recipient recipient)
+    public FilterReply verifyRecipient(RecipientContext recipientContext)
             throws RejectException {
-        if (recipient.isGlobalPostmaster())
+        if (recipientContext.recipient.isGlobalPostmaster())
             return FilterReply.ACCEPT;
         else
             return FilterReply.NEUTRAL;

@@ -4,9 +4,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import mireka.address.LocalPart;
-import mireka.address.RemotePartContainingRecipient;
-import mireka.filter.local.RecipientSpecification;
+import mireka.address.Recipient;
+import mireka.filter.local.table.RecipientSpecification;
 
+/**
+ * A {@link RecipientSpecification} which accepts those recipient addresses
+ * where the local part case insensitively matches any of the user names in the
+ * supplied {@link GlobalUsers} collection.
+ */
 public class GlobalUsersRecipientSpecification implements
         RecipientSpecification {
     private final Set<LocalPart> usernamesAsLocalParts =
@@ -23,8 +28,7 @@ public class GlobalUsersRecipientSpecification implements
     }
 
     @Override
-    public boolean isSatisfiedBy(RemotePartContainingRecipient recipient) {
-        return usernamesAsLocalParts.contains(recipient.getAddress()
-                .getLocalPart());
+    public boolean isSatisfiedBy(Recipient recipient) {
+        return usernamesAsLocalParts.contains(recipient.localPart());
     }
 }

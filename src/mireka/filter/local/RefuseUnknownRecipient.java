@@ -1,41 +1,31 @@
 package mireka.filter.local;
 
-import java.util.ArrayList;
-import java.util.List;
+import mireka.UnknownUserException;
+import mireka.filter.FilterReply;
+import mireka.filter.RecipientContext;
+import mireka.filter.StatelessFilterType;
+import mireka.filter.local.table.UnknownRecipient;
 
 import org.subethamail.smtp.RejectException;
 
-import mireka.UnknownUserException;
-import mireka.address.Recipient;
-import mireka.address.RemotePartContainingRecipient;
-import mireka.filter.FilterReply;
-import mireka.filter.StatelessFilterType;
-
+/**
+ * The RefuseUnknownRecipient filter rejects recipients whose destination has
+ * been set to {@link UnknownRecipient} . A destination must be assigned to the
+ * recipient before the {@link #verifyRecipient} method of this class is called.
+ * 
+ * @see LookupDestination
+ */
 public class RefuseUnknownRecipient extends StatelessFilterType {
-    private List<RecipientSpecification> specifications =
-            new ArrayList<RecipientSpecification>();
-
-    public void addRecipientSpecification(RecipientSpecification specification) {
-        specifications.add(specification);
-    }
 
     @Override
-    public FilterReply verifyRecipient(Recipient recipient)
+    public FilterReply verifyRecipient(RecipientContext recipientContext)
             throws RejectException {
-        if (isKnown(recipient))
+        if (isKnown(recipientContext))
             return FilterReply.NEUTRAL;
-        throw new UnknownUserException(recipient);
+        throw new UnknownUserException(recipientContext.recipient);
     }
 
-    private boolean isKnown(Recipient recipient) {
-        if (recipient.isGlobalPostmaster())
-            return true;
-        RemotePartContainingRecipient remotePartContainingRecipient =
-                (RemotePartContainingRecipient) recipient;
-        for (RecipientSpecification specification : specifications) {
-            if (specification.isSatisfiedBy(remotePartContainingRecipient))
-                return true;
-        }
-        return false;
+    private boolean isKnown(RecipientContext recipientContext) {
+        return !(recipientContext.getDestination() instanceof UnknownRecipient);
     }
 }

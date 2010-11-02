@@ -2,15 +2,15 @@ package mireka.filterchain;
 
 import java.io.IOException;
 
-import org.subethamail.smtp.RejectException;
-import org.subethamail.smtp.TooMuchDataException;
-
 import mireka.MailData;
 import mireka.UnknownUserException;
-import mireka.address.Recipient;
 import mireka.filter.FilterChain;
 import mireka.filter.FilterReply;
 import mireka.filter.MailTransaction;
+import mireka.filter.RecipientContext;
+
+import org.subethamail.smtp.RejectException;
+import org.subethamail.smtp.TooMuchDataException;
 
 class ChainEnd implements FilterChain {
     private final MailTransaction mailTransaction;
@@ -30,13 +30,13 @@ class ChainEnd implements FilterChain {
     }
 
     @Override
-    public FilterReply verifyRecipient(Recipient recipient)
+    public FilterReply verifyRecipient(RecipientContext recipientContext)
             throws RejectException {
-        throw new UnknownUserException(recipient);
+        throw new UnknownUserException(recipientContext.recipient);
     }
 
     @Override
-    public void recipient(Recipient recipient) throws RejectException {
+    public void recipient(RecipientContext recipientContext) throws RejectException {
         // do nothing
     }
 

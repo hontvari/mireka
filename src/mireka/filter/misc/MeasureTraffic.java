@@ -3,12 +3,12 @@ package mireka.filter.misc;
 import java.io.IOException;
 
 import mireka.MailData;
-import mireka.address.Recipient;
 import mireka.filter.AbstractFilter;
 import mireka.filter.Filter;
 import mireka.filter.FilterReply;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
+import mireka.filter.RecipientContext;
 
 import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.TooMuchDataException;
@@ -54,14 +54,14 @@ public class MeasureTraffic implements FilterType {
             chain.data(data);
             trafficSummary.acceptedMessages.incrementAndGet();
             trafficSummary.messageRecipients.addAndGet(mailTransaction
-                    .getRecipients().size());
+                    .getAcceptedRecipientContexts().size());
         }
 
         @Override
-        public FilterReply verifyRecipient(Recipient recipient)
+        public FilterReply verifyRecipient(RecipientContext recipientContext)
                 throws RejectException {
             trafficSummary.rcptCommands.incrementAndGet();
-            return chain.verifyRecipient(recipient);
+            return chain.verifyRecipient(recipientContext);
         }
     }
 }

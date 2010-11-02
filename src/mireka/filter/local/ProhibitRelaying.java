@@ -3,25 +3,36 @@ package mireka.filter.local;
 import java.util.ArrayList;
 import java.util.List;
 
+import mireka.address.GlobalPostmaster;
 import mireka.address.Recipient;
 import mireka.address.RemotePart;
 import mireka.address.RemotePartContainingRecipient;
 import mireka.filter.FilterReply;
+import mireka.filter.RecipientContext;
 import mireka.filter.StatelessFilterType;
+import mireka.filter.local.table.DomainSpecification;
 
 import org.subethamail.smtp.RejectException;
 
+/**
+ * This filter rejects recipient addresses of which remote part is not a local
+ * domain (or address literal). It does not rejects the special, global
+ * postmaster address.
+ */
 public class ProhibitRelaying extends StatelessFilterType {
     private List<DomainSpecification> localDomainSpecifications =
             new ArrayList<DomainSpecification>();
 
     @Override
-    public FilterReply verifyRecipient(Recipient recipient)
+    public FilterReply verifyRecipient(RecipientContext recipientContext)
             throws RejectException {
-        if (recipient.isGlobalPostmaster())
+        Recipient recipient = recipientContext.recipient;
+        if (recipient instanceof GlobalPostmaster)
             return FilterReply.NEUTRAL;
-        else
+        else if (recipient instanceof RemotePartContainingRecipient)
             return verifyRemotePartContainingRecipient((RemotePartContainingRecipient) recipient);
+        else
+            throw new IllegalArgumentException();
     }
 
     private FilterReply verifyRemotePartContainingRecipient(

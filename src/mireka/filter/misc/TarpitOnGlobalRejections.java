@@ -3,12 +3,12 @@ package mireka.filter.misc;
 import javax.annotation.concurrent.GuardedBy;
 
 import mireka.UnknownUserException;
-import mireka.address.Recipient;
 import mireka.filter.AbstractFilter;
 import mireka.filter.Filter;
 import mireka.filter.FilterReply;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
+import mireka.filter.RecipientContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,10 +35,10 @@ public class TarpitOnGlobalRejections implements FilterType {
         }
 
         @Override
-        public FilterReply verifyRecipient(Recipient recipient)
+        public FilterReply verifyRecipient(RecipientContext recipientContext)
                 throws RejectException {
             try {
-                return chain.verifyRecipient(recipient);
+                return chain.verifyRecipient(recipientContext);
             } catch (UnknownUserException e) {
                 tarpit.addRejection();
                 sleep();
@@ -47,9 +47,9 @@ public class TarpitOnGlobalRejections implements FilterType {
         }
 
         @Override
-        public void recipient(Recipient recipient) throws RejectException {
+        public void recipient(RecipientContext recipientContext) throws RejectException {
             try {
-                chain.recipient(recipient);
+                chain.recipient(recipientContext);
             } catch (UnknownUserException e) {
                 tarpit.addRejection();
                 throw e;

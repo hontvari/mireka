@@ -1,4 +1,4 @@
-package mireka.filter.local;
+package mireka.filter.local.table;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -8,8 +8,10 @@ import mireka.address.MailAddressFactory;
 import mireka.address.RemotePart;
 
 /**
- * In contrast to its name this container also accepts {@link AddressLiteral},
- * but that is rarely used if ever.
+ * InlineDomainRegistry is used to easily configure the list of domains and
+ * address literals which are considered local by the mail server. In contrast
+ * to its name this container also accepts {@link AddressLiteral}, but that is
+ * rarely used if ever.
  */
 public class InlineDomainRegistry implements DomainSpecification {
     private Set<RemotePart> remoteParts = new HashSet<RemotePart>();

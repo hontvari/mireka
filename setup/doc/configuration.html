@@ -67,12 +67,14 @@ services:
 connections.</li>  
 <li>the backend server. It specifies the server, to where mails are relayed for 
 delivery or submission. It is used by the relay filter. By default both proxy 
-sevices use the same backend server, however this is not required.</li> 
-</ul>
+sevices use the same backend server, however this is not required. Moreover, 
+it is possible to use more than one server, and configure Mireka to select a 
+backend server based on the recipient.</li> 
+</ul> 
 </td></tr>
 <tr><th><a href="mx.html">mx</a></th><td>Configuration files related to the MX 
 service, which receives mails sent to the local domains by any server on the 
-internet. The service, in turn, relays all received mails to the backend server.
+internet. The service, in turn, relays all received mails to a backend server.
 </td></tr>
 <tr><th><a href="submission.html">submission</a></th><td>Configuration files 
 related to the Submission service, used by local users to send mails either to 
@@ -87,7 +89,7 @@ sender.
 <tr><th><a href="submission-proxy.html">submission-proxy</a></th><td>Configuration 
 files related to the Submission Proxy service, used by local users to send mails 
 either to other local users, or to other domains on the internet. The service, 
-in turn, relays all submitted mails to the backend server.
+in turn, relays all submitted mails to a backend server.
 </td></tr>
 </table>
 

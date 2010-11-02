@@ -1,6 +1,6 @@
 /**
  * Provides the reliable transmission service API and the corresponding 
- * {@link mireka.transmission.Transmit} filter.  
+ * {@link mireka.transmission.TransmitFilter} filter.  
  */
 package mireka.transmission;
 

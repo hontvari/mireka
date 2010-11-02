@@ -5,8 +5,10 @@ import java.io.InputStream;
 
 import javax.mail.internet.ParseException;
 
+import mireka.ConfigurationException;
 import mireka.address.MailAddressFactory;
 import mireka.address.Recipient;
+import mireka.filter.RecipientContext;
 import mireka.filterchain.FilterInstances;
 
 import org.slf4j.Logger;
@@ -17,8 +19,8 @@ import org.subethamail.smtp.TooMuchDataException;
 import org.subethamail.smtp.io.DeferredFileOutputStream;
 
 public class FilterChainMessageHandler implements MessageHandler {
-    private final Logger logger =
-            LoggerFactory.getLogger(FilterChainMessageHandler.class);
+    private final Logger logger = LoggerFactory
+            .getLogger(FilterChainMessageHandler.class);
     private final FilterInstances filterChain;
     private final MailTransactionImpl mailTransaction;
 
@@ -37,9 +39,10 @@ public class FilterChainMessageHandler implements MessageHandler {
     @Override
     public void recipient(String recipientString) throws RejectException {
         Recipient recipient = convertToRecipient(recipientString);
-        filterChain.getHead().verifyRecipient(recipient);
-        filterChain.getHead().recipient(recipient);
-        mailTransaction.recipients.add(recipient);
+        RecipientContext recipientContext = new RecipientContext(recipient);
+        filterChain.getHead().verifyRecipient(recipientContext);
+        filterChain.getHead().recipient(recipientContext);
+        mailTransaction.recipientContexts.add(recipientContext);
     }
 
     private Recipient convertToRecipient(String recipient)
@@ -64,6 +67,7 @@ public class FilterChainMessageHandler implements MessageHandler {
                     new DeferredFileMailData(deferredFileOutputStream);
             mailTransaction.setData(deferredFileMailData);
             filterChain.getHead().data(mailTransaction.getData());
+            checkResponsibilityHasBeenTakenForAllRecipients();
         } finally {
             if (mailTransaction.getData() != null)
                 mailTransaction.getData().dispose();
@@ -82,6 +86,20 @@ public class FilterChainMessageHandler implements MessageHandler {
             deferredFileOutputStream.write(buffer, 0, cRead);
         }
         return deferredFileOutputStream;
+    }
+
+    private void checkResponsibilityHasBeenTakenForAllRecipients()
+            throws ConfigurationException {
+        for (RecipientContext recipientContext : mailTransaction.recipientContexts) {
+            if (!recipientContext.isResponsibilityTransferred) {
+                throw new ConfigurationException("Processing of mail data "
+                        + "completed, but no filter has took the "
+                        + "responsibility for the recipient "
+                        + recipientContext.recipient + ", "
+                        + "whose assigned destination was "
+                        + recipientContext.getDestination());
+            }
+        }
     }
 
     @Override
