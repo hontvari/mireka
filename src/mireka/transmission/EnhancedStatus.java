@@ -8,6 +8,8 @@ import mireka.transmission.immediate.ResponseParser;
 import mireka.transmission.immediate.Rfc821Status;
 import mireka.util.Multiline;
 
+import org.subethamail.smtp.RejectException;
+
 /**
  * These class represents an SMTP status which includes enhanced status code.
  * 
@@ -29,8 +31,8 @@ public class EnhancedStatus implements MailSystemStatus {
             new EnhancedStatus(550, "5.4.4", "Unable to route");
     public static final EnhancedStatus TRANSIENT_LOCAL_ERROR_IN_PROCESSING =
             new EnhancedStatus(451, "4.3.0", "Local error in processing");
-    public static final EnhancedStatus MAIL_SYSTEM_FULL =
-            new EnhancedStatus(452, "4.3.1", "Mail system full");
+    public static final EnhancedStatus MAIL_SYSTEM_FULL = new EnhancedStatus(
+            452, "4.3.1", "Mail system full");
     public static final EnhancedStatus BAD_DESTINATION_MAILBOX_ADDRESS_SYNTAX =
             new EnhancedStatus(553, "5.1.3",
                     "Bad destination mailbox address syntax");
@@ -133,6 +135,11 @@ public class EnhancedStatus implements MailSystemStatus {
     @Override
     public String getDiagnosticCode() {
         return Multiline.prependStatusCodeToMessage(smtpReplyCode,
+                getMessagePrefixedWithEnhancedStatusCode());
+    }
+
+    public RejectException createRejectException() {
+        return new RejectException(getSmtpReplyCode(),
                 getMessagePrefixedWithEnhancedStatusCode());
     }
 

@@ -21,7 +21,7 @@ import org.subethamail.smtp.TooMuchDataException;
 /**
  * RelayMailTransaction relays each step of the mail transaction in "realtime".
  * Different recipients may be relayed to different backend servers. This filter
- * handles only recipients whose destination is a {@link Relay}. The algorithm
+ * handles only recipients whose destination is a {@link RelayDestination}. The algorithm
  * is the same as in Baton. The backend server is only connected on the first
  * RCPT SMTP statement. This means that with proper configuration the backend
  * server is not connected at all if no recipient were accepted. Moreover, in
@@ -62,14 +62,14 @@ public class RelayMailTransaction implements FilterType {
         public void recipient(RecipientContext recipientContext)
                 throws RejectException {
             Destination destination = recipientContext.getDestination();
-            if (!(destination instanceof Relay))
+            if (!(destination instanceof RelayDestination))
                 return;
             recipientContext.isResponsibilityTransferred = true;
-            relayRecipientToServer(recipientContext, (Relay) destination);
+            relayRecipientToServer(recipientContext, (RelayDestination) destination);
         }
 
         private void relayRecipientToServer(RecipientContext recipientContext,
-                Relay destination) throws RejectException,
+                RelayDestination destination) throws RejectException,
                 BackendRejectException {
             BackendServer server = destination.getBackendServer();
             BackendClient client = getOrCreateClient(server);

@@ -18,7 +18,7 @@ public class RecipientSpecificationDestinationPair implements
         if (recipientSpecification.isSatisfiedBy(recipient))
             return destination;
         else
-            return UnknownRecipient.INSTANCE;
+            return UnknownRecipientDestination.INSTANCE;
     }
 
     /**

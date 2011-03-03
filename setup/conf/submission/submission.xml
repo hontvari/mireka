@@ -7,24 +7,56 @@
 	xmlns:ee="urn:java:ee"
 	>
 	
+	<!-- 
+		Comment out if mails will be relayed through the backend server.
+		In that case queues are not necessary. 
+	-->
 	<resin:import path="${__DIR__}/queues.xml" />
 	
 	<mireka:RecipientTable>
 		<Named>submissionRecipientTable</Named>
+
+		<!-- 
+			comment out if POP service is not active
+		-->
+		<mireka:mapper>
+			<mireka:GlobalUsersMaildropDestinationMapper>
+				<mireka:users>#{globalUsers}</mireka:users>
+			</mireka:GlobalUsersMaildropDestinationMapper>
+		</mireka:mapper>
+		
 		<mireka:mapper>
 			<mireka:RecipientSpecificationDestinationPair>
 				<mireka:recipientSpecification>
 					<mireka:AnyRecipient />
 				</mireka:recipientSpecification>
 				<mireka:destination>
-					<mireka:Transmit />
+					<!-- 
+						comment out if all mails will be 
+						relayed through the backend 
+						server
+					-->
+					<mireka:TransmitterDestination />
+					
+					<!-- 
+						uncomment to relay all mail to 
+						the backend server 
+					-->
+					<!--
+					<mireka:RelayDestination>
+						<mireka:backendServer>
+							#{backendServer}
+						</mireka:backendServer>
+					</mireka:RelayDestination>
+					-->
 				</mireka:destination>
+				
 			</mireka:RecipientSpecificationDestinationPair>
 		</mireka:mapper>
 	</mireka:RecipientTable>
 
 	<resource name="submissionTrafficSummary" 
-			mbean-name="mireka:type=SubmissionTraffic,name=Submission"
+			mbean-name="mireka:type=TrafficSummary,name=Submission"
 			type="mireka.filter.misc.TrafficSummary" />
 			
 	<mireka:Filters>
@@ -82,6 +114,16 @@
 					#{primaryTransmitter}
 				</mireka:transmitter>
 			</mireka:TransmitFilter>
+		</mireka:filter>
+		<mireka:filter>
+			<mireka:RelayMailTransaction />
+		</mireka:filter>
+		<mireka:filter>
+			<mireka:MaildropFilter>
+				<mireka:maildropRepository>
+					#{maildropRepository}
+				</mireka:maildropRepository>
+			</mireka:MaildropFilter>
 		</mireka:filter>
 	</mireka:Filters>
 	

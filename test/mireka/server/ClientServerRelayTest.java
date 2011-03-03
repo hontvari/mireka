@@ -13,9 +13,11 @@ import mireka.filter.local.LookupDestination;
 import mireka.filter.local.table.RecipientSpecificationDestinationPair;
 import mireka.filter.local.table.RecipientSpecificationFactory;
 import mireka.filter.proxy.BackendServer;
-import mireka.filter.proxy.Relay;
+import mireka.filter.proxy.RelayDestination;
 import mireka.filter.proxy.RelayMailTransaction;
 import mireka.filterchain.Filters;
+import mireka.smtp.server.MessageHandlerFactoryImpl;
+import mireka.smtp.server.SMTPService;
 
 import org.junit.After;
 import org.junit.Before;
@@ -57,7 +59,7 @@ public class ClientServerRelayTest {
         backendServer.setHost("localhost");
         backendServer.setPort(8026);
         backendServer.setClientFactory(client);
-        Relay relayDestination = new Relay();
+        RelayDestination relayDestination = new RelayDestination();
         relayDestination.setBackendServer(backendServer);
 
         RecipientSpecificationDestinationPair recipientDestinationMapper =

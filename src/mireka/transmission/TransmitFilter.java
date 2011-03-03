@@ -59,7 +59,7 @@ public class TransmitFilter implements FilterType {
         @Override
         public void recipient(RecipientContext recipientContext)
                 throws RejectException {
-            if (!(recipientContext.getDestination() instanceof Transmit))
+            if (!(recipientContext.getDestination() instanceof TransmitterDestination))
                 return;
             recipientContext.isResponsibilityTransferred = true;
             mail.recipients.add(recipientContext.recipient);

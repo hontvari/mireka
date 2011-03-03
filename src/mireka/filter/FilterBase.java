@@ -8,8 +8,11 @@ import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.TooMuchDataException;
 
 /**
- * don't implement this interface directly, use the descendant interfaces and
- * the implementing abstract classes
+ * A filter processes mails, its functions are called in the different phases of
+ * the SMTP mail transaction.
+ * <p>
+ * Note: Don't implement this interface directly, use the descendant interfaces
+ * and the implementing abstract classes
  */
 public interface FilterBase {
 
@@ -18,13 +21,20 @@ public interface FilterBase {
     void from(String from) throws RejectException;
 
     /**
-     * it is not called if a previous filter has already accepted the recipient
+     * Decides if a recipient should be accepted. The decision can be a final
+     * positive, a final negative, or a neutral answer. This function is not
+     * called if a previous filter has already accepted or rejected the
+     * recipient. In case of a neutral answer, other filters will decide.
+     * 
+     * @throws RejectException
+     *             if the recipient is not valid and it must be rejected
      */
-    FilterReply verifyRecipient(RecipientContext recipientContext) throws RejectException;
+    FilterReply verifyRecipient(RecipientContext recipientContext)
+            throws RejectException;
 
     /**
-     * it is only called if one of the filters accepted the recipient in
-     * {@link #verifyRecipient}
+     * Processes an accepted recipient. It is only called if one of the filters
+     * accepted the recipient in {@link #verifyRecipient}.
      */
     void recipient(RecipientContext recipientContext) throws RejectException;
 

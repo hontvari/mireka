@@ -4,13 +4,13 @@ import mireka.UnknownUserException;
 import mireka.filter.FilterReply;
 import mireka.filter.RecipientContext;
 import mireka.filter.StatelessFilterType;
-import mireka.filter.local.table.UnknownRecipient;
+import mireka.filter.local.table.UnknownRecipientDestination;
 
 import org.subethamail.smtp.RejectException;
 
 /**
  * The RefuseUnknownRecipient filter rejects recipients whose destination has
- * been set to {@link UnknownRecipient} . A destination must be assigned to the
+ * been set to {@link UnknownRecipientDestination} . A destination must be assigned to the
  * recipient before the {@link #verifyRecipient} method of this class is called.
  * 
  * @see LookupDestination
@@ -26,6 +26,6 @@ public class RefuseUnknownRecipient extends StatelessFilterType {
     }
 
     private boolean isKnown(RecipientContext recipientContext) {
-        return !(recipientContext.getDestination() instanceof UnknownRecipient);
+        return !(recipientContext.getDestination() instanceof UnknownRecipientDestination);
     }
 }

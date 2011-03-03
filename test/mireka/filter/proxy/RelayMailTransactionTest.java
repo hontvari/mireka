@@ -32,14 +32,14 @@ public class RelayMailTransactionTest {
     private RelayMailTransaction.FilterImpl filter =
             new RelayMailTransaction.FilterImpl(null);
 
-    private Relay destinationA;
-    private Relay destinationB;
+    private RelayDestination destinationA;
+    private RelayDestination destinationB;
 
     @Before
     public void setup() {
-        destinationA = new Relay();
+        destinationA = new RelayDestination();
         destinationA.setBackendServer(backendServerA);
-        destinationB = new Relay();
+        destinationB = new RelayDestination();
         destinationB.setBackendServer(backendServerB);
     }
 

@@ -33,4 +33,9 @@ public class LocalPart {
     public String escapedName() {
         return receivedRawText;
     }
+
+    @Override
+    public String toString() {
+        return displayableName();
+    }
 }

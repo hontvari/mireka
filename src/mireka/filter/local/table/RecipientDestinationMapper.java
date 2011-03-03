@@ -8,7 +8,8 @@ import mireka.filter.Destination;
  */
 public interface RecipientDestinationMapper {
     /**
-     * Returns UnknownUser if it does not know the recipient.
+     * Returns {@link UnknownRecipientDestination} if it does not know the
+     * recipient.
      */
     Destination lookup(Recipient recipient);
 }

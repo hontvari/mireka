@@ -1,5 +1,8 @@
 package mireka.submission;
 
+import mireka.login.LoginResult;
+import mireka.login.LoginSpecification;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.subethamail.smtp.auth.LoginFailedException;
@@ -17,8 +20,8 @@ public class UsernamePasswordValidatorImpl implements UsernamePasswordValidator 
     public void login(String username, String password)
             throws LoginFailedException {
         LoginResult loginResult =
-                loginSpecification.evaluate(username, password);
-        switch (loginResult) {
+                loginSpecification.evaluatePlain(username, password);
+        switch (loginResult.decision) {
         case VALID:
             logger.debug("{} logged in", username);
             return;

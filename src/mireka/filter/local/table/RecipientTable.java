@@ -19,10 +19,10 @@ public class RecipientTable implements RecipientDestinationMapper {
     public Destination lookup(Recipient recipient) {
         for (RecipientDestinationMapper mapper : mappers) {
             Destination destination = mapper.lookup(recipient);
-            if (!destination.equals(UnknownRecipient.INSTANCE))
+            if (!destination.equals(UnknownRecipientDestination.INSTANCE))
                 return destination;
         }
-        return UnknownRecipient.INSTANCE;
+        return UnknownRecipientDestination.INSTANCE;
     }
 
     public void addMapper(RecipientDestinationMapper mapper) {

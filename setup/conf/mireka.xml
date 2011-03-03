@@ -29,42 +29,42 @@
 		</mireka:clientFactory>
 	</mireka:BackendServer>
 	
+	<mireka:MaildropRepository>
+		<Named>maildropRepository</Named>
+		 <ApplicationScoped/>
+		<mireka:dir>${mirekaHome}/maildrops</mireka:dir>
+	</mireka:MaildropRepository>
+	
+	<resin:import path="${__DIR__}/global-users.xml" />
+	
 	<!--
-		uncomment to run the RFC 4409 message submission PROXY service
-		
-		This service transmits messages to the backend server. 
-		
-		global-users of this submission service are accepted 
-		recipients in the MX service
-
+		uncomment to run the POP3 server
 	-->
 	<!--
-	<system-property submissionServiceActive="true"/>
-	<resin:import path="${__DIR__}/submission-proxy/global-users.xml" />
-	<resin:import path="${__DIR__}/submission-proxy/submission.xml" />
+	<resin:import path="${__DIR__}/pop/pop.xml" />
 	-->
 	
 	<!--
-		uncomment to run the RFC 4409 message submission NON-PROXY 
-		service
+		uncomment to run the RFC 4409 message submission service
 
-		This service directly transmits messages to the 
-		mail servers of the recipient on the internet.
-		
-		global-users of this submission service are accepted 
-		recipients in the MX service
+		This service - depending on its configuration - either directly 
+		transmits messages to the mail servers of the recipient on the 
+		internet, or relays messages to a backend server.
 	-->
 	<!--
 	<system-property submissionServiceActive="true"/>
-	<resin:import path="${__DIR__}/submission/global-users.xml" />
 	<resin:import path="${__DIR__}/submission/submission.xml" />
 	-->
 	
 	<!--
-		uncomment to run the MX proxy
+		uncomment to run the MX SMTP server
+		
+		This service - depending on its configuration - either relay  
+		a message to a backend server, or deliver it into a local POP3
+		maildrop. 
 	-->
 	<!--
 	<resin:import path="${__DIR__}/mx/mx.xml" />
-	-->
+	-->	
 	
 </web-app>

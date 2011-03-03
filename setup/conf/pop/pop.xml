@@ -1,0 +1,29 @@
+<web-app xmlns="http://caucho.com/ns/resin"
+	xmlns:resin="urn:java:com.caucho.resin"
+	xmlns:mireka="urn:java:mireka"
+	xmlns:subetha="urn:java:org.subethamail.smtp.server"
+	xmlns:ee="urn:java:ee"
+	>
+	
+	
+	<mireka:PopServer>
+		<Named>popServer</Named>
+		<ee:Startup/>
+
+		<mireka:loginSpecification>
+			<mireka:GlobalUsersLoginSpecification>
+				<mireka:users>#{globalUsers}</mireka:users>
+			</mireka:GlobalUsersLoginSpecification>
+		</mireka:loginSpecification>
+		
+		<mireka:principalMaildropTable>
+			<mireka:GlobalUsersPrincipalMaildropTable />
+		</mireka:principalMaildropTable>
+		
+		<mireka:maildropRepository>
+			#{maildropRepository}
+		</mireka:maildropRepository>
+
+	</mireka:PopServer>
+	
+</web-app>

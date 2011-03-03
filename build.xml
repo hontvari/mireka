@@ -78,14 +78,23 @@
                        includeantruntime="false">
                         <classpath refid="compile.classpath" />
                 </javac>
-
-                <copy toDir="${build.dir}/classes">
-                        <fileset dir="${src.dir}" excludes="**/*.java" />
-                </copy>
         </target>
 
         <target name="war" depends="compile">
-                <war destfile="${build.war.file}" needxmlfile="false">
+                <mkdir dir="build/META-INF" />
+                <manifest file="build/META-INF/MANIFEST.MF" mode="update">
+                        <attribute name="Implementation-Title" value="Mireka" />
+                        <attribute name="Implementation-Version"
+                                   value="${build.version}" />
+                </manifest>
+                <copy file="resource/version.properties" todir="build">
+                        <filterchain>
+                                <expandproperties />
+                        </filterchain>
+                </copy>
+                <war destfile="${build.war.file}"
+                     needxmlfile="false"
+                     duplicate="fail">
 
                         <webinf dir="webapp/WEB-INF">
                                 <include name="resin-web-pre.xml" />
@@ -94,13 +103,24 @@
 
                         <classes dir="${build.classes.dir}" />
 
-                        <classes dir="${src.dir}">
+                        <classes dir="${src.dir}" excludes="**/*.java" />
+
+                        <classes dir="build">
                                 <include name="META-INF/**" />
                         </classes>
+                        
+                        <classes file="build/version.properties" />
 
                         <lib dir="${lib.dir}">
                                 <exclude name="build-only/**" />
                         </lib>
+
+                        <manifest>
+                                <attribute name="Implementation-Title"
+                                           value="Mireka" />
+                                <attribute name="Implementation-Version"
+                                           value="${build.version}" />
+                        </manifest>
                 </war>
         </target>
 
@@ -217,7 +237,6 @@
           target: init-dist                    
          - - - - - - - - - - - - - - - - - -->
         <target name="init-dist">
-                <input addproperty="build.version" message="Version number?" />
                 <property name="dist.name" value="${name}-${build.version}" />
 
                 <property name="build.dist.dir"

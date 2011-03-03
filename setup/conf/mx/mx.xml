@@ -31,13 +31,11 @@
 			</mireka:InlineRecipientRegistry>
 		</mireka:specification>
 	
-		<resin:if test="${submissionServiceActive}">	
 		<mireka:specification>
 			<mireka:GlobalUsersRecipientSpecification>
 				<mireka:users>#{globalUsers}</mireka:users>
 			</mireka:GlobalUsersRecipientSpecification>
 		</mireka:specification>
-		</resin:if>
 		
 		<resin:import path="${__DIR__}/wildcard-recipients.xml" />
 		
@@ -45,20 +43,31 @@
 
 	<mireka:RecipientTable>
 		<Named>recipientTable</Named>
+		
+		<!-- 
+			comment out if POP service is not active
+		-->
+		<mireka:mapper>
+			<mireka:GlobalUsersMaildropDestinationMapper>
+				<mireka:users>#{globalUsers}</mireka:users>
+			</mireka:GlobalUsersMaildropDestinationMapper>
+		</mireka:mapper>
+		
 		<mireka:mapper>
 			<mireka:RecipientSpecificationDestinationPair>
 				<mireka:recipientSpecification>
 					#{validRecipients}
 				</mireka:recipientSpecification>
 				<mireka:destination>
-					<mireka:Relay>
+					<mireka:RelayDestination>
 						<mireka:backendServer>
 							#{backendServer}
 						</mireka:backendServer>
-					</mireka:Relay>
+					</mireka:RelayDestination>
 				</mireka:destination>
 			</mireka:RecipientSpecificationDestinationPair>
 		</mireka:mapper>
+		
 	</mireka:RecipientTable>
 	
 	<resource name="mxTrafficSummary" mbean-name="mireka:type=TrafficSummary,name=MX"
@@ -131,6 +140,13 @@
 		</mireka:filter>
 		<mireka:filter>
 			<mireka:RelayMailTransaction />
+		</mireka:filter>
+		<mireka:filter>
+			<mireka:MaildropFilter>
+				<mireka:maildropRepository>
+					#{maildropRepository}
+				</mireka:maildropRepository>
+			</mireka:MaildropFilter>
 		</mireka:filter>
 	</mireka:Filters>
 	
