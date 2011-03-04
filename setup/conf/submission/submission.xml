@@ -16,13 +16,8 @@
 	<mireka:RecipientTable>
 		<Named>submissionRecipientTable</Named>
 
-		<!-- 
-			comment out if POP service is not active
-		-->
 		<mireka:mapper>
-			<mireka:GlobalUsersMaildropDestinationMapper>
-				<mireka:users>#{globalUsers}</mireka:users>
-			</mireka:GlobalUsersMaildropDestinationMapper>
+			#{localRecipientsTable}
 		</mireka:mapper>
 		
 		<mireka:mapper>

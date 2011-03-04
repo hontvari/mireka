@@ -13,7 +13,7 @@ import mireka.address.RemotePart;
  * to its name this container also accepts {@link AddressLiteral}, but that is
  * rarely used if ever.
  */
-public class InlineDomainRegistry implements DomainSpecification {
+public class InlineDomainRegistry implements RemotePartSpecification {
     private Set<RemotePart> remoteParts = new HashSet<RemotePart>();
 
     @Override

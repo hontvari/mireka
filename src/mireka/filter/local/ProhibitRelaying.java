@@ -10,7 +10,7 @@ import mireka.address.RemotePartContainingRecipient;
 import mireka.filter.FilterReply;
 import mireka.filter.RecipientContext;
 import mireka.filter.StatelessFilterType;
-import mireka.filter.local.table.DomainSpecification;
+import mireka.filter.local.table.RemotePartSpecification;
 
 import org.subethamail.smtp.RejectException;
 
@@ -20,8 +20,8 @@ import org.subethamail.smtp.RejectException;
  * postmaster address.
  */
 public class ProhibitRelaying extends StatelessFilterType {
-    private List<DomainSpecification> localDomainSpecifications =
-            new ArrayList<DomainSpecification>();
+    private List<RemotePartSpecification> localDomainSpecifications =
+            new ArrayList<RemotePartSpecification>();
 
     @Override
     public FilterReply verifyRecipient(RecipientContext recipientContext)
@@ -38,8 +38,8 @@ public class ProhibitRelaying extends StatelessFilterType {
     private FilterReply verifyRemotePartContainingRecipient(
             RemotePartContainingRecipient recipient) throws RejectException {
         RemotePart remotePart = recipient.getAddress().getRemotePart();
-        for (DomainSpecification domainSpecification : localDomainSpecifications) {
-            if (domainSpecification.isSatisfiedBy(remotePart))
+        for (RemotePartSpecification remotePartSpecification : localDomainSpecifications) {
+            if (remotePartSpecification.isSatisfiedBy(remotePart))
                 return FilterReply.NEUTRAL;
         }
         throw new RejectException(550,
@@ -48,9 +48,9 @@ public class ProhibitRelaying extends StatelessFilterType {
     }
 
     public void addLocalDomainSpecification(
-            DomainSpecification domainSpecification) {
-        if (domainSpecification == null)
+            RemotePartSpecification remotePartSpecification) {
+        if (remotePartSpecification == null)
             throw new NullPointerException();
-        localDomainSpecifications.add(domainSpecification);
+        localDomainSpecifications.add(remotePartSpecification);
     }
 }

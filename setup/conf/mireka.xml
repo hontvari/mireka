@@ -35,7 +35,25 @@
 		<mireka:dir>${mirekaHome}/maildrops</mireka:dir>
 	</mireka:MaildropRepository>
 	
+	<resin:import path="${__DIR__}/domains.xml" />
 	<resin:import path="${__DIR__}/global-users.xml" />
+	
+	<mireka:RecipientTable>
+		<Named>localRecipientsTable</Named>
+		
+		<resin:import path="${__DIR__}/alias.xml" />
+		
+		<!-- 
+			comment out if POP service is not active
+		-->
+		<mireka:mapper>
+			<mireka:GlobalUsersMaildropDestinationMapper>
+				<mireka:users>#{globalUsers}</mireka:users>
+			</mireka:GlobalUsersMaildropDestinationMapper>
+		</mireka:mapper>
+		
+	</mireka:RecipientTable>
+	
 	
 	<!--
 		uncomment to run the POP3 server

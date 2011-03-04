@@ -1,0 +1,24 @@
+<!--
+	Aliases are mostly useful if the POP3 service is enabled.
+-->
+<RecipientTable xmlns="urn:java:mireka">
+
+	<!--
+	<mapper>
+		<PostmasterAliasMapper>
+			<localDomains>#{localDomains}</localDomains>
+			<canonical>john@example.com</canonical>
+		</PostmasterAliasMapper>
+	</mapper>
+
+	<mapper>
+		<AliasMapper>
+			<alias>john1@example.com</alias>
+			<alias>john2@example.com</alias>
+			<canonical>john.doe@example.com</canonical>
+		</AliasMapper>
+	</mapper>
+	-->
+	
+</RecipientTable>
+	
