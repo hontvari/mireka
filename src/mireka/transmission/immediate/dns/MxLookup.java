@@ -8,7 +8,7 @@ import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import mireka.address.Domain;
-import mireka.transmission.EnhancedStatus;
+import mireka.smtp.EnhancedStatus;
 import mireka.transmission.immediate.SendException;
 
 import org.slf4j.Logger;

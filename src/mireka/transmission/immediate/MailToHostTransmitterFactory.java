@@ -1,6 +1,6 @@
 package mireka.transmission.immediate;
 
-import mireka.ClientFactory;
+import mireka.smtp.ClientFactory;
 import mireka.transmission.queuing.LogIdFactory;
 
 public class MailToHostTransmitterFactory {

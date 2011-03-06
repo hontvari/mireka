@@ -1,5 +1,7 @@
 package mireka.transmission;
 
+import mireka.smtp.EnhancedStatus;
+
 /**
  * Signals a failure within the scope of this installation, in which the SMTP
  * protocol is not involved.

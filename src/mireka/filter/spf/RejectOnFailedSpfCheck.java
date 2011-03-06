@@ -6,6 +6,7 @@ import mireka.filter.FilterReply;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
+import mireka.smtp.RejectExceptionExt;
 
 import org.apache.james.jspf.core.exceptions.SPFErrorConstants;
 import org.apache.james.jspf.executor.SPFResult;
@@ -43,7 +44,7 @@ public class RejectOnFailedSpfCheck implements FilterType {
 
         @Override
         public FilterReply verifyRecipient(RecipientContext recipientContext)
-                throws RejectException {
+                throws RejectExceptionExt {
             SPFResult spfResult = spfChecker.getResult();
             String spfResultCode = spfResult.getResult();
 

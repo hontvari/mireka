@@ -8,9 +8,9 @@ import java.util.List;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
-import mireka.ClientFactory;
 import mireka.address.Recipient;
-import mireka.transmission.EnhancedStatus;
+import mireka.smtp.ClientFactory;
+import mireka.smtp.EnhancedStatus;
 import mireka.transmission.Mail;
 import mireka.transmission.queuing.LogIdFactory;
 

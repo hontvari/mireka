@@ -1,8 +1,8 @@
 package mireka.transmission.immediate;
 
 import static org.junit.Assert.*;
-import mireka.transmission.EnhancedStatus;
-import mireka.transmission.MailSystemStatus;
+import mireka.smtp.EnhancedStatus;
+import mireka.smtp.MailSystemStatus;
 
 import org.junit.Test;
 import org.subethamail.smtp.client.SMTPClient.Response;

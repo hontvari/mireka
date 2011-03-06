@@ -9,10 +9,10 @@ import mireka.filter.AbstractFilter;
 import mireka.filter.Filter;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
+import mireka.smtp.RejectExceptionExt;
 import mireka.util.StreamCopier;
 
 import org.apache.james.jspf.executor.SPFResult;
-import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.TooMuchDataException;
 import org.subethamail.smtp.util.TextUtils;
 
@@ -32,7 +32,7 @@ public class AddReceivedSpfHeader implements FilterType {
         }
 
         @Override
-        public void data(MailData data) throws RejectException,
+        public void data(MailData data) throws RejectExceptionExt,
                 TooMuchDataException, IOException {
             SPFResult spfResult = spfChecker.getResult();
             String headerString = spfResult.getHeader() + "\r\n";

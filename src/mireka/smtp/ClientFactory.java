@@ -1,4 +1,4 @@
-package mireka;
+package mireka.smtp;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -11,6 +11,10 @@ import javax.enterprise.context.ApplicationScoped;
 import org.subethamail.smtp.client.SMTPException;
 import org.subethamail.smtp.client.SmartClient;
 
+/**
+ * ClientFactory creates {@link SmartClient} instances based on the configured
+ * parameters.
+ */
 @ApplicationScoped
 public class ClientFactory {
     private String helo;

@@ -4,10 +4,12 @@ import java.util.Date;
 
 import javax.annotation.Nullable;
 
-import mireka.transmission.EnhancedStatus;
+import mireka.smtp.EnhancedStatus;
 
 /**
- * 
+ * Signals an error occurred while attempting to transmit a mail to a remote
+ * domain. Typically the remote system cannot be found in the DNS or it rejects
+ * the mail.
  */
 public class SendException extends Exception {
     private static final long serialVersionUID = 379604390803596371L;

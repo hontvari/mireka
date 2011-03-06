@@ -10,8 +10,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 
-import mireka.ClientFactory;
 import mireka.ExampleMail;
+import mireka.smtp.ClientFactory;
 import mireka.transmission.Mail;
 import mireka.transmission.queuing.LogIdFactory;
 

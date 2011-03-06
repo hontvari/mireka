@@ -11,7 +11,7 @@ import java.util.Arrays;
 import mireka.ExampleMail;
 import mireka.address.Domain;
 import mireka.address.Recipient;
-import mireka.transmission.EnhancedStatus;
+import mireka.smtp.EnhancedStatus;
 import mireka.transmission.Mail;
 import mireka.transmission.immediate.dns.AddressLookup;
 import mireka.transmission.immediate.dns.AddressLookupFactory;

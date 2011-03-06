@@ -4,8 +4,8 @@ import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import mireka.transmission.EnhancedStatus;
-import mireka.transmission.MailSystemStatus;
+import mireka.smtp.EnhancedStatus;
+import mireka.smtp.MailSystemStatus;
 import mireka.util.MultilineParser;
 
 import org.slf4j.Logger;

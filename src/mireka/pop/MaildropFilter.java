@@ -15,7 +15,7 @@ import mireka.filter.RecipientContext;
 import mireka.pop.store.Maildrop;
 import mireka.pop.store.MaildropAppender;
 import mireka.pop.store.MaildropRepository;
-import mireka.transmission.EnhancedStatus;
+import mireka.smtp.EnhancedStatus;
 import mireka.transmission.LocalMailSystemException;
 
 import org.slf4j.Logger;

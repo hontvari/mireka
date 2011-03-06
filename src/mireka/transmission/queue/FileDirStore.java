@@ -15,7 +15,7 @@ import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import mireka.MailData;
-import mireka.transmission.EnhancedStatus;
+import mireka.smtp.EnhancedStatus;
 import mireka.transmission.Mail;
 import mireka.transmission.queue.dataprop.DataProperties;
 import mireka.util.StreamCopier;

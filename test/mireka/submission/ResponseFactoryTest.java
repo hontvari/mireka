@@ -2,8 +2,8 @@ package mireka.submission;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
-import mireka.transmission.EnhancedStatus;
-import mireka.transmission.MailSystemStatus;
+import mireka.smtp.EnhancedStatus;
+import mireka.smtp.MailSystemStatus;
 import mireka.transmission.immediate.Rfc821Status;
 import mireka.transmission.immediate.ResponseParser;
 

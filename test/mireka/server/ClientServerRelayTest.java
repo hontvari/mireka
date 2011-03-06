@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 
 import mireka.ArrayEndsWith;
-import mireka.ClientFactory;
 import mireka.ExampleAddress;
 import mireka.ExampleMailData;
 import mireka.filter.local.AcceptAllRecipient;
@@ -16,6 +15,7 @@ import mireka.filter.proxy.BackendServer;
 import mireka.filter.proxy.RelayDestination;
 import mireka.filter.proxy.RelayMailTransaction;
 import mireka.filterchain.Filters;
+import mireka.smtp.ClientFactory;
 import mireka.smtp.server.MessageHandlerFactoryImpl;
 import mireka.smtp.server.SMTPService;
 

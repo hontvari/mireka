@@ -5,8 +5,8 @@ import java.util.Date;
 import javax.annotation.Nullable;
 
 import mireka.address.Recipient;
-import mireka.transmission.EnhancedStatus;
-import mireka.transmission.MailSystemStatus;
+import mireka.smtp.EnhancedStatus;
+import mireka.smtp.MailSystemStatus;
 import mireka.transmission.immediate.RemoteMta;
 
 public class PermanentFailureReport {

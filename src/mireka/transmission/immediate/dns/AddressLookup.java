@@ -2,7 +2,7 @@ package mireka.transmission.immediate.dns;
 
 import java.net.InetAddress;
 
-import mireka.transmission.EnhancedStatus;
+import mireka.smtp.EnhancedStatus;
 import mireka.transmission.immediate.RemoteMta;
 import mireka.transmission.immediate.SendException;
 

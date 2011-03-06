@@ -14,9 +14,9 @@ import javax.mail.internet.ParseException;
 import mireka.MailData;
 import mireka.address.MailAddressFactory;
 import mireka.address.Recipient;
-import mireka.transmission.EnhancedStatus;
+import mireka.smtp.EnhancedStatus;
+import mireka.smtp.MailSystemStatus;
 import mireka.transmission.Mail;
-import mireka.transmission.MailSystemStatus;
 import mireka.util.DateTimeRfc822Formatter;
 import mireka.util.MultilineParser;
 

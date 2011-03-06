@@ -108,7 +108,7 @@
                         <classes dir="build">
                                 <include name="META-INF/**" />
                         </classes>
-                        
+
                         <classes file="build/version.properties" />
 
                         <lib dir="${lib.dir}">
@@ -207,6 +207,9 @@
                          author="true"
                          version="true"
                          Windowtitle="Mireka ${build.version}"
+                         Use="true"
+                         breakiterator="true"
+                         noqualifier="java.lang"
                          failonerror="true"
                          useexternalfile="true">
                         <fileset dir="${src.dir}">

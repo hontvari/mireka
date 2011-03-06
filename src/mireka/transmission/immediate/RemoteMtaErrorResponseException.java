@@ -1,7 +1,7 @@
 package mireka.transmission.immediate;
 
-import mireka.transmission.EnhancedStatus;
-import mireka.transmission.MailSystemStatus;
+import mireka.smtp.EnhancedStatus;
+import mireka.smtp.MailSystemStatus;
 
 import org.subethamail.smtp.client.SMTPException;
 

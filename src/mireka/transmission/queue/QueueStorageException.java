@@ -1,6 +1,6 @@
 package mireka.transmission.queue;
 
-import mireka.transmission.EnhancedStatus;
+import mireka.smtp.EnhancedStatus;
 import mireka.transmission.LocalMailSystemException;
 
 /**

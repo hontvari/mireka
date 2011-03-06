@@ -1,4 +1,4 @@
-package mireka.transmission;
+package mireka.smtp;
 
 /**
  * This interface represents an SMTP status, which is returned by a remote MTA

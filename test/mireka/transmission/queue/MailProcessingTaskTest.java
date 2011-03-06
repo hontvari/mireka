@@ -5,7 +5,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.Date;
 
-import mireka.transmission.EnhancedStatus;
+import mireka.smtp.EnhancedStatus;
 import mireka.transmission.LocalMailSystemException;
 import mireka.transmission.Mail;
 

@@ -3,6 +3,7 @@ package mireka.filter;
 import java.io.IOException;
 
 import mireka.MailData;
+import mireka.smtp.RejectExceptionExt;
 
 import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.TooMuchDataException;
@@ -18,7 +19,7 @@ public interface FilterBase {
 
     void begin();
 
-    void from(String from) throws RejectException;
+    void from(String from) throws RejectExceptionExt;
 
     /**
      * Decides if a recipient should be accepted. The decision can be a final
@@ -30,15 +31,15 @@ public interface FilterBase {
      *             if the recipient is not valid and it must be rejected
      */
     FilterReply verifyRecipient(RecipientContext recipientContext)
-            throws RejectException;
+            throws RejectExceptionExt;
 
     /**
      * Processes an accepted recipient. It is only called if one of the filters
      * accepted the recipient in {@link #verifyRecipient}.
      */
-    void recipient(RecipientContext recipientContext) throws RejectException;
+    void recipient(RecipientContext recipientContext) throws RejectExceptionExt;
 
-    void data(MailData data) throws RejectException, TooMuchDataException,
+    void data(MailData data) throws RejectExceptionExt, TooMuchDataException,
             IOException;
 
     /**

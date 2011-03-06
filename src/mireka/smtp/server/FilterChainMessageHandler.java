@@ -10,6 +10,7 @@ import mireka.address.MailAddressFactory;
 import mireka.address.Recipient;
 import mireka.filter.RecipientContext;
 import mireka.filterchain.FilterInstances;
+import mireka.smtp.RejectExceptionExt;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,17 +33,25 @@ public class FilterChainMessageHandler implements MessageHandler {
 
     @Override
     public void from(String from) throws RejectException {
-        filterChain.getHead().from(from);
-        mailTransaction.from = from;
+        try {
+            filterChain.getHead().from(from);
+            mailTransaction.from = from;
+        } catch (RejectExceptionExt e) {
+            throw e.toRejectException();
+        }
     }
 
     @Override
     public void recipient(String recipientString) throws RejectException {
-        Recipient recipient = convertToRecipient(recipientString);
-        RecipientContext recipientContext = new RecipientContext(recipient);
-        filterChain.getHead().verifyRecipient(recipientContext);
-        filterChain.getHead().recipient(recipientContext);
-        mailTransaction.recipientContexts.add(recipientContext);
+        try {
+            Recipient recipient = convertToRecipient(recipientString);
+            RecipientContext recipientContext = new RecipientContext(recipient);
+            filterChain.getHead().verifyRecipient(recipientContext);
+            filterChain.getHead().recipient(recipientContext);
+            mailTransaction.recipientContexts.add(recipientContext);
+        } catch (RejectExceptionExt e) {
+            throw e.toRejectException();
+        }
     }
 
     private Recipient convertToRecipient(String recipient)
@@ -68,6 +77,8 @@ public class FilterChainMessageHandler implements MessageHandler {
             mailTransaction.setData(deferredFileMailData);
             filterChain.getHead().data(mailTransaction.getData());
             checkResponsibilityHasBeenTakenForAllRecipients();
+        } catch (RejectExceptionExt e) {
+            throw e.toRejectException();
         } finally {
             if (mailTransaction.getData() != null)
                 mailTransaction.getData().dispose();

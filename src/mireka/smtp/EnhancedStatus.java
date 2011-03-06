@@ -1,4 +1,4 @@
-package mireka.transmission;
+package mireka.smtp;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,10 +14,13 @@ import org.subethamail.smtp.RejectException;
  * These class represents an SMTP status which includes enhanced status code.
  * 
  * @see ResponseParser
- * @see <a href="http://tools.ietf.org/html/rfc3463">rfc3463 - Enhanced Mail
+ * @see <a href="http://tools.ietf.org/html/rfc3463">RFC 3463 - Enhanced Mail
  *      System Status Codes</a>
- * @see <a href="http://tools.ietf.org/html/rfc2034">rfc2034 - SMTP Service
+ * @see <a href="http://tools.ietf.org/html/rfc2034">RFC 2034 - SMTP Service
  *      Extension for Returning Enhanced Error Codes</a>
+ * @see <a
+ *      href="http://www.iana.org/assignments/smtp-enhanced-status-codes/smtp-enhanced-status-codes.xml">IANA
+ *      Enhanced Status Code Registry</a>
  */
 public class EnhancedStatus implements MailSystemStatus {
     public static final EnhancedStatus TRANSIENT_SYSTEM_NOT_ACCEPTING_NETWORK_MESSAGES =

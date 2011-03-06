@@ -2,17 +2,17 @@ package mireka.filter.misc;
 
 import javax.annotation.concurrent.GuardedBy;
 
-import mireka.UnknownUserException;
 import mireka.filter.AbstractFilter;
 import mireka.filter.Filter;
 import mireka.filter.FilterReply;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
+import mireka.smtp.RejectExceptionExt;
+import mireka.smtp.UnknownUserException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.subethamail.smtp.RejectException;
 
 /**
  * slows down replies to RCPT command on all connections
@@ -36,7 +36,7 @@ public class TarpitOnGlobalRejections implements FilterType {
 
         @Override
         public FilterReply verifyRecipient(RecipientContext recipientContext)
-                throws RejectException {
+                throws RejectExceptionExt {
             try {
                 return chain.verifyRecipient(recipientContext);
             } catch (UnknownUserException e) {
@@ -47,7 +47,8 @@ public class TarpitOnGlobalRejections implements FilterType {
         }
 
         @Override
-        public void recipient(RecipientContext recipientContext) throws RejectException {
+        public void recipient(RecipientContext recipientContext)
+                throws RejectExceptionExt {
             try {
                 chain.recipient(recipientContext);
             } catch (UnknownUserException e) {

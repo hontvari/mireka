@@ -7,6 +7,7 @@ import mireka.filter.AbstractFilter;
 import mireka.filter.Filter;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
+import mireka.smtp.RejectExceptionExt;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,7 @@ public class RejectIfUnauthenticated implements FilterType {
         }
 
         @Override
-        public void from(String from) throws RejectException {
+        public void from(String from) throws RejectExceptionExt {
             if (!isAuthenticated()) {
                 logger.debug("None of the authentication specifications "
                         + "matched the session, rejecting");

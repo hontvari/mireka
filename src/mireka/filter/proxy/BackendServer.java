@@ -6,7 +6,7 @@ import java.net.UnknownHostException;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import mireka.ClientFactory;
+import mireka.smtp.ClientFactory;
 
 import org.subethamail.smtp.client.SMTPException;
 import org.subethamail.smtp.client.SmartClient;

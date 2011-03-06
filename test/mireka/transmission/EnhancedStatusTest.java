@@ -2,7 +2,7 @@ package mireka.transmission;
 
 import static org.junit.Assert.*;
 
-import mireka.transmission.EnhancedStatus;
+import mireka.smtp.EnhancedStatus;
 import mireka.transmission.immediate.Rfc821Status;
 
 import org.junit.Test;

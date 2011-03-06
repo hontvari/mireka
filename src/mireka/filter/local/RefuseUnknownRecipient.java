@@ -1,12 +1,11 @@
 package mireka.filter.local;
 
-import mireka.UnknownUserException;
 import mireka.filter.FilterReply;
 import mireka.filter.RecipientContext;
 import mireka.filter.StatelessFilterType;
 import mireka.filter.local.table.UnknownRecipientDestination;
-
-import org.subethamail.smtp.RejectException;
+import mireka.smtp.RejectExceptionExt;
+import mireka.smtp.UnknownUserException;
 
 /**
  * The RefuseUnknownRecipient filter rejects recipients whose destination has
@@ -19,7 +18,7 @@ public class RefuseUnknownRecipient extends StatelessFilterType {
 
     @Override
     public FilterReply verifyRecipient(RecipientContext recipientContext)
-            throws RejectException {
+            throws RejectExceptionExt {
         if (isKnown(recipientContext))
             return FilterReply.NEUTRAL;
         throw new UnknownUserException(recipientContext.recipient);

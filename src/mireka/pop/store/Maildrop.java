@@ -14,7 +14,7 @@ import java.util.List;
 
 import javax.annotation.concurrent.GuardedBy;
 
-import mireka.transmission.EnhancedStatus;
+import mireka.smtp.EnhancedStatus;
 import mireka.transmission.LocalMailSystemException;
 
 import org.slf4j.Logger;

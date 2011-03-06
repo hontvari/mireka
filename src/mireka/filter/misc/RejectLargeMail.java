@@ -9,9 +9,9 @@ import mireka.filter.AbstractFilter;
 import mireka.filter.Filter;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
+import mireka.smtp.RejectExceptionExt;
 import mireka.util.StreamCopier;
 
-import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.TooMuchDataException;
 
 public class RejectLargeMail implements FilterType {
@@ -43,7 +43,7 @@ public class RejectLargeMail implements FilterType {
         }
 
         @Override
-        public void data(MailData data) throws RejectException,
+        public void data(MailData data) throws RejectExceptionExt,
                 TooMuchDataException, IOException {
             chain.data(new LengthLimitingMailData(data));
         }

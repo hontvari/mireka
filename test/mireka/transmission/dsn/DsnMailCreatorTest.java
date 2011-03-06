@@ -19,7 +19,7 @@ import javax.mail.internet.ParseException;
 import mireka.ExampleMail;
 import mireka.MailData;
 import mireka.address.MailAddressFactory;
-import mireka.transmission.EnhancedStatus;
+import mireka.smtp.EnhancedStatus;
 import mireka.transmission.Mail;
 import mireka.transmission.immediate.RemoteMta;
 import mireka.transmission.immediate.Rfc821Status;

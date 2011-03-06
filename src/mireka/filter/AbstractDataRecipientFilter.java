@@ -3,6 +3,7 @@ package mireka.filter;
 import java.io.IOException;
 
 import mireka.MailData;
+import mireka.smtp.RejectExceptionExt;
 
 import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.TooMuchDataException;
@@ -27,7 +28,7 @@ public abstract class AbstractDataRecipientFilter implements
 
     @Override
     public FilterReply verifyRecipient(RecipientContext recipientContext)
-            throws RejectException {
+            throws RejectExceptionExt {
         return FilterReply.NEUTRAL;
     }
 

@@ -3,7 +3,7 @@ package mireka.filter.dnsbl;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import mireka.SmtpReply;
+import mireka.smtp.SmtpReplyTemplate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ public class Dnsbl {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final String EOL = System.getProperty("line.separator");
     public String domain;
-    public SmtpReply smtpReply = new SmtpReply();
+    public SmtpReplyTemplate smtpReplyTemplate = new SmtpReplyTemplate();
 
     public DnsblResult check(InetAddress address) {
         return new Checker(address).check();
@@ -46,15 +46,15 @@ public class Dnsbl {
     /**
      * @category GETSET
      */
-    public SmtpReply getSmtpReply() {
-        return smtpReply;
+    public SmtpReplyTemplate getSmtpReply() {
+        return smtpReplyTemplate;
     }
 
     /**
      * @category GETSET
      */
-    public void setSmtpReply(SmtpReply smtpReply) {
-        this.smtpReply = smtpReply;
+    public void setSmtpReply(SmtpReplyTemplate smtpReplyTemplate) {
+        this.smtpReplyTemplate = smtpReplyTemplate;
     }
 
     private class Checker {

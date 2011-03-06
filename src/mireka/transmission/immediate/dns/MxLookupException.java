@@ -1,6 +1,6 @@
 package mireka.transmission.immediate.dns;
 
-import mireka.transmission.EnhancedStatus;
+import mireka.smtp.EnhancedStatus;
 import mireka.transmission.immediate.SendException;
 
 public class MxLookupException extends SendException {

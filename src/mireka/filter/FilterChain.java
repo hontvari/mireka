@@ -3,18 +3,19 @@ package mireka.filter;
 import java.io.IOException;
 
 import mireka.MailData;
+import mireka.smtp.RejectExceptionExt;
 
-import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.TooMuchDataException;
 
 public interface FilterChain {
     void begin();
 
-    void from(String from) throws RejectException;
+    void from(String from) throws RejectExceptionExt;
 
-    FilterReply verifyRecipient(RecipientContext recipientContext) throws RejectException;
+    FilterReply verifyRecipient(RecipientContext recipientContext)
+            throws RejectExceptionExt;
 
-    void recipient(RecipientContext recipientContext) throws RejectException;
+    void recipient(RecipientContext recipientContext) throws RejectExceptionExt;
 
     /**
      * A typical implementation of this method would follow the following
@@ -26,6 +27,6 @@ public interface FilterChain {
      * {@link MailTransaction#getData()} until another filter replaces it
      * possibly by wrapping it
      */
-    void data(MailData data) throws RejectException, TooMuchDataException,
+    void data(MailData data) throws RejectExceptionExt, TooMuchDataException,
             IOException;
 }

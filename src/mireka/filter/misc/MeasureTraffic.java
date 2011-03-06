@@ -9,8 +9,8 @@ import mireka.filter.FilterReply;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
+import mireka.smtp.RejectExceptionExt;
 
-import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.TooMuchDataException;
 
 public class MeasureTraffic implements FilterType {
@@ -48,7 +48,7 @@ public class MeasureTraffic implements FilterType {
         }
 
         @Override
-        public void data(MailData data) throws RejectException,
+        public void data(MailData data) throws RejectExceptionExt,
                 TooMuchDataException, IOException {
             trafficSummary.dataCommands.incrementAndGet();
             chain.data(data);
@@ -59,7 +59,7 @@ public class MeasureTraffic implements FilterType {
 
         @Override
         public FilterReply verifyRecipient(RecipientContext recipientContext)
-                throws RejectException {
+                throws RejectExceptionExt {
             trafficSummary.rcptCommands.incrementAndGet();
             return chain.verifyRecipient(recipientContext);
         }

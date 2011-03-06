@@ -7,6 +7,9 @@ import java.io.IOException;
  * received from the client.
  */
 public interface Command {
+    /**
+     * Executes the command, after parsing arguments if necessary.
+     */
     public void execute(CommandParser commandParser) throws IOException,
             Pop3Exception;
 
