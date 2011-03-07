@@ -38,27 +38,28 @@
 	<resin:import path="${__DIR__}/domains.xml" />
 	<resin:import path="${__DIR__}/global-users.xml" />
 	
-	<mireka:RecipientTable>
-		<Named>localRecipientsTable</Named>
+	<LocalRecipientTable xmlns="urn:java:mireka">
+		<Named xmlns="http://caucho.com/ns/resin">localRecipientsTable</Named>
+		<localDomains>#{localDomains}</localDomains>
 		
 		<resin:import path="${__DIR__}/alias.xml" />
 		
-		<mireka:mapper>
-			<mireka:MailingLists>
+		<mapper>
+			<MailingLists>
 				<resin:import path="${__DIR__}/lists.xml" />
-			</mireka:MailingLists>
-		</mireka:mapper>
+			</MailingLists>
+		</mapper>
 		
 		<!-- 
 			comment out if POP service is not active
 		-->
-		<mireka:mapper>
-			<mireka:GlobalUsersMaildropDestinationMapper>
-				<mireka:users>#{globalUsers}</mireka:users>
-			</mireka:GlobalUsersMaildropDestinationMapper>
-		</mireka:mapper>
+		<mapper>
+			<GlobalUsersMaildropDestinationMapper>
+				<users>#{globalUsers}</users>
+			</GlobalUsersMaildropDestinationMapper>
+		</mapper>
 		
-	</mireka:RecipientTable>
+	</LocalRecipientTable>
 	
 	
 	<!--

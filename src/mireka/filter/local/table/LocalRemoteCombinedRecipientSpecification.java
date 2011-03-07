@@ -22,7 +22,7 @@ public class LocalRemoteCombinedRecipientSpecification implements
 
     @Override
     public boolean isSatisfiedBy(Recipient recipient) {
-        if (!localPartSpecification.matches(recipient.localPart()))
+        if (!localPartSpecification.isSatisfiedBy(recipient.localPart()))
             return false;
         if (!(recipient instanceof RemotePartContainingRecipient))
             return false;

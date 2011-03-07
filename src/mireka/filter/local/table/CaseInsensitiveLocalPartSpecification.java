@@ -16,19 +16,27 @@ import mireka.address.LocalPart;
  */
 public class CaseInsensitiveLocalPartSpecification implements
         LocalPartSpecification {
-    private final String unescapedText;
-    private final String unescapedTextInLowerCase;
+    private String unescapedText;
+    private String unescapedTextInLowerCase;
+
+    public CaseInsensitiveLocalPartSpecification() {
+        // setValue() will be used to initialize this instance
+    }
 
     public CaseInsensitiveLocalPartSpecification(String displayableName) {
-        this.unescapedText = displayableName;
-        this.unescapedTextInLowerCase = displayableName.toLowerCase(Locale.US);
+        setValue(displayableName);
     }
 
     @Override
-    public boolean matches(LocalPart localPart) {
+    public boolean isSatisfiedBy(LocalPart localPart) {
         String recipientLocalPartInLowerCase =
                 localPart.displayableName().toLowerCase(Locale.US);
         return recipientLocalPartInLowerCase.equals(unescapedTextInLowerCase);
+    }
+
+    public void setValue(String displayableName) {
+        this.unescapedText = displayableName;
+        this.unescapedTextInLowerCase = displayableName.toLowerCase(Locale.US);
     }
 
     @Override

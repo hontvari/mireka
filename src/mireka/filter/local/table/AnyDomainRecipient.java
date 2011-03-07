@@ -12,7 +12,7 @@ public class AnyDomainRecipient implements RecipientSpecification {
 
     @Override
     public boolean isSatisfiedBy(Recipient recipient) {
-        return localPart.matches(recipient.localPart());
+        return localPart.isSatisfiedBy(recipient.localPart());
     }
 
     /**

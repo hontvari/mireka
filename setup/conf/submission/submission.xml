@@ -123,6 +123,9 @@
 		<mireka:filter>
 			<mireka:MailingListFilter />
 		</mireka:filter>
+		<mireka:filter>
+			<mireka:NullFilter />
+		</mireka:filter>
 	</mireka:Filters>
 	
 	<mireka:UsernamePasswordValidatorImpl>
