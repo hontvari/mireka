@@ -24,7 +24,6 @@ public class SessionThread extends Thread {
     private static final int TEN_MINUTES = 10 * 60 * 1000;
     private final Logger log = LoggerFactory.getLogger(SessionThread.class);
     private final ServerThread serverThread;
-    private final PopServer server;
     private final CommandHandler commandHandler;
     /** I/O to the client */
     private Socket socket;
@@ -42,7 +41,6 @@ public class SessionThread extends Thread {
             Socket socket) throws IOException {
         super(SessionThread.class.getName() + "-" + socket.getInetAddress()
                 + ":" + socket.getPort());
-        this.server = server;
         this.serverThread = serverThread;
         setSocket(socket);
         session = new Session(server, this);

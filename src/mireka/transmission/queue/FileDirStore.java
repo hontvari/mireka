@@ -134,6 +134,7 @@ public class FileDirStore {
                         + "directory, " + "please delete it manually. " + "");
             throw new QueueStorageException(e, EnhancedStatus.MAIL_SYSTEM_FULL);
         }
+        logger.debug("Mail was saved to store: {}, {}", srcMail, dir);
         return mailName;
     }
 

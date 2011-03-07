@@ -8,12 +8,16 @@ import javax.annotation.PostConstruct;
 
 import mireka.transmission.Mail;
 
+import org.slf4j.LoggerFactory;
+
 /**
  * This mail queue, working with a mail store, passes the mails to a mail
  * processors according to the schedule. The schedule is defined by the time
  * point in {@link Mail#scheduleDate} in each mail.
  */
 public class ScheduleFileDirQueue {
+    private final org.slf4j.Logger logger = LoggerFactory
+            .getLogger(ScheduleFileDirQueue.class);
     private FileDirStore store;
     private MailProcessorFactory mailProcessorFactory;
     private ScheduledThreadPoolExecutor executor;
@@ -57,8 +61,10 @@ public class ScheduleFileDirQueue {
         MailProcessingTask task =
                 new MailProcessingTask(this, store, mailProcessorFactory,
                         mailName);
-        executor.schedule(task, mailName.scheduleDate
-                - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+        executor.schedule(task,
+                mailName.scheduleDate - System.currentTimeMillis(),
+                TimeUnit.MILLISECONDS);
+        logger.debug("Mail was sceduled for processing: {}", mailName);
     }
 
     /**

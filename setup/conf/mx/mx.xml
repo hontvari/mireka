@@ -137,6 +137,9 @@
 				</mireka:maildropRepository>
 			</mireka:MaildropFilter>
 		</mireka:filter>
+		<mireka:filter>
+			<mireka:MailingListFilter />
+		</mireka:filter>
 	</mireka:Filters>
 	
 	<mireka:MessageHandlerFactoryImpl>

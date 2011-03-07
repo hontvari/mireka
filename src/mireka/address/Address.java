@@ -59,6 +59,9 @@ public class Address {
         return remotePart;
     }
 
+    /**
+     * Returns the displayable form of the address.
+     */
     @Override
     public String toString() {
         return mailbox;

@@ -16,6 +16,7 @@ import mireka.pop.store.Maildrop;
 import mireka.pop.store.MaildropAppender;
 import mireka.pop.store.MaildropRepository;
 import mireka.smtp.EnhancedStatus;
+import mireka.smtp.RejectExceptionExt;
 import mireka.transmission.LocalMailSystemException;
 
 import org.slf4j.Logger;
@@ -77,7 +78,7 @@ public class MaildropFilter implements FilterType {
 
         @Override
         public void data(MailData data) throws TooMuchDataException,
-                RejectException, IOException {
+                RejectExceptionExt, IOException {
             for (String maildropName : maildropNames) {
                 Maildrop maildrop =
                         maildropRepository.borrowMaildrop(maildropName);
@@ -89,7 +90,7 @@ public class MaildropFilter implements FilterType {
                     } catch (LocalMailSystemException e) {
                         logger.error("Cannot accept mail because of a "
                                 + "maildrop failure", e);
-                        throw e.errorStatus().createRejectException();
+                        throw new RejectExceptionExt(e.errorStatus());
                     }
                     OutputStream out;
                     try {
@@ -98,7 +99,7 @@ public class MaildropFilter implements FilterType {
                         logger.error("Cannot accept mail because of a "
                                 + "maildrop failure", e);
                         appender.rollback();
-                        throw e.errorStatus().createRejectException();
+                        throw new RejectExceptionExt(e.errorStatus());
                     }
                     try {
                         data.writeTo(out);
@@ -108,15 +109,15 @@ public class MaildropFilter implements FilterType {
                                         + "occured while the mail was written into the maildrop",
                                 e);
                         appender.rollback();
-                        throw EnhancedStatus.TRANSIENT_LOCAL_ERROR_IN_PROCESSING
-                                .createRejectException();
+                        throw new RejectExceptionExt(
+                                EnhancedStatus.TRANSIENT_LOCAL_ERROR_IN_PROCESSING);
                     }
                     try {
                         appender.commit();
                     } catch (LocalMailSystemException e) {
                         logger.error("Cannot accept mail because of a "
                                 + "maildrop failure", e);
-                        throw e.errorStatus().createRejectException();
+                        throw new RejectExceptionExt(e.errorStatus());
                     }
                 } finally {
                     maildropRepository.releaseMaildrop(maildrop);

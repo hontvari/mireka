@@ -34,6 +34,9 @@ public class LocalPart {
         return receivedRawText;
     }
 
+    /**
+     * The same as {@link #displayableName()}.
+     */
     @Override
     public String toString() {
         return displayableName();

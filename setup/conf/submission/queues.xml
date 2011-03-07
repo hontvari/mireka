@@ -17,6 +17,7 @@
 	
 	<mireka:ScheduleFileDirQueue>
 		<Named>submittedMailQueue</Named>
+		<ApplicationScoped/>
 		<mireka:store>
 			<mireka:FileDirStore>
 				<dir>${mirekaHome}/queues/submitted</dir>
@@ -34,6 +35,7 @@
 
 	<mireka:ScheduleFileDirQueue>
 		<Named>retryMailQueue</Named>
+		<ApplicationScoped/>
 		<mireka:store>
 			<mireka:FileDirStore>
 				<dir>${mirekaHome}/queues/retry</dir>
@@ -51,6 +53,7 @@
 	
 	<mireka:ScheduleFileDirQueue>
 		<Named>dsnMailQueue</Named>
+		<ApplicationScoped/>
 		<mireka:store>
 			<mireka:FileDirStore>
 				<dir>${mirekaHome}/queues/dsn</dir>
@@ -68,6 +71,7 @@
 
 	<mireka:LogIdFactory>
 		<Named>logIdFactory</Named>
+		<ApplicationScoped/>
 	</mireka:LogIdFactory>
 
 	<mireka:MailToHostTransmitterFactory>
@@ -114,6 +118,7 @@
 
 	<mireka:QueuingTransmitter>
 		<Named>primaryTransmitter</Named>
+		<ApplicationScoped/>
 		<mireka:queue>
 			#{submittedMailQueue}
 		</mireka:queue>
@@ -135,6 +140,7 @@
 
 	<mireka:QueuingTransmitter>
 		<Named>dsnTransmitter</Named>
+		<ApplicationScoped/>
 		<mireka:queue>
 			#{dsnMailQueue}
 		</mireka:queue>
@@ -156,6 +162,7 @@
 
 	<mireka:QueuingTransmitter>
 		<Named>retryTransmitter</Named>
+		<ApplicationScoped/>
 		<mireka:queue>
 			#{retryMailQueue}
 		</mireka:queue>

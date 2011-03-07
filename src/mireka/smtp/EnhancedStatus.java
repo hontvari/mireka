@@ -8,8 +8,6 @@ import mireka.transmission.immediate.ResponseParser;
 import mireka.transmission.immediate.Rfc821Status;
 import mireka.util.Multiline;
 
-import org.subethamail.smtp.RejectException;
-
 /**
  * These class represents an SMTP status which includes enhanced status code.
  * 
@@ -41,12 +39,16 @@ public class EnhancedStatus implements MailSystemStatus {
                     "Bad destination mailbox address syntax");
     public static final EnhancedStatus PERMANENT_INTERNAL_ERROR =
             new EnhancedStatus(554, "5.3.0", "Internal error");
+    public static final EnhancedStatus BAD_MESSAGE_BODY =
+            new EnhancedStatus(554, "5.6.0", "Message body is invalid");
     private final int smtpReplyCode;
     private final String enhancedStatusCode;
     private final String message;
 
     public EnhancedStatus(int smtpReplyCode, String enhancedStatusCode,
             String message) {
+        if (smtpReplyCode <= 0 || enhancedStatusCode == null || message == null)
+            throw new IllegalArgumentException();
         this.smtpReplyCode = smtpReplyCode;
         this.enhancedStatusCode = enhancedStatusCode;
         this.message = message;
@@ -138,11 +140,6 @@ public class EnhancedStatus implements MailSystemStatus {
     @Override
     public String getDiagnosticCode() {
         return Multiline.prependStatusCodeToMessage(smtpReplyCode,
-                getMessagePrefixedWithEnhancedStatusCode());
-    }
-
-    public RejectException createRejectException() {
-        return new RejectException(getSmtpReplyCode(),
                 getMessagePrefixedWithEnhancedStatusCode());
     }
 

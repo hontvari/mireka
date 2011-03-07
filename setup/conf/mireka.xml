@@ -43,6 +43,12 @@
 		
 		<resin:import path="${__DIR__}/alias.xml" />
 		
+		<mireka:mapper>
+			<mireka:MailingLists>
+				<resin:import path="${__DIR__}/lists.xml" />
+			</mireka:MailingLists>
+		</mireka:mapper>
+		
 		<!-- 
 			comment out if POP service is not active
 		-->

@@ -83,9 +83,11 @@ public class Mail {
             builder.append(", recipients=");
             builder.append(recipients.get(0));
             builder.append(",...");
-        } else {
+        } else if (recipients.size() == 1) {
             builder.append(", recipient=");
             builder.append(recipients.get(0));
+        } else {
+            builder.append(", no recipients");
         }
         builder.append("]");
         return builder.toString();

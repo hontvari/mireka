@@ -12,8 +12,8 @@ import org.subethamail.smtp.auth.UsernamePasswordValidator;
  * TODO: prevent brute-force attack on passwords
  */
 public class UsernamePasswordValidatorImpl implements UsernamePasswordValidator {
-    private final Logger logger =
-            LoggerFactory.getLogger(UsernamePasswordValidatorImpl.class);
+    private final Logger logger = LoggerFactory
+            .getLogger(UsernamePasswordValidatorImpl.class);
     private LoginSpecification loginSpecification;
 
     @Override
@@ -33,6 +33,10 @@ public class UsernamePasswordValidatorImpl implements UsernamePasswordValidator 
             logger.debug("Username {} doesn't exist", username);
             throw new LoginFailedException("Username " + username
                     + " doesn't exist");
+        case INVALID:
+            logger.debug("User {} - password pair is not valid", username);
+            throw new LoginFailedException("No user with name " + username
+                    + " and supplied password was found");
         }
     }
 

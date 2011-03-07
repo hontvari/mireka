@@ -26,4 +26,10 @@ public interface Recipient {
     LocalPart localPart();
 
     String sourceRouteStripped();
+
+    /**
+     * Returns the displayable (unescaped) form of the recipient, without source
+     * route.
+     */
+    String toString();
 }

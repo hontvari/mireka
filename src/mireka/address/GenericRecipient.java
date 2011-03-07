@@ -51,6 +51,6 @@ public class GenericRecipient implements RemotePartContainingRecipient {
 
     @Override
     public String toString() {
-        return forwardPath;
+        return address.toString();
     }
 }

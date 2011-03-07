@@ -17,7 +17,11 @@ import mireka.transmission.queue.QueueStorageException;
 import mireka.transmission.queue.ScheduleFileDirQueue;
 import mireka.transmission.queue.TransmitterSummary;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class QueuingTransmitter implements Transmitter, MailProcessorFactory {
+    private Logger logger = LoggerFactory.getLogger(QueuingTransmitter.class);
     private ScheduleFileDirQueue queue;
     private ImmediateSenderFactory immediateSenderFactory;
     private RetryPolicy retryPolicy;
@@ -25,16 +29,21 @@ public class QueuingTransmitter implements Transmitter, MailProcessorFactory {
     private TransmitterSummary summary;
 
     public void transmit(Mail mail) throws QueueStorageException {
+        logger.debug("Mail received for transmission: {}", mail);
         queueByRemotePart(mail);
     }
 
     private void queueByRemotePart(Mail mail) throws QueueStorageException {
         List<List<Recipient>> recipientsByDomain =
                 groupRecipientsByDomain(mail.recipients);
+        if (recipientsByDomain.isEmpty())
+            throw new IllegalArgumentException("No recipients");
         for (List<Recipient> recipients : recipientsByDomain) {
             mail.recipients = recipients;
             queue.add(mail);
         }
+        logger.debug("Mail addressed to {} domains was added to queue: {}",
+                recipientsByDomain.size(), mail);
     }
 
     private List<List<Recipient>> groupRecipientsByDomain(
