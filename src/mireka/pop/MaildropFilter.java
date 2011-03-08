@@ -2,6 +2,7 @@ package mireka.pop;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class MaildropFilter implements FilterType {
 
     private class FilterImpl extends AbstractDataRecipientFilter {
         private final Logger logger = LoggerFactory.getLogger(FilterImpl.class);
-
+        private String from;
         private List<String> maildropNames = new ArrayList<String>();
 
         protected FilterImpl(MailTransaction mailTransaction) {
@@ -62,7 +63,7 @@ public class MaildropFilter implements FilterType {
 
         @Override
         public void from(String from) {
-            // do nothing
+            this.from = from;
         }
 
         @Override
@@ -102,6 +103,7 @@ public class MaildropFilter implements FilterType {
                         throw new RejectExceptionExt(e.errorStatus());
                     }
                     try {
+                        out.write(constructReturnPathLine());
                         data.writeTo(out);
                     } catch (IOException e) {
                         logger.error(
@@ -122,6 +124,14 @@ public class MaildropFilter implements FilterType {
                 } finally {
                     maildropRepository.releaseMaildrop(maildrop);
                 }
+            }
+        }
+
+        private byte[] constructReturnPathLine() {
+            try {
+                return ("Return-Path: <" + from + ">\r\n").getBytes("US-ASCII");
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
             }
         }
     }

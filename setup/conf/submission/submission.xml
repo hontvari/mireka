@@ -151,24 +151,19 @@
 		<new>#{usernamePasswordValidator}</new>
 	</subethaauth:EasyAuthenticationHandlerFactory>
 	
-	<subetha:SMTPServer>
-		<Named>submissionServer</Named>
+	<mireka:SMTPServer>
+		<Named>submission</Named>
+		<ee:Startup/>
 		<new>
 			#{submissionMessageHandler}
 		</new>
 		<subetha:authenticationHandlerFactory>
 			#{authenticationHandlerFactory}
 		</subetha:authenticationHandlerFactory>
+		<!-- <mireka:bindAddress>192.0.2.0</mireka:bindAddress> -->
 		<subetha:port>587</subetha:port>
 		<subetha:hostName>${helo}</subetha:hostName>
 		<subetha:hideTLS>true</subetha:hideTLS>
-	</subetha:SMTPServer>
-	
-	<mireka:SMTPService>
-		<Named>submission</Named>
-		<ee:Startup/>
-		<mireka:smtpServer>#{submissionServer}</mireka:smtpServer>
-		<!-- <mireka:bindAddress>192.0.2.0</mireka:bindAddress> -->
-	</mireka:SMTPService>
+	</mireka:SMTPServer>
 	
 </web-app>

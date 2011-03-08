@@ -10,7 +10,7 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/smtp/lib-doc/javamail-1.4.2-docs.zip!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/subethasmtp-UNVERSIONED.jar" sourcepath="lib-doc/SubEthaSMTP-src.zip"/>
+	<classpathentry kind="lib" path="lib/subethasmtp-UNVERSIONED.jar" sourcepath="lib-doc/subethasmtp-UNVERSIONED.zip"/>
 	<classpathentry kind="lib" path="lib/dnsjava-2.0.6.jar" sourcepath="lib-doc/dnsjava-2.0.6-src.zip">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/mireka/lib-doc/dnsjava-2.0.6-javadoc.zip!/"/>

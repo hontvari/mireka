@@ -153,20 +153,15 @@
 		<mireka:filters>#{mxFilters}</mireka:filters>
 	</mireka:MessageHandlerFactoryImpl>
 
-	<subetha:SMTPServer>
-		<Named>mxServer</Named>
+	<mireka:SMTPServer>
+		<Named>mx</Named>
+		<ee:Startup/>
 		<new>
 			#{mxMessageHandler}
 		</new>
 		<subetha:hostName>mx1.example.com</subetha:hostName>
-		<subetha:hideTLS>true</subetha:hideTLS>
-	</subetha:SMTPServer>
-	
-	<mireka:SMTPService>
-		<Named>mx</Named>
-		<ee:Startup/>
-		<mireka:smtpServer>#{mxServer}</mireka:smtpServer>
 		<!-- <mireka:bindAddress>192.0.2.0</mireka:bindAddress> -->
-	</mireka:SMTPService>
-
+		<subetha:hideTLS>true</subetha:hideTLS>
+	</mireka:SMTPServer>
+	
 </web-app>

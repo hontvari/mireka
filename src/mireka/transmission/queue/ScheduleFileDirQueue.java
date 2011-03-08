@@ -46,8 +46,12 @@ public class ScheduleFileDirQueue {
 
     @PostConstruct
     public void start() {
-        MailName[] mailNames =
-                store.initializeAndQueryMailNamesOrderedBySchedule();
+        MailName[] mailNames;
+        try {
+            mailNames = store.initializeAndQueryMailNamesOrderedBySchedule();
+        } catch (QueueStorageException e) {
+            throw new RuntimeException("Queue initialization failed", e);
+        }
         scheduleMailNames(mailNames);
     }
 

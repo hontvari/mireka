@@ -59,22 +59,32 @@ public class FileDirStore {
     /**
      * this function must be called before any other method, and it cannot be
      * called more then once.
+     * 
+     * @throws QueueStorageException
+     *             if the store cannot be initialized for some reason.
      */
-    public MailName[] initializeAndQueryMailNamesOrderedBySchedule() {
-        MailName[] mailNames = queryMailNames();
-        size.set(mailNames.length);
-        logger.info("Mail store initialized with " + size + " mails in " + dir);
-        return mailNames;
+    public MailName[] initializeAndQueryMailNamesOrderedBySchedule()
+            throws QueueStorageException {
+        try {
+            MailName[] mailNames = queryMailNames();
+            size.set(mailNames.length);
+            logger.info("Mail store initialized with " + size + " mails in "
+                    + dir);
+            return mailNames;
+        } catch (IOException e) {
+            throw new QueueStorageException(e,
+                    EnhancedStatus.TRANSIENT_LOCAL_ERROR_IN_PROCESSING);
+        }
     }
 
-    private MailName[] queryMailNames() {
+    private MailName[] queryMailNames() throws IOException {
         String[] names = listEnvelopeFileNames();
         MailName[] mailNames = convertFileNamesToMailNames(names);
         Arrays.sort(mailNames);
         return mailNames;
     }
 
-    private String[] listEnvelopeFileNames() {
+    private String[] listEnvelopeFileNames() throws IOException {
         String[] names = dir.list(new FilenameFilter() {
 
             @Override
@@ -82,6 +92,8 @@ public class FileDirStore {
                 return name.endsWith(MailName.MESSAGE_ENVELOPE_DOT_EXTENSION);
             }
         });
+        if (names == null)
+            throw new IOException("Cannot list directory: " + dir);
         return names;
     }
 

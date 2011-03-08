@@ -17,19 +17,18 @@ import mireka.filter.proxy.RelayMailTransaction;
 import mireka.filterchain.Filters;
 import mireka.smtp.ClientFactory;
 import mireka.smtp.server.MessageHandlerFactoryImpl;
-import mireka.smtp.server.SMTPService;
+import mireka.smtp.server.SMTPServer;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.subethamail.smtp.client.SMTPException;
 import org.subethamail.smtp.client.SmartClient;
-import org.subethamail.smtp.server.SMTPServer;
 import org.subethamail.wiser.Wiser;
 import org.subethamail.wiser.WiserMessage;
 
 public class ClientServerRelayTest {
-    private SMTPService smtpService;
+    private SMTPServer smtpServer;
     private Wiser wiser;
 
     @Before
@@ -44,11 +43,9 @@ public class ClientServerRelayTest {
         MessageHandlerFactoryImpl handlerFactoryImpl =
                 new MessageHandlerFactoryImpl();
         handlerFactoryImpl.setFilters(filters);
-        SMTPServer smtpServer = new SMTPServer(handlerFactoryImpl);
+        smtpServer = new SMTPServer(handlerFactoryImpl);
         smtpServer.setPort(8025);
-        smtpService = new SMTPService();
-        smtpService.setSmtpServer(smtpServer);
-        smtpService.start();
+        smtpServer.start();
     }
 
     private Filters createFilters() {
@@ -104,6 +101,6 @@ public class ClientServerRelayTest {
     @After
     public void cleanup() {
         wiser.stop();
-        smtpService.stop();
+        smtpServer.stop();
     }
 }
