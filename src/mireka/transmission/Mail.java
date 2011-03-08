@@ -55,22 +55,25 @@ public class Mail {
      */
     public int deliveryAttempts;
 
-    public Mail() {
-        // 
-    }
-
-    public Mail(String from, List<Recipient> recipients, MailData mailData) {
-        this.from = from;
-        this.recipients.addAll(recipients);
-        this.mailData = mailData;
-    }
-
-    public Mail(Mail src, MailData mailData) {
-        this.from = src.from;
-        this.recipients.addAll(src.recipients);
-        this.mailData = mailData;
-        this.scheduleDate = src.scheduleDate;
-        this.deliveryAttempts = src.deliveryAttempts;
+    /**
+     * Creates an essentially deep copy of this instance. The same
+     * {@link #mailData} object is used, otherwise every other field is a deep
+     * copy.
+     * 
+     * @return A deep copy of this mail, except the {@link #mailData} object,
+     *         which is used in both the new and in this object.
+     */
+    public Mail copy() {
+        Mail result = new Mail();
+        result.from = from;
+        result.recipients.addAll(recipients);
+        result.mailData = mailData;
+        result.arrivalDate = arrivalDate;
+        result.receivedFromMtaName = receivedFromMtaName;
+        result.receivedFromMtaAddress = receivedFromMtaAddress;
+        result.scheduleDate = scheduleDate;
+        result.deliveryAttempts = deliveryAttempts;
+        return result;
     }
 
     @Override

@@ -141,6 +141,9 @@
 			<mireka:MailingListFilter />
 		</mireka:filter>
 		<mireka:filter>
+			<mireka:ForwardListFilter />
+		</mireka:filter>
+		<mireka:filter>
 			<mireka:NullFilter />
 		</mireka:filter>
 	</mireka:Filters>

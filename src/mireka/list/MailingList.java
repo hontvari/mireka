@@ -2,7 +2,6 @@ package mireka.list;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -117,7 +116,7 @@ public class MailingList {
         checkSender(mail);
         checkAttachmentsAllowed(mail);
         MimeMessage outgoingMessage = createOutgoingMimeMessage(mail);
-        sendMail(outgoingMessage);
+        sendMail(rawMail, outgoingMessage);
     }
 
     private void checkSender(ParsedMail mail) throws RejectExceptionExt {
@@ -293,7 +292,8 @@ public class MailingList {
         return subject.toString();
     }
 
-    private void sendMail(MimeMessage mimeMessage) throws RejectExceptionExt {
+    private void sendMail(Mail srcMail, MimeMessage mimeMessage)
+            throws RejectExceptionExt {
         Mail mail = new Mail();
         mail.from = reversePath;
         for (Member member : members) {
@@ -301,9 +301,10 @@ public class MailingList {
         }
         mail.mailData = createMailData(mimeMessage);
         try {
-            mail.arrivalDate = new Date();
+            mail.arrivalDate = srcMail.arrivalDate;
+            mail.scheduleDate = mail.arrivalDate; // try to preserve order
             transmitter.transmit(mail);
-            logger.debug("Mailing list mail was submitted to transmitter {}",
+            logger.debug("Mailing list mail was submitted to transmitter: {}",
                     mail);
         } catch (LocalMailSystemException e) {
             logger.error("Cannot transmit mail", e);

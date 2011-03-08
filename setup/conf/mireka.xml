@@ -50,6 +50,12 @@
 			</MailingLists>
 		</mapper>
 		
+		<mapper>
+			<ForwardLists>
+				<resin:import path="${__DIR__}/forwards.xml" />
+			</ForwardLists>
+		</mapper>
+		
 		<!-- 
 			comment out if POP service is not active
 		-->

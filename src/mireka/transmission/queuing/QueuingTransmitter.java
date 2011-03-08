@@ -39,8 +39,10 @@ public class QueuingTransmitter implements Transmitter, MailProcessorFactory {
         if (recipientsByDomain.isEmpty())
             throw new IllegalArgumentException("No recipients");
         for (List<Recipient> recipients : recipientsByDomain) {
-            mail.recipients = recipients;
-            queue.add(mail);
+            Mail mailToSingleDomain = mail.copy();
+            mailToSingleDomain.recipients.clear();
+            mailToSingleDomain.recipients.addAll(recipients);
+            queue.add(mailToSingleDomain);
         }
         logger.debug("Mail addressed to {} domains was added to queue: {}",
                 recipientsByDomain.size(), mail);

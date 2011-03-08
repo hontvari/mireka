@@ -1,4 +1,4 @@
-package mireka.list;
+package mireka.forward;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,9 +18,9 @@ import mireka.transmission.Mail;
 import org.subethamail.smtp.TooMuchDataException;
 
 /**
- * This filter class redistribute the incoming mail to a mailing list.
+ * This filter class redistribute the incoming mail to a forward list.
  */
-public class MailingListFilter implements FilterType {
+public class ForwardListFilter implements FilterType {
 
     @Override
     public Filter createInstance(MailTransaction mailTransaction) {
@@ -31,7 +31,7 @@ public class MailingListFilter implements FilterType {
     private class FilterImpl extends AbstractDataRecipientFilter {
         private Mail mail = new Mail();
         private List<RecipientMailPair> recipientMailPairs =
-                new ArrayList<MailingListFilter.RecipientMailPair>();
+                new ArrayList<ForwardListFilter.RecipientMailPair>();
 
         protected FilterImpl(MailTransaction mailTransaction) {
             super(mailTransaction);
@@ -48,7 +48,7 @@ public class MailingListFilter implements FilterType {
 
         @Override
         public void recipient(RecipientContext recipientContext) {
-            if (!(recipientContext.getDestination() instanceof ListDestination))
+            if (!(recipientContext.getDestination() instanceof ForwardDestination))
                 return;
             recipientContext.isResponsibilityTransferred = true;
             RecipientMailPair recipientMailPair = new RecipientMailPair();
@@ -66,8 +66,8 @@ public class MailingListFilter implements FilterType {
                 recipientMailPair.mail.mailData = data;
                 recipientMailPair.mail.arrivalDate = mail.arrivalDate;
                 recipientMailPair.mail.scheduleDate = mail.arrivalDate;
-                ListDestination destination =
-                        (ListDestination) recipientMailPair.recipientContext
+                ForwardDestination destination =
+                        (ForwardDestination) recipientMailPair.recipientContext
                                 .getDestination();
                 destination.getList().submit(recipientMailPair.mail);
             }

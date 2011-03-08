@@ -1,0 +1,24 @@
+<!--
+	Forward lists are used to redistribute incoming mail to multiple 
+	other addresses.
+-->
+<ForwardLists xmlns="urn:java:mireka">
+
+	<!--
+	<forwardList>
+		<address>games@example.com</address>
+		<transmitter>#{primaryTransmitter}</transmitter>
+		
+		<member>
+			<address>john@example.com</address>
+			<name>John Doe</name>
+		</member>
+		<member>
+			<address>jane@example.com</address>
+			<name>Jane Doe</name>
+		</member>
+	</forwardList>
+	-->
+	
+</ForwardLists>
+	
