@@ -30,7 +30,7 @@ public class MailProcessingTaskTest {
     @Mock
     private MailProcessor mockedMailProcessor;
     private MailProcessingTask task;
-    private MailName mailName = MailName.create(new Date());
+    private MailName mailName = new MailName(new Date().getTime(), 0);
 
     @Before
     public void initialize() {

@@ -37,5 +37,6 @@
 	<classpathentry kind="lib" path="lib/logback-classic-0.9.26.jar"/>
 	<classpathentry kind="lib" path="lib/logback-core-0.9.26.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.6.1.jar"/>
+	<classpathentry kind="lib" path="build/version"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

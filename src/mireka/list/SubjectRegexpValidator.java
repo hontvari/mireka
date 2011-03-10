@@ -7,11 +7,16 @@ import javax.mail.MessagingException;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.RejectExceptionExt;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * SubjectRegexpValidator accepts a mail if its subject matches the specified
  * regular expression pattern.
  */
 public class SubjectRegexpValidator implements MailValidator {
+    private final Logger logger = LoggerFactory
+            .getLogger(SubjectRegexpValidator.class);
     private Pattern pattern;
 
     @Override
@@ -20,7 +25,11 @@ public class SubjectRegexpValidator implements MailValidator {
             String subject = mail.getMimeMessage().getSubject();
             if (subject == null)
                 subject = "";
-            return pattern.matcher(subject).matches();
+            boolean result = pattern.matcher(subject).matches();
+            if (result)
+                logger.debug("Mail accepted, subject matches "
+                        + pattern.toString());
+            return result;
         } catch (MessagingException e) {
             throw new RejectExceptionExt(EnhancedStatus.BAD_MESSAGE_BODY);
         }
@@ -40,4 +49,10 @@ public class SubjectRegexpValidator implements MailValidator {
         this.pattern = Pattern.compile(pattern);
     }
 
+    /**
+     * @category GETSET
+     */
+    public void setValue(String pattern) {
+        setPattern(pattern);
+    }
 }

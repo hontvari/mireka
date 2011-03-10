@@ -157,13 +157,13 @@
 		<new>
 			#{submissionMessageHandler}
 		</new>
-		<subetha:authenticationHandlerFactory>
+		<mireka:authenticationHandlerFactory>
 			#{authenticationHandlerFactory}
-		</subetha:authenticationHandlerFactory>
+		</mireka:authenticationHandlerFactory>
 		<!-- <mireka:bindAddress>192.0.2.0</mireka:bindAddress> -->
-		<subetha:port>587</subetha:port>
-		<subetha:hostName>${helo}</subetha:hostName>
-		<subetha:hideTLS>true</subetha:hideTLS>
+		<mireka:port>587</mireka:port>
+		<mireka:hostName>${helo}</mireka:hostName>
+		<mireka:hideTLS>true</mireka:hideTLS>
 	</mireka:SMTPServer>
 	
 </web-app>

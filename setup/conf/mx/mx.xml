@@ -159,9 +159,9 @@
 		<new>
 			#{mxMessageHandler}
 		</new>
-		<subetha:hostName>mx1.example.com</subetha:hostName>
+		<mireka:hostName>mx1.example.com</mireka:hostName>
 		<!-- <mireka:bindAddress>192.0.2.0</mireka:bindAddress> -->
-		<subetha:hideTLS>true</subetha:hideTLS>
+		<mireka:hideTLS>true</mireka:hideTLS>
 	</mireka:SMTPServer>
 	
 </web-app>

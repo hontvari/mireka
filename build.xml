@@ -80,21 +80,29 @@
                 </javac>
         </target>
 
-        <target name="war" depends="compile">
+        <!-- - - - - - - - - - - - - - - - - - 
+          target: version                      
+         - - - - - - - - - - - - - - - - - -->
+        <target name="version">
+                <mkdir dir="build/version" />
+                <copy file="resource/version.properties" todir="build/version">
+                        <filterchain>
+                                <expandproperties />
+                        </filterchain>
+                </copy>
+        </target>
+
+
+        <target name="war" depends="compile, version">
                 <mkdir dir="build/META-INF" />
                 <manifest file="build/META-INF/MANIFEST.MF" mode="update">
                         <attribute name="Implementation-Title" value="Mireka" />
                         <attribute name="Implementation-Version"
                                    value="${build.version}" />
                 </manifest>
-                <copy file="resource/version.properties" todir="build">
-                        <filterchain>
-                                <expandproperties />
-                        </filterchain>
-                </copy>
                 <war destfile="${build.war.file}"
                      needxmlfile="false"
-                     duplicate="fail">
+                     duplicate="preserve">
 
                         <webinf dir="webapp/WEB-INF">
                                 <include name="resin-web-pre.xml" />
@@ -109,7 +117,7 @@
                                 <include name="META-INF/**" />
                         </classes>
 
-                        <classes file="build/version.properties" />
+                        <classes file="build/version/version.properties" />
 
                         <lib dir="${lib.dir}">
                                 <exclude name="build-only/**" />
@@ -150,8 +158,8 @@
           target: test              
          ================================= -->
         <target name="test"
-                depends="test.compile"
-                description="Execute JUnit tests accorsing to all.test and test properties">
+                depends="test.compile, version"
+                description="Execute JUnit tests according to all.test and test properties">
                 <condition property="quick.tests">
                         <not>
                                 <or>
@@ -171,6 +179,7 @@
                         <classpath>
                                 <pathelement location="${build.dir}/test" />
                                 <pathelement location="${build.dir}/classes" />
+                                <pathelement location="${build.dir}/version" />
                                 <path refid="compile.classpath" />
                         </classpath>
                         <test name="mireka.QuickTests"

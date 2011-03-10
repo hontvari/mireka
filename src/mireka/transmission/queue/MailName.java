@@ -15,6 +15,9 @@ class MailName implements Comparable<MailName> {
      * not includes extension
      */
     public final String baseFileName;
+    /**
+     * milliseconds from epoch
+     */
     public final long scheduleDate;
     public final int sequenceNumber;
 
@@ -33,7 +36,7 @@ class MailName implements Comparable<MailName> {
         this.baseFileName = fileName.substring(0, pos.getIndex());
     }
 
-    private MailName(long scheduleDate, int sequenceNumber) {
+    public MailName(long scheduleDate, int sequenceNumber) {
         this.scheduleDate = scheduleDate;
         this.sequenceNumber = sequenceNumber;
         SimpleDateFormat format =
@@ -85,20 +88,12 @@ class MailName implements Comparable<MailName> {
         return Integer.parseInt(sequenceString.toString());
     }
 
-    public static MailName create(Date scheduleDate) {
-        return new MailName(scheduleDate.getTime(), 0);
-    }
-
     public String envelopeFileName() {
         return baseFileName + MESSAGE_ENVELOPE_DOT_EXTENSION;
     }
 
     public String contentFileName() {
         return baseFileName + MESSAGE_CONTENT_DOT_EXTENSION;
-    }
-
-    public MailName nextInSequence() {
-        return new MailName(scheduleDate, sequenceNumber + 1);
     }
 
     @Override
