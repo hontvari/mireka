@@ -17,8 +17,8 @@ public class MaildropRepository {
      */
     private File dir;
     @GuardedBy("this")
-    private Map<String, Maildrop> openMaildrops =
-            new HashMap<String, Maildrop>();
+    private Map<String, MaildropSlot> openMaildrops =
+            new HashMap<String, MaildropSlot>();
 
     public synchronized Maildrop borrowMaildrop(String maildropName) {
         Maildrop maildrop = getOrCreateMaildrop(maildropName);
@@ -26,20 +26,28 @@ public class MaildropRepository {
     }
 
     private Maildrop getOrCreateMaildrop(String maildropName) {
-        Maildrop maildrop = openMaildrops.get(maildropName);
-        if (maildrop == null) {
+        MaildropSlot maildropSlot = openMaildrops.get(maildropName);
+        if (maildropSlot == null) {
+            maildropSlot = new MaildropSlot();
             File maildropDir = new File(dir, maildropName);
-            maildrop = new Maildrop(maildropName, maildropDir);
-            openMaildrops.put(maildropName, maildrop);
+            maildropSlot.maildrop = new Maildrop(maildropName, maildropDir);
+            openMaildrops.put(maildropName, maildropSlot);
         }
-        return maildrop;
+        maildropSlot.borrowCount++;
+        return maildropSlot.maildrop;
     }
 
     public synchronized void releaseMaildrop(Maildrop maildrop) {
-        if (!openMaildrops.containsKey(maildrop.getName()))
+        MaildropSlot maildropSlot = openMaildrops.get(maildrop.getName());
+        if (maildropSlot == null)
+            throw new IllegalStateException("Maildrop is already released");
+        maildropSlot.borrowCount--;
+        if (maildropSlot.borrowCount < 0)
             throw new RuntimeException("Assertion failed");
-        if (!maildrop.isInUse())
+        else if (maildropSlot.borrowCount == 0) {
             openMaildrops.remove(maildrop.getName());
+            maildrop.checkReleasedState();
+        }
     }
 
     /**
@@ -56,4 +64,8 @@ public class MaildropRepository {
         return dir;
     }
 
+    private static class MaildropSlot {
+        int borrowCount = 0;
+        Maildrop maildrop;
+    }
 }

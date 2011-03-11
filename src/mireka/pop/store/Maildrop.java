@@ -326,8 +326,15 @@ public class Maildrop {
         return new Appender();
     }
 
-    public synchronized boolean isInUse() {
-        return isTransactionRunning || appenderCount > 0;
+    public synchronized void checkReleasedState() {
+        if (isTransactionRunning)
+            throw new IllegalStateException("Properly released maildrop was "
+                    + "expected, but a transaction is still running: " + name
+                    + ", " + dir);
+        if (appenderCount >= 1)
+            throw new IllegalStateException("Properly released maildrop was "
+                    + "expected, but an appender is still not released: "
+                    + name + ", " + dir);
     }
 
     /**
