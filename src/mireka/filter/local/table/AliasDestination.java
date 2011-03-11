@@ -1,5 +1,9 @@
 package mireka.filter.local.table;
 
+import javax.mail.internet.ParseException;
+
+import mireka.ConfigurationException;
+import mireka.address.MailAddressFactory;
 import mireka.address.Recipient;
 import mireka.filter.Destination;
 
@@ -11,6 +15,18 @@ import mireka.filter.Destination;
 public class AliasDestination implements Destination {
 
     private Recipient recipient;
+
+    /**
+     * @category GETSET
+     */
+    public void setRecipient(String recipient) {
+        try {
+            this.recipient =
+                    new MailAddressFactory().createRecipient(recipient);
+        } catch (ParseException e) {
+            throw new ConfigurationException();
+        }
+    }
 
     /**
      * @category GETSET

@@ -55,7 +55,7 @@ public class MailingList {
      * Mails sent to {@link #address} will be redistributed to the member
      * addresses in this list.
      */
-    private final List<Member> members = new ArrayList<Member>();
+    private final List<ListMember> listMembers = new ArrayList<ListMember>();
     /**
      * A prefix that will be inserted at the front of the subject. Null means no
      * prefix.
@@ -107,11 +107,6 @@ public class MailingList {
      */
     public void submit(Mail rawMail) throws RejectExceptionExt {
         logger.debug("Mail is received for mail list {}: {}", address, rawMail);
-        if (members.isEmpty()) {
-            logger.debug("Mail list has no members, dropping mail");
-            return;
-        }
-
         ParsedMail mail = new ParsedMail(rawMail);
         checkSender(mail);
         checkAttachmentsAllowed(mail);
@@ -132,8 +127,9 @@ public class MailingList {
     }
 
     private boolean isMember(String reversePath) {
-        for (Member member : members) {
-            if (member.getRecipient().toString().equalsIgnoreCase(reversePath))
+        for (ListMember listMember : listMembers) {
+            if (listMember.getRecipient().toString()
+                    .equalsIgnoreCase(reversePath))
                 return true;
         }
         return false;
@@ -296,9 +292,17 @@ public class MailingList {
             throws RejectExceptionExt {
         Mail mail = new Mail();
         mail.from = reversePath;
-        for (Member member : members) {
+        for (ListMember member : listMembers) {
+            if (member.isDisabled() || member.isNoDelivery())
+                continue;
             mail.recipients.add(member.getRecipient());
         }
+        if (mail.recipients.isEmpty()) {
+            logger.debug("Mail list has no such members, "
+                    + "who should receive mail, dropping mail");
+            return;
+        }
+
         mail.mailData = createMailData(mimeMessage);
         try {
             mail.arrivalDate = srcMail.arrivalDate;
@@ -379,8 +383,8 @@ public class MailingList {
     /**
      * @category GETSET
      */
-    public void addMember(Member member) {
-        members.add(member);
+    public void addMember(ListMember listMember) {
+        listMembers.add(listMember);
     }
 
     /**

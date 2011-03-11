@@ -10,7 +10,6 @@ import mireka.address.MailAddressFactory;
 import mireka.address.Recipient;
 import mireka.filter.local.table.RecipientSpecification;
 import mireka.filter.local.table.RecipientSpecificationFactory;
-import mireka.list.Member;
 import mireka.smtp.RejectExceptionExt;
 import mireka.transmission.LocalMailSystemException;
 import mireka.transmission.Mail;
@@ -61,6 +60,8 @@ public class ForwardList {
         Mail mail = srcMail.copy();
         mail.recipients.clear();
         for (Member member : members) {
+            if (member.isDisabled())
+                continue;
             mail.recipients.add(member.getRecipient());
         }
         try {
