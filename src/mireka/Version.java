@@ -6,6 +6,9 @@ import java.util.Properties;
 
 import javax.annotation.concurrent.GuardedBy;
 
+/**
+ * Version retrieves the current Mireka version number.
+ */
 public class Version {
     @GuardedBy("Version.class")
     private static String cachedVersion;

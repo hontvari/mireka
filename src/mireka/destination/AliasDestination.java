@@ -1,11 +1,10 @@
-package mireka.filter.local.table;
+package mireka.destination;
 
 import javax.mail.internet.ParseException;
 
 import mireka.ConfigurationException;
 import mireka.address.MailAddressFactory;
 import mireka.address.Recipient;
-import mireka.filter.Destination;
 
 /**
  * An AliasDestination indicates that the final destination of mails sent to the

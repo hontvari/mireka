@@ -1,4 +1,4 @@
-package mireka.filter;
+package mireka.destination;
 
 /**
  * Destination specifies the service which must be used to transfer an incoming

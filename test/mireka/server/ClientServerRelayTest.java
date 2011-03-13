@@ -7,13 +7,13 @@ import java.io.IOException;
 import mireka.ArrayEndsWith;
 import mireka.ExampleAddress;
 import mireka.ExampleMailData;
+import mireka.destination.DestinationProcessorFilter;
 import mireka.filter.local.AcceptAllRecipient;
-import mireka.filter.local.LookupDestination;
+import mireka.filter.local.LookupDestinationFilter;
 import mireka.filter.local.table.RecipientSpecificationDestinationPair;
 import mireka.filter.local.table.RecipientSpecificationFactory;
 import mireka.filter.proxy.BackendServer;
 import mireka.filter.proxy.RelayDestination;
-import mireka.filter.proxy.RelayMailTransaction;
 import mireka.filterchain.Filters;
 import mireka.smtp.ClientFactory;
 import mireka.smtp.server.MessageHandlerFactoryImpl;
@@ -65,15 +65,16 @@ public class ClientServerRelayTest {
                 .addRecipientSpecification(new RecipientSpecificationFactory()
                         .create(ExampleAddress.JANE));
         recipientDestinationMapper.setDestination(relayDestination);
-        LookupDestination lookupDestinationFilter = new LookupDestination();
+        LookupDestinationFilter lookupDestinationFilter = new LookupDestinationFilter();
         lookupDestinationFilter
                 .setRecipientDestinationMapper(recipientDestinationMapper);
         filters.addFilter(lookupDestinationFilter);
 
         filters.addFilter(new AcceptAllRecipient());
 
-        RelayMailTransaction relayFilter = new RelayMailTransaction();
-        filters.addFilter(relayFilter);
+        DestinationProcessorFilter destinationProcessFilter =
+                new DestinationProcessorFilter();
+        filters.addFilter(destinationProcessFilter);
         return filters;
     }
 

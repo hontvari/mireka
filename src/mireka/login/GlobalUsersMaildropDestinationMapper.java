@@ -2,10 +2,10 @@ package mireka.login;
 
 import mireka.address.LocalPart;
 import mireka.address.Recipient;
-import mireka.filter.Destination;
+import mireka.destination.Destination;
 import mireka.filter.local.table.RecipientDestinationMapper;
-import mireka.filter.local.table.UnknownRecipientDestination;
 import mireka.pop.MaildropDestination;
+import mireka.pop.store.MaildropRepository;
 
 /**
  * This class assigns a {@link MaildropDestination} to a {@link GlobalUsers}
@@ -15,6 +15,7 @@ public class GlobalUsersMaildropDestinationMapper implements
         RecipientDestinationMapper {
 
     private GlobalUsers users;
+    private MaildropRepository maildropRepository;
 
     @Override
     public Destination lookup(Recipient recipient) {
@@ -23,10 +24,11 @@ public class GlobalUsersMaildropDestinationMapper implements
             if (user.getUsername().matches(recipientLocalPart)) {
                 MaildropDestination destination = new MaildropDestination();
                 destination.setMaildropName(user.getUsername().toString());
+                destination.setMaildropRepository(maildropRepository);
                 return destination;
             }
         }
-        return UnknownRecipientDestination.INSTANCE;
+        return null;
 
     }
 
@@ -35,5 +37,19 @@ public class GlobalUsersMaildropDestinationMapper implements
      */
     public void setUsers(GlobalUsers users) {
         this.users = users;
+    }
+
+    /**
+     * @category GETSET
+     */
+    public void setMaildropRepository(MaildropRepository maildropRepository) {
+        this.maildropRepository = maildropRepository;
+    }
+
+    /**
+     * @category GETSET
+     */
+    public MaildropRepository getMaildropRepository() {
+        return maildropRepository;
     }
 }

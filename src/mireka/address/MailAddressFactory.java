@@ -4,6 +4,9 @@ import java.util.Locale;
 
 import javax.mail.internet.ParseException;
 
+/**
+ * MailAddressFactory creates mail address related objects from strings.
+ */
 public class MailAddressFactory {
     public Recipient createRecipient(String recipientString)
             throws ParseException {

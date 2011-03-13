@@ -8,7 +8,6 @@ import mireka.filter.FilterReply;
 import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
 import mireka.smtp.RejectExceptionExt;
-import mireka.smtp.UnknownUserException;
 
 import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.TooMuchDataException;
@@ -33,7 +32,7 @@ class ChainEnd implements FilterChain {
     @Override
     public FilterReply verifyRecipient(RecipientContext recipientContext)
             throws RejectExceptionExt {
-        throw new UnknownUserException(recipientContext.recipient);
+        return FilterReply.NEUTRAL;
     }
 
     @Override

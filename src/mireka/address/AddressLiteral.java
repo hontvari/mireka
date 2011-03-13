@@ -3,6 +3,10 @@ package mireka.address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+/**
+ * AddressLiteral is a remote part which is specified in IP address format, for
+ * example [192.0.2.0] in the john@[192.0.2.0] address.
+ */
 public class AddressLiteral implements RemotePart {
     private final String value;
     private final InetAddress address;

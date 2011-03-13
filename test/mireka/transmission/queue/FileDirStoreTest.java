@@ -6,6 +6,7 @@ import java.io.File;
 
 import mireka.ExampleAddress;
 import mireka.ExampleMail;
+import mireka.TempDirectory;
 import mireka.transmission.Mail;
 
 import org.junit.Test;
@@ -14,6 +15,8 @@ public class FileDirStoreTest extends TempDirectory {
     @Test
     public void testSave() throws Exception {
         FileDirStore store = new FileDirStore(directory, 10);
+        store.initializeAndQueryMailNamesOrderedBySchedule();
+
         Mail mail = ExampleMail.simple();
         store.save(mail);
 
@@ -26,6 +29,7 @@ public class FileDirStoreTest extends TempDirectory {
     @Test
     public void testSaveWithSameDate() throws Exception {
         FileDirStore store = new FileDirStore(directory, 10);
+        store.initializeAndQueryMailNamesOrderedBySchedule();
 
         Mail mail = ExampleMail.simple();
         mail.from = ExampleAddress.JOHN;
@@ -42,6 +46,7 @@ public class FileDirStoreTest extends TempDirectory {
     @Test
     public void testRead() throws Exception {
         FileDirStore store = new FileDirStore(directory, 10);
+        store.initializeAndQueryMailNamesOrderedBySchedule();
 
         Mail mailStored = ExampleMail.simple();
         MailName mailName = store.save(mailStored);
@@ -53,6 +58,7 @@ public class FileDirStoreTest extends TempDirectory {
     @Test
     public void testDelete() throws Exception {
         FileDirStore store = new FileDirStore(directory, 10);
+        store.initializeAndQueryMailNamesOrderedBySchedule();
 
         Mail mailStored = ExampleMail.simple();
         MailName mailName = store.save(mailStored);
@@ -67,6 +73,7 @@ public class FileDirStoreTest extends TempDirectory {
     @Test
     public void testMoveToErrorDir() throws Exception {
         FileDirStore store = new FileDirStore(directory, 10);
+        store.initializeAndQueryMailNamesOrderedBySchedule();
 
         Mail mailStored = ExampleMail.simple();
         MailName mailName = store.save(mailStored);
@@ -84,6 +91,7 @@ public class FileDirStoreTest extends TempDirectory {
     @Test(expected = QueueStorageException.class)
     public void testFull() throws Exception {
         FileDirStore store = new FileDirStore(directory, 1);
+        store.initializeAndQueryMailNamesOrderedBySchedule();
 
         Mail mail = ExampleMail.simple();
         store.save(mail);
@@ -96,6 +104,7 @@ public class FileDirStoreTest extends TempDirectory {
     @Test
     public void testSizeMaintained() throws Exception {
         FileDirStore store = new FileDirStore(directory, 1);
+        store.initializeAndQueryMailNamesOrderedBySchedule();
         Mail mail = ExampleMail.simple();
 
         MailName lastName = store.save(mail);

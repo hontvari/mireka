@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mireka.address.Recipient;
-import mireka.filter.Destination;
+import mireka.destination.Destination;
 import mireka.filter.local.table.RecipientDestinationMapper;
-import mireka.filter.local.table.UnknownRecipientDestination;
 
 /**
  * ForwardLists is a collection of forward lists, used in the configuration
@@ -29,7 +28,7 @@ public class ForwardLists implements RecipientDestinationMapper {
             }
 
         }
-        return UnknownRecipientDestination.INSTANCE;
+        return null;
     }
 
 }

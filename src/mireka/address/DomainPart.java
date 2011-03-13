@@ -1,5 +1,9 @@
 package mireka.address;
 
+/**
+ * DomainPart is a remote part which is specified as a DNS domain, for example
+ * example.com in the john@example.com address.
+ */
 public class DomainPart implements RemotePart {
     public final Domain domain;
 

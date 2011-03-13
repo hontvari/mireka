@@ -73,11 +73,11 @@
 			</mireka:MeasureTraffic>
 		</mireka:filter>
 		<mireka:filter>
-			<mireka:LookupDestination>
+			<mireka:LookupDestinationFilter>
 				<mireka:recipientDestinationMapper>
 					#{recipientTable}
 				</mireka:recipientDestinationMapper>
-			</mireka:LookupDestination>
+			</mireka:LookupDestinationFilter>
 		</mireka:filter>
 		<mireka:filter>
 			<mireka:RejectLargeMail/>
@@ -128,23 +128,7 @@
 			<mireka:StopLoop />
 		</mireka:filter>
 		<mireka:filter>
-			<mireka:RelayMailTransaction />
-		</mireka:filter>
-		<mireka:filter>
-			<mireka:MaildropFilter>
-				<mireka:maildropRepository>
-					#{maildropRepository}
-				</mireka:maildropRepository>
-			</mireka:MaildropFilter>
-		</mireka:filter>
-		<mireka:filter>
-			<mireka:MailingListFilter />
-		</mireka:filter>
-		<mireka:filter>
-			<mireka:ForwardListFilter />
-		</mireka:filter>
-		<mireka:filter>
-			<mireka:NullFilter />
+			<mireka:DestinationProcessorFilter />
 		</mireka:filter>
 	</mireka:Filters>
 	

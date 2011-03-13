@@ -100,6 +100,7 @@ class UidManager {
                 }
                 try {
                     highestAllocatedUid = readUidFile(file);
+                    logger.error("Uid file is successfully recovered");
                 } catch (InvalidUidFileException e1) {
                     logger.error(
                             "Temporary uid file was invalid too, maildrop is invalid",

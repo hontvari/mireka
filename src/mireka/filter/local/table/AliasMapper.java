@@ -7,7 +7,8 @@ import javax.mail.internet.ParseException;
 
 import mireka.address.MailAddressFactory;
 import mireka.address.Recipient;
-import mireka.filter.Destination;
+import mireka.destination.AliasDestination;
+import mireka.destination.Destination;
 
 /**
  * AliasMapper is a convenience class used in configuration files to create an
@@ -25,7 +26,7 @@ public class AliasMapper implements RecipientDestinationMapper {
                 return destination;
             }
         }
-        return UnknownRecipientDestination.INSTANCE;
+        return null;
     }
 
     /**

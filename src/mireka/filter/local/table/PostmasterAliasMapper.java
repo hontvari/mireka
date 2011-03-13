@@ -4,7 +4,8 @@ import javax.mail.internet.ParseException;
 
 import mireka.address.MailAddressFactory;
 import mireka.address.Recipient;
-import mireka.filter.Destination;
+import mireka.destination.AliasDestination;
+import mireka.destination.Destination;
 
 /**
  * PostmasterAliasMapper is a convenience class used in configuration files to
@@ -18,7 +19,7 @@ public class PostmasterAliasMapper implements RecipientDestinationMapper {
     @Override
     public Destination lookup(Recipient recipient) {
         return localPostmasterSpecification.isSatisfiedBy(recipient) ? destination
-                : UnknownRecipientDestination.INSTANCE;
+                : null;
     }
 
     /**

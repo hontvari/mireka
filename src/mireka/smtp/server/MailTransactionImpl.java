@@ -9,7 +9,7 @@ import java.util.Map;
 
 import mireka.MailData;
 import mireka.address.Recipient;
-import mireka.filter.Destination;
+import mireka.destination.Destination;
 import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
 

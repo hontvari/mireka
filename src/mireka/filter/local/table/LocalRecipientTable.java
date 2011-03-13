@@ -3,7 +3,7 @@ package mireka.filter.local.table;
 import mireka.address.Recipient;
 import mireka.address.RemotePart;
 import mireka.address.RemotePartContainingRecipient;
-import mireka.filter.Destination;
+import mireka.destination.Destination;
 
 /**
  * LocalRecipientTable contains recipient-destination mappings like
@@ -20,7 +20,7 @@ public class LocalRecipientTable extends RecipientTable {
                     ((RemotePartContainingRecipient) recipient).getAddress()
                             .getRemotePart();
             if (!localDomains.isSatisfiedBy(remotePart))
-                return UnknownRecipientDestination.INSTANCE;
+                return null;
         }
         return super.lookup(recipient);
     }

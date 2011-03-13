@@ -55,12 +55,15 @@
 				<resin:import path="${__DIR__}/forwards.xml" />
 			</ForwardLists>
 		</mapper>
+
+		<resin:import path="${__DIR__}/others.xml" />
 		
 		<!-- 
 			comment out if POP service is not active
 		-->
 		<mapper>
 			<GlobalUsersMaildropDestinationMapper>
+				<maildropRepository>#{maildropRepository}</maildropRepository>
 				<users>#{globalUsers}</users>
 			</GlobalUsersMaildropDestinationMapper>
 		</mapper>

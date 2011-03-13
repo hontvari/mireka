@@ -8,9 +8,12 @@ import javax.mail.internet.ParseException;
 import mireka.ConfigurationException;
 import mireka.address.MailAddressFactory;
 import mireka.address.Recipient;
+import mireka.destination.UnknownRecipientDestination;
+import mireka.filter.FilterReply;
 import mireka.filter.RecipientContext;
 import mireka.filterchain.FilterInstances;
 import mireka.smtp.RejectExceptionExt;
+import mireka.smtp.UnknownUserException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +48,15 @@ public class FilterChainMessageHandler implements MessageHandler {
     public void recipient(String recipientString) throws RejectException {
         try {
             Recipient recipient = convertToRecipient(recipientString);
-            RecipientContext recipientContext = new RecipientContext(recipient);
-            filterChain.getHead().verifyRecipient(recipientContext);
+            RecipientContext recipientContext =
+                    new RecipientContext(mailTransaction, recipient);
+            FilterReply filterReply =
+                    filterChain.getHead().verifyRecipient(recipientContext);
+            if (filterReply == FilterReply.NEUTRAL) {
+                if (!recipientContext.isDestinationAssigned()
+                        || (recipientContext.getDestination() instanceof UnknownRecipientDestination))
+                    throw new UnknownUserException(recipientContext.recipient);
+            }
             filterChain.getHead().recipient(recipientContext);
             mailTransaction.recipientContexts.add(recipientContext);
         } catch (RejectExceptionExt e) {

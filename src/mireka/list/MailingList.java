@@ -10,21 +10,19 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.ParseException;
 
-import mireka.MailData;
 import mireka.address.MailAddressFactory;
 import mireka.address.Recipient;
 import mireka.filter.local.table.RecipientSpecification;
 import mireka.filter.local.table.RecipientSpecificationFactory;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.RejectExceptionExt;
-import mireka.smtp.server.DeferredFileMailData;
 import mireka.transmission.LocalMailSystemException;
 import mireka.transmission.Mail;
 import mireka.transmission.Transmitter;
+import mireka.util.MimeMessageConverter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.subethamail.smtp.io.DeferredFileOutputStream;
 
 /**
  * Very simple mailing list implementation suitable for small, closed, internal
@@ -303,7 +301,9 @@ public class MailingList {
             return;
         }
 
-        mail.mailData = createMailData(mimeMessage);
+        mail.mailData =
+                new MimeMessageConverter()
+                        .createMailDataInSmtpSession(mimeMessage);
         try {
             mail.arrivalDate = srcMail.arrivalDate;
             mail.scheduleDate = mail.arrivalDate; // try to preserve order
@@ -316,34 +316,6 @@ public class MailingList {
         } finally {
             mail.mailData.dispose();
         }
-    }
-
-    private MailData createMailData(MimeMessage mimeMessage)
-            throws RejectExceptionExt {
-        DeferredFileOutputStream deferredFileOutputStream =
-                new DeferredFileOutputStream(32768);
-        try {
-            mimeMessage.writeTo(deferredFileOutputStream);
-        } catch (IOException e) {
-            logger.error("Cannot write MimeMessage", e);
-            try {
-                deferredFileOutputStream.close();
-            } catch (IOException e1) {
-                logger.warn("Cannot close deferredFileOutputStream", e);
-            }
-            throw new RejectExceptionExt(
-                    EnhancedStatus.TRANSIENT_LOCAL_ERROR_IN_PROCESSING);
-        } catch (MessagingException e) {
-            logger.error("Cannot write MimeMessage", e);
-            try {
-                deferredFileOutputStream.close();
-            } catch (IOException e1) {
-                logger.warn("Cannot close deferredFileOutputStream", e);
-            }
-            throw new RejectExceptionExt(
-                    EnhancedStatus.TRANSIENT_LOCAL_ERROR_IN_PROCESSING);
-        }
-        return new DeferredFileMailData(deferredFileOutputStream);
     }
 
     /**

@@ -2,16 +2,16 @@ package mireka.filter.local;
 
 import mireka.ConfigurationException;
 import mireka.address.Recipient;
+import mireka.destination.AliasDestination;
+import mireka.destination.Destination;
 import mireka.filter.AbstractDataRecipientFilter;
 import mireka.filter.DataRecipientFilterAdapter;
-import mireka.filter.Destination;
 import mireka.filter.Filter;
 import mireka.filter.FilterBase;
 import mireka.filter.FilterReply;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
-import mireka.filter.local.table.AliasDestination;
 import mireka.filter.local.table.RecipientDestinationMapper;
 
 import org.slf4j.Logger;
@@ -20,9 +20,11 @@ import org.subethamail.smtp.RejectException;
 
 /**
  * The LookupDestination filter assigns a destination to recipients in the
- * {@link FilterBase#verifyRecipient(RecipientContext)} phase.
+ * {@link FilterBase#verifyRecipient(RecipientContext)} phase. It does nothing
+ * if a destination is already assigned, except if it is an
+ * {@link AliasDestination}, in which case it tries to resolve the alias.
  */
-public class LookupDestination implements FilterType {
+public class LookupDestinationFilter implements FilterType {
     private RecipientDestinationMapper recipientDestinationMapper;
 
     @Override
@@ -57,9 +59,19 @@ public class LookupDestination implements FilterType {
         @Override
         public FilterReply verifyRecipient(RecipientContext recipientContext)
                 throws RejectException {
-            Destination destination =
-                    lookupDestinationByResolvingAliases(recipientContext.recipient);
-            recipientContext.setDestination(destination);
+            Destination currentDestination =
+                    recipientContext.isDestinationAssigned() ? recipientContext
+                            .getDestination() : null;
+            if (currentDestination == null) {
+                Destination destination =
+                        lookupDestinationByResolvingAliases(recipientContext.recipient);
+                recipientContext.setDestination(destination);
+            } else if (currentDestination instanceof AliasDestination) {
+                Destination destination =
+                        lookupDestinationByResolvingAliases(((AliasDestination) currentDestination)
+                                .getRecipient());
+                recipientContext.setDestination(destination);
+            }
             return FilterReply.NEUTRAL;
         }
 

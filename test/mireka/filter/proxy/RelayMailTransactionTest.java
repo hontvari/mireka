@@ -1,7 +1,8 @@
 package mireka.filter.proxy;
 
 import mireka.ExampleAddress;
-import mireka.ExampleMailData;
+import mireka.ExampleMail;
+import mireka.destination.Session;
 import mireka.filter.RecipientContext;
 import mockit.Expectations;
 import mockit.Mocked;
@@ -13,34 +14,24 @@ import org.subethamail.smtp.client.SmartClient;
 
 public class RelayMailTransactionTest {
     @Mocked
-    private BackendServer backendServerA;
-    @Mocked
-    private BackendServer backendServerB;
+    private BackendServer backendServer;
 
     @NonStrict
     @Mocked(stubOutClassInitialization = false)
-    private SmartClient smartClientA;
-    @NonStrict
-    @Mocked(stubOutClassInitialization = false)
-    private SmartClient smartClientB;
+    private SmartClient smartClient;
 
-    private RecipientContext recipientContextJane = new RecipientContext(
+    private RecipientContext recipientContextJane = new RecipientContext(null,
             ExampleAddress.JANE_AS_RECIPIENT);
-    private RecipientContext recipientContextJohn = new RecipientContext(
+    private RecipientContext recipientContextJohn = new RecipientContext(null,
             ExampleAddress.JOHN_AS_RECIPIENT);
 
-    private RelayMailTransaction.FilterImpl filter =
-            new RelayMailTransaction.FilterImpl(null);
-
-    private RelayDestination destinationA;
-    private RelayDestination destinationB;
+    private Session session;
 
     @Before
     public void setup() {
-        destinationA = new RelayDestination();
-        destinationA.setBackendServer(backendServerA);
-        destinationB = new RelayDestination();
-        destinationB.setBackendServer(backendServerB);
+        RelayDestination destination = new RelayDestination();
+        destination.setBackendServer(backendServer);
+        session = destination.createSession();
     }
 
     @Test
@@ -48,19 +39,17 @@ public class RelayMailTransactionTest {
 
         new Expectations() {
             {
-                backendServerA.connect();
-                result = smartClientA;
+                backendServer.connect();
+                result = smartClient;
 
-                smartClientA.dataEnd();
+                smartClient.dataEnd();
                 times = 1;
             }
         };
 
-        recipientContextJane.setDestination(destinationA);
+        session.recipient(recipientContextJane);
 
-        filter.recipient(recipientContextJane);
-
-        filter.data(ExampleMailData.simple());
+        session.data(ExampleMail.simple());
     }
 
     @Test
@@ -68,54 +57,19 @@ public class RelayMailTransactionTest {
 
         new Expectations() {
             {
-                backendServerA.connect();
-                result = smartClientA;
+                backendServer.connect();
+                result = smartClient;
 
-                smartClientA.to(anyString);
+                smartClient.to(anyString);
                 times = 2;
-                smartClientA.dataEnd();
+                smartClient.dataEnd();
                 times = 1;
             }
         };
 
-        recipientContextJane.setDestination(destinationA);
-        recipientContextJohn.setDestination(destinationA);
+        session.recipient(recipientContextJane);
+        session.recipient(recipientContextJohn);
 
-        filter.recipient(recipientContextJane);
-        filter.recipient(recipientContextJohn);
-
-        filter.data(ExampleMailData.simple());
-    }
-
-    @Test
-    public final void testTwoRecipientsTwoDestinations() throws Exception {
-
-        new Expectations() {
-            {
-                backendServerA.connect();
-                result = smartClientA;
-                backendServerB.connect();
-                result = smartClientB;
-
-                smartClientA.to(anyString);
-                times = 1;
-                smartClientA.dataEnd();
-                times = 1;
-
-                smartClientB.to(anyString);
-                times = 1;
-                smartClientB.dataEnd();
-                times = 1;
-
-            }
-        };
-
-        recipientContextJane.setDestination(destinationA);
-        recipientContextJohn.setDestination(destinationB);
-
-        filter.recipient(recipientContextJane);
-        filter.recipient(recipientContextJohn);
-
-        filter.data(ExampleMailData.simple());
+        session.data(ExampleMail.simple());
     }
 }

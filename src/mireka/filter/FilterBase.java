@@ -3,6 +3,7 @@ package mireka.filter;
 import java.io.IOException;
 
 import mireka.MailData;
+import mireka.destination.UnknownRecipientDestination;
 import mireka.smtp.RejectExceptionExt;
 
 import org.subethamail.smtp.RejectException;
@@ -25,7 +26,11 @@ public interface FilterBase {
      * Decides if a recipient should be accepted. The decision can be a final
      * positive, a final negative, or a neutral answer. This function is not
      * called if a previous filter has already accepted or rejected the
-     * recipient. In case of a neutral answer, other filters will decide.
+     * recipient. In case of a neutral answer, other filters will decide. If all
+     * filters return the neutral answer, then the recipient will be accepted if
+     * a destination is assigned to it and the assigned destination is not an
+     * {@link UnknownRecipientDestination}; otherwise it will be rejected as an
+     * unknown user.
      * 
      * @throws RejectException
      *             if the recipient is not valid and it must be rejected

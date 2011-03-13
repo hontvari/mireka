@@ -2,8 +2,8 @@ package mireka.address;
 
 /**
  * LocalPart contains the local part of a forward path (usually a mailbox) which
- * appeared as the recipient in an RCPT command submitted by an SMTP client,
- * e.g. "john" if the recipient was john@example.com. An SMTP server must
+ * appeared as the recipient in an RCPT command submitted by an SMTP client, for
+ * example "john" if the recipient was john@example.com. An SMTP server must
  * preserve the case of its characters, it must not assume that the
  * corresponding mailbox name is case insensitive. However, a mailbox name
  * should indeed be case insensitive.

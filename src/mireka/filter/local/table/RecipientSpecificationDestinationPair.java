@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mireka.address.Recipient;
-import mireka.filter.Destination;
+import mireka.destination.Destination;
 
 /**
  * RecipientSpecificationDestinationPair assigns a {@link Destination} to one or
@@ -23,7 +23,7 @@ public class RecipientSpecificationDestinationPair implements
             if (recipientSpecification.isSatisfiedBy(recipient))
                 return destination;
         }
-        return UnknownRecipientDestination.INSTANCE;
+        return null;
     }
 
     /**
