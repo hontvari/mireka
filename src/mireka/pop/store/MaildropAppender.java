@@ -10,7 +10,9 @@ import mireka.transmission.LocalMailSystemException;
  */
 public interface MaildropAppender {
     /**
-     * Returns an output stream into which the mail must be written.
+     * Returns an output stream into which the mail must be written. Either
+     * {@link #commit()} or {@link #rollback()} must be called later to close
+     * this stream.
      */
     public OutputStream getOutputStream() throws LocalMailSystemException;
 

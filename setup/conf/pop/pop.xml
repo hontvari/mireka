@@ -4,6 +4,20 @@
 	xmlns:subetha="urn:java:org.subethamail.smtp.server"
 	xmlns:ee="urn:java:ee"
 	>
+
+	<!--
+		uncomment to import POP3 mails from an existing server at 
+		startup
+	-->
+	<!--
+	<mireka:PopMailImporter>
+		<ee:Startup/>
+		<users>#{globalUsers}</users>
+		<maildropRepository>#{maildropRepository}</maildropRepository>
+		<remoteHost>localhost</remoteHost>
+		<remotePort>110</remotePort>
+	</mireka:PopMailImporter>
+	-->
 	
 	
 	<mireka:PopServer>
