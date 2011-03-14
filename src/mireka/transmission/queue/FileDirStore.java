@@ -342,6 +342,13 @@ public class FileDirStore {
     /**
      * @category GETSET
      */
+    public File getDir() {
+        return dir;
+    }
+
+    /**
+     * @category GETSET
+     */
     public void setMaxSize(int maxSize) {
         this.maxSize = maxSize;
     }

@@ -40,4 +40,12 @@ public class MailNameTest {
         MailName name2 = new MailName(testDate + 1, 0);
         assertTrue(name1.compareTo(name2) < 0);
     }
+
+    @Test
+    public void testParsingWithSequenceNumber() {
+        String fileName = "2011-03-14T04-02-18.094+0100_1.eml";
+        MailName mailName = new MailName(fileName);
+        assertEquals("2011-03-14T04-02-18.094+0100_1", mailName.baseFileName);
+        assertEquals(1, mailName.sequenceNumber);
+    }
 }

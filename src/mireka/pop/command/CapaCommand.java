@@ -21,6 +21,7 @@ public class CapaCommand implements Command {
         session.getThread().sendResponse("USER");
         session.getThread().sendResponse("RESP-CODES");
         session.getThread().sendResponse("AUTH-RESP-CODE");
+        session.getThread().sendResponse("PIPELINING");
         session.getThread().sendResponse("UIDL");
         session.getThread().sendResponse(
                 "IMPLEMENTATION Mireka-" + Version.getVersion());

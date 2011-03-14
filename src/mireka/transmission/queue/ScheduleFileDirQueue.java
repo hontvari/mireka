@@ -46,6 +46,7 @@ public class ScheduleFileDirQueue {
 
     @PostConstruct
     public void start() {
+        logger.info("Initializing queue. [store=" + store + "]");
         MailName[] mailNames;
         try {
             mailNames = store.initializeAndQueryMailNamesOrderedBySchedule();
@@ -58,6 +59,9 @@ public class ScheduleFileDirQueue {
     private void scheduleMailNames(MailName[] mailNames) {
         for (MailName name : mailNames) {
             scheduleMailName(name);
+            logger.debug(
+                    "Mail name, read from store, was scheduled for processing: {}",
+                    name);
         }
     }
 
@@ -68,7 +72,6 @@ public class ScheduleFileDirQueue {
         executor.schedule(task,
                 mailName.scheduleDate - System.currentTimeMillis(),
                 TimeUnit.MILLISECONDS);
-        logger.debug("Mail was sceduled for processing: {}", mailName);
     }
 
     /**
@@ -79,6 +82,8 @@ public class ScheduleFileDirQueue {
             srcMail.scheduleDate = new Date();
         MailName mailName = store.save(srcMail);
         scheduleMailName(mailName);
+        logger.debug("Mail was sceduled for processing: {}, {}", mailName,
+                srcMail);
     }
 
     /**
@@ -113,5 +118,10 @@ public class ScheduleFileDirQueue {
      */
     public void setExecutor(ScheduledThreadPoolExecutor executor) {
         this.executor = executor;
+    }
+
+    @Override
+    public String toString() {
+        return "ScheduleFileDirQueue [store=" + store + "]";
     }
 }
