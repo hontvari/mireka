@@ -19,31 +19,51 @@ import org.slf4j.LoggerFactory;
 import org.subethamail.smtp.client.SMTPException;
 import org.subethamail.smtp.client.SmartClient;
 
+/**
+ * MailToHostTransmitter transmits a mail to a specific host specified by its IP
+ * address.
+ */
 @NotThreadSafe
 class MailToHostTransmitter {
-    private final Logger logger =
-            LoggerFactory.getLogger(MailToHostTransmitter.class);
+    private final Logger logger = LoggerFactory
+            .getLogger(MailToHostTransmitter.class);
     private final ClientFactory clientFactory;
+    private OutgoingConnectionsRegistry outgoingConnectionsRegistry;
     private final LogIdFactory logIdFactory;
     private final RemoteMta remoteMta;
     private Mail mail;
 
     public MailToHostTransmitter(ClientFactory clientFactory,
+            OutgoingConnectionsRegistry outgoingConnectionsRegistry,
             LogIdFactory logIdFactory, RemoteMta remoteMta) {
         this.clientFactory = clientFactory;
+        this.outgoingConnectionsRegistry = outgoingConnectionsRegistry;
         this.logIdFactory = logIdFactory;
         this.remoteMta = remoteMta;
+
     }
 
     /**
+     * Delivers the mail to the SMTP server running on the specified host.
+     * 
      * @param inetAddress
-     *            the name (if there is one) must already be resolved (using
-     *            dnsJava)
+     *            The receiving SMTP host. The name (if there is one) must
+     *            already be resolved (using dnsJava).
+     * @throws PostponeException
+     *             if it has not even tried connecting to the host, because it
+     *             is likely that the host is busy at this moment.
      */
     public void transmit(Mail mail, InetAddress inetAddress)
-            throws SendException, RecipientsWereRejectedException {
+            throws SendException, RecipientsWereRejectedException,
+            PostponeException {
         this.mail = mail;
         SmartClient smartClient = null;
+        try {
+            outgoingConnectionsRegistry.openConnection(inetAddress);
+        } catch (PostponeException e) {
+            e.setRemoteMta(remoteMta);
+            throw e;
+        }
         try {
             smartClient = clientFactory.create(inetAddress);
             smartClient.from(mail.from);
@@ -91,6 +111,7 @@ class MailToHostTransmitter {
             if (smartClient != null) {
                 smartClient.quit();
             }
+            outgoingConnectionsRegistry.releaseConnection(inetAddress);
         }
     }
 

@@ -4,6 +4,7 @@ import mireka.transmission.LocalMailSystemException;
 import mireka.transmission.Mail;
 import mireka.transmission.immediate.ImmediateSender;
 import mireka.transmission.immediate.ImmediateSenderFactory;
+import mireka.transmission.immediate.PostponeException;
 import mireka.transmission.immediate.RecipientsWereRejectedException;
 import mireka.transmission.immediate.SendException;
 import mireka.transmission.queue.MailProcessor;
@@ -13,8 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 class OutboundMtaMailProcessor implements MailProcessor {
-    private final Logger logger =
-            LoggerFactory.getLogger(OutboundMtaMailProcessor.class);
+    private final Logger logger = LoggerFactory
+            .getLogger(OutboundMtaMailProcessor.class);
     private final ImmediateSenderFactory immediateSenderFactory;
     private final RetryPolicy retryPolicy;
     private final LogIdFactory logIdFactory;
@@ -23,8 +24,8 @@ class OutboundMtaMailProcessor implements MailProcessor {
 
     public OutboundMtaMailProcessor(
             ImmediateSenderFactory immediateSenderFactory,
-            RetryPolicy retryPolicy, LogIdFactory logIdFactory, TransmitterSummary summary,
-            Mail mail) {
+            RetryPolicy retryPolicy, LogIdFactory logIdFactory,
+            TransmitterSummary summary, Mail mail) {
         this.immediateSenderFactory = immediateSenderFactory;
         this.mail = mail;
         this.retryPolicy = retryPolicy;
@@ -59,6 +60,8 @@ class OutboundMtaMailProcessor implements MailProcessor {
             handleSendException(e);
         } catch (RecipientsWereRejectedException e) {
             handleSomeRecipientsWereRejectedException(e);
+        } catch (PostponeException e) {
+            handlePostponeException(e);
         }
     }
 
@@ -103,5 +106,12 @@ class OutboundMtaMailProcessor implements MailProcessor {
             summary.transientFailures.incrementAndGet();
         else
             summary.permanentFailures.incrementAndGet();
+    }
+
+    private void handlePostponeException(PostponeException e)
+            throws LocalMailSystemException {
+        logger.debug("Delivery must be postponed to all hosts. "
+                + "Executing retry policy...");
+        retryPolicy.actOnPostponeRequired(mail, e);
     }
 }

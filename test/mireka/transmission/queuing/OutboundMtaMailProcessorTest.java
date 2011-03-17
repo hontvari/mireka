@@ -7,6 +7,7 @@ import mireka.transmission.LocalMailSystemException;
 import mireka.transmission.Mail;
 import mireka.transmission.immediate.ImmediateSender;
 import mireka.transmission.immediate.ImmediateSenderFactory;
+import mireka.transmission.immediate.PostponeException;
 import mireka.transmission.immediate.RecipientsWereRejectedException;
 import mireka.transmission.immediate.SendException;
 import mireka.transmission.queue.TransmitterSummary;
@@ -41,7 +42,8 @@ public class OutboundMtaMailProcessorTest {
 
     @Test
     public void testRun() throws IllegalArgumentException, SendException,
-            RecipientsWereRejectedException, LocalMailSystemException {
+            RecipientsWereRejectedException, LocalMailSystemException,
+            PostponeException {
         processor.run();
 
         verify(immediateSender).send(any(Mail.class));

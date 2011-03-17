@@ -47,13 +47,20 @@ public class Mail {
     public InetAddress receivedFromMtaAddress;
 
     /**
-     * the desired date of sending this mail. Null means immediately.
+     * The desired date of sending this mail. Null means immediately.
      */
     public Date scheduleDate;
     /**
-     * count of failed attempts until now
+     * Count of failed attempts until now.
      */
     public int deliveryAttempts;
+    /**
+     * Count of postponings of delivery attempts since the last actually
+     * performed attempt. Postponing a delivery means that no remote SMTP hosts
+     * were connected, so a postponed delivery attempt must not be considered as
+     * a retry.
+     */
+    public int postpones;
 
     /**
      * Creates an essentially deep copy of this instance. The same
@@ -73,6 +80,7 @@ public class Mail {
         result.receivedFromMtaAddress = receivedFromMtaAddress;
         result.scheduleDate = scheduleDate;
         result.deliveryAttempts = deliveryAttempts;
+        result.postpones = postpones;
         return result;
     }
 

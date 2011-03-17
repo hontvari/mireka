@@ -10,6 +10,7 @@ import mireka.transmission.Mail;
 import mireka.transmission.Transmitter;
 import mireka.transmission.dsn.DsnMailCreator;
 import mireka.transmission.dsn.PermanentFailureReport;
+import mireka.transmission.immediate.PostponeException;
 import mireka.transmission.immediate.RecipientRejection;
 import mireka.transmission.immediate.RecipientsWereRejectedException;
 import mireka.transmission.immediate.RemoteMtaErrorResponseException;
@@ -22,12 +23,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RetryPolicy {
-    private List<Period> retryPeriods =
-            Arrays.asList(new Period[] { Period.minutes(3), Period.minutes(27),
-                    Period.minutes(30), Period.hours(2), Period.hours(2),
-                    Period.hours(2), Period.hours(2), Period.hours(2),
-                    Period.hours(2), Period.hours(2), Period.hours(2),
-                    Period.hours(2), Period.hours(2), Period.hours(3) });
+    private final Logger logger = LoggerFactory.getLogger(RetryPolicy.class);
+    private List<Period> retryPeriods = Arrays.asList(new Period[] {
+            Period.minutes(3), Period.minutes(27), Period.minutes(30),
+            Period.hours(2), Period.hours(2), Period.hours(2), Period.hours(2),
+            Period.hours(2), Period.hours(2), Period.hours(2), Period.hours(2),
+            Period.hours(2), Period.hours(2), Period.hours(3) });
     private DsnMailCreator dsnMailCreator;
     private Transmitter dsnTransmitter;
     private Transmitter retryTransmitter;
@@ -69,6 +70,33 @@ public class RetryPolicy {
         failureHandler.onFailure();
     }
 
+    public void actOnPostponeRequired(Mail mail, PostponeException e)
+            throws LocalMailSystemException {
+        mail.postpones++;
+        if (mail.postpones <= 3) {
+            Instant newScheduleDate =
+                    new DateTime().plusSeconds(e.getRecommendedDelay())
+                            .toInstant();
+            mail.scheduleDate = newScheduleDate.toDate();
+            retryTransmitter.transmit(mail);
+            logger.debug("Delivery must be postponed to all hosts. "
+                    + "Rescheduling the attempt. This is the " + mail.postpones
+                    + ". postponing of this delivery attempt.");
+
+        } else {
+            logger.debug("Too much postponings of delivery attempt. "
+                    + "The next would be the " + mail.postpones
+                    + ". Attempt is considered to be a failure.");
+            SendException sendException =
+                    new SendException(
+                            "Too much postponings of delivery attempt, attempt is considered to be a failure.",
+                            e, e.getEnhancedStatus(), e.getRemoteMta());
+            EntireMailFailureHandler failureHandler =
+                    new EntireMailFailureHandler(mail, sendException);
+            failureHandler.onFailure();
+        }
+    }
+
     private int maxAttempts() {
         return retryPeriods.size();
     }
@@ -101,25 +129,6 @@ public class RetryPolicy {
         this.retryTransmitter = retryTransmitter;
     }
 
-    private class EntireMailFailureHandler extends FailureHandler {
-
-        private final SendException sendException;
-
-        public EntireMailFailureHandler(Mail mail, SendException sendException) {
-            super(mail);
-            this.sendException = sendException;
-        }
-
-        @Override
-        protected List<SendingFailure> createFailures() {
-            List<SendingFailure> result = new ArrayList<SendingFailure>();
-            for (Recipient recipient : mail.recipients) {
-                result.add(new SendingFailure(recipient, sendException));
-            }
-            return result;
-        }
-    }
-
     private class RecipientsRejectedFailureHandler extends FailureHandler {
         private final List<RecipientRejection> rejections;
 
@@ -140,9 +149,28 @@ public class RetryPolicy {
         }
     }
 
+    private class EntireMailFailureHandler extends FailureHandler {
+
+        private final SendException sendException;
+
+        public EntireMailFailureHandler(Mail mail, SendException sendException) {
+            super(mail);
+            this.sendException = sendException;
+        }
+
+        @Override
+        protected List<SendingFailure> createFailures() {
+            List<SendingFailure> result = new ArrayList<SendingFailure>();
+            for (Recipient recipient : mail.recipients) {
+                result.add(new SendingFailure(recipient, sendException));
+            }
+            return result;
+        }
+    }
+
     private abstract class FailureHandler {
-        private final Logger logger =
-                LoggerFactory.getLogger(EntireMailFailureHandler.class);
+        private final Logger logger = LoggerFactory
+                .getLogger(EntireMailFailureHandler.class);
         protected final Mail mail;
 
         private List<SendingFailure> failures;
@@ -159,6 +187,7 @@ public class RetryPolicy {
 
         public final void onFailure() throws LocalMailSystemException {
             mail.deliveryAttempts++;
+            mail.postpones = 0;
             failures = createFailures();
             separatePermanentAndTemporaryFailures();
             createPermanentFailureReports();
@@ -219,9 +248,8 @@ public class RetryPolicy {
             }
             Mail dsnMail = dsnMailCreator.create(mail, permanentFailureReports);
             dsnTransmitter.transmit(dsnMail);
-            logger
-                    .debug("Permanent failure, DSN message is created and passed "
-                            + "to the DSN transmitter.");
+            logger.debug("Permanent failure, DSN message is created and passed "
+                    + "to the DSN transmitter.");
         }
 
         private void rescheduleTemporaryFailures()
@@ -248,6 +276,9 @@ public class RetryPolicy {
         }
     }
 
+    /**
+     * SendingFailure stores failure information for a specific recipient.
+     */
     private static class SendingFailure {
         public final Recipient recipient;
         public final SendException exception;

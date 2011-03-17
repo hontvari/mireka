@@ -2,8 +2,6 @@ package mireka.transmission.immediate;
 
 import static mireka.ExampleAddress.*;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
 
 import java.net.InetAddress;
 import java.util.Arrays;
@@ -17,33 +15,32 @@ import mireka.transmission.immediate.dns.AddressLookup;
 import mireka.transmission.immediate.dns.AddressLookupFactory;
 import mireka.transmission.immediate.dns.MxLookup;
 import mireka.transmission.immediate.dns.MxLookupFactory;
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.NonStrictExpectations;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.xbill.DNS.Name;
 
-@RunWith(MockitoJUnitRunner.class)
 public class ImmediateSenderTest {
 
-    @Mock
+    @Mocked
     private MxLookupFactory mxLookupFactory;
 
-    @Mock
+    @Mocked
     private MxLookup mxLookup;
 
-    @Mock
+    @Mocked
     private AddressLookupFactory addressLookupFactory;
 
-    @Mock
+    @Mocked
     private AddressLookup addressLookup;
 
-    @Mock
+    @Mocked
     private MailToHostTransmitterFactory mailToHostTransmitterFactory;
 
-    @Mock
+    @Mocked
     private MailToHostTransmitter mailToHostTransmitter;
 
     private Mail mail = ExampleMail.simple();
@@ -52,12 +49,17 @@ public class ImmediateSenderTest {
 
     private ImmediateSender sender;
 
-    private SendException permanentSendException =
-            new SendException("Example permanent failure",
-                    EnhancedStatus.PERMANENT_UNABLE_TO_ROUTE);
-    private SendException transientSendException =
-            new SendException("Example transient failure",
-                    EnhancedStatus.TRANSIENT_LOCAL_ERROR_IN_PROCESSING);
+    private SendException permanentSendException = new SendException(
+            "Example permanent failure",
+            EnhancedStatus.PERMANENT_UNABLE_TO_ROUTE);
+    private SendException transientSendException = new SendException(
+            "Example transient failure",
+            EnhancedStatus.TRANSIENT_LOCAL_ERROR_IN_PROCESSING);
+    private static final PostponeException POSTPONE_EXCEPTION =
+            new PostponeException(
+                    10,
+                    EnhancedStatus.TRANSIENT_SYSTEM_NOT_ACCEPTING_NETWORK_MESSAGES,
+                    "Test exception");
 
     @Before
     public void initialize() {
@@ -70,113 +72,248 @@ public class ImmediateSenderTest {
         sender =
                 new ImmediateSender(mxLookupFactory, addressLookupFactory,
                         mailToHostTransmitterFactory);
-        when(mailToHostTransmitterFactory.create(any(RemoteMta.class)))
-                .thenReturn(mailToHostTransmitter);
-        when(mxLookupFactory.create(any(Domain.class))).thenReturn(mxLookup);
-        when(addressLookupFactory.create(any(Name.class))).thenReturn(
-                addressLookup);
+
+        new NonStrictExpectations() {
+            {
+                mailToHostTransmitterFactory.create((RemoteMta) any);
+                result = mailToHostTransmitter;
+
+                mxLookupFactory.create((Domain) any);
+                result = mxLookup;
+
+                addressLookupFactory.create((Name) any);
+                result = addressLookup;
+            }
+        };
     }
 
     @Test
     public void testSendToAddressLiteralVerifyNoDns() throws SendException,
-            RecipientsWereRejectedException {
-        sender.send(adaAddressLiteralMail);
+            RecipientsWereRejectedException, PostponeException {
+        new Expectations() {
+            {
+                mxLookup.queryMxTargets();
+                times = 0;
 
-        verify(mailToHostTransmitter).transmit(any(Mail.class),
-                eq(IP_ADDRESS_ONLY));
-        verifyZeroInteractions(addressLookup, mxLookup);
+                addressLookup.queryAddresses();
+                times = 0;
+
+                mailToHostTransmitter.transmit((Mail) any, IP);
+            }
+        };
+
+        sender.send(adaAddressLiteralMail);
     }
 
     @Test
     public void testSendToDomain() throws SendException,
-            RecipientsWereRejectedException {
-        when(mxLookup.queryMxTargets()).thenReturn(
-                new Name[] { HOST1_EXAMPLE_COM_NAME });
-        when(addressLookup.queryAddresses()).thenReturn(
-                new InetAddress[] { IP_ADDRESS_ONLY });
+            RecipientsWereRejectedException, PostponeException {
+        new Expectations() {
+            {
+                mxLookup.queryMxTargets();
+                result = new Name[] { HOST1_EXAMPLE_COM_NAME };
+
+                addressLookup.queryAddresses();
+                result = new InetAddress[] { IP_ADDRESS_ONLY };
+
+                mailToHostTransmitter.transmit((Mail) any, IP_ADDRESS_ONLY);
+            }
+        };
 
         sender.send(mail);
 
-        verify(mailToHostTransmitter).transmit(any(Mail.class),
-                eq(IP_ADDRESS_ONLY));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testSendToDifferentDomain() throws IllegalArgumentException,
-            SendException, RecipientsWereRejectedException {
+    public void testSendToDifferentDomain() throws SendException,
+            RecipientsWereRejectedException, PostponeException {
         mail.recipients =
                 Arrays.asList(JANE_AS_RECIPIENT, NANCY_NET_AS_RECIPIENT);
         sender.send(mail);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testSendToGlobalPostmaster() throws IllegalArgumentException,
-            SendException, RecipientsWereRejectedException {
+    public void testSendToGlobalPostmaster() throws SendException,
+            RecipientsWereRejectedException, PostponeException {
         mail.recipients =
                 Arrays.asList((Recipient) GLOBAL_POSTMASTER_AS_RECIPIENT);
         sender.send(mail);
     }
 
     @Test
-    public void testSendFirstMxCannotBeResolved()
-            throws IllegalArgumentException, SendException,
-            RecipientsWereRejectedException {
-        when(mxLookup.queryMxTargets()).thenReturn(
-                new Name[] { HOST1_EXAMPLE_COM_NAME, HOST2_EXAMPLE_COM_NAME });
-        when(addressLookup.queryAddresses()).thenThrow(permanentSendException)
-                .thenReturn(new InetAddress[] { IP2 });
+    public void testSendFirstMxCannotBeResolved() throws SendException,
+            RecipientsWereRejectedException, PostponeException {
+        new Expectations() {
+            {
+                mxLookup.queryMxTargets();
+                result =
+                        new Name[] { HOST1_EXAMPLE_COM_NAME,
+                                HOST2_EXAMPLE_COM_NAME };
+
+                addressLookup.queryAddresses();
+                result = permanentSendException;
+                result = new InetAddress[] { IP2 };
+
+                mailToHostTransmitter.transmit((Mail) any, IP2);
+            }
+        };
 
         sender.send(mail);
-
-        verify(addressLookup, times(2)).queryAddresses();
-        verify(mailToHostTransmitter).transmit(any(Mail.class), eq(IP2));
     }
 
     @Test
-    public void testSendFirstHostHasTransientProblem()
-            throws IllegalArgumentException, SendException,
-            RecipientsWereRejectedException {
-        when(mxLookup.queryMxTargets()).thenReturn(
-                new Name[] { HOST1_EXAMPLE_COM_NAME, HOST2_EXAMPLE_COM_NAME });
-        when(addressLookup.queryAddresses()).thenReturn(
-                new InetAddress[] { IP1 });
-        doThrow(transientSendException).doNothing().when(mailToHostTransmitter)
-                .transmit(any(Mail.class), any(InetAddress.class));
+    public void testSendFirstHostHasTransientProblem() throws SendException,
+            RecipientsWereRejectedException, PostponeException {
+        twoMxDnsExpectation();
+
+        new Expectations() {
+            {
+                mailToHostTransmitter.transmit((Mail) any, (InetAddress) any);
+                result = transientSendException;
+
+                mailToHostTransmitter.transmit((Mail) any, (InetAddress) any);
+                result = null;
+            }
+        };
 
         sender.send(mail);
 
-        verify(addressLookup, times(2)).queryAddresses();
-        verify(mailToHostTransmitter, times(2)).transmit(any(Mail.class),
-                any(InetAddress.class));
+    }
+
+    private void twoMxDnsExpectation() throws SendException {
+        new NonStrictExpectations() {
+            {
+                mxLookup.queryMxTargets();
+                result =
+                        new Name[] { HOST1_EXAMPLE_COM_NAME,
+                                HOST2_EXAMPLE_COM_NAME };
+                times = 1;
+
+                addressLookup.queryAddresses();
+                result = new InetAddress[] { IP1 };
+                result = new InetAddress[] { IP2 };
+                times = 2;
+            }
+        };
+    }
+
+    @Test(expected = SendException.class)
+    public void testSendFirstHostHasPermanentProblem() throws SendException,
+            RecipientsWereRejectedException, PostponeException {
+        new Expectations() {
+            {
+                mxLookup.queryMxTargets();
+                result =
+                        new Name[] { HOST1_EXAMPLE_COM_NAME,
+                                HOST2_EXAMPLE_COM_NAME };
+
+                addressLookup.queryAddresses();
+                result = new InetAddress[] { IP1 };
+
+                mailToHostTransmitter.transmit((Mail) any, (InetAddress) any);
+                result = permanentSendException;
+            }
+        };
+
+        sender.send(mail);
     }
 
     @Test
-    public void testSendFirstHostHasPermanentProblem()
-            throws IllegalArgumentException, SendException,
-            RecipientsWereRejectedException {
-        when(mxLookup.queryMxTargets()).thenReturn(
-                new Name[] { HOST1_EXAMPLE_COM_NAME, HOST2_EXAMPLE_COM_NAME });
-        when(addressLookup.queryAddresses()).thenReturn(
-                new InetAddress[] { IP1 });
-        doThrow(permanentSendException).doNothing().when(mailToHostTransmitter)
-                .transmit(any(Mail.class), any(InetAddress.class));
+    public void testSendFirstHostHasTransientSecondHasPermanentProblem()
+            throws SendException, RecipientsWereRejectedException,
+            PostponeException {
+        twoMxDnsExpectation();
+        new Expectations() {
+            {
+                mailToHostTransmitter.transmit((Mail) any, (InetAddress) any);
+                result = transientSendException;
+
+                mailToHostTransmitter.transmit((Mail) any, (InetAddress) any);
+                result = permanentSendException;
+            }
+        };
 
         try {
             sender.send(mail);
-            fail("An exception must have been thrown");
+            fail("Exception expected");
         } catch (SendException e) {
-            verify(mailToHostTransmitter, times(1)).transmit(any(Mail.class),
-                    any(InetAddress.class));
+            assertFalse(e.errorStatus().shouldRetry());
         }
+
+    }
+
+    @Test
+    public void testSendFirstHostPostponed() throws SendException,
+            RecipientsWereRejectedException, PostponeException {
+        twoMxDnsExpectation();
+        new Expectations() {
+            {
+                mailToHostTransmitter.transmit((Mail) any, (InetAddress) any);
+                result = POSTPONE_EXCEPTION;
+
+                mailToHostTransmitter.transmit((Mail) any, (InetAddress) any);
+                result = null;
+            }
+        };
+
+        sender.send(mail);
+
+    }
+
+    @Test
+    public void testSendFirstHostPostponedSecondHasTransientProblem()
+            throws SendException, RecipientsWereRejectedException,
+            PostponeException {
+        twoMxDnsExpectation();
+        new Expectations() {
+            {
+                mailToHostTransmitter.transmit((Mail) any, (InetAddress) any);
+                result = POSTPONE_EXCEPTION;
+
+                mailToHostTransmitter.transmit((Mail) any, (InetAddress) any);
+                result = transientSendException;
+            }
+        };
+
+        try {
+            sender.send(mail);
+            fail("Exception expected");
+        } catch (SendException e) {
+            assertTrue(e.errorStatus().shouldRetry());
+        }
+    }
+
+    @Test(expected = PostponeException.class)
+    public void testSendBothPostponed()
+            throws SendException, RecipientsWereRejectedException,
+            PostponeException {
+        twoMxDnsExpectation();
+        new Expectations() {
+            {
+                mailToHostTransmitter.transmit((Mail) any, (InetAddress) any);
+                result = POSTPONE_EXCEPTION;
+
+                mailToHostTransmitter.transmit((Mail) any, (InetAddress) any);
+                result = POSTPONE_EXCEPTION;
+            }
+        };
+
+            sender.send(mail);
     }
 
     @Test
     public void testSendSingleHostPermanentlyCannotBeResolved()
-            throws IllegalArgumentException, SendException,
-            RecipientsWereRejectedException {
-        when(mxLookup.queryMxTargets()).thenReturn(
-                new Name[] { HOST1_EXAMPLE_COM_NAME });
-        when(addressLookup.queryAddresses()).thenThrow(permanentSendException);
+            throws SendException, RecipientsWereRejectedException,
+            PostponeException {
+        new Expectations() {
+            {
+                mxLookup.queryMxTargets();
+                result = new Name[] { HOST1_EXAMPLE_COM_NAME };
+
+                addressLookup.queryAddresses();
+                result = permanentSendException;
+            }
+        };
 
         try {
             sender.send(mail);
@@ -188,11 +325,17 @@ public class ImmediateSenderTest {
 
     @Test
     public void testSendSingleHostTemporarilyCannotBeResolved()
-            throws IllegalArgumentException, SendException,
-            RecipientsWereRejectedException {
-        when(mxLookup.queryMxTargets()).thenReturn(
-                new Name[] { HOST1_EXAMPLE_COM_NAME });
-        when(addressLookup.queryAddresses()).thenThrow(transientSendException);
+            throws SendException, RecipientsWereRejectedException,
+            PostponeException {
+        new Expectations() {
+            {
+                mxLookup.queryMxTargets();
+                result = new Name[] { HOST1_EXAMPLE_COM_NAME };
+
+                addressLookup.queryAddresses();
+                result = transientSendException;
+            }
+        };
 
         try {
             sender.send(mail);
@@ -200,5 +343,24 @@ public class ImmediateSenderTest {
         } catch (SendException e) {
             assertTrue(e.errorStatus().shouldRetry());
         }
+    }
+
+    @Test(expected = PostponeException.class)
+    public void testSendSingleHostPostponeException() throws SendException,
+            RecipientsWereRejectedException, PostponeException {
+        new Expectations() {
+            {
+                mxLookup.queryMxTargets();
+                result = new Name[] { HOST1_EXAMPLE_COM_NAME };
+
+                addressLookup.queryAddresses();
+                result = new InetAddress[] { IP1 };
+
+                mailToHostTransmitter.transmit((Mail) any, IP1);
+                result = POSTPONE_EXCEPTION;
+            }
+        };
+
+        sender.send(mail);
     }
 }

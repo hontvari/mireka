@@ -18,6 +18,7 @@
 	<mireka:ScheduleFileDirQueue>
 		<Named>submittedMailQueue</Named>
 		<ApplicationScoped/>
+		<ee:Startup/>
 		<mireka:store>
 			<mireka:FileDirStore>
 				<dir>${mirekaHome}/queues/submitted</dir>
@@ -36,6 +37,7 @@
 	<mireka:ScheduleFileDirQueue>
 		<Named>retryMailQueue</Named>
 		<ApplicationScoped/>
+		<ee:Startup/>
 		<mireka:store>
 			<mireka:FileDirStore>
 				<dir>${mirekaHome}/queues/retry</dir>
@@ -54,6 +56,7 @@
 	<mireka:ScheduleFileDirQueue>
 		<Named>dsnMailQueue</Named>
 		<ApplicationScoped/>
+		<ee:Startup/>
 		<mireka:store>
 			<mireka:FileDirStore>
 				<dir>${mirekaHome}/queues/dsn</dir>
@@ -73,12 +76,27 @@
 		<Named>logIdFactory</Named>
 		<ApplicationScoped/>
 	</mireka:LogIdFactory>
+	
+	<mireka:OutgoingConnectionsRegistry>
+		<Named>outgoingConnectionRegisty</Named>
+		<ApplicationScoped/>
+		<!-- 
+			uncomment to switch off limiting simultaneous connections 
+			to a single host
+		-->
+		<!--
+		<maxConnectionsToHost>0</maxConnectionsToHost>
+		-->		
+	</mireka:OutgoingConnectionsRegistry>
 
 	<mireka:MailToHostTransmitterFactory>
 		<Named>mailToHostTransmitterFactory</Named>
 		<mireka:clientFactory>
 			#{clientFactory}
 		</mireka:clientFactory>
+		<mireka:outgoingConnectionRegistry>
+			#{outgoingConnectionRegisty}
+		</mireka:outgoingConnectionRegistry>
 		<mireka:logIdFactory>
 			#{logIdFactory}
 		</mireka:logIdFactory>

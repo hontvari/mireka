@@ -23,6 +23,7 @@ class MailEnvelopePersister {
                 mail.receivedFromMtaAddress);
         props.setDate("scheduleDate", mail.scheduleDate);
         props.setInt("deliveryAttempts", mail.deliveryAttempts);
+        props.setInt("postpones", mail.postpones);
     }
 
     public Mail readFromProperties(DataProperties props) {
@@ -45,7 +46,7 @@ class MailEnvelopePersister {
                 props.getInetAddress("receivedFromMtaAddress");
         mail.scheduleDate = props.getDate("scheduleDate");
         mail.deliveryAttempts = props.getInt("deliveryAttempts");
+        mail.postpones = props.getInt("postpones");
         return mail;
     }
-
 }

@@ -5,13 +5,13 @@ import java.net.UnknownHostException;
 
 import javax.mail.internet.ParseException;
 
-import org.xbill.DNS.Name;
-import org.xbill.DNS.TextParseException;
-
 import mireka.address.Domain;
 import mireka.address.GlobalPostmaster;
 import mireka.address.MailAddressFactory;
 import mireka.address.Recipient;
+
+import org.xbill.DNS.Name;
+import org.xbill.DNS.TextParseException;
 
 public class ExampleAddress {
     /**
@@ -27,7 +27,7 @@ public class ExampleAddress {
     public static final String IP_STRING = "192.0.2.0";
     public static final InetAddress IP_ADDRESS_ONLY;
     public static final InetAddress IPV6;
-    public static final String ADDRESS_LITERAL = "[192.168.0.0]";
+    public static final String ADDRESS_LITERAL = "[192.0.2.0]";
     public static final String JANE = "jane@example.com";
     public static final String JOHN = "john@example.com";
     public static final String NANCY_NET = "nancy@example.net";

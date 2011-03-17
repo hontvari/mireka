@@ -5,10 +5,12 @@ import mireka.transmission.queuing.LogIdFactory;
 
 public class MailToHostTransmitterFactory {
     private ClientFactory clientFactory;
+    private OutgoingConnectionsRegistry outgoingConnectionRegistry;
     private LogIdFactory logIdFactory;
 
     public MailToHostTransmitter create(RemoteMta remoteMta) {
-        return new MailToHostTransmitter(clientFactory, logIdFactory, remoteMta);
+        return new MailToHostTransmitter(clientFactory,
+                outgoingConnectionRegistry, logIdFactory, remoteMta);
     }
 
     /**
@@ -16,6 +18,21 @@ public class MailToHostTransmitterFactory {
      */
     public void setClientFactory(ClientFactory clientFactory) {
         this.clientFactory = clientFactory;
+    }
+
+    /**
+     * @category GETSET
+     */
+    public void setOutgoingConnectionRegistry(
+            OutgoingConnectionsRegistry outgoingConnectionRegistry) {
+        this.outgoingConnectionRegistry = outgoingConnectionRegistry;
+    }
+
+    /**
+     * @category GETSET
+     */
+    public OutgoingConnectionsRegistry getOutgoingConnectionRegistry() {
+        return outgoingConnectionRegistry;
     }
 
     /**
