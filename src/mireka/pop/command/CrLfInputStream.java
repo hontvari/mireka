@@ -13,7 +13,7 @@ import org.subethamail.smtp.io.CRLFTerminatedReader.MaxLineLengthException;
  * binary content. Mail content is special, because it is considered to be an
  * octet stream, although usually it contains text. MIME mail headers can be
  * encoded in either US-ASCII or UTF-8, but the mail body can be in any charset,
- * moreover it van be arbitrary binary data encoded using the MIME binary
+ * moreover it can be arbitrary binary data encoded using the MIME binary
  * method, so the result does not even similar to text. The POP3 TOP command
  * needs to return mail headers and a few lines of the body. The latter is
  * obsolete functionality, there may be no lines in the body, but we have to

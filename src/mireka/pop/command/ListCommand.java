@@ -43,11 +43,12 @@ public class ListCommand implements Command {
         session.getThread().sendResponse(
                 "+OK " + scanListings.size() + " messages (" + totalOctets
                         + ")");
+        ResultListWriter out =
+                new ResultListWriter(session.getThread().getOutputStream());
         for (ScanListing scanListing : scanListings) {
-            session.getThread().sendResponse(scanListing.toString());
+            out.writeLine(scanListing.toString());
         }
-        session.getThread().sendResponse(".");
-
+        out.endList();
     }
 
     private void displaySingleScanListing(int messageNumber)

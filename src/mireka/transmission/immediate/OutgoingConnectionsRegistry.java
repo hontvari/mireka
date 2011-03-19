@@ -57,7 +57,8 @@ public class OutgoingConnectionsRegistry {
         int connectionCount =
                 connectionCountObject == null ? 0 : connectionCountObject;
         if (connectionCount <= 0)
-            throw new RuntimeException("Assertion failed");
+            throw new RuntimeException("Assertion failed, connections="
+                    + connections.toString() + " address=" + address);
 
         if (connectionCount == 1) {
             connections.remove(address);

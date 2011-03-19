@@ -35,10 +35,12 @@ public class UidlCommand implements Command {
     private void displayList() throws IOException {
         List<UidListing> listings = session.getMaildrop().getUidListings();
         session.getThread().sendResponse("+OK");
+        ResultListWriter writer =
+                new ResultListWriter(session.getThread().getOutputStream());
         for (UidListing listing : listings) {
-            session.getThread().sendResponse(listing.toString());
+            writer.writeLine(listing.toString());
         }
-        session.getThread().sendResponse(".");
+        writer.endList();
 
     }
 
