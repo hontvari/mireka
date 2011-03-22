@@ -13,6 +13,7 @@ public class Session {
     private SessionState sessionState = SessionState.AUTHORIZATION;
 
     private Maildrop maildrop;
+    private boolean tlsStarted;
 
     public Session(PopServer server, SessionThread sessionThread) {
         this.server = server;
@@ -59,6 +60,20 @@ public class Session {
      */
     public SessionThread getThread() {
         return thread;
+    }
+
+    /**
+     * @category GETSET
+     */
+    public boolean isTlsStarted() {
+        return tlsStarted;
+    }
+
+    /**
+     * @category GETSET
+     */
+    public void setTlsStarted(boolean started) {
+        tlsStarted = started;
     }
 
 }

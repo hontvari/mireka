@@ -9,6 +9,19 @@
 	<dependency path="${__DIR__}/logback.xml" />
 
 	<system-property helo="mail.example.com"/>
+	<!-- 
+		Uncomment to set global JSSE TLS settings. This is not necessary 
+		if TLS is not used or if it is configured for each service 
+		separately.
+	-->
+	<!--
+	<system-property javax.net.ssl.keyStore="${mirekaHome}/conf/keystore.jks"/>
+	<system-property javax.net.ssl.keyStorePassword="changeit"/>
+	-->
+	
+	<mireka:HomeDir>
+		<path>${mirekaHome}</path>
+	</mireka:HomeDir>
 
 	<mireka:ClientFactory>
 		<Named>clientFactory</Named>

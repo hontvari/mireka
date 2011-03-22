@@ -19,7 +19,6 @@
 	</mireka:PopMailImporter>
 	-->
 	
-	
 	<mireka:PopServer>
 		<Named>popServer</Named>
 		<ee:Startup/>
@@ -38,6 +37,26 @@
 			#{maildropRepository}
 		</mireka:maildropRepository>
 
+		<!-- 
+			uncomnnet to specify TLS configuration specific to this 
+			service 
+		-->
+		<!--
+		<mireka:tlsConfiguration>
+			<mireka:PrivateTlsConfiguration>
+				<enabled>true</enabled>
+			</mireka:PrivateTlsConfiguration>
+			<mireka:JsseDefaultTlsConfiguration/>
+		</mireka:tlsConfiguration>
+		-->
+
+		<!-- 
+			comment out if TLS should be disabled or if service 
+			specific configuration is supplied (see above) 
+		-->
+		<mireka:tlsConfiguration>
+			<mireka:JsseDefaultTlsConfiguration/>
+		</mireka:tlsConfiguration>
 	</mireka:PopServer>
 	
 </web-app>

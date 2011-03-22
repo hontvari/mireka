@@ -36,6 +36,8 @@ public class PopServer {
 
     private int maximumConnections = 100;
 
+    private TlsConfiguration tlsConfiguration = new PrivateTlsConfiguration();
+
     /**
      * The host name that will be reported to POP clients
      */
@@ -205,6 +207,20 @@ public class PopServer {
     public void setPrincipalMaildropTable(
             PrincipalMaildropTable principalMaildropTable) {
         this.principalMaildropTable = principalMaildropTable;
+    }
+
+    /**
+     * @category GETSET
+     */
+    public void setTlsConfiguration(TlsConfiguration tlsExtension) {
+        this.tlsConfiguration = tlsExtension;
+    }
+
+    /**
+     * @category GETSET
+     */
+    public TlsConfiguration getTlsConfiguration() {
+        return tlsConfiguration;
     }
 
 }

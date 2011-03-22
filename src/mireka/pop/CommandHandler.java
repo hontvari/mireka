@@ -15,6 +15,7 @@ import mireka.pop.command.QuitCommand;
 import mireka.pop.command.RetrCommand;
 import mireka.pop.command.RsetCommand;
 import mireka.pop.command.StatCommand;
+import mireka.pop.command.StlsCommand;
 import mireka.pop.command.TopCommand;
 import mireka.pop.command.UidlCommand;
 import mireka.pop.command.UserCommand;
@@ -55,6 +56,8 @@ class CommandHandler {
         commandMap.put("TOP", new TopCommand(session));
         apopCommand = new ApopCommand(session);
         commandMap.put("APOP", apopCommand);
+        if (session.getServer().getTlsConfiguration().isEnabled())
+            commandMap.put("STLS", new StlsCommand(session));
     }
 
     public void handleCommand(String line) throws IOException {

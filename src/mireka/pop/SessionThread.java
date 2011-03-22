@@ -220,6 +220,15 @@ public class SessionThread extends Thread {
     }
 
     /**
+     * Returns the current socket. This function is called when the original
+     * socket is to be wrapped by an SSLSocket, after the STLS command is
+     * received.
+     */
+    public Socket getSocket() {
+        return socket;
+    }
+
+    /**
      * Initializes our reader, writer, and the i/o filter chains based on the
      * specified socket. This is called internally when we startup and when (if)
      * SSL is started.
