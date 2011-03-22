@@ -144,7 +144,8 @@
 		<!-- <mireka:bindAddress>192.0.2.0</mireka:bindAddress> -->
 		<mireka:port>587</mireka:port>
 		<mireka:hostName>${helo}</mireka:hostName>
-		<mireka:hideTLS>true</mireka:hideTLS>
+		<!-- set to false to enable STARTTLS if JSSE is correctly configured -->
+		<mireka:disableTLS>true</mireka:disableTLS>
 	</mireka:SMTPServer>
 	
 </web-app>
