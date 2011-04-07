@@ -29,6 +29,7 @@
 			<member>
 				<address>john@example.com</address>
 				<name>John Doe</name>
+				<noDelivery>false</noDelivery>
 			</member>
 		</MailingList>
 	</mailingList>
