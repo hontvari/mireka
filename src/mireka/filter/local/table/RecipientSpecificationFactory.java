@@ -1,16 +1,20 @@
 package mireka.filter.local.table;
 
-import java.util.Locale;
+import java.text.ParseException;
 
 import mireka.address.MailAddressFactory;
 import mireka.address.RemotePart;
+import mireka.address.parser.RecipientParser;
+import mireka.address.parser.ast.DomainPostmasterRecipientAST;
+import mireka.address.parser.ast.MailboxRecipientAST;
+import mireka.address.parser.ast.RecipientAST;
+import mireka.address.parser.ast.SystemPostmasterRecipientAST;
 
 /**
  * RecipientSpecificationFactory can convert a mail address like string into a
  * {@link RecipientSpecification} instance.
  */
 public class RecipientSpecificationFactory {
-    private static final String POSTMASTER_AT = "postmaster@";
     private final MailAddressFactory mailAddressFactory;
 
     public RecipientSpecificationFactory() {
@@ -36,31 +40,39 @@ public class RecipientSpecificationFactory {
      */
     public RecipientSpecification create(String mailbox)
             throws IllegalArgumentException {
-        String mailboxLowerCase = mailbox.toLowerCase(Locale.US);
-        if ("postmaster".equals(mailboxLowerCase)) {
+        RecipientAST recipientAST;
+        try {
+            recipientAST = new RecipientParser("<" + mailbox + ">").parse();
+        } catch (ParseException e) {
+            throw new IllegalArgumentException(e);
+        }
+        if (recipientAST instanceof SystemPostmasterRecipientAST) {
             return new GlobalPostmasterSpecification();
-        } else if (mailboxLowerCase.startsWith(POSTMASTER_AT)) {
+        } else if (recipientAST instanceof DomainPostmasterRecipientAST) {
+            DomainPostmasterRecipientAST domainPostmasterRecipientAST =
+                    (DomainPostmasterRecipientAST) recipientAST;
             DomainPostmasterSpecification domainPostmaster =
                     new DomainPostmasterSpecification();
-            String remotePartString = mailbox.substring(POSTMASTER_AT.length());
-            domainPostmaster.setRemotePart(mailAddressFactory
-                    .createRemotePart(remotePartString));
-            return domainPostmaster;
-        } else {
-            int iAt = mailbox.indexOf('@');
-            if (iAt == -1 || iAt == 0 || iAt == mailbox.length() - 1)
-                throw new IllegalArgumentException("Recipient specification "
-                        + mailbox + " must contain a '@' symbol "
-                        + "and both local and remote parts, "
-                        + "except for the global postmaster mailbox");
-            String localPartString = mailbox.substring(0, iAt);
-            LocalPartSpecification localPart =
-                    new CaseInsensitiveLocalPartSpecification(localPartString);
-            String remotePartString = mailbox.substring(iAt + 1);
+
             RemotePart remotePart =
-                    mailAddressFactory.createRemotePart(remotePartString);
+                    mailAddressFactory
+                            .createRemotePartFromAST(domainPostmasterRecipientAST.mailboxAST.remotePartAST);
+            domainPostmaster.setRemotePart(remotePart);
+            return domainPostmaster;
+
+        } else if (recipientAST instanceof MailboxRecipientAST) {
+            MailboxRecipientAST mailboxRecipientAST = (MailboxRecipientAST) recipientAST;
+            LocalPartSpecification localPart =
+                    new CaseInsensitiveLocalPartSpecification(
+                            mailboxRecipientAST.pathAST.mailboxAST.localPartAST.spelling);
+            RemotePart remotePart =
+                    mailAddressFactory
+                            .createRemotePartFromAST(mailboxRecipientAST.pathAST.mailboxAST.remotePartAST);
             return new LocalRemoteCombinedRecipientSpecification(localPart,
                     remotePart);
+        } else {
+            throw new RuntimeException("Assertion failed");
         }
+
     }
 }

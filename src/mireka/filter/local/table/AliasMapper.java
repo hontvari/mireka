@@ -1,9 +1,8 @@
 package mireka.filter.local.table;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.mail.internet.ParseException;
 
 import mireka.address.MailAddressFactory;
 import mireka.address.Recipient;

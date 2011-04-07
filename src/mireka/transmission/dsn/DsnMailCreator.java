@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
+import java.text.ParseException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.concurrent.ThreadSafe;
-import javax.mail.internet.ParseException;
 
 import mireka.MailData;
 import mireka.address.MailAddressFactory;

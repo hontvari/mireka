@@ -7,8 +7,8 @@ package mireka.address;
 public class DomainPart implements RemotePart {
     public final Domain domain;
 
-    public DomainPart(String domainPart) {
-        this.domain = new Domain(domainPart);
+    public DomainPart(Domain domain) {
+        this.domain = domain;
     }
 
     @Override

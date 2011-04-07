@@ -2,7 +2,7 @@ package mireka.address;
 
 import static org.junit.Assert.*;
 
-import javax.mail.internet.ParseException;
+import java.text.ParseException;
 
 import mireka.ExampleAddress;
 
@@ -39,14 +39,14 @@ public class MailAddressFactoryTest {
     @Test
     public void testCreateAddressLiteralRemotePart() {
         RemotePart remotePart =
-                factory.createRemotePart(ExampleAddress.ADDRESS_LITERAL);
+                factory.createRemotePartFromDisplayableText(ExampleAddress.ADDRESS_LITERAL);
         assertTrue(remotePart instanceof AddressLiteral);
     }
 
     @Test
     public void testCreateDomainRemotePart() {
         RemotePart remotePart =
-                factory.createRemotePart(ExampleAddress.EXAMPLE_COM);
+                factory.createRemotePartFromDisplayableText(ExampleAddress.EXAMPLE_COM);
         assertTrue(remotePart instanceof DomainPart);
     }
 

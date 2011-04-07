@@ -67,6 +67,7 @@ public class RegexAddressSpecification implements RecipientSpecification {
     public void setRemotePart(String remotePart) {
         this.remotePartString = remotePart;
         this.remotePartObject =
-                new MailAddressFactory().createRemotePart(remotePart);
+                new MailAddressFactory()
+                        .createRemotePartFromDisplayableText(remotePart);
     }
 }

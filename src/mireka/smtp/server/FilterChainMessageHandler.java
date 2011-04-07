@@ -2,8 +2,7 @@ package mireka.smtp.server;
 
 import java.io.IOException;
 import java.io.InputStream;
-
-import javax.mail.internet.ParseException;
+import java.text.ParseException;
 
 import mireka.ConfigurationException;
 import mireka.address.MailAddressFactory;

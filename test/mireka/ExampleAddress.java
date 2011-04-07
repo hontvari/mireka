@@ -2,8 +2,7 @@ package mireka;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
-import javax.mail.internet.ParseException;
+import java.text.ParseException;
 
 import mireka.address.Domain;
 import mireka.address.GlobalPostmaster;

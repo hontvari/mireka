@@ -1,21 +1,75 @@
 package mireka.address;
 
-import java.util.Locale;
+import java.text.ParseException;
 
-import javax.mail.internet.ParseException;
+import mireka.address.parser.RecipientParser;
+import mireka.address.parser.RemotePartParser;
+import mireka.address.parser.ast.AddressLiteralRemotePartAST;
+import mireka.address.parser.ast.DomainPostmasterRecipientAST;
+import mireka.address.parser.ast.DomainRemotePartAST;
+import mireka.address.parser.ast.MailboxAST;
+import mireka.address.parser.ast.MailboxRecipientAST;
+import mireka.address.parser.ast.SystemPostmasterRecipientAST;
 
 /**
  * MailAddressFactory creates mail address related objects from strings.
  */
 public class MailAddressFactory {
-    public Recipient createRecipient(String recipientString)
+    /**
+     * Parses the specified string and creates a {@link Recipient} instance.
+     * 
+     * @param recipientString
+     *            the recipient parameter of the RCPT SMTP command, without the
+     *            enclosing angle bracket.
+     */
+    public mireka.address.Recipient createRecipient(String recipientString)
             throws ParseException {
-        if (isGlobalPostmaster(recipientString))
-            return new GlobalPostmaster(recipientString);
-        else if (isDomainPostmaster(recipientString))
-            return new DomainPostmaster(recipientString);
-        else
-            return new GenericRecipient(recipientString);
+        String recipientStringWithAngleBracket = "<" + recipientString + ">";
+        mireka.address.parser.ast.RecipientAST recipientAST =
+                new RecipientParser(recipientStringWithAngleBracket).parse();
+        if (recipientAST instanceof SystemPostmasterRecipientAST) {
+            SystemPostmasterRecipientAST systemPostmasterAST =
+                    (SystemPostmasterRecipientAST) recipientAST;
+            return new GlobalPostmaster(systemPostmasterAST.postmasterSpelling);
+        } else if (recipientAST instanceof DomainPostmasterRecipientAST) {
+            DomainPostmasterRecipientAST domainPostmasterAST =
+                    (DomainPostmasterRecipientAST) recipientAST;
+            Address address = createAddress(domainPostmasterAST.mailboxAST);
+            return new DomainPostmaster(address);
+        } else if (recipientAST instanceof MailboxRecipientAST) {
+            MailboxRecipientAST mailboxRecipientAST =
+                    (MailboxRecipientAST) recipientAST;
+            Address address = createAddress(mailboxRecipientAST.pathAST.mailboxAST);
+            return new GenericRecipient(address);
+        } else {
+            throw new RuntimeException("Assertion failed");
+        }
+    }
+
+    private Address createAddress(MailboxAST mailboxAST) {
+        LocalPart localPart = new LocalPart(mailboxAST.localPartAST.spelling);
+        RemotePart remotePart = createRemotePartFromAST(mailboxAST.remotePartAST);
+        return new Address(mailboxAST.spelling, localPart, remotePart);
+    }
+
+    public mireka.address.RemotePart createRemotePartFromAST(
+            mireka.address.parser.ast.RemotePartAST remotePartAST) {
+        RemotePart remotePart;
+        if (remotePartAST instanceof DomainRemotePartAST) {
+            DomainRemotePartAST domainRemotePartAST =
+                    (DomainRemotePartAST) remotePartAST;
+            Domain domain = new Domain(domainRemotePartAST.spelling);
+            remotePart = new DomainPart(domain);
+        } else if (remotePartAST instanceof AddressLiteralRemotePartAST) {
+            AddressLiteralRemotePartAST addressLiteralRemotePartAST =
+                    (AddressLiteralRemotePartAST) remotePartAST;
+            remotePart =
+                    new AddressLiteral(addressLiteralRemotePartAST.spelling,
+                            addressLiteralRemotePartAST.address);
+        } else {
+            throw new RuntimeException("Assertion failed");
+        }
+        return remotePart;
     }
 
     public Recipient createRecipientAlreadyVerified(String recipientString) {
@@ -26,27 +80,19 @@ public class MailAddressFactory {
         }
     }
 
-    private boolean isGlobalPostmaster(String recipient) {
-        String lowerCase = recipient.toLowerCase(Locale.US);
-        return "postmaster".equals(lowerCase);
-    }
-
-    private boolean isDomainPostmaster(String recipient) throws ParseException {
-        String prefix = "postmaster@";
-        String lowerCase = recipient.toLowerCase(Locale.US);
-        if (!lowerCase.startsWith(prefix))
-            return false;
-        if (lowerCase.length() == prefix.length())
-            throw new ParseException();
-        return true;
-    }
-
-    public RemotePart createRemotePart(String remotePartString) {
-        if (remotePartString.length() == 0)
-            throw new IllegalArgumentException();
-        if (remotePartString.startsWith("["))
-            return new AddressLiteral(remotePartString);
-        else
-            return new DomainPart(remotePartString);
+    /**
+     * Creates a {@link RemotePart} object by parsing the specified displayable
+     * text. Note that currently actual parsing of displayable text is not
+     * implemented, internationalized domain names must be specified in ASCII
+     * compatible text.
+     */
+    public RemotePart createRemotePartFromDisplayableText(String displayableText) {
+        mireka.address.parser.ast.RemotePartAST remotePartAST;
+        try {
+            remotePartAST = new RemotePartParser(displayableText).parse();
+        } catch (ParseException e) {
+            throw new IllegalArgumentException(e);
+        }
+        return createRemotePartFromAST(remotePartAST);
     }
 }

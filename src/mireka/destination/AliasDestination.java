@@ -1,6 +1,6 @@
 package mireka.destination;
 
-import javax.mail.internet.ParseException;
+import java.text.ParseException;
 
 import mireka.ConfigurationException;
 import mireka.address.MailAddressFactory;

@@ -9,12 +9,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.ParseException;
 
 import mireka.ExampleMail;
 import mireka.MailData;
@@ -31,7 +29,7 @@ import org.subethamail.smtp.client.SMTPClient.Response;
 public class DsnMailCreatorTest {
 
     @Test
-    public void testCreate() throws MessagingException, IOException {
+    public void testCreate() throws Exception {
         DsnMailCreator dsnMailCreator = createDsnMailCreator();
         Mail mail = ExampleMail.simple();
         List<PermanentFailureReport> recipientStatuses =

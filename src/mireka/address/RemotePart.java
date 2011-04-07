@@ -5,6 +5,8 @@ package mireka.address;
  * in the john@example.com address example.com is the remote part.
  */
 public interface RemotePart {
-    // primary functionality of descendant classes are already specified in
-    // Object: equals and hashCode.
+    public boolean equals(Object obj);
+
+    public int hashCode();
+
 }

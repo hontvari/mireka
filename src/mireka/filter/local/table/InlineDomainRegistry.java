@@ -22,6 +22,7 @@ public class InlineDomainRegistry implements RemotePartSpecification {
     }
 
     public void addDomain(String remotePart) {
-        remoteParts.add(new MailAddressFactory().createRemotePart(remotePart));
+        remoteParts.add(new MailAddressFactory()
+                .createRemotePartFromDisplayableText(remotePart));
     }
 }

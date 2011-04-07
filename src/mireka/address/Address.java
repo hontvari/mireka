@@ -1,54 +1,23 @@
 package mireka.address;
 
-import javax.mail.internet.ParseException;
-
 /**
  * Corresponds to the Mailbox production in RFC 5321.<br>
  * Note: RFC 5322 Internet Message Format also contains a mailbox production,
  * but with different content. The addr-spec production of that RFC is the
  * production which corresponds to this class.
  * 
- * This is a draft implementation. Apache Mailet has a seemingly complete
- * address implementation in the MailAddress class.
- * 
  * @see <a href="http://tools.ietf.org/html/rfc5321#section-4.1.2">RFC 5321
  *      4.1.2</a>
  */
 public class Address {
-    private String mailbox;
+    private String smtpText;
     private LocalPart localPart;
     private RemotePart remotePart;
 
-    public Address(String mailbox) {
-        this.mailbox = mailbox;
-        try {
-            parse();
-        } catch (ParseException e) {
-            throw new RuntimeException(e); // unexpected
-        }
-    }
-
-    private void parse() throws ParseException {
-        int iLastAt = mailbox.lastIndexOf('@');
-        if (iLastAt == -1)
-            throw new ParseException();
-        if (iLastAt == mailbox.length() - 1)
-            throw new ParseException();
-        String localString = mailbox.substring(0, iLastAt);
-        String remoteString = mailbox.substring(iLastAt + 1);
-        createLocalPart(localString);
-        createRemotePart(remoteString);
-    }
-
-    private void createLocalPart(String localPartString) {
-        this.localPart = new LocalPart(localPartString);
-    }
-
-    private void createRemotePart(String remotePartString) {
-        if (remotePartString.startsWith("["))
-            this.remotePart = new AddressLiteral(remotePartString);
-        else
-            this.remotePart = new DomainPart(remotePartString);
+    public Address(String smtpText, LocalPart localPart, RemotePart remotePart) {
+        this.smtpText = smtpText;
+        this.localPart = localPart;
+        this.remotePart = remotePart;
     }
 
     public LocalPart getLocalPart() {
@@ -64,7 +33,7 @@ public class Address {
      */
     @Override
     public String toString() {
-        return mailbox;
+        return smtpText;
     }
 
     @Override

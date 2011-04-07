@@ -1,6 +1,7 @@
 package mireka.list;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,6 @@ import javax.annotation.Nonnull;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.mail.internet.ParseException;
 
 import mireka.address.MailAddressFactory;
 import mireka.address.Recipient;

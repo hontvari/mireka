@@ -8,12 +8,10 @@ package mireka.address;
  *      4.1.1.3</a>
  */
 public class DomainPostmaster implements RemotePartContainingRecipient {
-    private final String text;
     private final Address address;
 
-    public DomainPostmaster(String domainPostmaster) {
-        this.text = domainPostmaster;
-        this.address = new Address(domainPostmaster);
+    public DomainPostmaster(Address address) {
+        this.address = address;
     }
 
     @Override
@@ -43,12 +41,12 @@ public class DomainPostmaster implements RemotePartContainingRecipient {
 
     @Override
     public String sourceRouteStripped() {
-        return text;
+        return address.toString();
     }
 
     @Override
     public String toString() {
-        return text;
+        return address.toString();
     }
 
 }

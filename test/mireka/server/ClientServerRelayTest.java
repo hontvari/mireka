@@ -52,6 +52,7 @@ public class ClientServerRelayTest {
         Filters filters = new Filters();
 
         ClientFactory client = new ClientFactory();
+        client.setHelo("relay.localdomain");
         BackendServer backendServer = new BackendServer();
         backendServer.setHost("localhost");
         backendServer.setPort(8026);
