@@ -1,3 +1,11 @@
+<!-- 
+	List of IP addresses of hosts which are allowed to send mails 
+	via the submission service without authentication.
+	
+	For more information on the individual configuration elements see the 
+	Javadoc documentation in the doc/javadoc directory. For an overview read
+	the documentation in the doc directory.  
+-->
 <web-app xmlns="http://caucho.com/ns/resin"
 	xmlns:resin="urn:java:com.caucho.resin"
 	xmlns:mireka="urn:java:mireka"

@@ -68,6 +68,7 @@ public class OutgoingConnectionsRegistry {
         }
     }
 
+    @GuardedBy("this")
     private boolean noLimit() {
         return maxConnectionsToHost == 0;
     }

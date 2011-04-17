@@ -13,10 +13,11 @@ th             { border: 1px solid; padding: 1em; }
 </head>
 
 <body>
-<h1>How to Configure the MX Service</h1>
+<h1>How to Configure the SMTP Service</h1>
 		
-<p>The MX service receives mails sent to the local domains by any server on the 
-internet. The service, in turn, relays all received mails to the backend server.
+<p>The SMTP service receives mails sent to the local domains by any server on the 
+internet. The service, in turn, relays all received mails to the backend server,
+delivers them locally, expands it to a mail list, etc. 
 It always runs on port 25, and its address must be published in a DNS MX 
 record.
 </p>
@@ -46,10 +47,6 @@ relayed to the default backend server, which is specified in
 <kbd>mireka.xml</kbd>.
 </ul>
 </td></tr>
-<tr><th>domains.xml</th><td>list of local domain names. 
-If the domain part of a recipient is not in this list, then the recipient will 
-be rejected.
-<p>This file is imported by <kbd>mx.xml</kbd>.</p></td></tr>
 <tr><th>individual-recipients.xml</th><td>simple recipient addresses, like 
 <kbd>john@example.com</kbd>. If a recipient sent by the client equals with a 
 recipient adress supplied  
@@ -59,11 +56,6 @@ here then it will be accepted (assuming other conditions are also met).
 <cite>"any recipient which includes <kbd>bounce</kbd> in its local part, and of which 
 remote part is <kbd>lists.example.com</kbd>"</cite>.
 <p>This file is imported by <kbd>mx.xml</kbd>.</p></td></tr>
-<tr><th>*<a href="global-users.html">submission[-proxy]/global-users.xml</a></th>
-<td>If a submission service is enabled, then the users listed here become valid 
-wildcard recipients in the MX service too. 
-Note: this file is in the directory of the submission service.
-</p></td></tr>
 </table> 
 
 </body>

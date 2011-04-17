@@ -59,38 +59,68 @@ to divide the configuration into more files than what is supplied by default.
 </p>
 
 <table>
-<tr><th>mireka.xml</th><td>Enables/disables MX proxy, submission proxy and 
-submission services. It contains a few common elements used by more than one 
-services:
-<ul>
-<li>the default client factory. Specifies the properties of outgoing SMTP 
-connections.</li>  
-<li>the backend server. It specifies the server, to where mails are relayed for 
-delivery or submission. It is used by the relay filter. By default both proxy 
-sevices use the same backend server, however this is not required. Moreover, 
-it is possible to use more than one server, and configure Mireka to select a 
-backend server based on the recipient.</li> 
-</ul> 
+
+<tr><th>mireka.xml</th><td>Enables/disables SMTP, Submission and POP3 
+services by importing or not importing their respective configuration files. 
+It contains common elements used by more than one services. Some of these are 
+default objects which are referred by other parts of the configuration, but it 
+is also possible to define and use other instances of them. It also contains a 
+very few, mostly static configuration related to Mireka as a whole. 
+See the comments in the file for more information.
 </td></tr>
-<tr><th><a href="mx.html">mx</a></th><td>Configuration files related to the MX 
+
+<tr><th><a href="mx.html">mx</a></th><td>Configuration files related to the 
+public SMTP  
 service, which receives mails sent to the local domains by any server on the 
-internet. The service, in turn, relays all received mails to a backend server.
+internet. The service, in turn, stores the mail in a POP3 mailbox, relays it in 
+real time to a backend server behaving like a proxy, forwards it, etc.
 </td></tr>
+
 <tr><th><a href="submission.html">submission</a></th><td>Configuration files 
-related to the Submission service, used by local users to send mails either to 
-other local users, or to other domains on the internet. The service directly 
-talks to the SMTP server of the recipient domain. The responsible SMTP server
-is determined by querying the the MX DNS records of the domain.
-If it cannot transmit a mail on the first attempt, then it retries the
-transmission several times. If it eventually decides that the mail is 
-undeliverable, then it sends a delivery status notification message back to the 
-sender.   
+related to the Message Submission service, used by local users to send mails either to 
+other local users, or to other domains on the internet. The service, in turn, stores the mail in a POP3 mailbox, relays it in 
+real time to a backend server behaving like a proxy, forwards it, etc.
 </td></tr>
-<tr><th><a href="submission-proxy.html">submission-proxy</a></th><td>Configuration 
-files related to the Submission Proxy service, used by local users to send mails 
-either to other local users, or to other domains on the internet. The service, 
-in turn, relays all submitted mails to a backend server.
+
+<tr><th>pop/pop.xml</th><td>Configures the POP3 service itself and the POP3 
+Importer. POP3 Importer is useful for migration. It retrieves each users' mails from another 
+POP3 server after startup. To use it, it is necessary that the user names and
+the passwords match on both system.
 </td></tr>
+
+<tr><th>domains.xml</th><td>List of local domain names. 
+If the domain part of a recipient is not in this list, then the recipient will 
+be rejected by the MX SMTP service.
+</td></tr>
+
+<tr><th><a href="global-users.html">global-users.xml</a></th>
+<td>Authorized users of the Mail Submission, POP3 services, in addition they
+are also valid wildcard recipients in the MX SMTP service. 
+</td></tr>
+
+<tr><th>alias.xml</th>
+<td>
+List of aliases. An alias maps one or more virtual recipients to a 
+canonical recipient address. 
+</td></tr>
+
+<tr><th>forwards.xml</th>
+<td>
+Forward lists. Forward lists are used to redistribute incoming mail to multiple 
+other addresses.
+</td></tr>
+
+<tr><th>lists.xml</th>
+<td>
+List of (very) simple mailing lists.
+</td></tr>
+
+<tr><th>others.xml</th>
+<td>
+Other local recipients not included in the alias.xml, forwards.xml etc. 
+configuration files.
+</td></tr>
+
 </table>
 
 <h3>Logging</h3>

@@ -1,14 +1,36 @@
+<!-- 
+	This is the main configuration file of Mireka.
+	
+	For more information on the individual configuration elements see the 
+	Javadoc documentation in the doc/javadoc directory. For an overview read
+	the documentation in the doc directory.  
+-->
 <web-app xmlns="http://caucho.com/ns/resin"
 	xmlns:resin="urn:java:com.caucho.resin"
 	xmlns:mireka="urn:java:mireka"
 	xmlns:subetha="urn:java:org.subethamail.smtp.server"
 	>
-	
+
+	<!--
+		Parameters related to the directory layout.
+		
+		Usually you don't have to change these.
+	-->
 	<system-property mireka.home="${mirekaHome}"/>
 	<system-property logback.configurationFile="${__DIR__}/logback.xml"/>
 	<dependency path="${__DIR__}/logback.xml" />
 
+	<mireka:HomeDir>
+		<path>${mirekaHome}</path>
+	</mireka:HomeDir>
+
+	<!--
+		The default host name used to identify this server, for example
+		in the SMTP HELO command. This value is referred at several 
+		places in the configuration files.
+	-->
 	<system-property helo="mail.example.com"/>
+	
 	<!-- 
 		Uncomment to set global JSSE TLS settings. This is not necessary 
 		if TLS is not used or if it is configured for each service 
@@ -19,10 +41,10 @@
 	<system-property javax.net.ssl.keyStorePassword="changeit"/>
 	-->
 	
-	<mireka:HomeDir>
-		<path>${mirekaHome}</path>
-	</mireka:HomeDir>
-
+	<!--
+		Default SMTP client factory, it specifies the properties of the 
+		outgoing SMTP connections.
+	-->
 	<mireka:ClientFactory>
 		<Named>clientFactory</Named>
 		<mireka:helo>${helo}</mireka:helo>
@@ -30,8 +52,9 @@
 	</mireka:ClientFactory>
 	
 	<!--
-		the next element can be commented out if none of the proxy 
-		services are enabled
+		Default backend server. It specifies an SMTP server, to where 
+		mails are relayed for delivery or submission. It can be 
+		referred where SMTP proxy functionality is configured. 
 	-->
 	<mireka:BackendServer>
 		<Named>backendServer</Named>
@@ -41,7 +64,12 @@
 			#{clientFactory}
 		</mireka:clientFactory>
 	</mireka:BackendServer>
-	
+
+	<!--
+		Default maildrop repository. A maildrop corresponds to a POP3
+		account. Maildrops are used to store incoming mails (via SMTP) 
+		and to transfer mails to the user (via POP3). 
+	-->	
 	<mireka:MaildropRepository>
 		<Named>maildropRepository</Named>
 		 <ApplicationScoped/>
@@ -51,6 +79,13 @@
 	<resin:import path="${__DIR__}/domains.xml" />
 	<resin:import path="${__DIR__}/global-users.xml" />
 	
+	<!--
+		Default local recipients table. It enumerates all valid local 
+		recipients and assigns a destination to them. The destination
+		tells what to do with a mail sent to the corresponding 
+		recipient. E.g. drop the mail or store it in a maildrop or 
+		forward it to other addresses. 
+	-->
 	<LocalRecipientTable xmlns="urn:java:mireka">
 		<Named xmlns="http://caucho.com/ns/resin">localRecipientsTable</Named>
 		<localDomains>#{localDomains}</localDomains>

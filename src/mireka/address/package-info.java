@@ -1,5 +1,4 @@
 /**
- * Classes representing recipient addresses passed in mail object 
- * envelopes.
+ * Classes representing recipient addresses passed in mail envelopes.
  */
 package mireka.address;

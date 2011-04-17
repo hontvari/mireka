@@ -1,3 +1,10 @@
+<!-- 
+	POP3 and POP3 Mail Importer configuration.
+	
+	For more information on the individual configuration elements see the 
+	Javadoc documentation in the doc/javadoc directory. For an overview read
+	the documentation in the doc directory.  
+-->
 <web-app xmlns="http://caucho.com/ns/resin"
 	xmlns:resin="urn:java:com.caucho.resin"
 	xmlns:mireka="urn:java:mireka"
@@ -6,8 +13,9 @@
 	>
 
 	<!--
-		uncomment to import POP3 mails from an existing server at 
-		startup
+		Uncomment to import POP3 mails from an existing server at 
+		startup for each user. The user names and the passwords must 
+		match on both systems.
 	-->
 	<!--
 	<mireka:PopMailImporter>
@@ -19,6 +27,9 @@
 	</mireka:PopMailImporter>
 	-->
 	
+	<!--
+		Configure server name, bind address, etc. here.
+	-->
 	<mireka:PopServer>
 		<Named>popServer</Named>
 		<ee:Startup/>
@@ -38,8 +49,8 @@
 		</mireka:maildropRepository>
 
 		<!-- 
-			uncomnnet to specify TLS configuration specific to this 
-			service 
+			Uncomment to specify TLS configuration specific to this 
+			service.
 		-->
 		<!--
 		<mireka:tlsConfiguration>
@@ -51,12 +62,15 @@
 		-->
 
 		<!-- 
-			comment out if TLS should be disabled or if service 
-			specific configuration is supplied (see above) 
+			Uncomment to use the global TLS configuration.
+			Make sure that the global TLS configuration is valid, 
+			otherwise an error will occur.
 		-->
+		<!--
 		<mireka:tlsConfiguration>
 			<mireka:JsseDefaultTlsConfiguration/>
 		</mireka:tlsConfiguration>
+		-->
 	</mireka:PopServer>
 	
 </web-app>

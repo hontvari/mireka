@@ -18,14 +18,14 @@ th             { border: 1px solid; padding: 1em; }
 <p>
 The Submission service is used by local users to send mails to either 
 other local users, or to other domains on the internet. The service, in turn, 
-transmits mails to the public SMTP server of the recipient domain. 
+transmits mails to the public SMTP server of the recipient domain, delivers them 
+locally, relays them locally, etc. 
 This service is specified by 
 <a href="http://tools.ietf.org/html/rfc4409">RFC 4409, Message Submission for Mail</a>.
-If this service is enabled, then Mireka becomes a standalone 
-<def>Message Submission Agent (MSA)</def>.
 </p>
 <p>
-If it cannot transmit a mail on the first attempt, then it retries the
+If the transmission of a mail to a remote domain fails on the first attempt, 
+then it retries the
 transmission several times. If it eventually decides that the mail is 
 undeliverable, then it sends a delivery status notification message back to the 
 sender.
@@ -62,8 +62,6 @@ the recipient's domain.
 Mails can be submitted from these ip addresses without further authentication of 
 the sender.
 <p>This file is imported by <kbd>submission.xml</kbd>.</p></td></tr>
-<tr><th><a href="global-users.html">global-users.xml</a></th><td>list of users 
-who are authorized to use this submission service.</td></tr>
 <tr><th>queues.xml</th><td>The submission service uses file system based 
 queues to make sure no mails are lost. Until a mail is confirmed to be received
 by the recipient domain the mail stays in a queue. The queues are managed by 

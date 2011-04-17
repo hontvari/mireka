@@ -5,6 +5,10 @@
 	If the requirements are more complex, then a dedicated list manager 
 	application should be used, like SubEthaMail, which can be easily 
 	integrated with Mireka or it can be used stand-alone on a subdomain.
+	
+	For more information on the individual configuration elements see the 
+	Javadoc documentation in the doc/javadoc directory. For an overview read
+	the documentation in the doc directory.  
 -->
 <MailingLists xmlns="urn:java:mireka">
 
