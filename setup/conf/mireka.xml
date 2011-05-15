@@ -77,6 +77,10 @@
 	</mireka:MaildropRepository>
 	
 	<resin:import path="${__DIR__}/domains.xml" />
+	<!-- 
+		comment out if none of the submission and POP3 services are 
+		active
+	-->
 	<resin:import path="${__DIR__}/global-users.xml" />
 	
 	<!--
@@ -134,7 +138,6 @@
 		internet, or relays messages to a backend server.
 	-->
 	<!--
-	<system-property submissionServiceActive="true"/>
 	<resin:import path="${__DIR__}/submission/submission.xml" />
 	-->
 	

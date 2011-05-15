@@ -190,8 +190,8 @@
 		</new>
 		<mireka:hostName>${helo}</mireka:hostName>
 		<!-- <mireka:bindAddress>192.0.2.0</mireka:bindAddress> -->
-		<!-- comment out to enable STARTTLS if JSSE is correctly configured -->
-		<mireka:disableTLS>true</mireka:disableTLS>
+		<!-- uncomment to enable STARTTLS if JSSE is correctly configured -->
+		<!-- <mireka:enableTLS>true</mireka:enableTLS> -->
 	</mireka:SMTPServer>
 	
 </web-app>
