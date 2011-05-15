@@ -44,6 +44,8 @@ public class RelayMailTransactionTest {
 
                 smartClient.dataEnd();
                 times = 1;
+
+                smartClient.quit();
             }
         };
 
