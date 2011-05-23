@@ -132,6 +132,10 @@
 	
 	<mireka:RetryPolicy>
 		<Named>retryPolicy</Named>
+		<!-- count of attempts after a Delayed DSN mail must be sent -->
+		<!--
+		<mireka:delayReportPoint>3</mireka:delayReportPoint>
+		-->
 		<mireka:dsnMailCreator>
 			#{dsnMailCreator}
 		</mireka:dsnMailCreator>

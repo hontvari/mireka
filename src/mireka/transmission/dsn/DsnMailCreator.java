@@ -35,37 +35,66 @@ import org.apache.james.mime4j.util.ByteSequence;
 import org.apache.james.mime4j.util.ContentUtil;
 import org.apache.james.mime4j.util.MimeUtil;
 
+/**
+ * DsnMailCreator constructs a DSN message. It does not collect any status
+ * information itself, its sole responsibility is to format the message based on
+ * the supplied data.
+ * 
+ * @see <a href="http://tools.ietf.org/html/rfc3464">RFC 3464 An Extensible
+ *      Message Format for Delivery Status Notifications</a>
+ */
 @ThreadSafe
 public class DsnMailCreator {
     private final DateTimeRfc822Formatter dateTimeRfc822Formatter =
             new DateTimeRfc822Formatter();
     /**
-     * the DNS/HELO name of the MTA which attempted the transfer ( i.e. this
-     * MTA. It appears in the report.
+     * The DNS/HELO name of the MTA which attempts the transfer (i.e. this MTA).
+     * It appears in the report.
      */
     private final String reportingMtaName;
+    /**
+     * The address used in the From header of the DSN message. Something like
+     * MAILER-DAEMON@example.com.
+     */
     private final NameAddr fromAddress;
 
+    /**
+     * Constructs a new instance which will create DSN messages using the
+     * specified common attributes.
+     * 
+     * @param reportingMtaName
+     *            The DNS/HELO name of this MTA. It appears in the report.
+     * @param fromAddress
+     *            The address used in the From header of the DSN mail.
+     */
     public DsnMailCreator(String reportingMtaName, NameAddr fromAddress) {
         this.reportingMtaName = reportingMtaName;
         this.fromAddress = fromAddress;
     }
 
-    public Mail create(Mail mail, List<PermanentFailureReport> recipientStatuses) {
-        return new DsnMailCreatorInner(mail, recipientStatuses).create();
+    /**
+     * Constructs a new DSN message.
+     * 
+     * @param mail
+     *            the mail of which transmission status will be reported
+     * @param recipientReports
+     *            recipient specific information about the status
+     */
+    public Mail create(Mail mail, List<RecipientProblemReport> recipientReports) {
+        return new DsnMailCreatorInner(mail, recipientReports).create();
     }
 
     private class DsnMailCreatorInner {
         private final Mime4jFieldFactory mime4jFieldFactory =
                 new Mime4jFieldFactory();
         private final Mail originalMail;
-        private final List<PermanentFailureReport> recipientStatuses;
+        private final List<RecipientProblemReport> recipientReports;
         private final Mail resultMail = new Mail();
 
         public DsnMailCreatorInner(Mail mail,
-                List<PermanentFailureReport> recipientStatuses) {
+                List<RecipientProblemReport> recipientReports) {
             this.originalMail = mail;
-            this.recipientStatuses = recipientStatuses;
+            this.recipientReports = recipientReports;
         }
 
         public Mail create() {
@@ -111,8 +140,8 @@ public class DsnMailCreator {
             message.setTo(Mailbox.parse(originalMail.from));
 
             Multipart report = multipartReport();
-            message.setMultipart(report, Collections.singletonMap(
-                    "report-type", "delivery-status"));
+            message.setMultipart(report,
+                    Collections.singletonMap("report-type", "delivery-status"));
             return message;
         }
 
@@ -145,15 +174,14 @@ public class DsnMailCreator {
             buffer.append(originalMail.from);
             buffer.append("\r\n");
             buffer.append("\r\n");
-            buffer
-                    .append("    ----- The following addresses had delivery problems -----");
+            buffer.append("    ----- The following addresses had delivery problems -----");
             buffer.append("\r\n");
-            for (PermanentFailureReport failure : recipientStatuses) {
+            for (RecipientProblemReport report : recipientReports) {
                 buffer.append("<");
-                buffer.append(failure.recipient);
+                buffer.append(report.recipient);
                 buffer.append(">");
                 buffer.append("  (");
-                buffer.append("unrecoverable error");
+                buffer.append(report.actionCode());
                 buffer.append(")");
                 buffer.append("\r\n");
             }
@@ -171,10 +199,9 @@ public class DsnMailCreator {
         private String deliveryStatusText() {
             StringBuilder buffer = new StringBuilder();
             buffer.append(messageDsn());
-            for (PermanentFailureReport recipientFailure : recipientStatuses) {
+            for (RecipientProblemReport recipientFailure : recipientReports) {
                 buffer.append("\r\n");
-                buffer
-                        .append(recipientDsnForPermanentFailure(recipientFailure));
+                buffer.append(recipientDsnForRecipientProblemReport(recipientFailure));
             }
             return buffer.toString();
         }
@@ -205,20 +232,19 @@ public class DsnMailCreator {
             return buffer.toString();
         }
 
-        private String recipientDsnForPermanentFailure(
-                PermanentFailureReport failure) {
+        private String recipientDsnForRecipientProblemReport(
+                RecipientProblemReport failure) {
             HeaderPrinter headers = new HeaderPrinter();
-            headers.add("Final-Recipient", "rfc822; "
-                    + failure.recipient.sourceRouteStripped());
-            headers.add("Action", "failed");
+            headers.add("Final-Recipient",
+                    "rfc822; " + failure.recipient.sourceRouteStripped());
+            headers.add("Action", failure.actionCode());
             headers.add("Status", formattedStatus(failure.status));
             if (failure.remoteMtaDiagnosticStatus != null) {
                 headers.add("Remote-MTA", "dns; " + failure.remoteMta.dnsName);
                 if (!failure.status.equals(failure.remoteMtaDiagnosticStatus)) {
-                    headers
-                            .add(
-                                    "Diagnostic-Code",
-                                    diagnosticCodeForRemoteMtaStatus(failure.remoteMtaDiagnosticStatus));
+                    headers.add(
+                            "Diagnostic-Code",
+                            diagnosticCodeForRemoteMtaStatus(failure.remoteMtaDiagnosticStatus));
                 }
             }
             headers.add("Last-Attempt-Date", failure.failureDate);

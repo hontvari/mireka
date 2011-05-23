@@ -1,36 +1,19 @@
 package mireka.transmission.dsn;
 
-import java.util.Date;
-
-import javax.annotation.Nullable;
-
-import mireka.address.Recipient;
-import mireka.smtp.EnhancedStatus;
-import mireka.smtp.MailSystemStatus;
-import mireka.transmission.immediate.RemoteMta;
-
-public class PermanentFailureReport {
-    public Recipient recipient;
-    /**
-     * @see <a href="http://tools.ietf.org/html/rfc3464#section-2.3.4">Status
-     *      field</a>
-     */
-    public EnhancedStatus status;
-    /**
-     * @see <a
-     *      href="http://tools.ietf.org/html/rfc3464#section-2.3.6">Diagnostic-Code
-     *      field</a>
-     */
-    @Nullable
-    public MailSystemStatus remoteMtaDiagnosticStatus;
-    @Nullable
-    public RemoteMta remoteMta;
-    public Date failureDate;
-    public String logId;
+/**
+ * DelayReport contains all information necessary to produce a "failed"
+ * recipient section in a DSN message.
+ */
+public class PermanentFailureReport extends RecipientProblemReport {
+    @Override
+    public String actionCode() {
+        return "failed";
+    }
 
     @Override
     public String toString() {
         return "PermanentFailureReport [recipient=" + recipient + ", status="
                 + status + "]";
     }
+
 }

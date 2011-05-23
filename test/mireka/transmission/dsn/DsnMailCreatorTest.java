@@ -32,7 +32,7 @@ public class DsnMailCreatorTest {
     public void testCreate() throws Exception {
         DsnMailCreator dsnMailCreator = createDsnMailCreator();
         Mail mail = ExampleMail.simple();
-        List<PermanentFailureReport> recipientStatuses =
+        List<RecipientProblemReport> recipientStatuses =
                 createRecipientFailure();
         Mail dsnMail = dsnMailCreator.create(mail, recipientStatuses);
 
@@ -52,7 +52,7 @@ public class DsnMailCreatorTest {
         return new DsnMailCreator(IP2.getHostName(), from);
     }
 
-    static List<PermanentFailureReport> createRecipientFailure()
+    static List<RecipientProblemReport> createRecipientFailure()
             throws ParseException {
         PermanentFailureReport f = new PermanentFailureReport();
         f.recipient =
@@ -68,7 +68,7 @@ public class DsnMailCreatorTest {
         f.remoteMta = new RemoteMta(IP3.getHostName());
         f.failureDate = new Date();
         f.logId = "NO_1_ENTRY";
-        return Collections.singletonList(f);
+        return Collections.singletonList((RecipientProblemReport) f);
     }
 
     private static String longErrorMessage() {

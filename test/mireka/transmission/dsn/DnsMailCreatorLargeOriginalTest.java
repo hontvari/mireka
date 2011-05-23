@@ -19,7 +19,7 @@ public class DnsMailCreatorLargeOriginalTest {
         DsnMailCreator dsnMailCreator =
                 DsnMailCreatorTest.createDsnMailCreator();
         Mail mail = ExampleMail.veryLong();
-        List<PermanentFailureReport> recipientStatuses =
+        List<RecipientProblemReport> recipientStatuses =
                 DsnMailCreatorTest.createRecipientFailure();
         Mail dsnMail = dsnMailCreator.create(mail, recipientStatuses);
 

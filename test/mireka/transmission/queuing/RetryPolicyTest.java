@@ -78,6 +78,33 @@ public class RetryPolicyTest {
     }
 
     @Test
+    public void testDelayDsn() throws LocalMailSystemException {
+        retryPolicy.addDelayReportPoint(1);
+
+        new Expectations() {
+            {
+                onInstance(dsnTransmitter).transmit((Mail) any);
+                onInstance(retryTransmitter).transmit((Mail) any);
+            }
+        };
+
+        retryPolicy.actOnEntireMailFailure(mail, transientSendException);
+    }
+
+    @Test
+    public void testNoDelayDsn() throws LocalMailSystemException {
+        retryPolicy.addDelayReportPoint(2);
+
+        new Expectations() {
+            {
+                onInstance(retryTransmitter).transmit((Mail) any);
+            }
+        };
+
+        retryPolicy.actOnEntireMailFailure(mail, transientSendException);
+    }
+
+    @Test
     public void testOnEntireMailFailureGiveUp() throws LocalMailSystemException {
         mail.deliveryAttempts = 100;
         retryPolicy.actOnEntireMailFailure(mail, transientSendException);
