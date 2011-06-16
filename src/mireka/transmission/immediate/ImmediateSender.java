@@ -141,7 +141,7 @@ public class ImmediateSender {
                     lastUnrecoverableDnsException = e;
                 logger.debug("Looking up address of MX host " + name
                         + " failed, continuing with the next MX host "
-                        + "if one is available", e);
+                        + "if one is available: ", e.getMessage());
                 continue;
             }
 
@@ -165,7 +165,7 @@ public class ImmediateSender {
                     lastRetryableException = e;
                     logger.debug("Sending to SMTP host " + name
                             + " failed, continuing with the next "
-                            + "MX host if one is available", e);
+                            + "MX host if one is available: ", e.getMessage());
                 } else {
                     throw e;
                 }
