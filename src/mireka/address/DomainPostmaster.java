@@ -8,15 +8,15 @@ package mireka.address;
  *      4.1.1.3</a>
  */
 public class DomainPostmaster implements RemotePartContainingRecipient {
-    private final Address address;
+    private final Mailbox mailbox;
 
-    public DomainPostmaster(Address address) {
-        this.address = address;
+    public DomainPostmaster(Mailbox mailbox) {
+        this.mailbox = mailbox;
     }
 
     @Override
-    public Address getAddress() {
-        return address;
+    public Mailbox getMailbox() {
+        return mailbox;
     }
 
     @Override
@@ -36,17 +36,17 @@ public class DomainPostmaster implements RemotePartContainingRecipient {
 
     @Override
     public LocalPart localPart() {
-        return address.getLocalPart();
+        return mailbox.getLocalPart();
     }
 
     @Override
     public String sourceRouteStripped() {
-        return address.toString();
+        return mailbox.toString();
     }
 
     @Override
     public String toString() {
-        return address.toString();
+        return mailbox.toString();
     }
 
 }

@@ -5,5 +5,5 @@ package mireka.address;
  * Recipient which doesn't implement this interface
  */
 public interface RemotePartContainingRecipient extends Recipient {
-    Address getAddress();
+    Mailbox getMailbox();
 }

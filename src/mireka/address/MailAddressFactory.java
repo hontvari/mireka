@@ -34,22 +34,22 @@ public class MailAddressFactory {
         } else if (recipientAST instanceof DomainPostmasterRecipientAST) {
             DomainPostmasterRecipientAST domainPostmasterAST =
                     (DomainPostmasterRecipientAST) recipientAST;
-            Address address = createAddress(domainPostmasterAST.mailboxAST);
-            return new DomainPostmaster(address);
+            Mailbox mailbox = createMailbox(domainPostmasterAST.mailboxAST);
+            return new DomainPostmaster(mailbox);
         } else if (recipientAST instanceof MailboxRecipientAST) {
             MailboxRecipientAST mailboxRecipientAST =
                     (MailboxRecipientAST) recipientAST;
-            Address address = createAddress(mailboxRecipientAST.pathAST.mailboxAST);
-            return new GenericRecipient(address);
+            Mailbox mailbox = createMailbox(mailboxRecipientAST.pathAST.mailboxAST);
+            return new GenericRecipient(mailbox);
         } else {
             throw new RuntimeException("Assertion failed");
         }
     }
 
-    private Address createAddress(MailboxAST mailboxAST) {
+    private Mailbox createMailbox(MailboxAST mailboxAST) {
         LocalPart localPart = new LocalPart(mailboxAST.localPartAST.spelling);
         RemotePart remotePart = createRemotePartFromAST(mailboxAST.remotePartAST);
-        return new Address(mailboxAST.spelling, localPart, remotePart);
+        return new Mailbox(mailboxAST.spelling, localPart, remotePart);
     }
 
     public mireka.address.RemotePart createRemotePartFromAST(

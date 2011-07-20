@@ -1,7 +1,9 @@
 package mireka.address;
 
 /**
- * Corresponds to the Mailbox production in RFC 5321.<br>
+ * Corresponds to the Mailbox production in RFC 5321, basically a
+ * LOCAL_PART@REMOTE_PART element.
+ * <p>
  * Note: RFC 5322 Internet Message Format also contains a mailbox production,
  * but with different content. The addr-spec production of that RFC is the
  * production which corresponds to this class.
@@ -9,12 +11,12 @@ package mireka.address;
  * @see <a href="http://tools.ietf.org/html/rfc5321#section-4.1.2">RFC 5321
  *      4.1.2</a>
  */
-public class Address {
+public class Mailbox {
     private String smtpText;
     private LocalPart localPart;
     private RemotePart remotePart;
 
-    public Address(String smtpText, LocalPart localPart, RemotePart remotePart) {
+    public Mailbox(String smtpText, LocalPart localPart, RemotePart remotePart) {
         this.smtpText = smtpText;
         this.localPart = localPart;
         this.remotePart = remotePart;
@@ -57,7 +59,7 @@ public class Address {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Address other = (Address) obj;
+        Mailbox other = (Mailbox) obj;
         if (remotePart == null) {
             if (other.remotePart != null)
                 return false;

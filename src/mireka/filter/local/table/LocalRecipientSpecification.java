@@ -1,6 +1,6 @@
 package mireka.filter.local.table;
 
-import mireka.address.Address;
+import mireka.address.Mailbox;
 import mireka.address.Recipient;
 import mireka.address.RemotePartContainingRecipient;
 
@@ -19,9 +19,9 @@ public class LocalRecipientSpecification implements RecipientSpecification {
             return false;
         if (!localPartSpecification.isSatisfiedBy(recipient.localPart()))
             return false;
-        Address address =
-                ((RemotePartContainingRecipient) recipient).getAddress();
-        return remotePartSpecification.isSatisfiedBy(address.getRemotePart());
+        Mailbox mailbox =
+                ((RemotePartContainingRecipient) recipient).getMailbox();
+        return remotePartSpecification.isSatisfiedBy(mailbox.getRemotePart());
     }
 
     /**
