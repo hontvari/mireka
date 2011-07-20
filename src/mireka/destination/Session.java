@@ -2,6 +2,7 @@ package mireka.destination;
 
 import java.io.IOException;
 
+import mireka.address.ReversePath;
 import mireka.filter.FilterBase;
 import mireka.filter.RecipientContext;
 import mireka.smtp.RejectExceptionExt;
@@ -23,7 +24,7 @@ public interface Session {
      * @param from
      *            The reverse path.
      */
-    void from(String from) throws RejectExceptionExt;
+    void from(ReversePath from) throws RejectExceptionExt;
 
     /**
      * Processes an accepted recipient. It is only called if one of the filters

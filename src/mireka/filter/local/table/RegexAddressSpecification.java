@@ -24,7 +24,7 @@ public class RegexAddressSpecification implements RecipientSpecification {
             return false;
 
         RemotePart recipientRemotePart =
-                ((RemotePartContainingRecipient) recipient).getAddress()
+                ((RemotePartContainingRecipient) recipient).getMailbox()
                         .getRemotePart();
         if (!remotePartObject.equals(recipientRemotePart))
             return false;

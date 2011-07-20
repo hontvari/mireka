@@ -32,9 +32,9 @@ public class FileDirStoreTest extends TempDirectory {
         store.initializeAndQueryMailNamesOrderedBySchedule();
 
         Mail mail = ExampleMail.simple();
-        mail.from = ExampleAddress.JOHN;
+        mail.from = ExampleAddress.JOHN_AS_REVERSE_PATH;
         store.save(mail);
-        mail.from = ExampleAddress.JANE;
+        mail.from = ExampleAddress.JANE_AS_REVERSE_PATH;
         store.save(mail);
 
         FileDirStore restartedStore = new FileDirStore(directory, 10);
@@ -52,7 +52,7 @@ public class FileDirStoreTest extends TempDirectory {
         MailName mailName = store.save(mailStored);
 
         Mail mailRead = store.read(mailName);
-        assertEquals(mailStored.from, mailRead.from);
+        assertEquals(mailStored.from.getSmtpText(), mailRead.from.getSmtpText());
     }
 
     @Test

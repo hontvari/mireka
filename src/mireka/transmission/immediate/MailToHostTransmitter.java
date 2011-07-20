@@ -66,7 +66,7 @@ class MailToHostTransmitter {
         }
         try {
             smartClient = clientFactory.create(inetAddress);
-            smartClient.from(mail.from);
+            smartClient.from(mail.from.getSmtpText());
             List<RecipientRejection> recipientRejections =
                     new ArrayList<RecipientRejection>();
             List<Recipient> acceptedRecipients = new ArrayList<Recipient>();

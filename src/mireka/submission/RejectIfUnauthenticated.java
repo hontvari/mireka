@@ -3,6 +3,7 @@ package mireka.submission;
 import java.util.ArrayList;
 import java.util.List;
 
+import mireka.address.ReversePath;
 import mireka.filter.AbstractFilter;
 import mireka.filter.Filter;
 import mireka.filter.FilterType;
@@ -38,7 +39,7 @@ public class RejectIfUnauthenticated implements FilterType {
         }
 
         @Override
-        public void from(String from) throws RejectExceptionExt {
+        public void from(ReversePath from) throws RejectExceptionExt {
             if (!isAuthenticated()) {
                 logger.debug("None of the authentication specifications "
                         + "matched the session, rejecting");

@@ -284,7 +284,7 @@ public class RetryPolicy {
 
             if (reports.isEmpty())
                 return;
-            if (mail.from.isEmpty()) {
+            if (mail.from.isNull()) {
                 logger.debug("Failure or delay, but reverse-path is null, "
                         + "DSN must not be sent. "
                         + "Original mail itself was a notification.");

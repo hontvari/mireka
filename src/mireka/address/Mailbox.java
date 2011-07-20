@@ -31,6 +31,13 @@ public class Mailbox {
     }
 
     /**
+     * Returns the raw mailbox, as it was supplied in the SMTP transaction.
+     */
+    public String getSmtpText() {
+        return smtpText;
+    }
+
+    /**
      * Returns the displayable form of the address.
      */
     @Override

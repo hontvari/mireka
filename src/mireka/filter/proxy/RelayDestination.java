@@ -3,6 +3,7 @@ package mireka.filter.proxy;
 import java.io.IOException;
 import java.io.InputStream;
 
+import mireka.address.ReversePath;
 import mireka.destination.Session;
 import mireka.destination.SessionDestination;
 import mireka.filter.RecipientContext;
@@ -61,10 +62,10 @@ public class RelayDestination implements SessionDestination {
 
     private class SessionImpl implements Session {
         private BackendClient client;
-        private String from;
+        private ReversePath from;
 
         @Override
-        public void from(String from) throws RejectExceptionExt {
+        public void from(ReversePath from) throws RejectExceptionExt {
             this.from = from;
         }
 
@@ -84,7 +85,7 @@ public class RelayDestination implements SessionDestination {
             client = new BackendClient(backendServer);
             try {
                 client.connect();
-                client.from(from);
+                client.from(from.getSmtpText());
             } catch (RejectException e) {
                 logger.debug("Connection to backend server failed, "
                         + "failed status is memorized, continuing...");

@@ -79,7 +79,7 @@ public class ImmediateSender {
                 throw new IllegalArgumentException(
                         "Cannot send mail to non-remote address: " + recipient);
             RemotePart remotePart =
-                    ((RemotePartContainingRecipient) recipient).getAddress()
+                    ((RemotePartContainingRecipient) recipient).getMailbox()
                             .getRemotePart();
             if (result == null) {
                 result = remotePart;

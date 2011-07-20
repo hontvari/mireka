@@ -13,7 +13,7 @@ public class ExampleMail {
     public static Mail simple() {
         Mail result = new Mail();
         result.arrivalDate = new Date();
-        result.from = JOHN;
+        result.from = JOHN_AS_REVERSE_PATH;
         result.receivedFromMtaAddress = IP1;
         result.receivedFromMtaName = IP1.getHostName();
         result.recipients.add(JANE_AS_RECIPIENT);

@@ -20,7 +20,7 @@ public class LocalPostmaster implements RecipientSpecification {
         if (!recipient.isDomainPostmaster())
             return false;
         RemotePart remotePart =
-                ((DomainPostmaster) recipient).getAddress().getRemotePart();
+                ((DomainPostmaster) recipient).getMailbox().getRemotePart();
         return localDomains.isSatisfiedBy(remotePart);
     }
 

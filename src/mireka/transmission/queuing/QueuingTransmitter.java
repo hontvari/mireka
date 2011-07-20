@@ -54,7 +54,7 @@ public class QueuingTransmitter implements Transmitter, MailProcessorFactory {
                 new LinkedHashMap<RemotePart, List<Recipient>>();
         for (Recipient recipient : recipients) {
             RemotePart remotePart =
-                    ((RemotePartContainingRecipient) recipient).getAddress()
+                    ((RemotePartContainingRecipient) recipient).getMailbox()
                             .getRemotePart();
             List<Recipient> remotePartRecipientList = map.get(remotePart);
             if (remotePartRecipientList == null) {

@@ -12,6 +12,7 @@ import javax.mail.internet.MimeMultipart;
 
 import mireka.address.MailAddressFactory;
 import mireka.address.Recipient;
+import mireka.address.ReversePath;
 import mireka.filter.local.table.RecipientSpecification;
 import mireka.filter.local.table.RecipientSpecificationFactory;
 import mireka.smtp.EnhancedStatus;
@@ -79,7 +80,7 @@ public class MailingList {
      * remote part of the {@link #address} field.
      */
     @Nonnull
-    private String reversePath;
+    private ReversePath reversePath;
     /**
      * If supplied then it overrides the default error message used when a
      * non-member posts to a members only list.
@@ -124,10 +125,10 @@ public class MailingList {
                 membersOnlyMessage));
     }
 
-    private boolean isMember(String reversePath) {
+    private boolean isMember(ReversePath reversePath) {
         for (ListMember listMember : listMembers) {
             if (listMember.getRecipient().toString()
-                    .equalsIgnoreCase(reversePath))
+                    .equalsIgnoreCase(reversePath.toString()))
                 return true;
         }
         return false;
@@ -419,14 +420,16 @@ public class MailingList {
      * @category GETSET
      */
     public String getReversePath() {
-        return reversePath;
+        return reversePath.getSmtpText();
     }
 
     /**
      * @category GETSET
      */
     public void setReversePath(String reversePath) {
-        this.reversePath = reversePath;
+        this.reversePath =
+                new MailAddressFactory()
+                        .createReversePathAlreadyVerified(reversePath);
     }
 
     /**

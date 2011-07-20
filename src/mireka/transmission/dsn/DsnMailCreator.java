@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
-import java.text.ParseException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +12,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import mireka.MailData;
 import mireka.address.MailAddressFactory;
+import mireka.address.NullReversePath;
 import mireka.address.Recipient;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.MailSystemStatus;
@@ -106,18 +106,11 @@ public class DsnMailCreator {
         private void setupEnvelope() {
             resultMail.arrivalDate = new Date();
             resultMail.scheduleDate = resultMail.arrivalDate;
-            resultMail.from = "";
+            resultMail.from = new NullReversePath();
             Recipient recipient;
-            try {
-                recipient =
-                        new MailAddressFactory()
-                                .createRecipient(originalMail.from);
-            } catch (ParseException e) {
-                // it mustn't happen at this time
-                throw new IllegalArgumentException(
-                        "Cannot create DSN mail, original reverse-path has "
-                                + "syntax error.", e);
-            }
+            recipient =
+                    new MailAddressFactory()
+                            .reversePath2Recipient(originalMail.from);
             resultMail.recipients.add(recipient);
         }
 
@@ -137,7 +130,7 @@ public class DsnMailCreator {
             message.createMessageId(reportingMtaName);
             message.setSubject("Delivery Status Notification");
             message.setFrom(fromAddress.toMime4jMailbox());
-            message.setTo(Mailbox.parse(originalMail.from));
+            message.setTo(Mailbox.parse(originalMail.from.getSmtpText()));
 
             Multipart report = multipartReport();
             message.setMultipart(report,

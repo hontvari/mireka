@@ -27,7 +27,7 @@ public class LocalRemoteCombinedRecipientSpecification implements
         if (!(recipient instanceof RemotePartContainingRecipient))
             return false;
         RemotePart recipientRemotePart =
-                ((RemotePartContainingRecipient) recipient).getAddress()
+                ((RemotePartContainingRecipient) recipient).getMailbox()
                         .getRemotePart();
         return remotePart.equals(recipientRemotePart);
     }

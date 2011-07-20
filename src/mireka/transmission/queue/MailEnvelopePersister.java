@@ -15,7 +15,7 @@ class MailEnvelopePersister {
     }
 
     void storeMailFieldsIntoProperties(Mail mail, DataProperties props) {
-        props.setString("from", mail.from);
+        props.setString("from", mail.from.getSmtpText());
         props.setList("recipients", mail.recipients);
         props.setDate("arrivalDate", mail.arrivalDate);
         props.setString("receivedFromMtaName", mail.receivedFromMtaName);
@@ -28,7 +28,9 @@ class MailEnvelopePersister {
 
     public Mail readFromProperties(DataProperties props) {
         Mail mail = new Mail();
-        mail.from = props.getString("from");
+        mail.from =
+                new MailAddressFactory().createReversePathAlreadyVerified(props
+                        .getString("from"));
         mail.recipients =
                 props.getList("recipients",
                         new StringToElementConverter<Recipient>() {

@@ -2,6 +2,7 @@ package mireka.filter.proxy;
 
 import mireka.ExampleAddress;
 import mireka.ExampleMail;
+import mireka.address.NullReversePath;
 import mireka.destination.Session;
 import mireka.filter.RecipientContext;
 import mockit.Expectations;
@@ -49,8 +50,8 @@ public class RelayMailTransactionTest {
             }
         };
 
+        session.from(new NullReversePath());
         session.recipient(recipientContextJane);
-
         session.data(ExampleMail.simple());
     }
 
@@ -69,6 +70,7 @@ public class RelayMailTransactionTest {
             }
         };
 
+        session.from(new NullReversePath());
         session.recipient(recipientContextJane);
         session.recipient(recipientContextJohn);
 

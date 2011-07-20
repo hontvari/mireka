@@ -65,10 +65,17 @@ public abstract class CharParser {
         return spelling.finish();
     }
 
+    /**
+     * Saves the current position within the input text onto a stack.
+     */
     protected void pushPosition() {
         inputPositionStack.push(currentToken.position);
     }
 
+    /**
+     * Returns and removes the last input text position which was put onto the
+     * stack using {@link #pushPosition()}.
+     */
     protected int popPosition() {
         return inputPositionStack.pop();
     }

@@ -7,6 +7,7 @@ import java.util.List;
 
 import mireka.ExampleAddress;
 import mireka.ExampleMail;
+import mireka.address.NullReversePath;
 import mireka.smtp.EnhancedStatus;
 import mireka.transmission.LocalMailSystemException;
 import mireka.transmission.Mail;
@@ -119,7 +120,7 @@ public class RetryPolicyTest {
     @Test
     public void testOnEntireMailFailurePermanentNotification()
             throws LocalMailSystemException {
-        mail.from = "";
+        mail.from = new NullReversePath();
         retryPolicy.actOnEntireMailFailure(mail, permanentSendException);
 
         new Verifications() {

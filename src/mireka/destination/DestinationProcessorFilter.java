@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import mireka.MailData;
+import mireka.address.ReversePath;
 import mireka.filter.AbstractDataRecipientFilter;
 import mireka.filter.DataRecipientFilterAdapter;
 import mireka.filter.Filter;
@@ -46,7 +47,7 @@ public class DestinationProcessorFilter implements FilterType {
         }
 
         @Override
-        public void from(String from) {
+        public void from(ReversePath from) {
             mail.from = from;
             mail.receivedFromMtaAddress =
                     mailTransaction.getRemoteInetAddress();

@@ -2,6 +2,7 @@ package mireka.destination;
 
 import java.io.IOException;
 
+import mireka.address.ReversePath;
 import mireka.filter.RecipientContext;
 import mireka.smtp.RejectExceptionExt;
 import mireka.smtp.UnknownUserException;
@@ -33,7 +34,7 @@ public class UnknownRecipientDestination implements SessionDestination {
     private class SessionImpl implements Session {
 
         @Override
-        public void from(String from) throws RejectExceptionExt {
+        public void from(ReversePath from) throws RejectExceptionExt {
             // nothing to do
         }
 
