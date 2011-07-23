@@ -3,9 +3,13 @@ package mireka.filter.misc;
 import java.util.Deque;
 import java.util.LinkedList;
 
-import javax.annotation.concurrent.NotThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
 
-@NotThreadSafe
+/**
+ * Tarpit maintains a list about attempts to send mail to non-existent users and
+ * calculates a wait duration which should be used to slow down clients.
+ */
+@ThreadSafe
 public class Tarpit {
     private final long VALIDITY_DURATION = 30000;
     private final long WAIT_BY_MARK = 1000;
@@ -22,7 +26,7 @@ public class Tarpit {
      */
     private Deque<Long> markExpirations = new LinkedList<Long>();
 
-    public void addRejection() {
+    public synchronized void addRejection() {
         removeExpiredMarks();
         Long expiration = System.currentTimeMillis() + VALIDITY_DURATION;
         markExpirations.addFirst(expiration);
@@ -36,7 +40,7 @@ public class Tarpit {
             markExpirations.removeLast();
     }
 
-    public long waitDuration() {
+    public synchronized long waitDuration() {
         removeExpiredMarks();
         long waitDuration = markExpirations.size() * WAIT_BY_MARK;
         waitDuration = Math.min(MAX_WAIT, waitDuration);
