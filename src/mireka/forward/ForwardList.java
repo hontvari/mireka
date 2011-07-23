@@ -46,6 +46,8 @@ public class ForwardList {
      */
     private Transmitter transmitter;
 
+    private Srs srs;
+
     /**
      * Processes the message.
      */
@@ -65,6 +67,7 @@ public class ForwardList {
             mail.recipients.add(member.getRecipient());
         }
         try {
+            mail.from = srs.forward(mail.from, srcMail.recipients.get(0));
             transmitter.transmit(mail);
             logger.debug("Forward list mail was submitted to transmitter: {}",
                     mail);
@@ -120,6 +123,20 @@ public class ForwardList {
      */
     public RecipientSpecification getRecipientSpecification() {
         return recipientSpecification;
+    }
+
+    /**
+     * @category GETSET
+     */
+    public Srs getSrs() {
+        return srs;
+    }
+
+    /**
+     * @category GETSET
+     */
+    public void setSrs(Srs srs) {
+        this.srs = srs;
     }
 
 }

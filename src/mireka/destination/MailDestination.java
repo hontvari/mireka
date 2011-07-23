@@ -10,7 +10,8 @@ import mireka.transmission.Mail;
 public interface MailDestination extends ResponsibleDestination {
     /**
      * Processes the mail. This function is called after the SMTP DATA command
-     * has been received.
+     * has been received. It is only called if there is at least one accepted
+     * recipient.
      */
     void data(Mail mail) throws RejectExceptionExt;
 }

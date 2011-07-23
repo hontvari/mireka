@@ -75,7 +75,7 @@ public class MxLookup {
         org.xbill.DNS.Lookup lookup;
 
         try {
-            lookup = new Lookup(domain.asString(), org.xbill.DNS.Type.MX);
+            lookup = new Lookup(domain.smtpText(), org.xbill.DNS.Type.MX);
         } catch (org.xbill.DNS.TextParseException e) {
             throw new MxLookupException(e,
                     EnhancedStatus.BAD_DESTINATION_MAILBOX_ADDRESS_SYNTAX);

@@ -84,6 +84,24 @@
 	<resin:import path="${__DIR__}/global-users.xml" />
 	
 	<!--
+		Sender Rewriting Scheme (SRS) configuration. SRS is used to 
+		make forwarding working even if receivers check SPF records.
+	-->
+	<mireka:Srs>
+		<Named>srs</Named>
+		 <ApplicationScoped/>
+		 
+		<!-- 
+			Key for signing SRS encoded reverse paths. Use a random
+			hexadecimal string here, like 37AB...
+		-->
+		<!--
+		<secretKey>ENTER A HEX KEY HERE</secretKey>
+		-->
+		<localDomains>#{localDomains}</localDomains>
+	</mireka:Srs>
+	
+	<!--
 		Default local recipients table. It enumerates all valid local 
 		recipients and assigns a destination to them. The destination
 		tells what to do with a mail sent to the corresponding 
@@ -118,6 +136,23 @@
 				<maildropRepository>#{maildropRepository}</maildropRepository>
 				<users>#{globalUsers}</users>
 			</GlobalUsersMaildropDestinationMapper>
+		</mapper>
+		
+		<!--
+			comment out if forwarding is not used
+		-->
+		<mapper>
+			<RecipientSpecificationDestinationPair>
+				<recipientSpecification>
+					<SrsRecipientSpecification/>
+				</recipientSpecification>
+				<destination>
+					<SrsDestination>
+						<srs>#{srs}</srs>
+						<transmitter>#{primaryTransmitter}</transmitter>
+					</SrsDestination>
+				</destination>
+			</RecipientSpecificationDestinationPair>
 		</mapper>
 		
 	</LocalRecipientTable>

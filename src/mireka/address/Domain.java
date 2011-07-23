@@ -17,7 +17,10 @@ public class Domain {
         this.valueInLowerCase = value.toLowerCase(Locale.US);
     }
 
-    public String asString() {
+    /**
+     * Returns the raw domain text, as it was supplied in the SMTP transaction.
+     */
+    public String smtpText() {
         return value;
     }
 
