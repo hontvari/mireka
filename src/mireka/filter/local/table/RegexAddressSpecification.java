@@ -8,7 +8,7 @@ import mireka.address.RemotePart;
 import mireka.address.RemotePartContainingRecipient;
 
 /**
- * RegexAddressSpecification matches the local part of a recipient address with
+ * RegexAddressSpecification compares the local part of a recipient address with
  * a regular expression and it also requires the remote part to be identical
  * with the specified remote part.
  */

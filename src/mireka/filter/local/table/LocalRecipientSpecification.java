@@ -7,7 +7,8 @@ import mireka.address.RemotePartContainingRecipient;
 /**
  * LocalRecipientSpecification matches a recipient if its remote part matches
  * the supplied {@link RemotePartSpecification} and its local part matches the
- * supplied {@link LocalPartSpecification}.
+ * supplied {@link LocalPartSpecification}. This specification never matches the
+ * global Postmaster address, because that has no remote part.
  */
 public class LocalRecipientSpecification implements RecipientSpecification {
     private LocalPartSpecification localPartSpecification;
