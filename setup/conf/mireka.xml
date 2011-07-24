@@ -30,7 +30,7 @@
 		places in the configuration files.
 	-->
 	<system-property helo="mail.example.com"/>
-	
+
 	<!-- 
 		Uncomment to set global JSSE TLS settings. This is not necessary 
 		if TLS is not used or if it is configured for each service 
@@ -94,6 +94,7 @@
 		<!-- 
 			Key for signing SRS encoded reverse paths. Use a random
 			hexadecimal string here, like 37AB...
+			You may want to use http://www.fourmilab.ch/hotbits/
 		-->
 		<!--
 		<secretKey>ENTER A HEX KEY HERE</secretKey>

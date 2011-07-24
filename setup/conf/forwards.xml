@@ -12,6 +12,7 @@
 	<forwardList>
 		<address>games@example.com</address>
 		<transmitter>#{primaryTransmitter}</transmitter>
+		<srs>#{srs}</srs>
 		
 		<member>
 			<address>john@example.com</address>
