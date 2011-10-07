@@ -92,9 +92,11 @@
 		 <ApplicationScoped/>
 		 
 		<!-- 
-			Key for signing SRS encoded reverse paths. Use a random
-			hexadecimal string here, like 37AB...
+			Key for signing SRS encoded reverse paths. 
+			Uncomment and enter a random hexadecimal string here, 
+			like 37AB...
 			You may want to use http://www.fourmilab.ch/hotbits/
+			to get random bits.
 		-->
 		<!--
 		<secretKey>ENTER A HEX KEY HERE</secretKey>
