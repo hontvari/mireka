@@ -49,7 +49,7 @@ public class MxLookup {
                     + "MX record targetting the host", domain);
             return implicitMxTargetForDomain();
         } else {
-            // 
+            //
             ArrayList<MXRecord> list =
                     new ArrayList<MXRecord>(Arrays.asList(records));
             Collections.shuffle(list);

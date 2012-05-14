@@ -11,7 +11,8 @@ import mireka.address.Recipient;
  * RecipientSpecification.
  */
 public class RecipientSpecifications implements RecipientSpecification {
-    private List<RecipientSpecification> specifications = new ArrayList<RecipientSpecification>();
+    private List<RecipientSpecification> specifications =
+            new ArrayList<RecipientSpecification>();
 
     @Override
     public boolean isSatisfiedBy(Recipient recipient) {

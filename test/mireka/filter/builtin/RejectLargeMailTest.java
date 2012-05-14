@@ -37,8 +37,7 @@ public class RejectLargeMailTest {
 
     @Test
     public void testSmallMail() throws TooMuchDataException,
-            RejectExceptionExt,
-            IOException {
+            RejectExceptionExt, IOException {
         filter.data(ExampleMailData.simple());
 
         verify(chain).data(exampleSimpleMail());
@@ -51,8 +50,7 @@ public class RejectLargeMailTest {
 
     @Test(expected = TooMuchDataException.class)
     public void testLargeMail() throws TooMuchDataException,
-            RejectExceptionExt,
-            IOException {
+            RejectExceptionExt, IOException {
         filter.data(ExampleMailData.mail4k());
 
         ArgumentCaptor<MailData> producedMailDataArgument =

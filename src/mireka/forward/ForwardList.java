@@ -93,8 +93,8 @@ public class ForwardList {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-        this.recipientSpecification = new RecipientSpecificationFactory()
-                .create(address);
+        this.recipientSpecification =
+                new RecipientSpecificationFactory().create(address);
     }
 
     /**

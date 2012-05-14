@@ -10,7 +10,8 @@ import mireka.address.Recipient;
  * valid addresses in the configuration files.
  */
 public class InlineRecipientRegistry implements RecipientSpecification {
-    private final List<RecipientSpecification> recipientSpecifications = new ArrayList<RecipientSpecification>();
+    private final List<RecipientSpecification> recipientSpecifications =
+            new ArrayList<RecipientSpecification>();
 
     @Override
     public boolean isSatisfiedBy(Recipient recipient) {
@@ -22,8 +23,8 @@ public class InlineRecipientRegistry implements RecipientSpecification {
     }
 
     public void addAddress(String address) {
-        RecipientSpecification specification = new RecipientSpecificationFactory()
-                .create(address);
+        RecipientSpecification specification =
+                new RecipientSpecificationFactory().create(address);
         recipientSpecifications.add(specification);
     }
 

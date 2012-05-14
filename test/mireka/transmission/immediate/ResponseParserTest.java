@@ -35,8 +35,8 @@ public class ResponseParserTest {
 
         assertEquals(Rfc821Status.class, mailSystemStatus.getClass());
         assertEquals(CODE500, mailSystemStatus.getSmtpReplyCode());
-        assertEquals("Example error\r\nSecond line", mailSystemStatus
-                .getMessage());
+        assertEquals("Example error\r\nSecond line",
+                mailSystemStatus.getMessage());
     }
 
     @Test
@@ -50,8 +50,8 @@ public class ResponseParserTest {
         assertEquals(EnhancedStatus.class, mailSystemStatus.getClass());
         assertEquals(CODE500, mailSystemStatus.getSmtpReplyCode());
         assertEquals("Example error", mailSystemStatus.getMessage());
-        assertEquals("5.0.0", ((EnhancedStatus) mailSystemStatus)
-                .getEnhancedStatusCode());
+        assertEquals("5.0.0",
+                ((EnhancedStatus) mailSystemStatus).getEnhancedStatusCode());
     }
 
     @Test
@@ -66,10 +66,10 @@ public class ResponseParserTest {
 
         assertEquals(EnhancedStatus.class, mailSystemStatus.getClass());
         assertEquals(CODE500, mailSystemStatus.getSmtpReplyCode());
-        assertEquals("Example error\r\nSecond line", mailSystemStatus
-                .getMessage());
-        assertEquals("5.0.0", ((EnhancedStatus) mailSystemStatus)
-                .getEnhancedStatusCode());
+        assertEquals("Example error\r\nSecond line",
+                mailSystemStatus.getMessage());
+        assertEquals("5.0.0",
+                ((EnhancedStatus) mailSystemStatus).getEnhancedStatusCode());
     }
 
     @Test
@@ -80,8 +80,8 @@ public class ResponseParserTest {
                 statusFactory
                         .createResponseLookingForEnhancedStatusCode(response);
 
-        assertEquals("5.10.100", ((EnhancedStatus) mailSystemStatus)
-                .getEnhancedStatusCode());
+        assertEquals("5.10.100",
+                ((EnhancedStatus) mailSystemStatus).getEnhancedStatusCode());
     }
 
     @Test
@@ -106,7 +106,7 @@ public class ResponseParserTest {
                         .createResponseLookingForEnhancedStatusCode(response);
 
         assertEquals(Rfc821Status.class, mailSystemStatus.getClass());
-        assertEquals("5.0.0 error\r\nMissing code!", mailSystemStatus
-                .getMessage());
+        assertEquals("5.0.0 error\r\nMissing code!",
+                mailSystemStatus.getMessage());
     }
 }

@@ -62,13 +62,13 @@ public class CharClasses {
     };
 
     static final CharClass HEX = new CharClass() {
-    
+
         @Override
         public boolean isSatisfiedBy(int ch) {
             return ('0' <= ch && ch <= '9') || ('a' <= ch && ch <= 'f')
                     || ('A' <= ch && ch <= 'F');
         }
-    
+
         @Override
         public String toString() {
             return "hex digit";

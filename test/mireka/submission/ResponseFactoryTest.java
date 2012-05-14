@@ -40,8 +40,8 @@ public class ResponseFactoryTest {
                         .createResponseLookingForEnhancedStatusCode(srcResponse);
         assertThat(basicResponse, instanceOf(Rfc821Status.class));
 
-        assertEquals("Delivery not authorized, message refused", basicResponse
-                .getMessage());
+        assertEquals("Delivery not authorized, message refused",
+                basicResponse.getMessage());
         assertEquals(500, basicResponse.getSmtpReplyCode());
     }
 }

@@ -18,7 +18,8 @@ import org.subethamail.smtp.RejectException;
  * Rejects the MAIL command if the session has not been authenticated.
  */
 public class RejectIfUnauthenticated implements FilterType {
-    private final List<MailTransactionSpecification> specifications = new ArrayList<MailTransactionSpecification>();
+    private final List<MailTransactionSpecification> specifications =
+            new ArrayList<MailTransactionSpecification>();
 
     @Override
     public Filter createInstance(MailTransaction mailTransaction) {

@@ -66,8 +66,9 @@ public class ScheduleFileDirQueue {
     }
 
     private void scheduleMailName(MailName mailName) {
-        MailProcessingTask task = new MailProcessingTask(this, store,
-                mailProcessorFactory, mailName);
+        MailProcessingTask task =
+                new MailProcessingTask(this, store, mailProcessorFactory,
+                        mailName);
         executor.schedule(task,
                 mailName.scheduleDate - System.currentTimeMillis(),
                 TimeUnit.MILLISECONDS);

@@ -58,8 +58,8 @@ public class RejectLargeMail implements FilterType {
 
         @Override
         public InputStream getInputStream() throws IOException {
-            return new LengthLimitingInputStream(wrappedMailData
-                    .getInputStream(), maxAllowedSize);
+            return new LengthLimitingInputStream(
+                    wrappedMailData.getInputStream(), maxAllowedSize);
         }
 
         @Override

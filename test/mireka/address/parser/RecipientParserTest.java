@@ -14,7 +14,8 @@ public class RecipientParserTest {
     public void testSystemPostmaster() throws Exception {
         RecipientAST recipientAST = new RecipientParser("<POSTMASTER>").parse();
         assertTrue(recipientAST instanceof SystemPostmasterRecipientAST);
-        assertEquals("POSTMASTER",
+        assertEquals(
+                "POSTMASTER",
                 ((SystemPostmasterRecipientAST) recipientAST).postmasterSpelling);
     }
 
@@ -33,15 +34,18 @@ public class RecipientParserTest {
         RecipientAST recipientAST =
                 new RecipientParser("<Postmaster@[192.0.2.0]>").parse();
         assertTrue(recipientAST instanceof MailboxRecipientAST);
-        assertEquals("Postmaster",
+        assertEquals(
+                "Postmaster",
                 ((MailboxRecipientAST) recipientAST).pathAST.mailboxAST.localPartAST.spelling);
     }
 
     @Test
     public void testMailboxRecipient() throws Exception {
-        RecipientAST recipientAST = new RecipientParser("<john@example.com>").parse();
+        RecipientAST recipientAST =
+                new RecipientParser("<john@example.com>").parse();
         assertTrue(recipientAST instanceof MailboxRecipientAST);
-        assertEquals("john",
+        assertEquals(
+                "john",
                 ((MailboxRecipientAST) recipientAST).pathAST.mailboxAST.localPartAST.spelling);
     }
 }

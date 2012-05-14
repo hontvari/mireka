@@ -23,7 +23,8 @@ public class GlobalUsersMaildropDestinationMapper implements
         for (GlobalUser user : users) {
             if (user.getUsernameObject().matches(recipientLocalPart)) {
                 MaildropDestination destination = new MaildropDestination();
-                destination.setMaildropName(user.getUsernameObject().toString());
+                destination
+                        .setMaildropName(user.getUsernameObject().toString());
                 destination.setMaildropRepository(maildropRepository);
                 return destination;
             }

@@ -51,7 +51,6 @@ public class MailToHostTransmitterTest {
     private RemoteMta remoteMta = new RemoteMta(HOST1_EXAMPLE_COM,
             IP1.getHostAddress());
 
-
     private MailToHostTransmitter sender;
 
     @Before

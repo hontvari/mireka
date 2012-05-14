@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import java.net.InetAddress;
 import java.text.ParseException;
 
-
 import mireka.address.parser.ast.AddressLiteralRemotePartAST;
 import mireka.address.parser.ast.Ipv4RemotePartAST;
 import mireka.address.parser.ast.Ipv6RemotePartAST;
@@ -100,7 +99,8 @@ public class MailboxParserTest {
         MailboxAST mailboxAST = parse("john@[192.0.2.0]");
         assertEquals(InetAddress.getByName("192.0.2.0"),
                 ((Ipv4RemotePartAST) (mailboxAST.remotePartAST)).ipv4.address);
-        assertEquals(InetAddress.getByName("192.0.2.0"),
+        assertEquals(
+                InetAddress.getByName("192.0.2.0"),
                 ((AddressLiteralRemotePartAST) (mailboxAST.remotePartAST)).address);
     }
 
@@ -109,7 +109,8 @@ public class MailboxParserTest {
         MailboxAST mailboxAST = parse("john@[IPv6:2001:DB8::]");
         assertEquals(InetAddress.getByName("[2001:DB8::]"),
                 ((Ipv6RemotePartAST) (mailboxAST.remotePartAST)).ipv6.address);
-        assertEquals(InetAddress.getByName("[2001:DB8::]"),
+        assertEquals(
+                InetAddress.getByName("[2001:DB8::]"),
                 ((AddressLiteralRemotePartAST) (mailboxAST.remotePartAST)).address);
     }
 

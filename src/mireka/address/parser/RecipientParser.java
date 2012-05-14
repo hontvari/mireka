@@ -42,12 +42,13 @@ public class RecipientParser extends CharParser {
             else
                 return new MailboxRecipientAST(popPosition(), pathAST);
         } else if (inputEqualsIgnoreCase(SYSTEM_POSTMASTER_PREFIX)) {
-            accept('<'); 
+            accept('<');
             pushSpelling();
             acceptThem(SYSTEM_POSTMASTER_PREFIX.length() - 2);
             String postmasterSpelling = popSpelling();
             accept('>');
-            return new SystemPostmasterRecipientAST(popPosition(), postmasterSpelling);
+            return new SystemPostmasterRecipientAST(popPosition(),
+                    postmasterSpelling);
         } else {
             PathAST pathAST = parsePath();
             return new MailboxRecipientAST(popPosition(), pathAST);

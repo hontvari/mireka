@@ -12,8 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class FilterInstances {
-    private final Logger logger =
-            LoggerFactory.getLogger(FilterInstances.class);
+    private final Logger logger = LoggerFactory
+            .getLogger(FilterInstances.class);
     private final List<Filter> filters = new ArrayList<Filter>();
     private final MailTransaction mailTransaction;
     private FilterChain head;

@@ -21,8 +21,7 @@ public class Version {
                 try {
                     InputStream resourceAsStream =
                             Version.class
-                                    .getResourceAsStream(
-                                    "/version.properties");
+                                    .getResourceAsStream("/version.properties");
                     Properties properties = new Properties();
                     properties.load(resourceAsStream);
                     resourceAsStream.close();

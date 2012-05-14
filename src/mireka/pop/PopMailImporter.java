@@ -59,9 +59,9 @@ public class PopMailImporter {
         Properties properties = new Properties();
         Session session = Session.getInstance(properties);
         Store store =
-                session.getStore(new URLName("pop3://" + user.getUsernameObject()
-                        + ":" + user.getPassword() + "@" + remoteHost + ":"
-                        + +remotePort + "/INBOX"));
+                session.getStore(new URLName("pop3://"
+                        + user.getUsernameObject() + ":" + user.getPassword()
+                        + "@" + remoteHost + ":" + +remotePort + "/INBOX"));
         store.connect();
         Folder folder = store.getFolder("INBOX");
         folder.open(Folder.READ_WRITE);

@@ -76,13 +76,16 @@ public class AddressLiteralParser extends CharParser {
         return ipv6;
     }
 
-    private void decorateWithInetAddress(AddressLiteralRemotePartAST remotePartAST) {
+    private void decorateWithInetAddress(
+            AddressLiteralRemotePartAST remotePartAST) {
         if (remotePartAST instanceof Ipv4RemotePartAST) {
-            Ipv4RemotePartAST ipv4RemotePartAST = (Ipv4RemotePartAST) remotePartAST;
+            Ipv4RemotePartAST ipv4RemotePartAST =
+                    (Ipv4RemotePartAST) remotePartAST;
             remotePartAST.addressBytes = ipv4RemotePartAST.ipv4.addressBytes;
             remotePartAST.address = ipv4RemotePartAST.ipv4.address;
         } else if (remotePartAST instanceof Ipv6RemotePartAST) {
-            Ipv6RemotePartAST ipv6RemotePartAST = (Ipv6RemotePartAST) remotePartAST;
+            Ipv6RemotePartAST ipv6RemotePartAST =
+                    (Ipv6RemotePartAST) remotePartAST;
             remotePartAST.addressBytes = ipv6RemotePartAST.ipv6.addressBytes;
             remotePartAST.address = ipv6RemotePartAST.ipv6.address;
         } else {

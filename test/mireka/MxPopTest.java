@@ -54,8 +54,8 @@ public class MxPopTest extends TempDirectory {
 
     private void sendMail() throws UnknownHostException, IOException,
             SMTPException {
-        SmartClient client = new SmartClient("localhost", PORT_SMTP,
-                "SmartClient");
+        SmartClient client =
+                new SmartClient("localhost", PORT_SMTP, "SmartClient");
         client.from("jane@example.com");
         client.to("john@example.com");
         client.dataStart();
@@ -69,8 +69,9 @@ public class MxPopTest extends TempDirectory {
             MessagingException, IOException {
         Properties properties = new Properties();
         Session session = Session.getInstance(properties);
-        Store store = session.getStore(new URLName(
-                "pop3://john:secret@localhost:" + PORT_POP + "/INBOX"));
+        Store store =
+                session.getStore(new URLName("pop3://john:secret@localhost:"
+                        + PORT_POP + "/INBOX"));
         store.connect();
         Folder folder = store.getFolder("INBOX");
         folder.open(Folder.READ_WRITE);
@@ -107,11 +108,13 @@ public class MxPopTest extends TempDirectory {
     }
 
     private SMTPServer createSmtpServer() {
-        GlobalUsersMaildropDestinationMapper recipientDestinationMapper = new GlobalUsersMaildropDestinationMapper();
+        GlobalUsersMaildropDestinationMapper recipientDestinationMapper =
+                new GlobalUsersMaildropDestinationMapper();
         recipientDestinationMapper.setUsers(users);
         recipientDestinationMapper.setMaildropRepository(maildropRepository);
 
-        LookupDestinationFilter lookupDestinationFilter = new LookupDestinationFilter();
+        LookupDestinationFilter lookupDestinationFilter =
+                new LookupDestinationFilter();
         lookupDestinationFilter
                 .setRecipientDestinationMapper(recipientDestinationMapper);
 
@@ -119,7 +122,8 @@ public class MxPopTest extends TempDirectory {
         filters.addFilter(lookupDestinationFilter);
         filters.addFilter(new DestinationProcessorFilter());
 
-        MessageHandlerFactoryImpl handlerFactory = new MessageHandlerFactoryImpl();
+        MessageHandlerFactoryImpl handlerFactory =
+                new MessageHandlerFactoryImpl();
         handlerFactory.setFilters(filters);
 
         SMTPServer smtpServer = new SMTPServer(handlerFactory);
@@ -128,10 +132,12 @@ public class MxPopTest extends TempDirectory {
     }
 
     private PopServer createPopServer() {
-        GlobalUsersLoginSpecification loginSpecification = new GlobalUsersLoginSpecification();
+        GlobalUsersLoginSpecification loginSpecification =
+                new GlobalUsersLoginSpecification();
         loginSpecification.setUsers(users);
 
-        GlobalUsersPrincipalMaildropTable principalMaildropTable = new GlobalUsersPrincipalMaildropTable();
+        GlobalUsersPrincipalMaildropTable principalMaildropTable =
+                new GlobalUsersPrincipalMaildropTable();
 
         PopServer popServer = new PopServer();
         popServer.setMaildropRepository(maildropRepository);

@@ -24,8 +24,8 @@ public class ScriptApi {
         String oldSourceFileName = (String) engine.get(ScriptEngine.FILENAME);
         engine.put(ScriptEngine.FILENAME, file.toString());
         includeStack.push(file);
-        try (InputStreamReader reader = new InputStreamReader(
-                new FileInputStream(file), "UTF-8")) {
+        try (InputStreamReader reader =
+                new InputStreamReader(new FileInputStream(file), "UTF-8")) {
             logger.debug("Evaluating " + file.toString() + "...");
             Object result = engine.eval(reader);
             logger.debug("Completed " + file.toString());

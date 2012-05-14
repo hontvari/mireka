@@ -13,7 +13,8 @@ import mireka.destination.Destination;
  */
 public class RecipientSpecificationDestinationPair implements
         RecipientDestinationMapper {
-    private final List<RecipientSpecification> recipientSpecifications = new ArrayList<RecipientSpecification>();
+    private final List<RecipientSpecification> recipientSpecifications =
+            new ArrayList<RecipientSpecification>();
     private Destination destination;
 
     @Override

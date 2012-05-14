@@ -53,8 +53,8 @@ public class PrivateTlsConfiguration implements TlsConfiguration {
             String defaultAlgorithm = KeyManagerFactory.getDefaultAlgorithm();
             logger.debug("Default KeyManagerFactory algorithm name: "
                     + defaultAlgorithm);
-            KeyManagerFactory keyManagerFactory = KeyManagerFactory
-                    .getInstance(defaultAlgorithm);
+            KeyManagerFactory keyManagerFactory =
+                    KeyManagerFactory.getInstance(defaultAlgorithm);
             String defaultKeyStoreType = KeyStore.getDefaultType();
             logger.debug("Default key store type: " + defaultKeyStoreType);
             KeyStore keyStore = KeyStore.getInstance(defaultKeyStoreType);
@@ -89,10 +89,11 @@ public class PrivateTlsConfiguration implements TlsConfiguration {
         if (!enabled)
             throw new IllegalStateException();
 
-        InetSocketAddress remoteAddress = (InetSocketAddress) socket
-                .getRemoteSocketAddress();
-        SSLSocket sslSocket = (SSLSocket) socketFactory.createSocket(socket,
-                remoteAddress.getHostName(), socket.getPort(), true);
+        InetSocketAddress remoteAddress =
+                (InetSocketAddress) socket.getRemoteSocketAddress();
+        SSLSocket sslSocket =
+                (SSLSocket) socketFactory.createSocket(socket,
+                        remoteAddress.getHostName(), socket.getPort(), true);
         sslSocket.setUseClientMode(false);
         return sslSocket;
     }

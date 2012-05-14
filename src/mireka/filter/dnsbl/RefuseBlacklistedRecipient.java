@@ -23,10 +23,10 @@ public class RefuseBlacklistedRecipient implements FilterType {
 
     @Override
     public Filter createInstance(MailTransaction mailTransaction) {
-        DnsblsChecker dnsblChecker = new DnsblsChecker(blacklists,
-                mailTransaction);
-        FilterImpl filterInstance = new FilterImpl(mailTransaction,
-                dnsblChecker);
+        DnsblsChecker dnsblChecker =
+                new DnsblsChecker(blacklists, mailTransaction);
+        FilterImpl filterInstance =
+                new FilterImpl(mailTransaction, dnsblChecker);
         return new DataRecipientFilterAdapter(filterInstance, mailTransaction);
     }
 
@@ -62,8 +62,9 @@ public class RefuseBlacklistedRecipient implements FilterType {
         }
 
         private EnhancedStatus calculateSmtpReply(DnsblResult dnsblResult) {
-            SmtpReplyTemplate reply = dnsblResult.dnsbl.smtpReplyTemplate
-                    .resolveDefaultsFrom(smtpReplyTemplate);
+            SmtpReplyTemplate reply =
+                    dnsblResult.dnsbl.smtpReplyTemplate
+                            .resolveDefaultsFrom(smtpReplyTemplate);
             reply = reply.format(mailTransaction.getRemoteInetAddress());
             return reply.toEnhancedStatus();
         }

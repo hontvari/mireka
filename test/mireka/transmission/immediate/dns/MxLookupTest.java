@@ -19,16 +19,16 @@ import org.xbill.DNS.MXRecord;
 import org.xbill.DNS.Name;
 
 public class MxLookupTest {
-    private final MXRecord HOST1_PRIORITY10 =
-            new MXRecord(EXAMPLE_COM_NAME, 0, 0, 10, HOST1_EXAMPLE_COM_NAME);
-    private final MXRecord HOST2_PRIORITY20 =
-            new MXRecord(EXAMPLE_COM_NAME, 0, 0, 20, HOST2_EXAMPLE_COM_NAME);
-    private final MXRecord HOST2_PRIORITY10 =
-            new MXRecord(EXAMPLE_COM_NAME, 0, 0, 10, HOST2_EXAMPLE_COM_NAME);
-    private final MXRecord HOST3_PRIORITY10 =
-            new MXRecord(EXAMPLE_COM_NAME, 0, 0, 10, HOST3_EXAMPLE_COM_NAME);
-    private final MXRecord HOST4_PRIORITY10 =
-            new MXRecord(EXAMPLE_COM_NAME, 0, 0, 10, HOST4_EXAMPLE_COM_NAME);
+    private final MXRecord HOST1_PRIORITY10 = new MXRecord(EXAMPLE_COM_NAME, 0,
+            0, 10, HOST1_EXAMPLE_COM_NAME);
+    private final MXRecord HOST2_PRIORITY20 = new MXRecord(EXAMPLE_COM_NAME, 0,
+            0, 20, HOST2_EXAMPLE_COM_NAME);
+    private final MXRecord HOST2_PRIORITY10 = new MXRecord(EXAMPLE_COM_NAME, 0,
+            0, 10, HOST2_EXAMPLE_COM_NAME);
+    private final MXRecord HOST3_PRIORITY10 = new MXRecord(EXAMPLE_COM_NAME, 0,
+            0, 10, HOST3_EXAMPLE_COM_NAME);
+    private final MXRecord HOST4_PRIORITY10 = new MXRecord(EXAMPLE_COM_NAME, 0,
+            0, 10, HOST4_EXAMPLE_COM_NAME);
     @NonStrict
     private Lookup lookup;
     private MxLookup mxLookup = new MxLookup(EXAMPLE_COM_DOMAIN);

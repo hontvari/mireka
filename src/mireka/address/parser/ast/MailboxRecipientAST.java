@@ -1,6 +1,5 @@
 package mireka.address.parser.ast;
 
-
 public class MailboxRecipientAST extends RecipientAST {
     public PathAST pathAST;
 

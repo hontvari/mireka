@@ -11,8 +11,7 @@ class Base32Int {
     private static final String BASE32_TABLE =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
 
-    public static int decode(String text)
-            throws NumberFormatException {
+    public static int decode(String text) throws NumberFormatException {
         String timestampUpperCase = text.toUpperCase(Locale.US);
         int value = 0;
         for (int i = 0; i < timestampUpperCase.length(); i++) {

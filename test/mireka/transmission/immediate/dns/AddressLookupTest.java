@@ -17,8 +17,8 @@ import org.xbill.DNS.Record;
 
 public class AddressLookupTest {
 
-    private AddressLookup addressLookup =
-            new AddressLookup(HOST1_EXAMPLE_COM_NAME);
+    private AddressLookup addressLookup = new AddressLookup(
+            HOST1_EXAMPLE_COM_NAME);
     @NonStrict
     private Lookup lookup;
 

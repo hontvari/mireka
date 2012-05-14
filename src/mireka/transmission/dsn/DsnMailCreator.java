@@ -45,7 +45,8 @@ import org.apache.james.mime4j.util.MimeUtil;
  */
 @ThreadSafe
 public class DsnMailCreator {
-    private final DateTimeRfc822Formatter dateTimeRfc822Formatter = new DateTimeRfc822Formatter();
+    private final DateTimeRfc822Formatter dateTimeRfc822Formatter =
+            new DateTimeRfc822Formatter();
     /**
      * The DNS/HELO name of the MTA which attempts the transfer (i.e. this MTA).
      * It appears in the report.
@@ -92,7 +93,8 @@ public class DsnMailCreator {
     }
 
     private class DsnMailCreatorInner {
-        private final Mime4jFieldFactory mime4jFieldFactory = new Mime4jFieldFactory();
+        private final Mime4jFieldFactory mime4jFieldFactory =
+                new Mime4jFieldFactory();
         private final Mail originalMail;
         private final List<RecipientProblemReport> recipientReports;
         private final Mail resultMail = new Mail();
@@ -114,8 +116,9 @@ public class DsnMailCreator {
             resultMail.scheduleDate = resultMail.arrivalDate;
             resultMail.from = new NullReversePath();
             Recipient recipient;
-            recipient = new MailAddressFactory()
-                    .reversePath2Recipient(originalMail.from);
+            recipient =
+                    new MailAddressFactory()
+                            .reversePath2Recipient(originalMail.from);
             resultMail.recipients.add(recipient);
         }
 
@@ -126,8 +129,8 @@ public class DsnMailCreator {
 
         private Message message() {
             Message message = new Message();
-            Mime4jHeaderBuilder headerBuilder = new Mime4jHeaderBuilder(
-                    mime4jFieldFactory);
+            Mime4jHeaderBuilder headerBuilder =
+                    new Mime4jHeaderBuilder(mime4jFieldFactory);
             headerBuilder.add("MIME-Version", "1.0");
             headerBuilder.add("Date", new Date());
             message.setHeader(headerBuilder.toHeader());
@@ -188,8 +191,8 @@ public class DsnMailCreator {
 
         private BodyPart deliveryStatusBodyPart() {
             BodyPart result = new BodyPart();
-            TextBody textBody = new BodyFactory()
-                    .textBody(deliveryStatusText());
+            TextBody textBody =
+                    new BodyFactory().textBody(deliveryStatusText());
             result.setBody(textBody, "message/delivery-status");
             return result;
         }
@@ -257,8 +260,8 @@ public class DsnMailCreator {
 
         private String diagnosticCodeForRemoteMtaStatus(
                 MailSystemStatus smtpStatus) {
-            MultilineParser parser = new MultilineParser(
-                    smtpStatus.getDiagnosticCode());
+            MultilineParser parser =
+                    new MultilineParser(smtpStatus.getDiagnosticCode());
             StringBuilder buffer = new StringBuilder();
             while (parser.hasNext()) {
                 String line = parser.next();
@@ -303,12 +306,14 @@ public class DsnMailCreator {
     }
 
     private static class Mime4jFieldFactory {
-        private final DefaultFieldParser mime4jFieldParser = new DefaultFieldParser();
+        private final DefaultFieldParser mime4jFieldParser =
+                new DefaultFieldParser();
 
         private Field create(String name, String value) {
             int usedCharacters = name.length() + 2;
-            String fieldValue = EncoderUtil.encodeIfNecessary(value,
-                    EncoderUtil.Usage.TEXT_TOKEN, usedCharacters);
+            String fieldValue =
+                    EncoderUtil.encodeIfNecessary(value,
+                            EncoderUtil.Usage.TEXT_TOKEN, usedCharacters);
             String rawStr = MimeUtil.fold(name + ": " + fieldValue, 0);
             ByteSequence raw = ContentUtil.encode(rawStr);
             return mime4jFieldParser.parse(name, fieldValue, raw);
@@ -343,8 +348,9 @@ public class DsnMailCreator {
 
         public void add(String name, String value) {
             int usedCharacters = name.length() + 2;
-            String encodedValue = EncoderUtil.encodeIfNecessary(value,
-                    EncoderUtil.Usage.TEXT_TOKEN, usedCharacters);
+            String encodedValue =
+                    EncoderUtil.encodeIfNecessary(value,
+                            EncoderUtil.Usage.TEXT_TOKEN, usedCharacters);
             String foldedField = MimeUtil.fold(name + ": " + encodedValue, 0);
             buffer.append(foldedField).append("\r\n");
         }

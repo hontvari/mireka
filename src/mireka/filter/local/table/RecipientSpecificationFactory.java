@@ -61,7 +61,8 @@ public class RecipientSpecificationFactory {
             return domainPostmaster;
 
         } else if (recipientAST instanceof MailboxRecipientAST) {
-            MailboxRecipientAST mailboxRecipientAST = (MailboxRecipientAST) recipientAST;
+            MailboxRecipientAST mailboxRecipientAST =
+                    (MailboxRecipientAST) recipientAST;
             LocalPartSpecification localPart =
                     new CaseInsensitiveLocalPartSpecification(
                             mailboxRecipientAST.pathAST.mailboxAST.localPartAST.spelling);

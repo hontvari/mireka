@@ -84,8 +84,8 @@ public class SrsDestination implements SessionDestination {
         public void recipient(RecipientContext recipientContext)
                 throws RejectExceptionExt {
             try {
-                Recipient originalSource = srs
-                        .reverse(recipientContext.recipient);
+                Recipient originalSource =
+                        srs.reverse(recipientContext.recipient);
                 sourceMailboxes.add(originalSource);
             } catch (InvalidSrsException e) {
                 logger.debug("SRS reverse expansion failed. " + e.getMessage());

@@ -17,7 +17,8 @@ public class MaildropRepository {
      */
     private String dir;
     @GuardedBy("this")
-    private Map<String, MaildropSlot> openMaildrops = new HashMap<String, MaildropSlot>();
+    private Map<String, MaildropSlot> openMaildrops =
+            new HashMap<String, MaildropSlot>();
 
     public synchronized Maildrop borrowMaildrop(String maildropName) {
         Maildrop maildrop = getOrCreateMaildrop(maildropName);

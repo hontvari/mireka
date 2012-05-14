@@ -12,7 +12,8 @@ import mireka.destination.Destination;
  * assigned to a recipient.
  */
 public class RecipientTable implements RecipientDestinationMapper {
-    private final List<RecipientDestinationMapper> mappers = new ArrayList<RecipientDestinationMapper>();
+    private final List<RecipientDestinationMapper> mappers =
+            new ArrayList<RecipientDestinationMapper>();
 
     @Override
     public Destination lookup(Recipient recipient) {

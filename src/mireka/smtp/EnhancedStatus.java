@@ -39,8 +39,8 @@ public class EnhancedStatus implements MailSystemStatus {
                     "Bad destination mailbox address syntax");
     public static final EnhancedStatus PERMANENT_INTERNAL_ERROR =
             new EnhancedStatus(554, "5.3.0", "Internal error");
-    public static final EnhancedStatus BAD_MESSAGE_BODY =
-            new EnhancedStatus(554, "5.6.0", "Message body is invalid");
+    public static final EnhancedStatus BAD_MESSAGE_BODY = new EnhancedStatus(
+            554, "5.6.0", "Message body is invalid");
     private final int smtpReplyCode;
     private final String enhancedStatusCode;
     private final String message;

@@ -20,7 +20,8 @@ import org.subethamail.smtp.RejectException;
  * postmaster address.
  */
 public class ProhibitRelaying extends StatelessFilterType {
-    private List<RemotePartSpecification> localDomainSpecifications = new ArrayList<RemotePartSpecification>();
+    private List<RemotePartSpecification> localDomainSpecifications =
+            new ArrayList<RemotePartSpecification>();
 
     @Override
     public FilterReply verifyRecipient(RecipientContext recipientContext)

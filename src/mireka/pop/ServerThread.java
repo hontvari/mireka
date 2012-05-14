@@ -23,7 +23,8 @@ class ServerThread extends Thread {
     private final Semaphore connectionPermits;
     private volatile boolean shuttingDown;
     @GuardedBy("this")
-    private final Set<SessionThread> sessionThreads = new HashSet<SessionThread>(200);
+    private final Set<SessionThread> sessionThreads =
+            new HashSet<SessionThread>(200);
 
     ServerThread(ServerSocket serverSocket, PopServer server) {
         super(ServerThread.class.getName() + " "

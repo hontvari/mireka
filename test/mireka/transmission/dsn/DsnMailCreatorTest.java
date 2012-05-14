@@ -83,8 +83,7 @@ public class DsnMailCreatorTest {
             throws FileNotFoundException, IOException {
         File file =
                 new File(System.getProperty("java.io.tmpdir"), getClass()
-                        .getSimpleName()
-                        + ".eml");
+                        .getSimpleName() + ".eml");
         FileOutputStream fout = new FileOutputStream(file);
         content.writeTo(fout);
         fout.close();

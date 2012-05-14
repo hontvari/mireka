@@ -8,8 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 class MailProcessingTask implements Runnable {
-    private final Logger logger =
-            LoggerFactory.getLogger(MailProcessingTask.class);
+    private final Logger logger = LoggerFactory
+            .getLogger(MailProcessingTask.class);
     private final ScheduleFileDirQueue parentQueue;
     private final MailName mailName;
     private final FileDirStore dir;

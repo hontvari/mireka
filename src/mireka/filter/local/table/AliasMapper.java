@@ -14,7 +14,8 @@ import mireka.destination.Destination;
  * alias. It maps a mail address to an {@link AliasDestination}.
  */
 public class AliasMapper implements RecipientDestinationMapper {
-    private final List<RecipientSpecification> aliases = new ArrayList<RecipientSpecification>();
+    private final List<RecipientSpecification> aliases =
+            new ArrayList<RecipientSpecification>();
     private AliasDestination destination;
 
     @Override
@@ -31,8 +32,8 @@ public class AliasMapper implements RecipientDestinationMapper {
      * GETSET
      */
     public void addAlias(String mailbox) {
-        RecipientSpecification recipientSpecification = new RecipientSpecificationFactory()
-                .create(mailbox);
+        RecipientSpecification recipientSpecification =
+                new RecipientSpecificationFactory().create(mailbox);
         aliases.add(recipientSpecification);
     }
 

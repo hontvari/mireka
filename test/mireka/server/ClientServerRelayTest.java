@@ -66,7 +66,8 @@ public class ClientServerRelayTest {
                 .addRecipientSpecification(new RecipientSpecificationFactory()
                         .create(ExampleAddress.JANE));
         recipientDestinationMapper.setDestination(relayDestination);
-        LookupDestinationFilter lookupDestinationFilter = new LookupDestinationFilter();
+        LookupDestinationFilter lookupDestinationFilter =
+                new LookupDestinationFilter();
         lookupDestinationFilter
                 .setRecipientDestinationMapper(recipientDestinationMapper);
         filters.addFilter(lookupDestinationFilter);

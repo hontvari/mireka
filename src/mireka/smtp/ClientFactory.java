@@ -24,8 +24,8 @@ public class ClientFactory {
 
     public SmartClient create(InetAddress inetAddress, int port)
             throws UnknownHostException, SMTPException, IOException {
-        SocketAddress bindpoint = bind == null ? null : new InetSocketAddress(
-                bind, 0);
+        SocketAddress bindpoint =
+                bind == null ? null : new InetSocketAddress(bind, 0);
 
         return new SmartClient(inetAddress.getHostAddress(), port, bindpoint,
                 helo);

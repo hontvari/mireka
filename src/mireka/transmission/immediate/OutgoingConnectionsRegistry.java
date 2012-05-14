@@ -72,6 +72,7 @@ public class OutgoingConnectionsRegistry {
     private boolean noLimit() {
         return maxConnectionsToHost == 0;
     }
+
     /**
      * @category GETSET
      */

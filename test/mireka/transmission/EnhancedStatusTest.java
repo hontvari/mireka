@@ -29,8 +29,8 @@ public class EnhancedStatusTest {
     public void testGetMessagePrefixedWithEnhancedStatusCodeOneLine() {
         EnhancedStatus status =
                 new EnhancedStatus(500, "5.0.0", "Example message");
-        assertEquals("5.0.0 Example message", status
-                .getMessagePrefixedWithEnhancedStatusCode());
+        assertEquals("5.0.0 Example message",
+                status.getMessagePrefixedWithEnhancedStatusCode());
     }
 
     @Test
@@ -38,7 +38,7 @@ public class EnhancedStatusTest {
         EnhancedStatus status =
                 new EnhancedStatus(500, "5.0.0",
                         "Example line 1\r\nExample line 2");
-        assertEquals("5.0.0 Example line 1\r\n5.0.0 Example line 2", status
-                .getMessagePrefixedWithEnhancedStatusCode());
+        assertEquals("5.0.0 Example line 1\r\n5.0.0 Example line 2",
+                status.getMessagePrefixedWithEnhancedStatusCode());
     }
 }

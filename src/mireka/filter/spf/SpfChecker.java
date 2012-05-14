@@ -41,8 +41,8 @@ public class SpfChecker {
         SPFResult result =
                 spf.checkSPF(mailTransaction.getRemoteInetAddress()
                         .getHostAddress(), fromNonNull, heloNonNull);
-        logger.debug("SPF check result: {} {}", result.getResult(), result
-                .getExplanation());
+        logger.debug("SPF check result: {} {}", result.getResult(),
+                result.getExplanation());
         return result;
     }
 }

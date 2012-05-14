@@ -1,10 +1,9 @@
 package mireka.address.parser.ast;
 
-
 public class DomainPostmasterRecipientAST extends RecipientAST {
     /**
-     * The mailbox where the localPart is Postmaster (case insensitive) and
-     * the remotePart is always a {@link DomainRemotePartAST}.
+     * The mailbox where the localPart is Postmaster (case insensitive) and the
+     * remotePart is always a {@link DomainRemotePartAST}.
      */
     public MailboxAST mailboxAST;
 

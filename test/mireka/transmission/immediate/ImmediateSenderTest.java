@@ -284,9 +284,8 @@ public class ImmediateSenderTest {
     }
 
     @Test(expected = PostponeException.class)
-    public void testSendBothPostponed()
-            throws SendException, RecipientsWereRejectedException,
-            PostponeException {
+    public void testSendBothPostponed() throws SendException,
+            RecipientsWereRejectedException, PostponeException {
         twoMxDnsExpectation();
         new Expectations() {
             {
@@ -298,7 +297,7 @@ public class ImmediateSenderTest {
             }
         };
 
-            sender.send(mail);
+        sender.send(mail);
     }
 
     @Test

@@ -3,7 +3,6 @@ package mireka.address.parser.base;
 import java.util.Collections;
 import java.util.List;
 
-
 public class CharToken extends Token {
     public int ch;
 

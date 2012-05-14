@@ -17,9 +17,11 @@ public class PathParserTest {
 
     @Test
     public void testSourceRoute1() throws Exception {
-        PathAST pathAST = new PathParser("<@example.org:john@example.com>").parse();
+        PathAST pathAST =
+                new PathParser("<@example.org:john@example.com>").parse();
         assertEquals(1, pathAST.sourceRouteAST.domainASTs.size());
-        assertEquals("example.org", pathAST.sourceRouteAST.domainASTs.get(0).spelling);
+        assertEquals("example.org",
+                pathAST.sourceRouteAST.domainASTs.get(0).spelling);
         assertEquals("john", pathAST.mailboxAST.localPartAST.spelling);
     }
 
@@ -29,7 +31,8 @@ public class PathParserTest {
                 new PathParser("<@example.org@example.net:john@example.com>")
                         .parse();
         assertEquals(2, pathAST.sourceRouteAST.domainASTs.size());
-        assertEquals("example.org", pathAST.sourceRouteAST.domainASTs.get(0).spelling);
+        assertEquals("example.org",
+                pathAST.sourceRouteAST.domainASTs.get(0).spelling);
         assertEquals("john", pathAST.mailboxAST.localPartAST.spelling);
     }
 }
