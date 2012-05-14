@@ -13,7 +13,6 @@ import java.util.Map;
  */
 public class GlobalUsersLoginSpecification implements LoginSpecification {
 
-    private GlobalUsers users;
     private final Map<Username, String> usernamePasswordMap =
             new HashMap<Username, String>();
     private final Map<Username, Principal> usernamePrincipalMap =
@@ -65,8 +64,6 @@ public class GlobalUsersLoginSpecification implements LoginSpecification {
     public void setUsers(GlobalUsers users) {
         if (!usernamePasswordMap.isEmpty())
             throw new IllegalStateException();
-
-        this.users = users;
 
         for (GlobalUser user : users) {
             usernamePasswordMap.put(user.getUsernameObject(),
