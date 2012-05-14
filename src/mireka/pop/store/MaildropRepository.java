@@ -15,10 +15,9 @@ public class MaildropRepository {
     /**
      * The directory where the individual maildrop directories are residing.
      */
-    private File dir;
+    private String dir;
     @GuardedBy("this")
-    private Map<String, MaildropSlot> openMaildrops =
-            new HashMap<String, MaildropSlot>();
+    private Map<String, MaildropSlot> openMaildrops = new HashMap<String, MaildropSlot>();
 
     public synchronized Maildrop borrowMaildrop(String maildropName) {
         Maildrop maildrop = getOrCreateMaildrop(maildropName);
@@ -53,15 +52,8 @@ public class MaildropRepository {
     /**
      * @category GETSET
      */
-    public void setDir(File dir) {
+    public void setDir(String dir) {
         this.dir = dir;
-    }
-
-    /**
-     * @category GETSET
-     */
-    public File getDir() {
-        return dir;
     }
 
     private static class MaildropSlot {

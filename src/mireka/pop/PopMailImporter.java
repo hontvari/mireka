@@ -44,7 +44,7 @@ public class PopMailImporter {
             try {
                 importMails(user);
             } catch (MessagingException e) {
-                logger.error("Importing mails for " + user.getUsername()
+                logger.error("Importing mails for " + user.getUsernameObject()
                         + " failed", e);
             }
         }
@@ -55,11 +55,11 @@ public class PopMailImporter {
     }
 
     private void importMails(GlobalUser user) throws MessagingException {
-        logger.debug("Importing mail for " + user.getUsername());
+        logger.debug("Importing mail for " + user.getUsernameObject());
         Properties properties = new Properties();
         Session session = Session.getInstance(properties);
         Store store =
-                session.getStore(new URLName("pop3://" + user.getUsername()
+                session.getStore(new URLName("pop3://" + user.getUsernameObject()
                         + ":" + user.getPassword() + "@" + remoteHost + ":"
                         + +remotePort + "/INBOX"));
         store.connect();
@@ -69,14 +69,14 @@ public class PopMailImporter {
         int cSuccessfulMails = 0;
         // user name currently equals with the maildrop name, but this is
         // not necessarily true in general.
-        String maildropName = user.getUsername().toString();
+        String maildropName = user.getUsernameObject().toString();
         for (Message message : messages) {
             try {
                 importMail(maildropName, message);
                 message.setFlag(Flags.Flag.DELETED, true);
                 cSuccessfulMails++;
             } catch (Exception e) {
-                logger.error("Importing a mail for " + user.getUsername()
+                logger.error("Importing a mail for " + user.getUsernameObject()
                         + " failed", e);
             }
         }
@@ -86,7 +86,7 @@ public class PopMailImporter {
         if (cSuccessfulMails > 0)
             totalUsersWithAtLeastOneMail++;
         logger.debug(cSuccessfulMails + " mails were imported for "
-                + user.getUsername());
+                + user.getUsernameObject());
     }
 
     private void importMail(String maildropName, Message message)

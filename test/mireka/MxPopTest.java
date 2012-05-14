@@ -1,6 +1,6 @@
 package mireka;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -23,7 +23,6 @@ import mireka.login.GlobalUsers;
 import mireka.login.GlobalUsersLoginSpecification;
 import mireka.login.GlobalUsersMaildropDestinationMapper;
 import mireka.login.GlobalUsersPrincipalMaildropTable;
-import mireka.login.Username;
 import mireka.pop.PopServer;
 import mireka.pop.store.MaildropRepository;
 import mireka.smtp.server.MessageHandlerFactoryImpl;
@@ -55,8 +54,8 @@ public class MxPopTest extends TempDirectory {
 
     private void sendMail() throws UnknownHostException, IOException,
             SMTPException {
-        SmartClient client =
-                new SmartClient("localhost", PORT_SMTP, "SmartClient");
+        SmartClient client = new SmartClient("localhost", PORT_SMTP,
+                "SmartClient");
         client.from("jane@example.com");
         client.to("john@example.com");
         client.dataStart();
@@ -70,9 +69,8 @@ public class MxPopTest extends TempDirectory {
             MessagingException, IOException {
         Properties properties = new Properties();
         Session session = Session.getInstance(properties);
-        Store store =
-                session.getStore(new URLName("pop3://john:secret@localhost:"
-                        + PORT_POP + "/INBOX"));
+        Store store = session.getStore(new URLName(
+                "pop3://john:secret@localhost:" + PORT_POP + "/INBOX"));
         store.connect();
         Folder folder = store.getFolder("INBOX");
         folder.open(Folder.READ_WRITE);
@@ -100,22 +98,20 @@ public class MxPopTest extends TempDirectory {
     private void initCommonConfiguration() {
         users = new GlobalUsers();
         GlobalUser user = new GlobalUser();
-        user.setUsername(new Username("john"));
+        user.setUsername("john");
         user.setPassword("secret");
         users.addUser(user);
 
         maildropRepository = new MaildropRepository();
-        maildropRepository.setDir(directory);
+        maildropRepository.setDir(directory.getPath());
     }
 
     private SMTPServer createSmtpServer() {
-        GlobalUsersMaildropDestinationMapper recipientDestinationMapper =
-                new GlobalUsersMaildropDestinationMapper();
+        GlobalUsersMaildropDestinationMapper recipientDestinationMapper = new GlobalUsersMaildropDestinationMapper();
         recipientDestinationMapper.setUsers(users);
         recipientDestinationMapper.setMaildropRepository(maildropRepository);
 
-        LookupDestinationFilter lookupDestinationFilter =
-                new LookupDestinationFilter();
+        LookupDestinationFilter lookupDestinationFilter = new LookupDestinationFilter();
         lookupDestinationFilter
                 .setRecipientDestinationMapper(recipientDestinationMapper);
 
@@ -123,8 +119,7 @@ public class MxPopTest extends TempDirectory {
         filters.addFilter(lookupDestinationFilter);
         filters.addFilter(new DestinationProcessorFilter());
 
-        MessageHandlerFactoryImpl handlerFactory =
-                new MessageHandlerFactoryImpl();
+        MessageHandlerFactoryImpl handlerFactory = new MessageHandlerFactoryImpl();
         handlerFactory.setFilters(filters);
 
         SMTPServer smtpServer = new SMTPServer(handlerFactory);
@@ -133,12 +128,10 @@ public class MxPopTest extends TempDirectory {
     }
 
     private PopServer createPopServer() {
-        GlobalUsersLoginSpecification loginSpecification =
-                new GlobalUsersLoginSpecification();
+        GlobalUsersLoginSpecification loginSpecification = new GlobalUsersLoginSpecification();
         loginSpecification.setUsers(users);
 
-        GlobalUsersPrincipalMaildropTable principalMaildropTable =
-                new GlobalUsersPrincipalMaildropTable();
+        GlobalUsersPrincipalMaildropTable principalMaildropTable = new GlobalUsersPrincipalMaildropTable();
 
         PopServer popServer = new PopServer();
         popServer.setMaildropRepository(maildropRepository);

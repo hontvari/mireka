@@ -4,20 +4,16 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
+import mireka.filter.MailTransaction;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import mireka.filter.MailTransaction;
-
 public class ConnectedFromAuthorizedIpAddress implements
         MailTransactionSpecification {
-    private final Logger logger =
-            LoggerFactory.getLogger(ConnectedFromAuthorizedIpAddress.class);
+    private final Logger logger = LoggerFactory
+            .getLogger(ConnectedFromAuthorizedIpAddress.class);
     private final List<IpAddress> ipAddresses = new ArrayList<IpAddress>();
-
-    public void addAddress(IpAddress ipAddress) {
-        ipAddresses.add(ipAddress);
-    }
 
     @Override
     public boolean isSatisfiedBy(MailTransaction mailTransaction) {
@@ -30,6 +26,15 @@ public class ConnectedFromAuthorizedIpAddress implements
             }
         }
         return false;
+    }
+
+    public void addAddress(IpAddress ipAddress) {
+        ipAddresses.add(ipAddress);
+    }
+
+    public void setAddresses(List<IpAddress> addresses) {
+        this.ipAddresses.clear();
+        this.ipAddresses.addAll(addresses);
     }
 
 }

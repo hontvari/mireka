@@ -6,8 +6,6 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
 
-import javax.enterprise.context.ApplicationScoped;
-
 import org.subethamail.smtp.client.SMTPException;
 import org.subethamail.smtp.client.SmartClient;
 
@@ -15,7 +13,6 @@ import org.subethamail.smtp.client.SmartClient;
  * ClientFactory creates {@link SmartClient} instances based on the configured
  * parameters.
  */
-@ApplicationScoped
 public class ClientFactory {
     private String helo;
     private String bind;
@@ -27,8 +24,8 @@ public class ClientFactory {
 
     public SmartClient create(InetAddress inetAddress, int port)
             throws UnknownHostException, SMTPException, IOException {
-        SocketAddress bindpoint =
-                bind == null ? null : new InetSocketAddress(bind, 0);
+        SocketAddress bindpoint = bind == null ? null : new InetSocketAddress(
+                bind, 0);
 
         return new SmartClient(inetAddress.getHostAddress(), port, bindpoint,
                 helo);

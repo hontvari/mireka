@@ -13,8 +13,7 @@ import mireka.destination.Destination;
  */
 public class RecipientSpecificationDestinationPair implements
         RecipientDestinationMapper {
-    private final List<RecipientSpecification> recipientSpecifications =
-            new ArrayList<RecipientSpecification>();
+    private final List<RecipientSpecification> recipientSpecifications = new ArrayList<RecipientSpecification>();
     private Destination destination;
 
     @Override
@@ -32,6 +31,26 @@ public class RecipientSpecificationDestinationPair implements
     public void addRecipientSpecification(
             RecipientSpecification recipientSpecification) {
         this.recipientSpecifications.add(recipientSpecification);
+    }
+
+    /**
+     * @category GETSET
+     */
+    public void setRecipientSpecification(
+            RecipientSpecification recipientSpecification) {
+        this.recipientSpecifications.clear();
+        this.recipientSpecifications.add(recipientSpecification);
+    }
+
+    /**
+     * @category GETSET
+     */
+    public void setRecipientSpecifications(
+            List<RecipientSpecification> recipientSpecifications) {
+        this.recipientSpecifications.clear();
+        for (RecipientSpecification recipientSpecification : recipientSpecifications) {
+            addRecipientSpecification(recipientSpecification);
+        }
     }
 
     /**

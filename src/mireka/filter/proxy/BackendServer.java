@@ -4,14 +4,11 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import javax.enterprise.context.ApplicationScoped;
-
 import mireka.smtp.ClientFactory;
 
 import org.subethamail.smtp.client.SMTPException;
 import org.subethamail.smtp.client.SmartClient;
 
-@ApplicationScoped
 public class BackendServer {
     private ClientFactory clientFactory;
     private String host;

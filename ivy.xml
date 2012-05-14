@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+
+	<info organisation="org.mireka" module="server" />
+
+	<configurations>
+		<conf name="compile" transitive="false" />
+		<conf name="runtime" />
+		<conf name="sources" />
+		<conf name="build" />
+	</configurations>
+
+	<dependencies>
+
+		<!-- concurrency annotations -->
+		<dependency org="com.google.code.findbugs" name="jsr305"
+			rev="2.0.0" conf="compile->master;runtime->default;sources">
+		</dependency>
+
+		<!-- logging API -->
+		<dependency org="org.slf4j" name="slf4j-api" rev="1.6.4"
+			conf="compile->master;runtime->default;sources" />
+
+		<!-- implements commons.logging api and redirects to slf4j -->
+		<dependency org="org.slf4j" name="jcl-over-slf4j" rev="1.6.4"
+			conf="runtime->default" />
+
+		<dependency org="ch.qos.logback" name="logback-classic"
+			rev="1.0.1" conf="runtime->default" />
+
+		<dependency org="ch.qos.logback" name="logback-core" rev="1.0.1"
+			conf="runtime->default" />
+
+		<!-- Logback uses it if the log configuration contains filters with complex 
+			Java like expressions -->
+		<dependency org="org.codehaus.janino" name="janino" rev="2.5.16"
+			conf="runtime->default" />
+
+		<!-- ======================================================= -->
+		<!-- retrieve some transitive dependency sources -->
+
+		<exclude org="org.slf4j" module="slf4j-log4j12" />
+		<exclude org="commons-logging" module="commons-logging" />
+	</dependencies>
+</ivy-module>

@@ -14,10 +14,6 @@ import mireka.filter.local.table.RecipientDestinationMapper;
 public class MailingLists implements RecipientDestinationMapper {
     private final List<MailingList> mailingLists = new ArrayList<MailingList>();
 
-    public void addMailingList(MailingList mailingList) {
-        mailingLists.add(mailingList);
-    }
-
     @Override
     public Destination lookup(Recipient recipient) {
         for (MailingList list : mailingLists) {
@@ -29,6 +25,15 @@ public class MailingLists implements RecipientDestinationMapper {
 
         }
         return null;
+    }
+
+    public void addMailingList(MailingList mailingList) {
+        mailingLists.add(mailingList);
+    }
+
+    public void setLists(List<MailingList> lists) {
+        this.mailingLists.clear();
+        this.mailingLists.addAll(lists);
     }
 
 }

@@ -21,19 +21,24 @@ public class RefuseBlacklistedRecipient implements FilterType {
             "Rejected: unauthenticated e-mail from {0} is restricted. "
                     + "Contact the postmaster for details.");
 
+    @Override
+    public Filter createInstance(MailTransaction mailTransaction) {
+        DnsblsChecker dnsblChecker = new DnsblsChecker(blacklists,
+                mailTransaction);
+        FilterImpl filterInstance = new FilterImpl(mailTransaction,
+                dnsblChecker);
+        return new DataRecipientFilterAdapter(filterInstance, mailTransaction);
+    }
+
     public void addBlacklist(Dnsbl dnsbl) {
         if (dnsbl == null)
             throw new NullPointerException();
         blacklists.add(dnsbl);
     }
 
-    @Override
-    public Filter createInstance(MailTransaction mailTransaction) {
-        DnsblsChecker dnsblChecker =
-                new DnsblsChecker(blacklists, mailTransaction);
-        FilterImpl filterInstance =
-                new FilterImpl(mailTransaction, dnsblChecker);
-        return new DataRecipientFilterAdapter(filterInstance, mailTransaction);
+    public void setBlacklists(List<Dnsbl> lists) {
+        this.blacklists.clear();
+        this.blacklists.addAll(lists);
     }
 
     private class FilterImpl extends AbstractDataRecipientFilter {
@@ -57,9 +62,8 @@ public class RefuseBlacklistedRecipient implements FilterType {
         }
 
         private EnhancedStatus calculateSmtpReply(DnsblResult dnsblResult) {
-            SmtpReplyTemplate reply =
-                    dnsblResult.dnsbl.smtpReplyTemplate
-                            .resolveDefaultsFrom(smtpReplyTemplate);
+            SmtpReplyTemplate reply = dnsblResult.dnsbl.smtpReplyTemplate
+                    .resolveDefaultsFrom(smtpReplyTemplate);
             reply = reply.format(mailTransaction.getRemoteInetAddress());
             return reply.toEnhancedStatus();
         }

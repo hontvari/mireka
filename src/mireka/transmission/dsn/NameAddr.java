@@ -12,6 +12,10 @@ public class NameAddr {
     private String displayName;
     private String addressSpec;
 
+    public NameAddr() {
+        // setters will be used to set attributes
+    }
+
     public NameAddr(String displayName, String addressSpec) {
         this.displayName = displayName;
         this.addressSpec = addressSpec;
@@ -25,5 +29,13 @@ public class NameAddr {
         String localPart = addressSpec.substring(0, iAt);
         String domain = addressSpec.substring(iAt + 1);
         return new Mailbox(displayName, localPart, domain);
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public void setAddressSpec(String addressSpec) {
+        this.addressSpec = addressSpec;
     }
 }

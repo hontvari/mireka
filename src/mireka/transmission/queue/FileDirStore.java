@@ -224,11 +224,10 @@ public class FileDirStore {
 
     private void writeEnvelopeIntoFile(Mail srcMail, File propertiesFile)
             throws IOException {
-        Properties props =
-                new MailEnvelopePersister().saveToProperties(srcMail);
-        Writer out =
-                new OutputStreamWriter(new FileOutputStream(propertiesFile),
-                        "UTF-8");
+        Properties props = new MailEnvelopePersister()
+                .saveToProperties(srcMail);
+        Writer out = new OutputStreamWriter(
+                new FileOutputStream(propertiesFile), "UTF-8");
         try {
             props.store(out, null);
         } finally {
@@ -249,8 +248,8 @@ public class FileDirStore {
             } finally {
                 propertiesStream.close();
             }
-            Mail mail =
-                    new MailEnvelopePersister().readFromProperties(properties);
+            Mail mail = new MailEnvelopePersister()
+                    .readFromProperties(properties);
 
             File mailDataFile = new File(dir, mailName.contentFileName());
             mail.mailData = new FileMailData(mailDataFile);
@@ -269,8 +268,8 @@ public class FileDirStore {
             errorDir.mkdir();
 
             if (envelopeFile.exists()) {
-                File envelopeTargetFile =
-                        new File(errorDir, mailName.envelopeFileName());
+                File envelopeTargetFile = new File(errorDir,
+                        mailName.envelopeFileName());
                 StreamCopier.copyFile(envelopeFile, envelopeTargetFile);
                 logger.info("Envelope file has been successfully copied into "
                         + "the error directory: " + envelopeFile);
@@ -281,8 +280,8 @@ public class FileDirStore {
             }
 
             if (mailDataFile.exists()) {
-                File mailDataTargetFile =
-                        new File(errorDir, mailName.contentFileName());
+                File mailDataTargetFile = new File(errorDir,
+                        mailName.contentFileName());
                 StreamCopier.copyFile(mailDataFile, mailDataTargetFile);
                 logger.info("Mail data file has been successfully moved into "
                         + "the error directory: " + envelopeFile);
@@ -335,15 +334,8 @@ public class FileDirStore {
     /**
      * @category GETSET
      */
-    public void setDir(File dir) {
-        this.dir = dir;
-    }
-
-    /**
-     * @category GETSET
-     */
-    public File getDir() {
-        return dir;
+    public void setDir(String dir) {
+        this.dir = new File(dir);
     }
 
     /**

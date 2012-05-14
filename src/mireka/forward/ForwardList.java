@@ -93,8 +93,8 @@ public class ForwardList {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-        this.recipientSpecification =
-                new RecipientSpecificationFactory().create(address);
+        this.recipientSpecification = new RecipientSpecificationFactory()
+                .create(address);
     }
 
     /**
@@ -102,6 +102,14 @@ public class ForwardList {
      */
     public void addMember(Member member) {
         members.add(member);
+    }
+
+    /**
+     * @category GETSET
+     */
+    public void setMembers(List<Member> members) {
+        this.members.clear();
+        this.members.addAll(members);
     }
 
     /**

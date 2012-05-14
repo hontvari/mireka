@@ -86,9 +86,8 @@ public class MailingList {
      * non-member posts to a members only list.
      * 
      */
-    private String membersOnlyMessage =
-            "Only members of the list are allowed to send a message "
-                    + "to this list address.";
+    private String membersOnlyMessage = "Only members of the list are allowed to send a message "
+            + "to this list address.";
     /**
      * The validator may decide that the mail must be accepted even if the
      * sender is not a member of the list.
@@ -157,8 +156,7 @@ public class MailingList {
             throws RejectExceptionExt {
         try {
             // Create a copy of this message to send out
-            MimeMessage outgoingMessage =
-                    new MimeMessage(mail.getMimeMessage());
+            MimeMessage outgoingMessage = new MimeMessage(mail.getMimeMessage());
             // We need to remove this header from the copy we're sending around
             outgoingMessage.removeHeader("Return-Path");
 
@@ -302,9 +300,8 @@ public class MailingList {
             return;
         }
 
-        mail.mailData =
-                new MimeMessageConverter()
-                        .createMailDataInSmtpSession(mimeMessage);
+        mail.mailData = new MimeMessageConverter()
+                .createMailDataInSmtpSession(mimeMessage);
         try {
             mail.arrivalDate = srcMail.arrivalDate;
             mail.scheduleDate = mail.arrivalDate; // try to preserve order
@@ -335,8 +332,8 @@ public class MailingList {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-        this.recipientSpecification =
-                new RecipientSpecificationFactory().create(address);
+        this.recipientSpecification = new RecipientSpecificationFactory()
+                .create(address);
     }
 
     /**
@@ -358,6 +355,14 @@ public class MailingList {
      */
     public void addMember(ListMember listMember) {
         listMembers.add(listMember);
+    }
+
+    /**
+     * @category GETSET
+     */
+    public void setMembers(List<ListMember> members) {
+        this.listMembers.clear();
+        this.listMembers.addAll(members);
     }
 
     /**
@@ -427,9 +432,8 @@ public class MailingList {
      * @category GETSET
      */
     public void setReversePath(String reversePath) {
-        this.reversePath =
-                new MailAddressFactory()
-                        .createReversePathAlreadyVerified(reversePath);
+        this.reversePath = new MailAddressFactory()
+                .createReversePathAlreadyVerified(reversePath);
     }
 
     /**

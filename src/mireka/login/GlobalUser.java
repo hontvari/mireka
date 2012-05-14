@@ -13,15 +13,15 @@ public class GlobalUser {
     /**
      * @category GETSET
      */
-    public Username getUsername() {
+    public Username getUsernameObject() {
         return username;
     }
 
     /**
      * @category GETSET
      */
-    public void setUsername(Username username) {
-        this.username = username;
+    public void setUsername(String username) {
+        this.username = new Username(username);
     }
 
     /**
@@ -42,8 +42,8 @@ public class GlobalUser {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result =
-                prime * result + ((username == null) ? 0 : username.hashCode());
+        result = prime * result
+                + ((username == null) ? 0 : username.hashCode());
         return result;
     }
 

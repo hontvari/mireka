@@ -66,9 +66,8 @@ public class ScheduleFileDirQueue {
     }
 
     private void scheduleMailName(MailName mailName) {
-        MailProcessingTask task =
-                new MailProcessingTask(this, store, mailProcessorFactory,
-                        mailName);
+        MailProcessingTask task = new MailProcessingTask(this, store,
+                mailProcessorFactory, mailName);
         executor.schedule(task,
                 mailName.scheduleDate - System.currentTimeMillis(),
                 TimeUnit.MILLISECONDS);
@@ -118,6 +117,13 @@ public class ScheduleFileDirQueue {
      */
     public void setExecutor(ScheduledThreadPoolExecutor executor) {
         this.executor = executor;
+    }
+
+    /**
+     * @category GETSET
+     */
+    public void setThreadCount(int count) {
+        this.executor = new ScheduledThreadPoolExecutor(count);
     }
 
     @Override

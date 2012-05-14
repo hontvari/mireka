@@ -14,10 +14,6 @@ import mireka.filter.local.table.RecipientDestinationMapper;
 public class ForwardLists implements RecipientDestinationMapper {
     private final List<ForwardList> lists = new ArrayList<ForwardList>();
 
-    public void addForwardList(ForwardList list) {
-        lists.add(list);
-    }
-
     @Override
     public Destination lookup(Recipient recipient) {
         for (ForwardList list : lists) {
@@ -29,6 +25,15 @@ public class ForwardLists implements RecipientDestinationMapper {
 
         }
         return null;
+    }
+
+    public void addForwardList(ForwardList list) {
+        lists.add(list);
+    }
+
+    public void setLists(List<ForwardList> lists) {
+        this.lists.clear();
+        this.lists.addAll(lists);
     }
 
 }

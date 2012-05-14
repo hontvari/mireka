@@ -13,21 +13,9 @@ import java.util.Map;
  */
 public class GlobalUsersLoginSpecification implements LoginSpecification {
 
-    private final Map<Username, String> usernamePasswordMap =
-            new HashMap<Username, String>();
-    private final Map<Username, Principal> usernamePrincipalMap =
-            new HashMap<Username, Principal>();
-
-    public void setUsers(GlobalUsers users) {
-        if (!usernamePasswordMap.isEmpty())
-            throw new IllegalStateException();
-
-        for (GlobalUser user : users) {
-            usernamePasswordMap.put(user.getUsername(), user.getPassword());
-            usernamePrincipalMap.put(user.getUsername(), new Principal(user
-                    .getUsername().toString()));
-        }
-    }
+    private GlobalUsers users;
+    private final Map<Username, String> usernamePasswordMap = new HashMap<Username, String>();
+    private final Map<Username, Principal> usernamePrincipalMap = new HashMap<Username, Principal>();
 
     @Override
     public LoginResult evaluatePlain(String usernameString, String password) {
@@ -62,13 +50,26 @@ public class GlobalUsersLoginSpecification implements LoginSpecification {
             throw new RuntimeException("Assertion failed");
         }
         byte[] calculatedDigestBytes = digest.digest(textBytes);
-        boolean isValid =
-                MessageDigest.isEqual(digestBytes, calculatedDigestBytes);
+        boolean isValid = MessageDigest.isEqual(digestBytes,
+                calculatedDigestBytes);
         if (isValid) {
             return new LoginResult(LoginDecision.VALID,
                     usernamePrincipalMap.get(username));
         } else {
             return new LoginResult(LoginDecision.INVALID, null);
+        }
+    }
+
+    public void setUsers(GlobalUsers users) {
+        if (!usernamePasswordMap.isEmpty())
+            throw new IllegalStateException();
+    
+        this.users = users;
+    
+        for (GlobalUser user : users) {
+            usernamePasswordMap.put(user.getUsernameObject(), user.getPassword());
+            usernamePrincipalMap.put(user.getUsernameObject(), new Principal(user
+                    .getUsernameObject().toString()));
         }
     }
 }

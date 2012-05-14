@@ -10,8 +10,6 @@ import java.security.KeyStore;
 import java.util.Arrays;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -32,10 +30,8 @@ import org.slf4j.LoggerFactory;
  *      Tomcat - The HTTP Connector - SSL Support</a>
  */
 public class PrivateTlsConfiguration implements TlsConfiguration {
-    private final Logger logger = LoggerFactory.getLogger(PrivateTlsConfiguration.class);
-    @Inject
-    @Named("mirekaHome")
-    private File homeDir;
+    private final Logger logger = LoggerFactory
+            .getLogger(PrivateTlsConfiguration.class);
     private boolean enabled = false;
     private String keystoreFile = "conf/keystore.jks";
     private String keystorePass = "changeit";
@@ -57,13 +53,13 @@ public class PrivateTlsConfiguration implements TlsConfiguration {
             String defaultAlgorithm = KeyManagerFactory.getDefaultAlgorithm();
             logger.debug("Default KeyManagerFactory algorithm name: "
                     + defaultAlgorithm);
-            KeyManagerFactory keyManagerFactory =
-                    KeyManagerFactory.getInstance(defaultAlgorithm);
+            KeyManagerFactory keyManagerFactory = KeyManagerFactory
+                    .getInstance(defaultAlgorithm);
             String defaultKeyStoreType = KeyStore.getDefaultType();
             logger.debug("Default key store type: " + defaultKeyStoreType);
             KeyStore keyStore = KeyStore.getInstance(defaultKeyStoreType);
             FileInputStream in = null;
-            File actualKeystoreFile = getActualKeystoreFile();
+            File actualKeystoreFile = new File(keystoreFile);
             try {
                 in = new FileInputStream(actualKeystoreFile);
                 keyStore.load(in, keystorePass.toCharArray());
@@ -88,24 +84,15 @@ public class PrivateTlsConfiguration implements TlsConfiguration {
 
     }
 
-    private File getActualKeystoreFile() {
-        File keystoreFileFile = new File(keystoreFile);
-        if (keystoreFileFile.isAbsolute())
-            return keystoreFileFile;
-        else
-            return new File(homeDir, keystoreFile);
-    }
-
     @Override
     public SSLSocket createSSLSocket(Socket socket) throws IOException {
         if (!enabled)
             throw new IllegalStateException();
 
-        InetSocketAddress remoteAddress =
-                (InetSocketAddress) socket.getRemoteSocketAddress();
-        SSLSocket sslSocket =
-                (SSLSocket) socketFactory.createSocket(socket,
-                        remoteAddress.getHostName(), socket.getPort(), true);
+        InetSocketAddress remoteAddress = (InetSocketAddress) socket
+                .getRemoteSocketAddress();
+        SSLSocket sslSocket = (SSLSocket) socketFactory.createSocket(socket,
+                remoteAddress.getHostName(), socket.getPort(), true);
         sslSocket.setUseClientMode(false);
         return sslSocket;
     }

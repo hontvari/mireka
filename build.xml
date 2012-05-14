@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="mireka" default="war" basedir=".">
+<project name="mireka" default="dist" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
         <property name="name" value="${ant.project.name}" />
 
         <property file="user.properties" />
@@ -10,54 +10,48 @@
         <property name="build.debug" value="on" />
         <property name="build.deprecation" value="on" />
 
-        <property name="ant.build.javac.target" value="1.6" />
-        <property name="ant.build.javac.source" value="1.6" />
+        <property name="ant.build.javac.target" value="1.7" />
+        <property name="ant.build.javac.source" value="1.7" />
         <property name="ant.build.javac.encoding" value="UTF-8" />
 
         <property name="build.dir" location="build" />
         <property name="build.classes.dir" location="${build.dir}/classes" />
-        <property name="build.war.file" location="${build.dir}/mireka.war" />
 
         <property name="docs.dir" value="${build.dir}/docs" />
 
-        <property name="resin.dir" location="/java/resin-4.0.6/" />
-        <property name="deploy.dir" location="${resin.dir}/webapps" />
-        <property name="expandedWar.dir" location="${deploy.dir}/mireka" />
-
         <property name="src.dir" location="src" />
-        <property name="web.dir" location="web" />
-        <property name="lib.dir" location="lib" />
-
-        <tstamp />
-        <tstamp>
-                <format property="YEAR" pattern="yyyy" />
-        </tstamp>
 
         <path id="compile.classpath">
-                <pathelement location="${lib.dir}/build-only/jmockit.jar" />
-                <fileset dir="${lib.dir}">
+                <fileset dir="lib/compile">
                         <include name="**/*.jar" />
-                        <exclude name="build-only/jmockit.jar" />
                 </fileset>
+                <!-- manually managed dependencies are only stored in the 
+                runtime directory, even if they are also a compile time 
+                dependency -->  
+                <fileset dir="lib/runtime">
+                        <include name="*.jar" />
+                </fileset>
+        </path>
 
-                <fileset dir="${resin.dir}/lib">
-                        <include name="**/*.jar" />
-                </fileset>
+        <path id="test.compile.classpath">
+                <path refid="compile.classpath"/>
+                <pathelement location="build/classes"/>
+                <fileset dir="lib/build" includes="**/*.jar" />
         </path>
 
         <path id="javadoc.classpath">
-                <fileset dir="${lib.dir}">
-                        <include name="**/*.jar" />
-                </fileset>
-
-                <fileset dir="${resin.dir}/lib">
-                        <include name="**/*.jar" />
-                </fileset>
+                <fileset dir="lib/compile" includes="**/*.jar" />
+                <fileset dir="lib/runtime" includes="*.jar" />
         </path>
 
         <taskdef classname="net.bluecow.googlecode.ant.GoogleCodeUploadTask"
-                 classpath="lib/build-only/ant-googlecode-0.0.2.jar"
+                 classpath="lib/build/ant-googlecode-0.0.2.jar"
                  name="gcupload" />
+
+        <taskdef resource="org/apache/ivy/ant/antlib.xml"
+                 uri="antlib:org.apache.ivy.ant"
+                 classpath="lib/build/ivy-2.2.0.jar">
+        </taskdef>
 
         <target name="init">
                 <!--		
@@ -67,6 +61,21 @@
                 <property name="version" value="${revisionVersion}" />
         </target>
 
+        <!-- ================================= 
+                  target: resolve              
+                 ================================= -->
+        <target name="resolve" description="--> retrieve dependencies with ivy">
+                <ivy:configure file="ivysettings.xml" />
+                <ivy:retrieve pattern="lib/[conf]/ivy/[artifact]-[revision](-[classifier]).[ext]" />
+                <ivy:report todir="build/ivy-report" graph="false" />
+        </target>
+
+        <!-- ================================= 
+                  target: dependency.clean              
+                 ================================= -->
+        <target name="dependency.clean" description="removes dependencies managed by ivy">
+                    <delete dir="lib" includes="*/ivy/*.jar" />
+        </target>
 
         <target name="compile" depends="init">
                 <mkdir dir="${build.classes.dir}" />
@@ -92,50 +101,32 @@
                 </copy>
         </target>
 
-
-        <target name="war" depends="compile, version">
-                <mkdir dir="build/META-INF" />
-                <manifest file="build/META-INF/MANIFEST.MF" mode="update">
+        <!-- - - - - - - - - - - - - - - - - - 
+          target: jar                      
+         - - - - - - - - - - - - - - - - - -->
+        <target name="jar" depends="compile, version">
+                <jar destfile="build/mireka.jar">
+                        <manifest>
                         <attribute name="Implementation-Title" value="Mireka" />
                         <attribute name="Implementation-Version"
                                    value="${build.version}" />
-                </manifest>
-                <war destfile="${build.war.file}"
-                     needxmlfile="false"
-                     duplicate="preserve">
-
-                        <webinf dir="webapp/WEB-INF">
-                                <include name="resin-web-pre.xml" />
-                                <include name="resin-web.xml" />
-                        </webinf>
-
-                        <classes dir="${build.classes.dir}" />
-
-                        <classes dir="${src.dir}" excludes="**/*.java" />
-
-                        <classes dir="build">
-                                <include name="META-INF/**" />
-                        </classes>
-
-                        <classes file="build/version/version.properties" />
-
-                        <lib dir="${lib.dir}">
-                                <exclude name="build-only/**" />
-                        </lib>
-
-                        <manifest>
-                                <attribute name="Implementation-Title"
-                                           value="Mireka" />
-                                <attribute name="Implementation-Version"
-                                           value="${build.version}" />
                         </manifest>
-                </war>
+                        
+                        <fileset dir="${build.classes.dir}" />
+                        
+                        <fileset dir="src" includes="mireka/namespace" />
+                        
+                    <fileset file="build/version/version.properties" />
+                        
+                        <metainf dir="src/META-INF" />
+                </jar>
         </target>
 
         <target name="deploy"
-                depends="war"
-                description="Deploys war on local app server">
-                <copy file="${build.war.file}" todir="${deploy.dir}" />
+                depends="jar"
+                description="Deploys jar on local server">
+                <property name="deploy.dir" location="temp/installed" />
+                <copy file="build/mireka.jar" todir="${deploy.dir}/lib" />
         </target>
 
         <target name="test.compile" depends="compile">
@@ -146,7 +137,6 @@
                        source="1.6"
                        target="1.6"
                        includeantruntime="false">
-                        <classpath path="${build.dir}/classes" />
                         <classpath refid="compile.classpath" />
                 </javac>
                 <copy toDir="${build.dir}/test">
@@ -177,10 +167,15 @@
                         <sysproperty key="jmockit-coverage-outputDir"
                                      file="build/coverage-report" />
                         <classpath>
+                                <pathelement location="lib/build/jmockit.jar" />
                                 <pathelement location="${build.dir}/test" />
                                 <pathelement location="${build.dir}/classes" />
                                 <pathelement location="${build.dir}/version" />
-                                <path refid="compile.classpath" />
+                                <fileset dir="lib/build">
+                                        <include name="**/*.jar" />
+                                        <exclude name="jmockit.jar" />
+                                </fileset>
+                                <fileset dir="lib/runtime" includes="**/*.jar" />
                         </classpath>
                         <test name="mireka.QuickTests"
                               todir="build/junit"
@@ -261,7 +256,7 @@
           target: dist              
          ================================= -->
         <target name="dist"
-                depends="clean, init-dist, war, doc"
+                depends="clean, init-dist, jar, doc"
                 description="Prepares distibution archives using clean build">
                 <copy todir="${build.dist.dir}">
                         <fileset dir="${setup.dir}">
@@ -269,13 +264,17 @@
                         </fileset>
 
                         <fileset dir="${build.dir}">
-                                <include name="*.war" />
                                 <include name="doc/**" />
                         </fileset>
 
                         <fileset dir=".">
                                 <include name="LICENSE.txt" />
                         </fileset>
+                </copy>
+
+                <copy todir="${build.dist.dir}/lib" flatten="true">
+                        <fileset dir="lib/runtime" includes="**/*.jar" />
+                        <fileset file="build/mireka.jar" />
                 </copy>
 
                 <dirname property="build.dist.dir.dirname"
@@ -323,7 +322,6 @@
                           summary="Mireka ${build.version}"
                           labels="Featured, Type-Archive, OpSys-All" />
         </target>
-
 
         <target name="clean" description="Cleans all previous build artifacts">
                 <delete dir="${build.dir}" />

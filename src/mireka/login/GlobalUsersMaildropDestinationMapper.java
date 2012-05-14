@@ -21,9 +21,9 @@ public class GlobalUsersMaildropDestinationMapper implements
     public Destination lookup(Recipient recipient) {
         LocalPart recipientLocalPart = recipient.localPart();
         for (GlobalUser user : users) {
-            if (user.getUsername().matches(recipientLocalPart)) {
+            if (user.getUsernameObject().matches(recipientLocalPart)) {
                 MaildropDestination destination = new MaildropDestination();
-                destination.setMaildropName(user.getUsername().toString());
+                destination.setMaildropName(user.getUsernameObject().toString());
                 destination.setMaildropRepository(maildropRepository);
                 return destination;
             }

@@ -10,10 +10,6 @@ import mireka.filter.MailTransaction;
 public class Filters {
     private final List<FilterType> filters = new ArrayList<FilterType>();
 
-    public void addFilter(FilterType filter) {
-        filters.add(filter);
-    }
-
     public FilterInstances createInstanceChain(MailTransaction mailTransaction) {
         FilterInstances instanceChain = new FilterInstances(mailTransaction);
         for (FilterType filterType : filters) {
@@ -22,5 +18,14 @@ public class Filters {
         }
         instanceChain.init();
         return instanceChain;
+    }
+
+    public void addFilter(FilterType filter) {
+        filters.add(filter);
+    }
+
+    public void setFilters(List<FilterType> filters) {
+        this.filters.clear();
+        this.filters.addAll(filters);
     }
 }

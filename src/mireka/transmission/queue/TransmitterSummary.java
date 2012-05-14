@@ -1,6 +1,12 @@
 package mireka.transmission.queue;
 
+import java.lang.management.ManagementFactory;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.annotation.PostConstruct;
+import javax.management.JMException;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 
 public class TransmitterSummary implements TransmitterSummaryMBean {
 
@@ -13,6 +19,28 @@ public class TransmitterSummary implements TransmitterSummaryMBean {
     public volatile String lastFailure;
     public final AtomicInteger errors = new AtomicInteger();
     public volatile String lastError;
+    private ObjectName objectName;
+
+    @PostConstruct
+    public void register() {
+        try {
+            ManagementFactory.getPlatformMBeanServer().registerMBean(this,
+                    objectName);
+        } catch (JMException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * @category GETSET
+     */
+    public void setObjectName(String objectName) {
+        try {
+            this.objectName = new ObjectName(objectName);
+        } catch (MalformedObjectNameException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public int getMailTransactions() {

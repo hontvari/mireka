@@ -1,14 +1,11 @@
 package mireka.filter.local;
 
-import javax.enterprise.context.Dependent;
-
 import mireka.filter.FilterReply;
 import mireka.filter.RecipientContext;
 import mireka.filter.StatelessFilterType;
 
 import org.subethamail.smtp.RejectException;
 
-@Dependent
 public class AcceptPostmaster extends StatelessFilterType {
 
     @Override

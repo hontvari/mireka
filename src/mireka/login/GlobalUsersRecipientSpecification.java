@@ -21,7 +21,7 @@ public class GlobalUsersRecipientSpecification implements
     public boolean isSatisfiedBy(Recipient recipient) {
         LocalPart recipientLocalPart = recipient.localPart();
         for (GlobalUser user : users) {
-            if (user.getUsername().matches(recipientLocalPart))
+            if (user.getUsernameObject().matches(recipientLocalPart))
                 return true;
         }
         return false;

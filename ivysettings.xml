@@ -1,0 +1,11 @@
+<ivysettings>
+	<settings defaultResolver="public"/>
+	
+	<resolvers>
+		<chain name="public">
+			<ibiblio name="jboss" root="http://repository.jboss.org/nexus/content/groups/public-jboss/" m2compatible="true" />
+			<ibiblio name="ibiblio" m2compatible="true" />
+		</chain>
+	</resolvers>
+	
+</ivysettings>

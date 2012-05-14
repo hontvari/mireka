@@ -20,8 +20,7 @@ import org.subethamail.smtp.RejectException;
  * postmaster address.
  */
 public class ProhibitRelaying extends StatelessFilterType {
-    private List<RemotePartSpecification> localDomainSpecifications =
-            new ArrayList<RemotePartSpecification>();
+    private List<RemotePartSpecification> localDomainSpecifications = new ArrayList<RemotePartSpecification>();
 
     @Override
     public FilterReply verifyRecipient(RecipientContext recipientContext)
@@ -52,5 +51,12 @@ public class ProhibitRelaying extends StatelessFilterType {
         if (remotePartSpecification == null)
             throw new NullPointerException();
         localDomainSpecifications.add(remotePartSpecification);
+    }
+
+    public void setLocalDomainSpecifications(
+            List<RemotePartSpecification> specifications) {
+        this.localDomainSpecifications.clear();
+        for (RemotePartSpecification specification : specifications)
+            addLocalDomainSpecification(specification);
     }
 }
