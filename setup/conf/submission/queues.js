@@ -23,7 +23,7 @@ submittedMailQueue = setup(ScheduleFileDirQueue, {
 	}),
 	mailProcessorFactory: primaryTransmitter,
 	threadCount: 10,
-}));
+});
 
 retryMailQueue = setup(ScheduleFileDirQueue, {
 	store: setup(FileDirStore, {
@@ -31,7 +31,7 @@ retryMailQueue = setup(ScheduleFileDirQueue, {
 	}),
 	mailProcessorFactory: retryTransmitter,
 	threadCount: 5,
-}));
+});
 
 dsnMailQueue = setup(ScheduleFileDirQueue, {
 	store: setup(FileDirStore, {
@@ -39,7 +39,7 @@ dsnMailQueue = setup(ScheduleFileDirQueue, {
 	}),
 	mailProcessorFactory: dsnTransmitter,
 	threadCount: 5,
-}));
+});
 
 logIdFactory = setup(LogIdFactory);
 
@@ -85,8 +85,8 @@ setup(primaryTransmitter, {
 	logIdFactory: logIdFactory,
 	summary: setup(TransmitterSummary, {
 		objectName: "mireka:type=TransmitterTraffic,name=submission",
-	})),
-}));
+	}),
+});
 
 setup(dsnTransmitter, {
 	queue: dsnMailQueue,
@@ -95,8 +95,8 @@ setup(dsnTransmitter, {
 	logIdFactory: logIdFactory,
 	summary: setup(TransmitterSummary, {
 		objectName: "mireka:type=TransmitterTraffic,name=dsn",
-	})),
-}));
+	}),
+});
 
 setup(retryTransmitter, {
 	queue: retryMailQueue,
@@ -105,6 +105,6 @@ setup(retryTransmitter, {
 	logIdFactory: logIdFactory,
 	summary: setup(TransmitterSummary, {
 		objectName: "mireka:type=TransmitterTraffic,name=retry",
-	})),
-}));
+	}),
+});
 

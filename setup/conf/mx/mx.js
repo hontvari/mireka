@@ -76,7 +76,7 @@ mxFilters = setup(Filters, {
 		setup(MeasureTraffic, {
 			trafficSummary: setup(TrafficSummary, {
 				objectName: "mireka:type=TrafficSummary,name=MX"
-			}))
+			})
 		}),
 		setup(LookupDestinationFilter, {
 				recipientDestinationMapper: recipientTable
@@ -120,5 +120,5 @@ mx = setup(SMTPServer(mxMessageHandler), {
 	/* bindAddress: "192.0.2.0", */
 	/* uncomment to enable STARTTLS if JSSE is correctly configured */
 	/* enableTLS: true, */
-}));
+});
 	

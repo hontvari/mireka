@@ -67,7 +67,7 @@ submissionFilters = setup(Filters, {
 		setup(MeasureTraffic, {
 			trafficSummary: setup(TrafficSummary, {
 				objectName: "mireka:type=TrafficSummary,name=Submission"
-			})),
+			}),
 		}),
 		setup(RejectIfUnauthenticated, {
 			authenticatedSpecifications: [
@@ -119,5 +119,5 @@ submission = setup(new SMTPServer(submissionMessageHandler), {
 	hostName: helo,
 	/* uncomment to enable STARTTLS if JSSE is correctly configured */
 	/* enableTLS: true, */
-}));
+});
 	

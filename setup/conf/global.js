@@ -83,7 +83,7 @@ function setup(bean, content) {
 			throw ex;
 		}
 	}
-	mireka.startup(object);
+	mireka.manage(object);
 	return object;
 }
 

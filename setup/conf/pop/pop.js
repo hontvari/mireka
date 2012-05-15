@@ -17,7 +17,7 @@ setup(PopMailImporter, {
 	maildropRepository: maildropRepository,
 	remoteHost: "localhost",
 	remotePort: 110,
-}));
+});
 */
 
 /*
@@ -48,4 +48,4 @@ setup(PopServer, {
 	/*
 	tlsConfiguration: setup(JsseDefaultTlsConfiguration),
 	*/
-}));
+});
