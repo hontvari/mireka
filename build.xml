@@ -116,9 +116,7 @@
                         
                         <fileset dir="src" includes="mireka/namespace" />
                         
-                    <fileset file="build/version/version.properties" />
-                        
-                        <metainf dir="src/META-INF" />
+                        <fileset file="build/version/version.properties" />
                 </jar>
         </target>
 
