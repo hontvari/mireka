@@ -90,21 +90,9 @@
         </target>
 
         <!-- - - - - - - - - - - - - - - - - - 
-          target: version                      
-         - - - - - - - - - - - - - - - - - -->
-        <target name="version">
-                <mkdir dir="build/version" />
-                <copy file="resource/version.properties" todir="build/version">
-                        <filterchain>
-                                <expandproperties />
-                        </filterchain>
-                </copy>
-        </target>
-
-        <!-- - - - - - - - - - - - - - - - - - 
           target: jar                      
          - - - - - - - - - - - - - - - - - -->
-        <target name="jar" depends="compile, version">
+        <target name="jar" depends="compile">
                 <jar destfile="build/mireka.jar">
                         <manifest>
                         <attribute name="Implementation-Title" value="Mireka" />
@@ -115,8 +103,6 @@
                         <fileset dir="${build.classes.dir}" />
                         
                         <fileset dir="src" includes="mireka/namespace" />
-                        
-                        <fileset file="build/version/version.properties" />
                 </jar>
         </target>
 
@@ -146,7 +132,7 @@
           target: test              
          ================================= -->
         <target name="test"
-                depends="test.compile, version"
+                depends="test.compile"
                 description="Execute JUnit tests according to all.test and test properties">
                 <condition property="quick.tests">
                         <not>
