@@ -6,18 +6,37 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Stack;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * ScriptApi provides functions which are called from the configuration scripts.
+ */
 public class ScriptApi {
     private static final Logger logger = LoggerFactory
             .getLogger(ScriptApi.class);
     public static ScriptEngine engine;
     public static final Stack<File> includeStack = new Stack<>();
 
+    /**
+     * Include another configuration file.
+     * 
+     * @return the result of the included file, in case of Javascript, this is
+     *         the result of the last statement.
+     * @param fileName
+     *            the path to the script file to be included. Relative paths are
+     *            resolved against the mireka.home directory.
+     * @throws IOException
+     *             thrown if the file cannot be opened
+     * @throws ScriptException
+     *             thrown if the script in the included file cannot be run
+     *             because of a syntactic or semantic error
+     */
     public static Object include(String fileName) throws IOException,
             ScriptException {
         File file = new File(fileName);
@@ -35,6 +54,17 @@ public class ScriptApi {
         }
     }
 
+    /**
+     * Registers objects created by the configuration script for lifecycle
+     * management, which includes calling methods marked with
+     * {@link PostConstruct} and {@link PreDestroy} annotations.
+     * 
+     * @param object
+     *            the object which may have a lifecycle annotation.
+     * @return the object argument
+     * 
+     * @see Lifecycle
+     */
     public static Object manage(Object object) {
         Lifecycle.addManagedObject(object);
         return object;

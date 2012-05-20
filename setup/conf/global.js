@@ -42,7 +42,7 @@ importPackage(Packages.mireka.transmission.immediate);
 	parameter, the file path. The path can be relative, in that case the 
 	parent directory is the Mireka home directory.
 */
-var include = mireka.include;
+var include = configuration.include;
 
 /*
 	Initializes an object by optionally creating a new instance, setting
@@ -83,7 +83,7 @@ function setup(bean, content) {
 			throw ex;
 		}
 	}
-	mireka.manage(object);
+	configuration.manage(object);
 	return object;
 }
 

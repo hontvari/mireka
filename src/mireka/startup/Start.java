@@ -2,27 +2,46 @@ package mireka.startup;
 
 import java.lang.reflect.InvocationTargetException;
 
+import javax.annotation.PostConstruct;
 import javax.script.ScriptEngineManager;
+
+import mireka.Version;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Start provides functions which configure and start up Mireka.
+ */
 public class Start {
     private static final Logger logger = LoggerFactory.getLogger(Start.class);
 
+    /**
+     * Runs the configuration scripts and calls the {@link PostConstruct}
+     * methods of the configured objects. It also registers a shutdown hook,
+     * which will be called by the JRE on system exit, and in turn the shutdown
+     * hook will call {@link Stop#shutdown()}.
+     * 
+     * @param args
+     *            unused
+     */
     public static void main(String[] args) {
+        logger.info("Starting Mireka " + Version.getVersion() + "...");
+
         configure();
 
         addShutdownHook();
 
         startManagedObjects();
+
+        logger.info("Startup completed.");
     }
 
     private static void configure() {
         try {
             ScriptEngineManager factory = new ScriptEngineManager();
             ScriptApi.engine = factory.getEngineByName("JavaScript");
-            ScriptApi.engine.put("mireka", new ScriptApi());
+            ScriptApi.engine.put("configuration", new ScriptApi());
             ScriptApi.include("conf/mireka.js");
         } catch (Exception e) {
             logger.error("Cannot read configuration. Include stack: "

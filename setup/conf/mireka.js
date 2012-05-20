@@ -1,14 +1,16 @@
 /*
 	The main configuration file, which is read and executed by Mireka 
 	during startup. All other configuration scripts are included directly
-	or indirectly by this script.
+	or indirectly by this script. In addition to the standard EcmaScript 
+	objects, the script can access the mireka.startup.ScriptApi object using the
+	"configuration" variable.  
 	
 	For more information on the individual configuration elements see the 
 	Javadoc documentation in the doc/javadoc directory. For an overview read
 	the documentation in the doc directory.  
 */
 
-mireka.include("conf/global.js");
+configuration.include("conf/global.js");
 include("conf/circular.js");
 
 /*
