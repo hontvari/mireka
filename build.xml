@@ -118,10 +118,8 @@
                 <javac srcdir="${test.dir}"
                        debug="on"
                        destdir="${build.dir}/test"
-                       source="1.6"
-                       target="1.6"
                        includeantruntime="false">
-                        <classpath refid="compile.classpath" />
+                        <classpath refid="test.compile.classpath" />
                 </javac>
                 <copy toDir="${build.dir}/test">
                         <fileset dir="${test.dir}" excludes="**/*.java" />
