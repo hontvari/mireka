@@ -64,7 +64,7 @@
         <!-- ================================= 
                   target: resolve              
                  ================================= -->
-        <target name="resolve" description="--> retrieve dependencies with ivy">
+        <target name="resolve" description="Retrieve dependencies with Ivy">
                 <ivy:configure file="ivysettings.xml" />
                 <ivy:retrieve pattern="lib/[conf]/ivy/[artifact]-[revision](-[classifier]).[ext]" />
                 <ivy:report todir="build/ivy-report" graph="false" />
@@ -73,7 +73,7 @@
         <!-- ================================= 
                   target: dependency.clean              
                  ================================= -->
-        <target name="dependency.clean" description="removes dependencies managed by ivy">
+        <target name="dependency.clean" description="Removes dependencies managed by Ivy">
                     <delete dir="lib" includes="*/ivy/*.jar" />
         </target>
 
@@ -266,6 +266,8 @@
                         destdir="${build.dist.dir}/bin"
                         includes="*.bat"
                         eol="dos" />
+
+                <fixcrlf file="${build.dist.dir}/doc/daemon.sh" eol="unix" />
 
                 <copy todir="${build.dist.dir}/lib" flatten="true">
                         <fileset dir="lib/runtime" includes="**/*.jar" />
