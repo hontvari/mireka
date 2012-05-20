@@ -191,7 +191,6 @@ public class MailToHostTransmitterTest {
             {
                 outgoingConnectionsRegistry.openConnection(IP1);
                 result = POSTPONE_EXCEPTION;
-                outgoingConnectionsRegistry.releaseConnection(IP1);
             }
         };
 
