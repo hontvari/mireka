@@ -54,11 +54,11 @@ do_start()
 	#   0 if daemon has been started
 	#   1 if daemon was already running
 	#   2 if daemon could not be started
-
+	
+	# uncomment --background and add --verbose to debug
 	start-stop-daemon --start --pidfile $PIDFILE \
 		--chuid $USER --chdir $APP_HOME \
 		--background \
-		--verbose \
 		--make-pidfile \
                 --startas "/usr/bin/authbind" \
                 -- $JAVA_HOME/bin/java -cp $CLASSPATH $JAVA_OPTS mireka.startup.Start
