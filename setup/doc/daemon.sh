@@ -1,6 +1,6 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:          jddclient
+# Provides:          mireka
 # Required-Start:    $local_fs $remote_fs $syslog $network
 # Required-Stop:     $local_fs $remote_fs $syslog $network
 # Default-Start:     2 3 4 5
@@ -18,12 +18,9 @@
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC="Mireka mail server and SMTP proxy"
 NAME=mireka
-DAEMON=/usr/bin/jsvc
 PIDFILE=/var/run/$NAME.pid
-SCRIPTNAME=/etc/init.d/$NAME
 DEFAULT=/etc/default/$NAME
-APPLICATION_HOME=/opt/$NAME
-LIB=$APPLICATION_HOME/lib
+APP_HOME=/opt/$NAME
 USER=$NAME
 JAVA_HOME=/opt/jre1.7.0_04
 
@@ -38,23 +35,15 @@ JAVA_HOME=/opt/jre1.7.0_04
 #. /usr/lib/java-wrappers/java-wrappers.sh
 #find_java_runtime java7
 
-# construct a classpath from lib jars
-LIBCLASSPATH=
-for i in `ls $LIB/*.jar`
-do
-  LIBCLASSPATH=${LIBCLASSPATH}:${i}
-done
-
-JSVC_CLASSPATH="/usr/share/java/commons-daemon.jar:classes:$LIBCLASSPATH:conf"
-JAVA_OPTS="-Dlogback.configurationFile=conf/logback.xml -Dmireka.home=$APPLICATION_HOME"
-BOOTSTRAP_CLASS=mireka.startup.Daemon
-DAEMON_OPTS=""
+CLASSPATH="classes:lib/*:conf"
+JAVA_OPTS="-Dlogback.configurationFile=conf/logback.xml"
+JAVA_OPTS="$JAVA_OPTS -Dmireka.home=$APP_HOME"
+JAVA_OPTS="$JAVA_OPTS -Djava.net.preferIPv4Stack=true"
 
 # overwrite settings from default file
 if [ -f "$DEFAULT" ]; then
 	. "$DEFAULT"
 fi
-
 
 #
 # Function that starts the daemon/service
@@ -65,17 +54,14 @@ do_start()
 	#   0 if daemon has been started
 	#   1 if daemon was already running
 	#   2 if daemon could not be started
-	start-stop-daemon --test --start --pidfile $PIDFILE \
-                --startas "$JAVA_HOME/bin/java" \
-		>/dev/null \
-		|| return 1
-	umask 027
-	cd "$APPLICATION_HOME"	
-	$DAEMON -home "$JAVA_HOME" -cp "$JSVC_CLASSPATH" -user $USER \
-	    -outfile SYSLOG -errfile SYSLOG \
-	    -pidfile "$PIDFILE" $JAVA_OPTS \
-	    "$BOOTSTRAP_CLASS" $DAEMON_OPTS \
-	    || return 2
+
+	start-stop-daemon --start --pidfile $PIDFILE \
+		--chuid $USER --chdir $APP_HOME \
+		--background \
+		--verbose \
+		--make-pidfile \
+                --startas "/usr/bin/authbind" \
+                -- $JAVA_HOME/bin/java -cp $CLASSPATH $JAVA_OPTS mireka.startup.Start
 }
 
 #
@@ -88,17 +74,7 @@ do_stop()
         #   1 if daemon was already stopped
         #   2 if daemon could not be stopped
         #   other if a failure occurred
-	if start-stop-daemon --test --start --pidfile "$PIDFILE" \
-		--startas "$JAVA_HOME/bin/java" >/dev/null \
-		; then
-			return 1
-	else 
-		$DAEMON -home "$JAVA_HOME" -cp "$JSVC_CLASSPATH" \
-			-pidfile "$PIDFILE" \
-			-stop "$BOOTSTRAP_CLASS" \
-			|| return 2
-		return 0
-	fi
+	start-stop-daemon --stop --pidfile $PIDFILE
 }
 
 case "$1" in
@@ -116,26 +92,26 @@ case "$1" in
 	log_daemon_msg "Stopping $DESC" "$NAME"
 	do_stop
 	case "$?" in
-		0) log_end_msg 0 ;;
-		1) log_end_msg 0 ;;
+		0) log_end_msg 0 ; rm $PIDFILE ;;
+		1) log_end_msg 0 ; rm $PIDFILE ;;
 		2) log_end_msg 1 ;;
 	esac
 	;;
   status)
         if start-stop-daemon --test --start --pidfile "$PIDFILE" \
-                --startas "$JAVA_HOME/bin/java" \
+                --startas "/usr/bin/authbind" \
 		>/dev/null \
 		; then
 
 		if [ -f "$PIDFILE" ]; then
-		    log_success_msg "$DESC $NAME is not running, but pid file exists."
+		    log_success_msg "$DESC is not running, but pid file exists."
 			exit 1
 		else
-		    log_success_msg "$DESC $NAME is not running."
+		    log_success_msg "$DESC is not running."
 			exit 3
 		fi
 	else
-		log_success_msg "$DESC $NAME is running with pid `cat $PIDFILE`"
+		log_success_msg "$DESC is running with pid `cat $PIDFILE`"
 	fi
         ;;
   restart|force-reload)
@@ -161,7 +137,7 @@ case "$1" in
 	esac
 	;;
   *)
-	echo "Usage: $SCRIPTNAME {start|stop|status|restart|force-reload}" >&2
+	echo "Usage: $0 {start|stop|status|restart|force-reload}" >&2
 	exit 3
 	;;
 esac
