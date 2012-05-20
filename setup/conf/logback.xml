@@ -25,10 +25,26 @@
 	</evaluator>
 	
 	<appender class="ch.qos.logback.core.rolling.RollingFileAppender"
-		name="Access">
+		name="ACCESS">
 		<file>${log.dir}/access.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<FileNamePattern>${log.dir}/access.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<!-- keep specified number of log files of history -->
+			<MaxHistory>90</MaxHistory>
+		</rollingPolicy>		
+		<encoder>
+			<pattern>%date %-29([%3.3(%X{smtpServerLocalSocketAddress}%X{localServerSocketAddress})] [%.21thread]) %-5level %logger{20} %m %ex{full, SUPRESS_TRACE_EVAL}%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender class="ch.qos.logback.core.rolling.RollingFileAppender"
+		name="ERROR">
+		<file>${log.dir}/error.log</file>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>info</level>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${log.dir}/error.%d{yyyy-MM-dd}.log</FileNamePattern>
 			<!-- keep specified number of log files of history -->
 			<MaxHistory>90</MaxHistory>
 		</rollingPolicy>		
@@ -60,7 +76,8 @@
 	<root>
 		<level value="warn" />
 		<appender-ref ref="STDERR" />
-		<appender-ref ref="Access" />
+		<appender-ref ref="ACCESS" />
+		<appender-ref ref="ERROR" />
 	</root>
 
 	<logger name="mireka">
