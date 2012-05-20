@@ -245,6 +245,7 @@
                 <copy todir="${build.dist.dir}">
                         <fileset dir="${setup.dir}">
                                 <exclude name="doc" />
+                        		<exclude name="bin" />
                         </fileset>
 
                         <fileset dir="${build.dir}">
@@ -255,6 +256,18 @@
                                 <include name="LICENSE.txt" />
                         </fileset>
                 </copy>
+
+                <fixcrlf
+                        srcdir="${setup.dir}/bin" 
+                        destdir="${build.dist.dir}/bin"
+                        includes="*.sh"
+                        eol="unix" />
+
+                <fixcrlf
+                        srcdir="${setup.dir}/bin" 
+                        destdir="${build.dist.dir}/bin"
+                        includes="*.bat"
+                        eol="dos" />
 
                 <copy todir="${build.dist.dir}/lib" flatten="true">
                         <fileset dir="lib/runtime" includes="**/*.jar" />
