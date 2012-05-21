@@ -256,18 +256,21 @@
                 </copy>
 
                 <fixcrlf
-                        srcdir="${setup.dir}/bin" 
+                        srcdir="${setup.dir}/bin"
                         destdir="${build.dist.dir}/bin"
                         includes="*.sh"
                         eol="unix" />
 
                 <fixcrlf
-                        srcdir="${setup.dir}/bin" 
+                        srcdir="${setup.dir}/bin"
                         destdir="${build.dist.dir}/bin"
                         includes="*.bat"
                         eol="dos" />
 
-                <fixcrlf file="${build.dist.dir}/doc/daemon.sh" eol="unix" />
+                <fixcrlf
+                        srcdir="${build.dist.dir}/doc/daemon"
+                        includes="*.sh"
+                        eol="unix" />
 
                 <copy todir="${build.dist.dir}/lib" flatten="true">
                         <fileset dir="lib/runtime" includes="**/*.jar" />

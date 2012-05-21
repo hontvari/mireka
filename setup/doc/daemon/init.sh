@@ -22,7 +22,6 @@ PIDFILE=/var/run/$NAME.pid
 DEFAULT=/etc/default/$NAME
 APP_HOME=/opt/$NAME
 USER=$NAME
-JAVA_HOME=/opt/jre1.7.0_04
 
 # Load the VERBOSE setting and other rcS variables
 . /lib/init/vars.sh
@@ -32,8 +31,12 @@ JAVA_HOME=/opt/jre1.7.0_04
 . /lib/lsb/init-functions
 
 # setup JAVA_HOME
-#. /usr/lib/java-wrappers/java-wrappers.sh
-#find_java_runtime java7
+. /usr/lib/java-wrappers/java-wrappers.sh
+# The java-wrappers in Ubuntu 10.04 goes into an endless loop if java7
+# is specified, which is unknown for it
+if [ -n "$__jvm_java7" ]; then
+        find_java_runtime java7
+fi
 
 CLASSPATH="classes:lib/*:conf"
 JAVA_OPTS="-Dlogback.configurationFile=conf/logback.xml"
