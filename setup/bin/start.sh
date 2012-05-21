@@ -11,8 +11,10 @@ SYSVARS="$SYSVARS -Djava.net.preferIPv4Stack=true"
 # Uncomment to wait for a debugger to connect before start
 #DEBUG_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,address=localhost:8000,suspend=y
 
-if [ -z "$JAVA_CMD" ]; then
-        JAVA_CMD=java
+if [ -n "$JAVA_HOME" ]; then
+	JAVA_CMD=$JAVA_HOME/bin/java
+else 
+	JAVA_CMD=java
 fi
 
 authbind $JAVA_CMD -classpath classes:lib/*:conf $SYSVARS $DEBUG_OPTIONS mireka.startup.Start
