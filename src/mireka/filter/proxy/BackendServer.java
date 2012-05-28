@@ -14,10 +14,21 @@ public class BackendServer {
     private String host;
     private int port = 25;
 
+    /**
+     * 
+     * @throws UnknownHostException
+     *             if the IP address of the backend server could not be
+     *             determined based on its domain name.
+     */
     public SmartClient connect() throws UnknownHostException, SMTPException,
             IOException {
         InetAddress inetAddress = InetAddress.getByName(host);
         return clientFactory.create(inetAddress, port);
+    }
+
+    @Override
+    public String toString() {
+        return "BackendServer [" + host + ":" + port + "]";
     }
 
     /**
