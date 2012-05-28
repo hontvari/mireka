@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <project name="mireka"
-         default="dist"
+         default="deb"
          basedir="."
          xmlns:ivy="antlib:org.apache.ivy.ant">
 	<property name="name" value="${ant.project.name}" />
@@ -55,6 +55,10 @@
 	         uri="antlib:org.apache.ivy.ant"
 	         classpath="lib/build/ivy-2.2.0.jar">
 	</taskdef>
+
+	<taskdef name="deb"
+	         classname="com.googlecode.ant_deb_task.Deb"
+	         classpath="lib/build/ant-deb-patched.jar" />
 
 	<target name="init">
 		<!--		
@@ -266,7 +270,7 @@
 		         includes="*.bat"
 		         eol="dos" />
 
-		<fixcrlf srcdir="${build.dist.dir}/doc/daemon"
+		<fixcrlf srcdir="${build.dist.dir}/doc/examples/daemon"
 		         includes="*.sh"
 		         eol="unix" />
 
@@ -294,6 +298,66 @@
 				<exclude name="startDos.bat" />
 			</zipfileset>
 		</zip>
+	</target>
+
+	<!-- ================================= 
+          target: deb              
+         ================================= -->
+	<target name="deb"
+	        depends="dist"
+	        description="Creates a Debian software package">
+		<local name="unpacked" />
+		<property name="unpacked" location="build/dist/ubuntu/unpacked" />
+		<mkdir dir="${unpacked}" />
+		<fixcrlf srcdir="package/ubuntu"
+		         destdir="${unpacked}"
+		         encoding="UTF-8"
+		         eol="unix" />
+		<mkdir dir="${unpacked}/etc/${name}" />
+		<fixcrlf srcdir="${build.dist.dir}/conf"
+		         destdir="${unpacked}/etc/${name}"
+		         encoding="UTF-8"
+		         eol="unix" />
+		<deb todir="build/dist/ubuntu"
+		     package="${name}"
+		     section="mail"
+		     architecture="all"
+		     depends="authbind, adduser, java-wrappers"
+		     recommends="default-jre-headless (>=7)"
+		     postinst="${unpacked}/control/postinst"
+		     prerm="${unpacked}/control/prerm"
+		     postrm="${unpacked}/control/postrm">
+
+			<version upstream="${build.version}" />
+			<maintainer name="Hontvari Jozsef Levente"
+			            email="hontvari@flyordie.com" />
+			<description synopsis="Mail server and SMTP proxy">
+				Mireka is a mail server with SMTP, Mail Submission and POP3 services. It is also an SMTP proxy.
+				Note: A Java SE 7 or later Java Runtime Environment must be installed manually before this package.
+			</description>
+			<!-- /etc/init.d/${name} -->
+			<tarfileset dir="${unpacked}"
+			            excludes="control/**,etc/${name}/**,etc/default/${name}"
+			            prefix="/" />
+			<!-- /etc/${name} -->
+			<!-- /etc/default/${name} -->
+			<conffiles dir="${unpacked}"
+			           includes="etc/${name}/**,etc/default/${name}"
+			           prefix="/" />
+			<!-- /usr/share/${name}/bin -->
+			<tarfileset dir="${build.dist.dir}/bin"
+			            includes="*.sh"
+			            prefix="usr/share/${name}/bin" />
+			<!-- /usr/share/doc/${name} -->
+			<tarfileset file="LICENSE.txt"
+			            fullpath="usr/share/doc/${name}/copyright" />
+			<tarfileset dir="${build.dist.dir}/doc"
+			            prefix="usr/share/doc/${name}" />
+			<!-- /usr/share/${name}/lib -->
+			<tarfileset dir="${build.dist.dir}/lib"
+			            includes="*.jar"
+			            prefix="usr/share/${name}/lib" />
+		</deb>
 	</target>
 
 	<!-- ================================= 

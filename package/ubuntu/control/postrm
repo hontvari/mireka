@@ -1,0 +1,23 @@
+#!/bin/sh -e
+
+case "$1" in
+    remove)
+        update-rc.d mireka remove >/dev/null || true
+        rmdir --ignore-fail-on-non-empty --parents /usr/share/mireka/classes || true
+    ;;    
+
+    purge)
+        rm -rf /var/lib/mireka /usr/share/mireka /var/log/mireka /etc/mireka  
+        rm -f /etc/authbind/byuid/$(id -u mireka) || true
+        deluser --system mireka || true
+    ;;
+
+    upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+        # Nothing to do here
+    ;;
+
+    *)
+        echo "$0 called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
