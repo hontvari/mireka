@@ -59,20 +59,6 @@ public class DsnMailCreator {
     private NameAddr fromAddress;
 
     /**
-     * Constructs a new instance which will create DSN messages using the
-     * specified common attributes.
-     * 
-     * @param reportingMtaName
-     *            The DNS/HELO name of this MTA. It appears in the report.
-     * @param fromAddress
-     *            The address used in the From header of the DSN mail.
-     */
-    public DsnMailCreator(String reportingMtaName, NameAddr fromAddress) {
-        this.reportingMtaName = reportingMtaName;
-        this.fromAddress = fromAddress;
-    }
-
-    /**
      * Constructs a new DSN message.
      * 
      * @param mail
@@ -84,10 +70,16 @@ public class DsnMailCreator {
         return new DsnMailCreatorInner(mail, recipientReports).create();
     }
 
+    /**
+     * Sets the DNS/HELO name of this MTA. It appears in the report.
+     */
     public void setReportingMtaName(String reportingMtaName) {
         this.reportingMtaName = reportingMtaName;
     }
 
+    /**
+     * Sets the address used in the From header of the DSN mail.
+     */
     public void setFromAddress(NameAddr fromAddress) {
         this.fromAddress = fromAddress;
     }

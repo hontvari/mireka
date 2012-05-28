@@ -124,31 +124,27 @@ localRecipientsTable = setup(LocalRecipientTable, {
 
 
 /*
-	uncomment to run the POP3 server
+	comment out to disable the POP3 server (port 110)
 */
-/*
 include("conf/pop/pop.js");
-*/
 
 /*
-	uncomment to run the RFC 4409 message submission service
+	comment out to disable the RFC 4409 message submission service (port 587)
 
-	This service - depending on its configuration - either directly 
-	transmits messages to the mail servers of the recipient on the 
-	internet, or relays messages to a backend server.
+	This service receives messages from the local users and - depending on 
+	its configuration - either directly transmits messages to the mail 
+	servers of the recipient on the internet, or relays messages to a 
+	backend server.
 */
-/*
 include("conf/submission/submission.js");
-*/
 
 /*
-	uncomment to run the MX SMTP server
+	comment out to disable the MX (receiving) SMTP server (port 25)
 	
-	This service - depending on its configuration - either relay  
-	a message to a backend server, or deliver it into a local POP3
-	maildrop. 
+	This service waits for messages from the public internet and - depending 
+	on its configuration - either relay a message to a backend server, or 
+	deliver it into a local POP3 maildrop. 
 */
-/*
 include("conf/mx/mx.js");
-*/	
+	
 

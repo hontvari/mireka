@@ -1,7 +1,8 @@
 package mireka.transmission.dsn;
 
-import static mireka.ExampleAddress.*;
-import static org.junit.Assert.*;
+import static mireka.ExampleAddress.IP2;
+import static mireka.ExampleAddress.IP3;
+import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -49,7 +50,10 @@ public class DsnMailCreatorTest {
         NameAddr from =
                 new NameAddr("Mail Delivery Subsystem",
                         "mailer-daemon@example.com");
-        return new DsnMailCreator(IP2.getHostName(), from);
+        DsnMailCreator dsnMailCreator = new DsnMailCreator();
+        dsnMailCreator.setReportingMtaName(IP2.getHostName());
+        dsnMailCreator.setFromAddress(from);
+        return dsnMailCreator;
     }
 
     static List<RecipientProblemReport> createRecipientFailure()
