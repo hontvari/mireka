@@ -1,8 +1,0 @@
-<web-app xmlns="http://caucho.com/ns/resin">
-
-	<class-loader>
-		<compiling-loader path="${mirekaHome}/classes"/>
-		<library-loader path="${mirekaHome}/lib"/>
-	</class-loader>				
-
-</web-app>
