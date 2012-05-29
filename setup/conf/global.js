@@ -29,6 +29,7 @@ importPackage(Packages.mireka.pop);
 importPackage(Packages.mireka.pop.store);
 importPackage(Packages.mireka.smtp);
 importPackage(Packages.mireka.smtp.server);
+importPackage(Packages.mireka.startup);
 importPackage(Packages.mireka.submission);
 importPackage(Packages.mireka.transmission);
 importPackage(Packages.mireka.transmission.dsn);

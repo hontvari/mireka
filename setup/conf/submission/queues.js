@@ -84,7 +84,7 @@ setup(primaryTransmitter, {
 	retryPolicy: retryPolicy,
 	logIdFactory: logIdFactory,
 	summary: setup(TransmitterSummary, {
-		objectName: "mireka:type=TransmitterTraffic,name=submission",
+		name: "submission",
 	}),
 });
 
@@ -94,7 +94,7 @@ setup(dsnTransmitter, {
 	retryPolicy: retryPolicy,
 	logIdFactory: logIdFactory,
 	summary: setup(TransmitterSummary, {
-		objectName: "mireka:type=TransmitterTraffic,name=dsn",
+		name: "dsn",
 	}),
 });
 
@@ -104,7 +104,7 @@ setup(retryTransmitter, {
 	retryPolicy: retryPolicy,
 	logIdFactory: logIdFactory,
 	summary: setup(TransmitterSummary, {
-		objectName: "mireka:type=TransmitterTraffic,name=retry",
+		name: "retry",
 	}),
 });
 

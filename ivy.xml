@@ -38,6 +38,23 @@
 		<dependency org="org.codehaus.janino" name="janino" rev="2.5.16"
 			conf="runtime->default" />
 
+		<!-- monitoring -->
+		<dependency org="com.yammer.metrics" name="metrics-core" rev="2.0.3"
+			conf="compile->master;runtime->default;sources" />
+			
+		<!-- sends monitored values to graphite -->
+		<dependency org="com.yammer.metrics" name="metrics-graphite" rev="2.0.3"
+			conf="compile->master;runtime->default;sources" />
+			
+		<!-- monitor log messages -->
+		<dependency org="com.yammer.metrics" name="metrics-logback" rev="2.0.3"
+			conf="runtime->default">
+			<exclude org="ch.qos.logback" module="logback-classic" />
+			<exclude org="ch.qos.logback" module="logback-core" />
+		</dependency>
+			
+
+
 		<!-- ======================================================= -->
 		<!-- retrieve some transitive dependency sources -->
 

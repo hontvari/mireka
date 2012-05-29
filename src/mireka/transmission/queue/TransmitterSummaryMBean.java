@@ -1,17 +1,17 @@
 package mireka.transmission.queue;
 
 public interface TransmitterSummaryMBean {
-    int getMailTransactions();
+    long getMailTransactions();
 
-    int getSuccessfulMailTransactions();
+    long getSuccessfulMailTransactions();
 
-    int getFailures();
+    long getFailures();
 
-    int getPartialFailures();
+    long getPartialFailures();
 
-    int getPermanentFailures();
+    long getPermanentFailures();
 
-    int getTransientFailures();
+    long getTransientFailures();
 
     double getFailuresPercentage();
 
@@ -21,7 +21,7 @@ public interface TransmitterSummaryMBean {
 
     String getLastFailure();
 
-    int getErrors();
+    long getErrors();
 
     String getLastError();
 }

@@ -73,11 +73,15 @@
 	</appender>
 	-->
 
+	<appender name="METRICS"
+		class="com.yammer.metrics.logback.InstrumentedAppender" />
+		
 	<root>
 		<level value="warn" />
 		<appender-ref ref="STDERR" />
 		<appender-ref ref="ACCESS" />
 		<appender-ref ref="ERROR" />
+		<appender-ref ref="METRICS" />
 	</root>
 
 	<logger name="mireka">

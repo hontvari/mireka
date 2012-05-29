@@ -146,5 +146,16 @@ include("conf/submission/submission.js");
 	deliver it into a local POP3 maildrop. 
 */
 include("conf/mx/mx.js");
+
+/*
+	uncomment to send monitoring data to a Graphite server for graphical 
+	viewing
+*/
+/*
+setup(GraphiteReporter, {
+	host: "graphite.example.com",
+	prefix: "mail.mireka"
+});
+*/
 	
 
