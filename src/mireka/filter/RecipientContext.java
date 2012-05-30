@@ -43,9 +43,11 @@ public class RecipientContext {
     public Destination getDestination() throws ConfigurationException {
         if (destination == null)
             throw new ConfigurationException(
-                    "Destination is not assigned to recipient " + recipient
-                            + " yet, this is likely caused by "
-                            + "wrong configuration");
+                    "Destination has not been assigned to recipient "
+                            + recipient
+                            + " (or to the final recipient if this "
+                            + "is an alias) yet by the filter chain, "
+                            + "this is likely caused by wrong configuration");
         return destination;
     }
 

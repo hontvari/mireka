@@ -20,8 +20,9 @@ import org.subethamail.smtp.RejectException;
 
 /**
  * The LookupDestination filter assigns a destination to recipients in the
- * {@link FilterBase#verifyRecipient(RecipientContext)} phase. It does nothing
- * if a destination is already assigned, except if it is an
+ * {@link FilterBase#verifyRecipient(RecipientContext)} phase. It resolves
+ * aliases, so the destination set is never {@link AliasDestination}. It does
+ * nothing if a destination is already assigned, except if it is an
  * {@link AliasDestination}, in which case it tries to resolve the alias.
  */
 public class LookupDestinationFilter implements FilterType {

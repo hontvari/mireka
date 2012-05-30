@@ -11,11 +11,20 @@
 aliases = [
 	
 	/*
+		Postmaster aliases
+		
+		Uncomment and enter a - preferably local - mailbox address which
+		will be the alias of both the server-wide "Postmaster" and the
+		domain 	specific "Postmaster@..." addresses for the domains
+		specified in the localDomains field.
+	/*
 	setup(PostmasterAliasMapper, {
 		localDomains: localDomains,
 		canonical: "john@example.com"
 	}),
+	*/
 	
+	/*
 	setup(AliasMapper, {
 			aliases: [
 				"john1@example.com",
