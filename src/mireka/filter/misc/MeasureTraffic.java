@@ -13,8 +13,13 @@ import mireka.smtp.RejectExceptionExt;
 
 import org.subethamail.smtp.TooMuchDataException;
 
+/**
+ * The MeasureTraffic filter collects statistics information about the incoming
+ * traffic of a Mireka SMTP server port in an {@link IncomingSmtpSummary}
+ * object.
+ */
 public class MeasureTraffic implements FilterType {
-    private TrafficSummary trafficSummary;
+    private IncomingSmtpSummary incomingSmtpSummary;
 
     @Override
     public Filter createInstance(MailTransaction mailTransaction) {
@@ -24,15 +29,8 @@ public class MeasureTraffic implements FilterType {
     /**
      * @category GETSET
      */
-    public TrafficSummary getTrafficSummary() {
-        return trafficSummary;
-    }
-
-    /**
-     * @category GETSET
-     */
-    public void setTrafficSummary(TrafficSummary summary) {
-        this.trafficSummary = summary;
+    public void setIncomingSmtpSummary(IncomingSmtpSummary summary) {
+        this.incomingSmtpSummary = summary;
     }
 
     private class FilterImpl extends AbstractFilter {
@@ -43,24 +41,24 @@ public class MeasureTraffic implements FilterType {
 
         @Override
         public void begin() {
-            trafficSummary.mailTransactions.incrementAndGet();
+            incomingSmtpSummary.mailTransactions.mark();
             chain.begin();
         }
 
         @Override
         public void data(MailData data) throws RejectExceptionExt,
                 TooMuchDataException, IOException {
-            trafficSummary.dataCommands.incrementAndGet();
+            incomingSmtpSummary.dataCommands.mark();
             chain.data(data);
-            trafficSummary.acceptedMessages.incrementAndGet();
-            trafficSummary.messageRecipients.addAndGet(mailTransaction
+            incomingSmtpSummary.acceptedMessages.mark();
+            incomingSmtpSummary.messageRecipients.mark(mailTransaction
                     .getAcceptedRecipientContexts().size());
         }
 
         @Override
         public FilterReply verifyRecipient(RecipientContext recipientContext)
                 throws RejectExceptionExt {
-            trafficSummary.rcptCommands.incrementAndGet();
+            incomingSmtpSummary.rcptCommands.mark();
             return chain.verifyRecipient(recipientContext);
         }
     }

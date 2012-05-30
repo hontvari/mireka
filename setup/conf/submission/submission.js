@@ -65,9 +65,9 @@ submissionFilters = setup(Filters, {
 	
 	filters: [
 		setup(MeasureTraffic, {
-			trafficSummary: setup(TrafficSummary, {
-				objectName: "mireka:type=TrafficSummary,name=Submission"
-			}),
+			incomingSmtpSummary: setup(IncomingSmtpSummary, {
+				name: "submission"
+			})
 		}),
 		setup(RejectIfUnauthenticated, {
 			authenticatedSpecifications: [

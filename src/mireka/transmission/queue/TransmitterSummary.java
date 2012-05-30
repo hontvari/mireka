@@ -7,9 +7,16 @@ import javax.annotation.PostConstruct;
 import javax.management.JMException;
 import javax.management.ObjectName;
 
+import mireka.transmission.queuing.QueuingTransmitter;
+
 import com.yammer.metrics.Metrics;
 import com.yammer.metrics.core.Meter;
+import com.yammer.metrics.core.MetricName;
 
+/**
+ * TransmitterSummary holds and publishes statistics data about the mail
+ * transactions of a {@link QueuingTransmitter}.
+ */
 public class TransmitterSummary implements TransmitterSummaryMBean {
     private String name;
     public Meter mailTransactions;
@@ -33,28 +40,33 @@ public class TransmitterSummary implements TransmitterSummaryMBean {
         } catch (JMException e) {
             throw new RuntimeException(e);
         }
+
         mailTransactions =
-                Metrics.newMeter(TransmitterSummary.class, "mailTransactions",
-                        name, "transactions", TimeUnit.MINUTES);
+                Metrics.newMeter(metricName("mailTransactions"),
+                        "transactions", TimeUnit.MINUTES);
         successfulMailTransactions =
-                Metrics.newMeter(TransmitterSummary.class,
-                        "successfulMailTransactions", name, "transactions",
-                        TimeUnit.MINUTES);
+                Metrics.newMeter(metricName("successfulMailTransactions"),
+                        "transactions", TimeUnit.MINUTES);
         failures =
-                Metrics.newMeter(TransmitterSummary.class, "failures", name,
-                        "transactions", TimeUnit.MINUTES);
+                Metrics.newMeter(metricName("failures"), "transactions",
+                        TimeUnit.MINUTES);
         permanentFailures =
-                Metrics.newMeter(TransmitterSummary.class, "permanentFailures",
-                        name, "transactions", TimeUnit.MINUTES);
-        transientFailures =
-                Metrics.newMeter(TransmitterSummary.class, "transientFailures",
-                        name, "transactions", TimeUnit.MINUTES);
-        partialFailures =
-                Metrics.newMeter(TransmitterSummary.class, "partialFailures",
-                        name, "transactions", TimeUnit.MINUTES);
-        errors =
-                Metrics.newMeter(TransmitterSummary.class, "errors", name,
+                Metrics.newMeter(metricName("permanentFailures"),
                         "transactions", TimeUnit.MINUTES);
+        transientFailures =
+                Metrics.newMeter(metricName("transientFailures"),
+                        "transactions", TimeUnit.MINUTES);
+        partialFailures =
+                Metrics.newMeter(metricName("partialFailures"), "transactions",
+                        TimeUnit.MINUTES);
+        errors =
+                Metrics.newMeter(metricName("errors"), "transactions",
+                        TimeUnit.MINUTES);
+    }
+
+    private MetricName metricName(String metricName) {
+        return new MetricName("mireka", "TransmitterTraffic", metricName,
+                this.name);
     }
 
     /**
@@ -62,36 +74,6 @@ public class TransmitterSummary implements TransmitterSummaryMBean {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public long getMailTransactions() {
-        return mailTransactions.count();
-    }
-
-    @Override
-    public long getSuccessfulMailTransactions() {
-        return successfulMailTransactions.count();
-    }
-
-    @Override
-    public long getFailures() {
-        return failures.count();
-    }
-
-    @Override
-    public long getPartialFailures() {
-        return partialFailures.count();
-    }
-
-    @Override
-    public long getPermanentFailures() {
-        return permanentFailures.count();
-    }
-
-    @Override
-    public long getTransientFailures() {
-        return transientFailures.count();
     }
 
     @Override
@@ -123,11 +105,6 @@ public class TransmitterSummary implements TransmitterSummaryMBean {
     @Override
     public String getLastFailure() {
         return lastFailure;
-    }
-
-    @Override
-    public long getErrors() {
-        return errors.count();
     }
 
     @Override

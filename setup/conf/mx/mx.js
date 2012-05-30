@@ -74,8 +74,8 @@ recipientTable = setup(RecipientTable, {
 mxFilters = setup(Filters, {
 	filters: [
 		setup(MeasureTraffic, {
-			trafficSummary: setup(TrafficSummary, {
-				objectName: "mireka:type=TrafficSummary,name=MX"
+			incomingSmtpSummary: setup(IncomingSmtpSummary, {
+				name: "mx"
 			})
 		}),
 		setup(LookupDestinationFilter, {

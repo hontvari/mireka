@@ -8,6 +8,13 @@ import javax.annotation.PreDestroy;
 
 import com.yammer.metrics.Metrics;
 
+/**
+ * GraphiteReporter sends metrics data maintained by the Metrics library to a
+ * Graphite server for graphical viewing.
+ * 
+ * @see <a href="http://metrics.codahale.com/">Metrics library</a>
+ * @see <a href="http://graphite.wikidot.com/">Graphite</a>
+ */
 public class GraphiteReporter {
     private String host;
     private int port = 2003;
