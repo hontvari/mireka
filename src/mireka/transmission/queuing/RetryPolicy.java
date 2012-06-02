@@ -128,10 +128,15 @@ public class RetryPolicy {
      * @category GETSET
      */
     public void setDelayReportPoints(List<Integer> delayReportPoints) {
-        this.delayReportPoints = delayReportPoints;
+        this.delayReportPoints.clear();
+        this.delayReportPoints.addAll(delayReportPoints);
     }
 
-    public void addDelayReportPoint(int index) {
+    /**
+     * @category GETSET
+     */
+    public void setDelayReportPoint(int index) {
+        this.delayReportPoints.clear();
         this.delayReportPoints.add(index);
     }
 

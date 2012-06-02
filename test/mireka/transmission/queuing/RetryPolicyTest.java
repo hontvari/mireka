@@ -1,8 +1,9 @@
 package mireka.transmission.queuing;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import mireka.ExampleAddress;
@@ -80,7 +81,7 @@ public class RetryPolicyTest {
 
     @Test
     public void testDelayDsn() throws LocalMailSystemException {
-        retryPolicy.addDelayReportPoint(1);
+        retryPolicy.setDelayReportPoint(1);
 
         new Expectations() {
             {
@@ -94,7 +95,7 @@ public class RetryPolicyTest {
 
     @Test
     public void testNoDelayDsn() throws LocalMailSystemException {
-        retryPolicy.addDelayReportPoint(2);
+        retryPolicy.setDelayReportPoint(2);
 
         new Expectations() {
             {
