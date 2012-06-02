@@ -10,6 +10,6 @@
 localDomains = setup(InlineDomainRegistry, {
 	remoteParts: [
 		// "example.com",
-		// "example.org"
+		// "[192.0.2.0]",
 	]
 });
