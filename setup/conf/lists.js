@@ -10,10 +10,10 @@
 	Javadoc documentation in the doc/javadoc directory. For an overview read
 	the documentation in the doc directory.  
 */
-lists = setup(MailingLists, { lists: [
-	
-	/*
-	setup(MailingList, {
+lists = [
+
+	/*	
+	setupList({
 		address: "games@example.com",
 		listId: "games.example.com",
 		subjectPrefix: "[GAMES]",
@@ -38,7 +38,7 @@ lists = setup(MailingLists, { lists: [
 				name: "Jane Doe",
 			})
 		]
-	})
+	}),
 	*/
 		
-]});	
+];	

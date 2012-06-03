@@ -104,3 +104,13 @@ function list() {
 	return result;
 }
 
+/*
+	Convenience function which creates a list and the corresponding 
+	recipient-to-destination mapping in a single step.
+*/
+function setupList(content) {
+	return setup(ListMapper, {
+		list: setup(ListDestination, content)
+	});
+}
+
