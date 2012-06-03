@@ -6,27 +6,29 @@
 	Javadoc documentation in the doc/javadoc directory. For an overview read
 	the documentation in the doc directory.  
 */
-forwards = setup(ForwardLists, { lists: [
-		
+forwards = [
+	
 	/*
-	setup(ForwardList, {
-		address: "games@example.com",
-		transmitter: primaryTransmitter,
-		srs: srs,
-		
-		members: [
-			setup(Member, {
-				address: "john@example.com",
-				name: "John Doe",
-			}),
-			setup(Member, {
-				address: "jane@example.com",
-				name: "Jane Doe",
-			})
-		]
-	})
+	setup(RecipientDestinationPair, {
+		recipient: "games@example.com",
+		destination: setup(ForwardDestination, {
+			transmitter: primaryTransmitter,
+			srs: srs,
+			
+			members: [
+				setup(Member, {
+					address: "john@example.com",
+					name: "John Doe",
+				}),
+				setup(Member, {
+					address: "jane@example.com",
+					name: "Jane Doe",
+				})
+			]
+		})
+	}),
 	*/
 		
-]});
+];
 	
 	

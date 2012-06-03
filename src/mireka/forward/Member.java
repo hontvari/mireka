@@ -17,6 +17,11 @@ public class Member {
      */
     private boolean disabled;
 
+    @Override
+    public String toString() {
+        return recipient.toString();
+    }
+
     /**
      * @category GETSET
      */
