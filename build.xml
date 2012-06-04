@@ -308,6 +308,7 @@
 	        description="Creates a Debian software package">
 		<local name="unpacked" />
 		<property name="unpacked" location="build/dist/ubuntu/unpacked" />
+
 		<mkdir dir="${unpacked}" />
 		<fixcrlf srcdir="package/ubuntu"
 		         destdir="${unpacked}"
@@ -318,6 +319,13 @@
 		         destdir="${unpacked}/etc/${name}"
 		         encoding="UTF-8"
 		         eol="unix" />
+		<mkdir dir="${unpacked}/usr/share/${name}/lib" />
+		<fixcrlf srcdir="${build.dist.dir}/lib"
+		         includes="*.js"
+		         destdir="${unpacked}/usr/share/${name}/lib"
+		         encoding="UTF-8"
+		         eol="unix" />
+
 		<deb todir="build/dist/ubuntu"
 		     package="${name}"
 		     section="mail"

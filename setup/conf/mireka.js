@@ -10,7 +10,7 @@
 	the documentation in the doc directory.  
 */
 
-configuration.include("conf/global.js");
+configuration.include("lib/configuration.js");
 include("conf/circular.js");
 
 /*
