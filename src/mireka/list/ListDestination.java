@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
@@ -504,6 +505,7 @@ public class ListDestination implements MailDestination {
     /**
      * @category GETSET
      */
+    @Inject
     public void setTransmitter(Transmitter transmitter) {
         this.transmitter = transmitter;
     }

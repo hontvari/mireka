@@ -12,9 +12,6 @@ forwards = [
 	setup(RecipientDestinationPair, {
 		recipient: "games@example.com",
 		destination: setup(ForwardDestination, {
-			transmitter: primaryTransmitter,
-			srs: srs,
-			
 			members: [
 				setup(Member, {
 					address: "john@example.com",

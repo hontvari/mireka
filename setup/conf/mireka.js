@@ -70,7 +70,7 @@ include("conf/global-users.js");
 	Sender Rewriting Scheme (SRS) configuration. SRS is used to 
 	make forwarding working even if receivers check SPF records.
 */
-srs = setup(Srs, {
+srs = setupDefault(Srs, {
 	/* 
 		Key for signing SRS encoded reverse paths. 
 		Uncomment and enter a random hexadecimal string here, 
@@ -114,10 +114,7 @@ localRecipientsTable = setup(LocalRecipientTable, {
 		*/
 		setup(RecipientSpecificationDestinationPair, {
 			recipientSpecification: setup(SrsRecipientSpecification),
-			destination: setup(SrsDestination, {
-				srs: srs,
-				transmitter: primaryTransmitter
-			})
+			destination: setup(SrsDestination)
 		})
 	)
 });

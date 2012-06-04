@@ -34,6 +34,7 @@
 	<classpathentry kind="lib" path="lib/runtime/ivy/slf4j-api-1.6.4.jar"/>
 	<classpathentry kind="lib" path="lib/runtime/ivy/metrics-graphite-2.0.3.jar" sourcepath="lib/sources/ivy/metrics-graphite-2.0.3-sources.jar"/>
 	<classpathentry kind="lib" path="lib/runtime/ivy/metrics-core-2.0.3.jar" sourcepath="lib/sources/ivy/metrics-core-2.0.3-sources.jar"/>
+	<classpathentry kind="lib" path="lib/runtime/ivy/javax.inject-1.jar" sourcepath="lib/sources/ivy/javax.inject-1-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

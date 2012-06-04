@@ -25,7 +25,6 @@ lists = [
 		nonMemberSenderValidator: setup(SubjectRegexpValidator, {
 			pattern: ".*TICKET-NO.*"
 		}),
-		transmitter: primaryTransmitter,
 		
 		members: [ 
 			setup(ListMember, {

@@ -37,6 +37,7 @@ public class Lifecycle {
         if (alreadyRegisteredStartup(object))
             throw new RuntimeException(
                     "Already registered for startup/shutdown: " + object);
+
         if (hasLifecycleAnnotation(object))
             managedObjects.add(new ManagedObject(object));
     }

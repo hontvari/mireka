@@ -1,5 +1,7 @@
 package mireka.transmission;
 
+import javax.inject.Inject;
+
 import mireka.destination.MailDestination;
 import mireka.smtp.RejectExceptionExt;
 
@@ -33,6 +35,7 @@ public class TransmitterDestination implements MailDestination {
     /**
      * @category GETSET
      */
+    @Inject
     public void setTransmitter(Transmitter transmitter) {
         this.transmitter = transmitter;
     }

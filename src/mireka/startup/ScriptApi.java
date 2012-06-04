@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Stack;
 
 import javax.annotation.PostConstruct;
@@ -68,6 +69,36 @@ public class ScriptApi {
     public static Object manage(Object object) {
         Lifecycle.addManagedObject(object);
         return object;
+    }
+
+    /**
+     * Registers the object as an object which can be injected later into an
+     * uninitialized property.
+     * 
+     * @param object
+     *            The object which can be injected
+     * @return the object argument
+     * @see DependencyInjection#addInjectable(Object)
+     */
+    public static Object addInjectableObject(Object object) {
+        DependencyInjection.addInjectable(object);
+        return object;
+    }
+
+    /**
+     * Initializes the properties that has not got a value explicitly and are
+     * annotated with @Inject annotation with default objects selected from the
+     * set of injectable objects.
+     * 
+     * @param object
+     *            The object that may have uninitialized properties
+     * @param initializedProperties
+     *            The list of properties which were explicitly initialized.
+     * @see DependencyInjection#injectDependencies(Object, List)
+     */
+    public static void injectMissingPropertyValues(Object object,
+            List<String> initializedProperties) {
+        DependencyInjection.injectDependencies(object, initializedProperties);
     }
 
 }

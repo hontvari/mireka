@@ -37,9 +37,7 @@ submissionRecipientTable = setup(RecipientTable, {
 				comment out if all mails will be 
 				relayed through the backend server
 			*/
-			destination: setup(TransmitterDestination, {
-				transmitter: primaryTransmitter
-			}),
+			destination: setup(TransmitterDestination),
 					
 			/* 
 				uncomment to relay all mail to 

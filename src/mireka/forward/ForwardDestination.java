@@ -3,6 +3,8 @@ package mireka.forward;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import mireka.destination.MailDestination;
 import mireka.smtp.RejectExceptionExt;
 import mireka.transmission.LocalMailSystemException;
@@ -80,6 +82,7 @@ public class ForwardDestination implements MailDestination {
     /**
      * @category GETSET
      */
+    @Inject
     public void setTransmitter(Transmitter transmitter) {
         this.transmitter = transmitter;
     }
@@ -87,6 +90,7 @@ public class ForwardDestination implements MailDestination {
     /**
      * @category GETSET
      */
+    @Inject
     public void setSrs(Srs srs) {
         this.srs = srs;
     }

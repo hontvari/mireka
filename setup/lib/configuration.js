@@ -46,22 +46,32 @@ importPackage(Packages.mireka.transmission.immediate);
 var include = configuration.include;
 
 /*
-	Initializes an object by optionally creating a new instance, setting
-	its properties, and registering it for automatic startup/shutdown.
-	If the bean parameter is a class name, then it will create a new 
-	instance of this class. If the bean parameter is an object instance, 
-	then it will set the properties of that JavaBean.
-	The optional content parameter is a Javascript object, intended to be 
-	specified using the object literal syntax, of which attributes will be 
-	copied into the specified by the bean argument.
-
-	After the configuration script is completely executed, an optional start 
-	function of these objects will be called in the order of their 
-	registration. On shutdown an optional stop function of these objects are 
-	called in reversed order. Start and stop methods must be annotated using 
-	the @PostConstruct and @PreDestroy annotations.
-
-*/
+ * Initializes an object by optionally creating a new instance, setting its
+ * properties, injecting dependencies and registering it for automatic
+ * startup/shutdown. If the bean parameter is a class name, then it will create
+ * a new instance of this class. If the bean parameter is an object instance,
+ * then it will set the properties of that JavaBean.
+ * 
+ * The optional content parameter is a Javascript object, intended to be
+ * specified using the object literal syntax, of which attributes will be copied
+ * into the specified by the bean argument.
+ * 
+ * Dependencies are injected into properties which were not explicitly specified
+ * by the content parameter. Only those properties are considered whose
+ * setter method is marked with the @Inject annotation. The objects available
+ * for injection are the ones on which the setAsDefault method were called. The
+ * injected object is selected by examining which is assignable to the setter
+ * type. If the dependency cannot be fulfilled because neither of them is
+ * assignable, or if the result is ambiguous, because more than one object is
+ * suitable, then an exception will occur.
+ * 
+ * After the configuration script is completely executed, an optional start
+ * function of these objects will be called in the order of their registration.
+ * On shutdown an optional stop function of these objects are called in reversed
+ * order. Start and stop methods must be annotated using the @PostConstruct and
+ * @PreDestroy annotations.
+ * 
+ */
 function setup(bean, content) {
 	var object;
 	if(typeof bean == "function") {
@@ -71,6 +81,7 @@ function setup(bean, content) {
 	} else {
 		object = bean;
 	}
+	
 	for(propertyName in content) {
 		try {
 			object[propertyName] = content[propertyName];
@@ -84,8 +95,33 @@ function setup(bean, content) {
 			throw ex;
 		}
 	}
+	
+	var assignedProperties = new Array();
+	for(propertyName in content) {
+		assignedProperties.push(propertyName);
+	}
+	configuration.injectMissingPropertyValues(object, assignedProperties);
+	
 	configuration.manage(object);
 	return object;
+}
+
+/*
+ * Makes the object available for injection. These object are used as default
+ * values for those properties of the configuration objects that which are marked
+ * with an @Inject annotation .
+ */
+function useAsDefault(object) {
+	configuration.addInjectableObject(object);
+	return object;
+}
+
+/*
+ * Convenience function, sets up the configuration object and makes it available
+ * for injection. The result is the same as calling setup and useAsDefault.
+ */
+function setupDefault(bean, content) {
+	return useAsDefault(setup(bean, content));
 }
 
 /* 
@@ -105,7 +141,7 @@ function list() {
 }
 
 /*
-	Convenience function which creates a list and the corresponding 
+	Convenience function which creates a mailing list and the corresponding 
 	recipient-to-destination mapping in a single step.
 */
 function setupList(content) {

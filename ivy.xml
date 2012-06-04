@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ivy-module version="2.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
 
 	<info organisation="org.mireka" module="server" />
@@ -15,9 +14,12 @@
 	<dependencies>
 
 		<!-- concurrency annotations -->
-		<dependency org="com.google.code.findbugs" name="jsr305"
-			rev="2.0.0" conf="compile->master;runtime->default;sources">
+		<dependency org="com.google.code.findbugs" name="jsr305" rev="2.0.0"
+			conf="compile->master;runtime->default;sources">
 		</dependency>
+
+		<dependency org="javax.inject" name="javax.inject" rev="1"
+			conf="compile->master;runtime->default;sources" />
 
 		<!-- logging API -->
 		<dependency org="org.slf4j" name="slf4j-api" rev="1.6.4"
@@ -27,32 +29,32 @@
 		<dependency org="org.slf4j" name="jcl-over-slf4j" rev="1.6.4"
 			conf="runtime->default" />
 
-		<dependency org="ch.qos.logback" name="logback-classic"
-			rev="1.0.1" conf="runtime->default" />
+		<dependency org="ch.qos.logback" name="logback-classic" rev="1.0.1"
+			conf="runtime->default" />
 
 		<dependency org="ch.qos.logback" name="logback-core" rev="1.0.1"
 			conf="runtime->default" />
 
-		<!-- Logback uses it if the log configuration contains filters with complex 
-			Java like expressions -->
+		<!-- Logback uses it if the log configuration contains filters with complex Java 
+			like expressions -->
 		<dependency org="org.codehaus.janino" name="janino" rev="2.5.16"
 			conf="runtime->default" />
 
 		<!-- monitoring -->
 		<dependency org="com.yammer.metrics" name="metrics-core" rev="2.0.3"
 			conf="compile->master;runtime->default;sources" />
-			
+
 		<!-- sends monitored values to graphite -->
 		<dependency org="com.yammer.metrics" name="metrics-graphite" rev="2.0.3"
 			conf="compile->master;runtime->default;sources" />
-			
+
 		<!-- monitor log messages -->
 		<dependency org="com.yammer.metrics" name="metrics-logback" rev="2.0.3"
 			conf="runtime->default">
 			<exclude org="ch.qos.logback" module="logback-classic" />
 			<exclude org="ch.qos.logback" module="logback-core" />
 		</dependency>
-			
+
 
 
 		<!-- ======================================================= -->
