@@ -18,9 +18,13 @@
 	
 	Examples
 	========
+	
+	The examples below are usually given in two forms. The short form is
+	more readable, the long sometime offers more settings and better 
+	demonstrates what Java objects are used under the hood.
 
-	Aliases
-	-------
+	Alias
+	-----
 	
 	An alias maps one or more virtual recipients to another 
 	canonical local recipient address. 
@@ -40,8 +44,9 @@
 			canonical: "john.doe@example.com"
 	}),
 	
-	Forwards
-	--------
+	
+	Forward
+	-------
 	
 	Forward lists are used to redistribute incoming mail to one or more  
 	other addresses, including remote addresses, without changing the 
@@ -68,8 +73,9 @@
 		})
 	}),
 	
-	Mailing lists
-	-------------
+	
+	Mailing list
+	------------
 	
 	Mireka provides very simple mailing lists. This implementation is 
 	appropriate for small, internal, closed membership lists. There is no 
@@ -106,6 +112,94 @@
 		]
 	}),
 	
+	
+	Proxy
+	-----
+	
+	A proxy destination relays the SMTP statements received in a mail 
+	session to a backend server step-by-step in real-time. In this way both 
+	this server and the backend server is able to reject a mail within the 
+	SMTP session, before accepting the responsibility of delivering the 
+	mail. This fast-fail behaviour is useful in some situations.  
+	
+	Proxy mappings should be placed at the end of the list, so (completely) 
+	locally handled addresses will not be shadowed accidentally by proxied 
+	addresses specified using wildcards.
+	
+	Short form for proxying a massive amount of addresses:
+	
+	massProxy(backendServer, [
+		// The followings are an example on how to specify the set of 
+		// proxied recipient addresses
+	
+		// Fully specified recipients
+		setup(InlineRecipientRegistry, {
+			addresses: [
+				"john@example.com",
+				"jack@example.com"
+			]
+		}),
+		
+		// A wildcard recipient, only the local part is specified
+		setup(CaseInsensitiveAnyDomainRecipient, {
+			localPart: "anonymous"
+		}),
+		
+		// Another wildcard recipient with regular expression
+		setup(RegexAddressSpecification, {
+			localPartRegex: ".*-bounces-.*",
+			remotePart: "lists.example.com"
+		}),
+		
+		// Any postmaster address
+		setup(AnyPostmaster),
+		
+		// Addresses corresponding to local user accounts
+		setup(GlobalUsersRecipientSpecification, {
+			users: globalUsers
+		}),
+	]),
+	
+	Complete form:
+	
+	setup(RecipientSpecificationDestinationPair, {
+		destination: setup(RelayDestination, {
+			backendServer: backendServer
+		}),
+		recipientSpecifications: deepList([
+			// The followings are an example on how to specify the set of 
+			// proxied recipient addresses
+			
+			// Fully specified recipients
+			setup(InlineRecipientRegistry, {
+				addresses: [
+					"john@example.com",
+					"jack@example.com"
+				]
+			}),
+			
+			// A wildcard recipient, only the local part is specified
+			setup(CaseInsensitiveAnyDomainRecipient, {
+				localPart: "anonymous"
+			}),
+			
+			// Another wildcard recipient with regular expression
+			setup(RegexAddressSpecification, {
+				localPartRegex: ".*-bounces-.*",
+				remotePart: "lists.example.com"
+			}),
+			
+			// Any postmaster address
+			setup(AnyPostmaster),
+			
+			// Addresses corresponding to local user accounts
+			setup(GlobalUsersRecipientSpecification, {
+					users: globalUsers
+			}),
+		]),
+	}),
+	
+	
 	Other
 	-----
 	
@@ -119,6 +213,7 @@
 	Javadoc documentation in the doc/javadoc directory. For an overview read
 	the documentation in the doc directory.  
 */
+
 localRecipientDestinations = deepList([
 
 	/*
@@ -143,7 +238,8 @@ localRecipientDestinations = deepList([
 		specific local "Postmaster@..." addresses.
 		
 		Comment it out if you have created a dedicated postmaster user 
-		and mailbox.
+		and mailbox, or if this server proxies postmaster mails to
+		another server.
 	*/
 	setup(PostmasterAliasMapper, {
 		canonical: "john@example.com"

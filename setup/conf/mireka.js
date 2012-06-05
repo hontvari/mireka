@@ -97,7 +97,7 @@ localRecipientsTable = setup(LocalRecipientTable, {
 /*
 	comment out to disable the POP3 server (port 110)
 */
-include("conf/pop/pop.js");
+include("conf/pop.js");
 
 /*
 	comment out to disable the RFC 4409 message submission service (port 587)
@@ -116,7 +116,7 @@ include("conf/submission/submission.js");
 	on its configuration - either relay a message to a backend server, or 
 	deliver it into a local POP3 maildrop. 
 */
-include("conf/mx/mx.js");
+include("conf/mx.js");
 
 /*
 	uncomment to send monitoring data to a Graphite server for graphical 

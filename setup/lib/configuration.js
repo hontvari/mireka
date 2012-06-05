@@ -204,3 +204,17 @@ function mailingList(content) {
 		list: setup(ListDestination, content)
 	});
 }
+
+/*
+ Convenience function which maps a large set of recipient addresses to a backend 
+ server where mails will be proxied to. 
+*/ 
+function massProxy(backendServer, recipientSpecifications) {
+	return setup(RecipientSpecificationDestinationPair, {
+		destination: setup(RelayDestination, {
+			backendServer: backendServer
+		}),
+		recipientSpecifications: deepList(recipientSpecifications)
+	});
+}
+
