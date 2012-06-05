@@ -84,41 +84,15 @@ srs = setupDefault(Srs, {
 
 /*
 	Default local recipients table. It enumerates all valid local 
-	recipients and assigns a destination to them. The destination
+	recipients and assigns destinations to them. The destination
 	tells what to do with a mail sent to the corresponding 
 	recipient. E.g. drop the mail or store it in a maildrop or 
 	forward it to other addresses. 
 */
-include("conf/aliases.js");
-include("conf/lists.js");
-include("conf/forwards.js");
-include("conf/others.js");
 localRecipientsTable = setup(LocalRecipientTable, {
 	localDomains: localDomains,
-	mappers: list(
-		aliases, 
-		lists, 
-		forwards, 
-		others, 
-		
-		/* 
-			comment out if POP service is not active
-		*/
-		setup(GlobalUsersMaildropDestinationMapper, {
-			maildropRepository: maildropRepository,
-			users: globalUsers
-		}),
-		
-		/*
-			comment out if forwarding is not used
-		*/
-		setup(RecipientSpecificationDestinationPair, {
-			recipientSpecification: setup(SrsRecipientSpecification),
-			destination: setup(SrsDestination)
-		})
-	)
+	mappers: include("conf/local-recipients.js")
 });
-
 
 /*
 	comment out to disable the POP3 server (port 110)

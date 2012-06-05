@@ -9,9 +9,9 @@
 importClass(java.lang.System);
 
 /*
-	Import those Mireka classes into the global Javascript namespace, which 
-	are useful in a configuration. 
-*/
+ * Import those Mireka classes into the global Javascript namespace, which are
+ * useful in a configuration.
+ */
 importPackage(Packages.mireka);
 importPackage(Packages.mireka.destination);
 importPackage(Packages.mireka.filter);
@@ -38,11 +38,11 @@ importPackage(Packages.mireka.transmission.queuing);
 importPackage(Packages.mireka.transmission.immediate);
 
 /*
-	Make the include function global. The include function reads and 
-	executes another Javascript configuration file. It has a single 
-	parameter, the file path. The path can be relative, in that case the 
-	parent directory is the Mireka home directory.
-*/
+ * Make the include function global. The include function reads and executes
+ * another Javascript configuration file. It has a single parameter, the file
+ * path. The path can be relative, in that case the parent directory is the
+ * Mireka home directory.
+ */
 var include = configuration.include;
 
 /*
@@ -57,9 +57,9 @@ var include = configuration.include;
  * into the specified by the bean argument.
  * 
  * Dependencies are injected into properties which were not explicitly specified
- * by the content parameter. Only those properties are considered whose
- * setter method is marked with the @Inject annotation. The objects available
- * for injection are the ones on which the setAsDefault method were called. The
+ * by the content parameter. Only those properties are considered whose setter
+ * method is marked with the @Inject annotation. The objects available for
+ * injection are the ones on which the setAsDefault method were called. The
  * injected object is selected by examining which is assignable to the setter
  * type. If the dependency cannot be fulfilled because neither of them is
  * assignable, or if the result is ambiguous, because more than one object is
@@ -108,8 +108,8 @@ function setup(bean, content) {
 
 /*
  * Makes the object available for injection. These object are used as default
- * values for those properties of the configuration objects that which are marked
- * with an @Inject annotation .
+ * values for those properties of the configuration objects that which are
+ * marked with an @Inject annotation .
  */
 function useAsDefault(object) {
 	configuration.addInjectableObject(object);
@@ -124,11 +124,11 @@ function setupDefault(bean, content) {
 	return useAsDefault(setup(bean, content));
 }
 
-/* 
-	Returns an array which contains all elements of the arrays and all 
-	non-array objects which were supplied in the argument list. 
-*/
-function list() {
+/*
+ * Returns an array which contains all elements of the arrays and all non-array
+ * objects which were supplied in the argument list.
+ */
+function deepList() {
 	var result = [];
 	for (var i = 0; i < arguments.length; i++) {
 		var argument = arguments[i];
@@ -141,12 +141,66 @@ function list() {
 }
 
 /*
-	Convenience function which creates a mailing list and the corresponding 
-	recipient-to-destination mapping in a single step.
-*/
-function setupList(content) {
+ * Convenience function which creates a recipient - destination mapping using
+ * the specified recipientSpecification and destination.
+ */
+function map(recipientSpecification, destination) {
+	return setup(RecipientSpecificationDestinationPair, {
+		recipientSpecification: recipientSpecification,
+		destination: destination
+	});
+}
+
+/*
+ * Convenience function which creates a fully specified recipient address -
+ * destination mapping.
+ */
+function mapAddress(address, destination) {
+	return setup(RecipientDestinationPair, {
+		recipient: address,
+		destination: destination
+	});
+}
+
+/*
+ * Convenience function which creates a fully specified alias address -
+ * canonical address mapping.
+ */
+function alias(aliasAddress, canonicalAddress) {
+	return mapAddress(aliasAddress, setup(AliasDestination, {
+		recipient: canonicalAddress
+	}));
+}
+
+/*
+ * Convenience function for creating a mail forwarding mapping. It has variable
+ * number of parameters. The first parameter is the fully specified recipient
+ * address. Mails sent to this address are forwarded to the fully specified
+ * addresses given in the second, third etc. parameters.
+ */
+function forward() {
+	var recipientAddress = arguments[0];
+	var members = [];
+	for (var i = 1; i < arguments.length; i++) {
+		members.push(setup(Member, {
+			address: arguments[i]
+		}));
+	}
+	
+	return setup(RecipientDestinationPair, {
+		recipient: recipientAddress,
+		destination: setup(ForwardDestination, {
+			members: members
+		})
+	}); 
+}	
+	
+/*
+ * Convenience function which creates a mailing list and the corresponding
+ * recipient-to-destination mapping in a single step.
+ */
+function mailingList(content) {
 	return setup(ListMapper, {
 		list: setup(ListDestination, content)
 	});
 }
-

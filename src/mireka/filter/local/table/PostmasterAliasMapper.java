@@ -9,25 +9,18 @@ import mireka.destination.Destination;
 
 /**
  * PostmasterAliasMapper is a convenience class used in configuration files to
- * assign a Postmaster alias. It maps the global postmaster and the local domain
- * postmaster addresses to an {@link AliasDestination}.
+ * assign a Postmaster alias. It maps the global postmaster and any domain
+ * specific postmaster addresses to an {@link AliasDestination}.
  */
 public class PostmasterAliasMapper implements RecipientDestinationMapper {
-    private LocalPostmaster localPostmasterSpecification;
+    private RecipientSpecification postmasterSpecification =
+            new AnyPostmaster();
     private AliasDestination destination;
 
     @Override
     public Destination lookup(Recipient recipient) {
-        return localPostmasterSpecification.isSatisfiedBy(recipient) ? destination
+        return postmasterSpecification.isSatisfiedBy(recipient) ? destination
                 : null;
-    }
-
-    /**
-     * @category GETSET
-     */
-    public void setLocalDomains(RemotePartSpecification localDomains) {
-        localPostmasterSpecification = new LocalPostmaster();
-        localPostmasterSpecification.setLocalDomains(localDomains);
     }
 
     /**

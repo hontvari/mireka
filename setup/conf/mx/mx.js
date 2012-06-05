@@ -22,12 +22,11 @@
 	according to its destination assigned in localRecipientsTable.
 */
 relayedRecipients = setup(RecipientSpecifications, {
-	specifications: list(
-		setup(GlobalPostmasterSpecification),
+	specifications: deepList(
 		/* this matches Postmaster@... addresses for any domain, not 
 			only for local domains, but non-local ones will be 
 			rejected by the ProhibitRelaying filter anyway */
-		setup(AnyDomainPostmaster),
+		setup(AnyPostmaster),
 		setup(InlineRecipientRegistry, {
 			addresses: include("conf/mx/proxy-individual-recipients.js")
 		}),
