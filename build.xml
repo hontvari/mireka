@@ -308,23 +308,51 @@
 	        description="Creates a Debian software package">
 		<local name="unpacked" />
 		<property name="unpacked" location="build/dist/ubuntu/unpacked" />
-
+		
+		<!-- /etc/init.d -->
+		<!-- /etc/default -->
 		<mkdir dir="${unpacked}" />
 		<fixcrlf srcdir="package/ubuntu"
 		         destdir="${unpacked}"
 		         encoding="UTF-8"
 		         eol="unix" />
+		<!-- /etc/${name} -->
 		<mkdir dir="${unpacked}/etc/${name}" />
 		<fixcrlf srcdir="${build.dist.dir}/conf"
 		         destdir="${unpacked}/etc/${name}"
 		         encoding="UTF-8"
 		         eol="unix" />
+		<!-- /usr/share/${name}/lib -->
 		<mkdir dir="${unpacked}/usr/share/${name}/lib" />
 		<fixcrlf srcdir="${build.dist.dir}/lib"
 		         includes="*.js"
 		         destdir="${unpacked}/usr/share/${name}/lib"
 		         encoding="UTF-8"
 		         eol="unix" />
+		<copy todir="${unpacked}/usr/share/${name}/lib">
+			<fileset dir="${build.dist.dir}/lib" includes="*.jar"/>
+		</copy>
+		<!-- /usr/share/${name}/bin -->
+		<mkdir dir="${unpacked}/usr/share/${name}/bin" />
+		<fixcrlf srcdir="${build.dist.dir}/bin"
+		         includes="*.sh"
+		         destdir="${unpacked}/usr/share/${name}/bin"
+		         encoding="UTF-8"
+		         eol="unix" />
+		<!-- /usr/share/doc/${name} -->
+		<mkdir dir="${unpacked}/usr/share/doc/${name}" />
+		<fixcrlf file="LICENSE.txt"
+		         destdir="${unpacked}/usr/share/doc/${name}"
+		         encoding="UTF-8"
+		         eol="unix" />
+		<fixcrlf srcdir="${build.dist.dir}/doc"
+		         includes="**/*.html"
+		         destdir="${unpacked}/usr/share/doc/${name}"
+		         encoding="UTF-8"
+		         eol="unix" />
+		<copy todir="${unpacked}/usr/share/doc/${name}">
+			<fileset dir="${build.dist.dir}/doc" excludes="**/*.html" />
+		</copy>
 
 		<deb todir="build/dist/ubuntu"
 		     package="${name}"
@@ -343,7 +371,7 @@
 				Mireka is a mail server with SMTP, Mail Submission and POP3 services. It is also an SMTP proxy.
 				Note: A Java SE 7 or later Java Runtime Environment must be installed manually before this package.
 			</description>
-			<!-- /etc/init.d/${name} -->
+			<!-- everything except control and configuration files  -->
 			<tarfileset dir="${unpacked}"
 			            excludes="control/**,etc/${name}/**,etc/default/${name}"
 			            prefix="/" />
@@ -352,19 +380,6 @@
 			<conffiles dir="${unpacked}"
 			           includes="etc/${name}/**,etc/default/${name}"
 			           prefix="/" />
-			<!-- /usr/share/${name}/bin -->
-			<tarfileset dir="${build.dist.dir}/bin"
-			            includes="*.sh"
-			            prefix="usr/share/${name}/bin" />
-			<!-- /usr/share/doc/${name} -->
-			<tarfileset file="LICENSE.txt"
-			            fullpath="usr/share/doc/${name}/copyright" />
-			<tarfileset dir="${build.dist.dir}/doc"
-			            prefix="usr/share/doc/${name}" />
-			<!-- /usr/share/${name}/lib -->
-			<tarfileset dir="${build.dist.dir}/lib"
-			            includes="*.jar"
-			            prefix="usr/share/${name}/lib" />
 		</deb>
 	</target>
 
