@@ -18,8 +18,16 @@
 			conf="compile->master;runtime->default;sources">
 		</dependency>
 
+		<!-- @Inject annotation -->
 		<dependency org="javax.inject" name="javax.inject" rev="1"
 			conf="compile->master;runtime->default;sources" />
+
+		<!-- SPF library -->
+		<dependency org="org.apache.james.jspf" name="apache-jspf-resolver"
+			rev="1.0.0" conf="compile->master;runtime->default;sources">
+			<exclude org="uk.nominet" module="dnsjnio" />
+			<exclude org="commons-cli" module="commons-cli" />
+		</dependency>
 
 		<!-- logging API -->
 		<dependency org="org.slf4j" name="slf4j-api" rev="1.6.4"
@@ -60,7 +68,11 @@
 		<!-- ======================================================= -->
 		<!-- retrieve some transitive dependency sources -->
 
+		<!-- global excludes -->
 		<exclude org="org.slf4j" module="slf4j-log4j12" />
 		<exclude org="commons-logging" module="commons-logging" />
+		<exclude org="log4j" module="log4j" />
+		<!-- Jar is included in Mireka, the version in Maven Central is old -->
+		<exclude org="dnsjava" module="dnsjava" />
 	</dependencies>
 </ivy-module>
