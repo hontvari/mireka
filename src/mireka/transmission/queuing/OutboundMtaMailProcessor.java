@@ -41,7 +41,7 @@ class OutboundMtaMailProcessor implements MailProcessor {
             logger.error("Abandoning " + mail + " after unexpected exception. "
                     + "You may have to correct mail stores manually.", e);
             summary.lastError = e.toString();
-            summary.errors.mark();
+            summary.errorsMeter().mark();
         }
 
     }
@@ -50,12 +50,12 @@ class OutboundMtaMailProcessor implements MailProcessor {
         ImmediateSender sender = immediateSenderFactory.create();
         try {
             logger.debug("Sending mail " + mail + "...");
-            summary.mailTransactions.mark();
+            summary.mailTransactionsMeter().mark();
 
             sender.send(mail);
 
             logger.debug("Sent successfully");
-            summary.successfulMailTransactions.mark();
+            summary.successfulMailTransactionsMeter().mark();
         } catch (SendException e) {
             handleSendException(e);
         } catch (RecipientsWereRejectedException e) {
@@ -72,7 +72,7 @@ class OutboundMtaMailProcessor implements MailProcessor {
 
         logger.debug("Send failed. Log-ID=" + logId
                 + ". Executing retry policy...", e);
-        summary.failures.mark();
+        summary.failuresMeter().mark();
         summary.lastFailure = e.toString();
         increaseTransientOrPermanentFailureCount(e);
 
@@ -84,16 +84,16 @@ class OutboundMtaMailProcessor implements MailProcessor {
         if (mail.recipients.size() == 1) {
             logger.debug("The single recipient was rejected. "
                     + "Executing retry policy...");
-            summary.failures.mark();
+            summary.failuresMeter().mark();
         } else if (mail.recipients.size() == e.rejections.size()) {
             logger.debug("All " + mail.recipients.size()
                     + " recipients were rejected. "
                     + "Executing retry policy...");
-            summary.failures.mark();
+            summary.failuresMeter().mark();
         } else {
             logger.debug("Some, but not all recipients were rejected. "
                     + "Executing retry policy...");
-            summary.partialFailures.mark();
+            summary.partialFailuresMeter().mark();
         }
         increaseTransientOrPermanentFailureCount(e.rejections.get(0).sendException);
         summary.lastFailure = e.toString();
@@ -103,9 +103,9 @@ class OutboundMtaMailProcessor implements MailProcessor {
 
     private void increaseTransientOrPermanentFailureCount(SendException e) {
         if (e.errorStatus().shouldRetry())
-            summary.transientFailures.mark();
+            summary.transientFailuresMeter().mark();
         else
-            summary.permanentFailures.mark();
+            summary.permanentFailuresMeter().mark();
     }
 
     private void handlePostponeException(PostponeException e)

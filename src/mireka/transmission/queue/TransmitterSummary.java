@@ -19,14 +19,19 @@ import com.yammer.metrics.core.MetricName;
  */
 public class TransmitterSummary implements TransmitterSummaryMBean {
     private String name;
-    public Meter mailTransactions;
-    public Meter successfulMailTransactions;
-    public Meter failures;
-    public Meter permanentFailures;
-    public Meter transientFailures;
-    public Meter partialFailures;
+    private Meter mailTransactions;
+    private Meter successfulMailTransactions;
+    private Meter failures;
+    private Meter permanentFailures;
+    private Meter transientFailures;
+    private Meter partialFailures;
     public volatile String lastFailure;
-    public Meter errors;
+    /**
+     * Meter which counts unexpected Java exceptions occurred during mail
+     * transmission that were not handled by sending an SMTP error reply and
+     * that are not expected, usual connection problems.
+     */
+    private Meter errors;
     public volatile String lastError;
 
     @PostConstruct
@@ -64,9 +69,8 @@ public class TransmitterSummary implements TransmitterSummaryMBean {
                         TimeUnit.MINUTES);
     }
 
-    private MetricName metricName(String metricName) {
-        return new MetricName("mireka", "TransmitterTraffic", metricName,
-                this.name);
+    private MetricName metricName(String name) {
+        return new MetricName("mireka", "TransmitterTraffic", name, this.name);
     }
 
     /**
@@ -110,5 +114,33 @@ public class TransmitterSummary implements TransmitterSummaryMBean {
     @Override
     public String getLastError() {
         return lastError;
+    }
+
+    public Meter mailTransactionsMeter() {
+        return mailTransactions;
+    }
+
+    public Meter successfulMailTransactionsMeter() {
+        return successfulMailTransactions;
+    }
+
+    public Meter failuresMeter() {
+        return failures;
+    }
+
+    public Meter permanentFailuresMeter() {
+        return permanentFailures;
+    }
+
+    public Meter transientFailuresMeter() {
+        return transientFailures;
+    }
+
+    public Meter partialFailuresMeter() {
+        return partialFailures;
+    }
+
+    public Meter errorsMeter() {
+        return errors;
     }
 }

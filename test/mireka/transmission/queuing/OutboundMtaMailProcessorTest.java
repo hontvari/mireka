@@ -1,7 +1,5 @@
 package mireka.transmission.queuing;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
 import mireka.ExampleMail;
 import mireka.transmission.LocalMailSystemException;
 import mireka.transmission.Mail;
@@ -11,22 +9,22 @@ import mireka.transmission.immediate.PostponeException;
 import mireka.transmission.immediate.RecipientsWereRejectedException;
 import mireka.transmission.immediate.SendException;
 import mireka.transmission.queue.TransmitterSummary;
+import mockit.Cascading;
+import mockit.Expectations;
+import mockit.Mocked;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)
 public class OutboundMtaMailProcessorTest {
-    @Mock
+    @Mocked
     private ImmediateSenderFactory immediateSenderFactory;
 
-    @Mock
+    @Mocked
     private ImmediateSender immediateSender;
 
-    private TransmitterSummary transmitterSummary = new TransmitterSummary();
+    @Cascading
+    private TransmitterSummary transmitterSummary;
 
     private Mail mail = ExampleMail.simple();
 
@@ -34,7 +32,6 @@ public class OutboundMtaMailProcessorTest {
 
     @Before
     public void initialize() {
-        when(immediateSenderFactory.create()).thenReturn(immediateSender);
         processor =
                 new OutboundMtaMailProcessor(immediateSenderFactory, null,
                         null, transmitterSummary, mail);
@@ -44,8 +41,15 @@ public class OutboundMtaMailProcessorTest {
     public void testRun() throws IllegalArgumentException, SendException,
             RecipientsWereRejectedException, LocalMailSystemException,
             PostponeException {
-        processor.run();
+        new Expectations() {
+            {
+                immediateSenderFactory.create();
+                result = immediateSender;
 
-        verify(immediateSender).send(any(Mail.class));
+                immediateSender.send((Mail) any);
+            }
+        };
+
+        processor.run();
     }
 }
