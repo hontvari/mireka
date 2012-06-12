@@ -5,12 +5,12 @@ import mireka.address.Recipient;
 import mireka.address.RemotePartContainingRecipient;
 
 /**
- * LocalRecipientSpecification matches a recipient if its remote part matches
+ * SplitRecipientSpecification matches a recipient if its remote part matches
  * the supplied {@link RemotePartSpecification} and its local part matches the
  * supplied {@link LocalPartSpecification}. This specification never matches the
  * global Postmaster address, because that has no remote part.
  */
-public class LocalRecipientSpecification implements RecipientSpecification {
+public class SplitRecipientSpecification implements RecipientSpecification {
     private LocalPartSpecification localPartSpecification;
     private RemotePartSpecification remotePartSpecification;
 
