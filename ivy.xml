@@ -29,6 +29,16 @@
 			<exclude org="commons-cli" module="commons-cli" />
 		</dependency>
 
+		<!-- Mime4J library -->
+		<dependency org="org.apache.james" name="apache-mime4j-dom"
+			rev="0.7.2" conf="compile->master;runtime->default;sources">
+		</dependency>
+
+		<!-- Mail parser library -->
+		<dependency org="org.apache.james" name="apache-mime4j-core"
+			rev="0.7.2" conf="compile->master;runtime->default;sources">
+		</dependency>
+
 		<!-- logging API -->
 		<dependency org="org.slf4j" name="slf4j-api" rev="1.6.4"
 			conf="compile->master;runtime->default;sources" />

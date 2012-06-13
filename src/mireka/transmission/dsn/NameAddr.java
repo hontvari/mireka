@@ -1,6 +1,6 @@
 package mireka.transmission.dsn;
 
-import org.apache.james.mime4j.field.address.Mailbox;
+import org.apache.james.mime4j.dom.address.Mailbox;
 
 /**
  * NameAddr class contains a display-name and an addr-spec.

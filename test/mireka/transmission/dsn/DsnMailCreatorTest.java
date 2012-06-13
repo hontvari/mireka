@@ -23,7 +23,8 @@ import mireka.transmission.Mail;
 import mireka.transmission.immediate.RemoteMta;
 import mireka.transmission.immediate.Rfc821Status;
 
-import org.apache.james.mime4j.message.Message;
+import org.apache.james.mime4j.dom.Message;
+import org.apache.james.mime4j.message.DefaultMessageBuilder;
 import org.junit.Test;
 import org.subethamail.smtp.client.SMTPClient.Response;
 
@@ -42,7 +43,7 @@ public class DsnMailCreatorTest {
         dsnMail.mailData.writeTo(out);
         byte[] bytes = out.toByteArray();
         ByteArrayInputStream in = new ByteArrayInputStream(bytes);
-        Message message = new Message(in);
+        Message message = new DefaultMessageBuilder().parseMessage(in);
         assertEquals(message.getMimeType(), "multipart/report");
     }
 

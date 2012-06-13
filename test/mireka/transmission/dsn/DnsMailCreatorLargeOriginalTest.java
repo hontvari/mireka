@@ -1,6 +1,6 @@
 package mireka.transmission.dsn;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,7 +10,8 @@ import java.util.List;
 import mireka.ExampleMail;
 import mireka.transmission.Mail;
 
-import org.apache.james.mime4j.message.Message;
+import org.apache.james.mime4j.dom.Message;
+import org.apache.james.mime4j.message.DefaultMessageBuilder;
 import org.junit.Test;
 
 public class DnsMailCreatorLargeOriginalTest {
@@ -31,7 +32,7 @@ public class DnsMailCreatorLargeOriginalTest {
         fout.close();
 
         FileInputStream in = new FileInputStream(file);
-        Message message = new Message(in);
+        Message message = new DefaultMessageBuilder().parseMessage(in);
         in.close();
         assertEquals(message.getMimeType(), "multipart/report");
         file.delete();
