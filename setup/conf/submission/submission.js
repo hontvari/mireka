@@ -110,10 +110,9 @@ authenticationHandlerFactory =
 /*
 	Configure server name, bind address, etc. here.
 */
-submission = setup(new SMTPServer(submissionMessageHandler), {
+submission = setup(SubmissionServer(submissionMessageHandler), {
 	authenticationHandlerFactory: authenticationHandlerFactory,
 	// bindAddress: "192.0.2.0",
-	port: 587,
 	hostName: helo,
 	/* uncomment to enable STARTTLS if JSSE is correctly configured */
 	/* enableTLS: true, */
