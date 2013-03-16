@@ -30,7 +30,6 @@ public class SMTPServer extends org.subethamail.smtp.server.SMTPServer {
     @PreDestroy
     public void stop() {
         super.stop();
-        logger.info("SMTP server stopped");
     }
 
     public void setBindAddress(String bindAddress) {
