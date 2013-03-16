@@ -68,7 +68,7 @@ public class Start {
             logger.error(
                     "Startup failed because the @PostConstruct method of a "
                             + "startup object could not complete. Shutting down...",
-                    e.getCause());
+                    e);
             System.exit(3);
         } catch (InvalidMethodSignatureException e) {
             logger.error("Startup failed. Shutting down...", e);

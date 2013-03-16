@@ -84,6 +84,10 @@ public class Lifecycle {
                                 e);
                     } catch (IllegalAccessException e) {
                         throw new RuntimeException(e);
+                    } catch (InvocationTargetException e) {
+                        throw new InvocationTargetException(e,
+                                "PostConstruct method failed: " + method
+                                        + " on " + managedObject.object);
                     }
                 }
             }
