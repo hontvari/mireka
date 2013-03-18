@@ -30,10 +30,7 @@ chown -R mireka:mireka /var/lib/mireka/maildrops /var/lib/mireka/postmaster /var
 chmod 750 /var/lib/mireka/maildrops /var/lib/mireka/postmaster /var/lib/mireka/queues
 chown root:mireka /etc/mireka/global-users.js
 chmod 640 /etc/mireka/global-users.js
-chmod +x /usr/share/mireka/bin/start.sh
-chmod 755 /etc/init.d/mireka
 
-echo "0.0.0.0/0:25,25\n0.0.0.0/0:110,110\n0.0.0.0/0:587,587" > /etc/authbind/byuid/$(id -u mireka)
+echo "0.0.0.0/0:25,25\n0.0.0.0/0:110,110\n0.0.0.0/0:587,587" | tee /etc/authbind/byuid/$(id -u mireka) > /etc/authbind/byuid/!$(id -u mireka) 
 
-update-rc.d mireka defaults 20 80
-service mireka start || true
+start mireka || true

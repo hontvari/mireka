@@ -305,12 +305,11 @@
          ================================= -->
 	<target name="deb"
 	        depends="dist"
-	        description="Creates a Debian software package">
+	        description="Creates an Ubuntu software package">
 		<local name="unpacked" />
 		<property name="unpacked" location="build/dist/ubuntu/unpacked" />
 		
-		<!-- /etc/init.d -->
-		<!-- /etc/default -->
+		<!-- /etc/init -->
 		<mkdir dir="${unpacked}" />
 		<fixcrlf srcdir="package/ubuntu"
 		         destdir="${unpacked}"
@@ -332,13 +331,6 @@
 		<copy todir="${unpacked}/usr/share/${name}/lib">
 			<fileset dir="${build.dist.dir}/lib" includes="*.jar"/>
 		</copy>
-		<!-- /usr/share/${name}/bin -->
-		<mkdir dir="${unpacked}/usr/share/${name}/bin" />
-		<fixcrlf srcdir="${build.dist.dir}/bin"
-		         includes="*.sh"
-		         destdir="${unpacked}/usr/share/${name}/bin"
-		         encoding="UTF-8"
-		         eol="unix" />
 		<!-- /usr/share/doc/${name} -->
 		<mkdir dir="${unpacked}/usr/share/doc/${name}" />
 		<fixcrlf file="LICENSE.txt"
@@ -346,20 +338,19 @@
 		         encoding="UTF-8"
 		         eol="unix" />
 		<fixcrlf srcdir="${build.dist.dir}/doc"
-		         includes="**/*.html"
+		         includes="**/*.html,**/*.css"
 		         destdir="${unpacked}/usr/share/doc/${name}"
 		         encoding="UTF-8"
 		         eol="unix" />
 		<copy todir="${unpacked}/usr/share/doc/${name}">
-			<fileset dir="${build.dist.dir}/doc" excludes="**/*.html" />
+			<fileset dir="${build.dist.dir}/doc" excludes="**/*.html,**/*.css" />
 		</copy>
 
 		<deb todir="build/dist/ubuntu"
 		     package="${name}"
 		     section="mail"
 		     architecture="all"
-		     depends="authbind, adduser, java-wrappers"
-		     recommends="default-jre-headless (>=7)"
+		     depends="adduser, authbind, java7-runtime-headless | openjdk-7-jre-headless, upstart-job"
 		     postinst="${unpacked}/control/postinst"
 		     prerm="${unpacked}/control/prerm"
 		     postrm="${unpacked}/control/postrm">
@@ -369,16 +360,14 @@
 			            email="hontvari@flyordie.com" />
 			<description synopsis="Mail server and SMTP proxy">
 				Mireka is a mail server with SMTP, Mail Submission and POP3 services. It is also an SMTP proxy.
-				Note: A Java SE 7 or later Java Runtime Environment must be installed manually before this package.
 			</description>
 			<!-- everything except control and configuration files  -->
 			<tarfileset dir="${unpacked}"
-			            excludes="control/**,etc/${name}/**,etc/default/${name}"
+			            excludes="control/**,etc/${name}/**"
 			            prefix="/" />
 			<!-- /etc/${name} -->
-			<!-- /etc/default/${name} -->
 			<conffiles dir="${unpacked}"
-			           includes="etc/${name}/**,etc/default/${name}"
+			           includes="etc/${name}/**"
 			           prefix="/" />
 		</deb>
 	</target>
