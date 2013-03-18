@@ -363,11 +363,11 @@
 			</description>
 			<!-- everything except control and configuration files  -->
 			<tarfileset dir="${unpacked}"
-			            excludes="control/**,etc/${name}/**"
+			            excludes="control/**,etc/${name}/**,etc/init/${name}.conf"
 			            prefix="/" />
 			<!-- /etc/${name} -->
 			<conffiles dir="${unpacked}"
-			           includes="etc/${name}/**"
+			           includes="etc/${name}/**,etc/init/${name}.conf"
 			           prefix="/" />
 		</deb>
 	</target>

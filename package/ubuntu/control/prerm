@@ -1,9 +1,5 @@
 #!/bin/sh
 set -e
-if [ -x "/etc/init.d/mireka" ]; then
-	if [ -x "`which invoke-rc.d 2>/dev/null`" ]; then
-		invoke-rc.d mireka stop || true
-	else
-		/etc/init.d/mireka stop || true
-	fi
+if [ -e "/etc/init/mireka.conf" ] && [ "$1" = remove ]; then
+	stop mireka || true
 fi

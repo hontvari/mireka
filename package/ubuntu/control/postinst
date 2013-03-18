@@ -17,7 +17,6 @@ mkdir --parents \
 	/var/lib/mireka/queues/retry \
 	/var/lib/mireka/queues/submitted
 	
-ln -sfn /usr/share/mireka/bin		/var/lib/mireka/bin
 ln -sfn /usr/share/mireka/classes	/var/lib/mireka/classes
 ln -sfn /etc/mireka			/var/lib/mireka/conf
 ln -sfn /usr/share/doc/mireka		/var/lib/mireka/doc
