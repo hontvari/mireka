@@ -8,16 +8,28 @@
 	
 	For more information on the individual configuration elements see the 
 	Javadoc documentation in the doc/javadoc directory. For an overview read
-	the documentation in the doc directory.  
-*/
-globalUsers = setup(GlobalUsers, { users: [
+	the documentation in the doc directory.
+	
+	Examples
+	========
+	
+	Short form:
+	globalUser("john", "changeit"),
+	where john is a username, changeit is a password.
 
-	/*			
+	More complete form:
 	setup(GlobalUser, {
 		username: "john",
 		password: "changeit"
 	})
+	
+*/
+globalUsers = setup(GlobalUsers, { users: [
+
+	/*
+	globalUser("john", "changeit"),
+	globalUser("jane", "changeit"),
 	*/
-			
+	
 ]});
 	

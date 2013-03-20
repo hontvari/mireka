@@ -29,8 +29,8 @@ public class GlobalUsers implements Iterable<GlobalUser> {
 
     public void setUsers(List<GlobalUser> users) {
         this.users.clear();
-        for (GlobalUser user : users) {
-            this.users.add(user);
-        }
+
+        for (GlobalUser user : users)
+            addUser(user);
     }
 }

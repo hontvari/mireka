@@ -218,3 +218,17 @@ function massProxy(backendServer, recipientSpecifications) {
 	});
 }
 
+/*
+ Convenience function which creeates a global user account. Usernames specified 
+ here will be valid recipients when they are combined with any of the local domain 
+ names.  
+*/ 
+function globalUser(username, password) {
+	return setup(GlobalUser, {
+		username: username,
+		password: password
+		
+	});
+}
+
+
