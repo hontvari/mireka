@@ -17,5 +17,5 @@ else
 	JAVA_CMD=java
 fi
 
-authbind $JAVA_CMD -classpath classes:lib/*:conf $SYSVARS $DEBUG_OPTIONS mireka.startup.Start
+$JAVA_CMD -classpath classes:lib/*:conf $SYSVARS $DEBUG_OPTIONS mireka.startup.Start
 
