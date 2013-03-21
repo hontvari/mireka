@@ -214,9 +214,28 @@ function mailingList(content) {
 function listMembers(simpleMemberArray) {
 	var members = [];
 	for (var i = 0; i < simpleMemberArray.length; i++) {
-		members.push(setup(ListMember, {
-			address: simpleMemberArray[i]
-		}));
+		var element = simpleMemberArray[i];
+		if (typeof element == "string")
+			element = setup(ListMember, {
+					address: element });
+		members.push(element);
+	}
+	return members;
+}
+
+/*
+ * Convenience function for creating a list of IP addresses.  
+ * The caller is allowed to pass not only the usual IpAddress objects but also 
+ * simple strings containing IP addresses or ranges in textual form, which will be 
+ * converted to IpAddress objects by this function.
+ */ 
+function ipAddressList(simpleAddressArray) {
+	var members = [];
+	for (var i = 0; i < simpleAddressArray.length; i++) {
+		var element = simpleAddressArray[i];
+		if (typeof element == "string")
+			element = new IpAddress(element);
+		members.push(element);
 	}
 	return members;
 }

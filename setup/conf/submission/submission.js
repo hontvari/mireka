@@ -71,7 +71,7 @@ submissionFilters = setup(Filters, {
 			authenticatedSpecifications: [
 				setup(SmtpAuthenticated),
 				setup(ConnectedFromAuthorizedIpAddress, {
-					addresses: include("conf/submission/authorized-ip.js")
+					addresses: ipAddressList(include("conf/submission/authorized-ip.js"))
 				})
 			]
 		}),
