@@ -206,6 +206,22 @@ function mailingList(content) {
 }
 
 /*
+ * Convenience function for creating the members list of a mailing list.  
+ * The caller is allowed to pass not only the usual ListMember objects but also 
+ * simple strings containing email addresses, which will be converted to ListMember
+ * objects by this function.
+ */ 
+function listMembers(simpleMemberArray) {
+	var members = [];
+	for (var i = 0; i < simpleMemberArray.length; i++) {
+		members.push(setup(ListMember, {
+			address: simpleMemberArray[i]
+		}));
+	}
+	return members;
+}
+
+/*
  Convenience function which maps a large set of recipient addresses to a backend 
  server where mails will be proxied to. 
 */ 

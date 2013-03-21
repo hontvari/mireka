@@ -84,7 +84,28 @@
 	
 	If the requirements are more complex, then a dedicated list manager 
 	application should be used, like SubEthaMail, which can be easily 
-	integrated with Mireka or it can be used stand-alone on a subdomain.	
+	integrated with Mireka or it can be used stand-alone on a subdomain.
+	
+	Shorter form:
+	mailingList({
+		address: "games@example.com",
+		subjectPrefix: "[GAMES]",
+		membersOnly: false,
+		attachmentsAllowed: true,
+		replyToList: true,
+		reversePath: "list-owner@example.com",
+		membersOnlyMessage: "Only example.com employees can post onto this list.",
+		nonMemberSenderValidator: setup(SubjectRegexpValidator, {
+			pattern: ".*TICKET-NO.*"
+		}),
+		
+		members: listMembers([ 
+			"john@example.com",
+			"jane@example.com",
+		])
+	}),
+
+	More complete form:	
 	
 	mailingList({
 		address: "games@example.com",
