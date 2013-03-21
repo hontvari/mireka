@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -111,6 +112,12 @@ public class ListDestination implements MailDestination {
      * the members.
      */
     private Transmitter transmitter;
+    
+    @PostConstruct
+    public void setDefaults() {
+        if (listId == null)
+            listId = address.sourceRouteStripped().replace('@', '.');
+    }
 
     @Override
     public void data(Mail mail) throws RejectExceptionExt {
