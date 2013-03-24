@@ -1,0 +1,27 @@
+<html>
+	<head>
+		<title>Authenticate by IP address</title>
+		<link rel="stylesheet" type="text/css" href="../doc.css" />
+	</head>
+
+	<body>
+		<h1>Authenticate by IP address</h1>
+		
+<p>Clients connecting to the Message Submission port must be authenticated. 
+It must not be allowed that anyone on the internet could send mails through the server, 
+because spammers quickly find such an open-proxy SMTP server and starts to use it.
+<p>Authentication is based on either the name-password pair of a user account, or on the IP address of the client.
+For remote users with dynamic IP addresses the password authentication, 
+for servers the IP address based authentication is the more useful.
+
+<p>Edit <code>submission/authorized-ip.js</code> and insert the IP addresses or address ranges, 
+from which machines are allowed to send mail without password authentication. 
+For example if your private network is 192.168.0.0/24 and you allow machines on 
+your private network to send mail without password authentication,
+insert the following line:
+<p class="code">...
+<span class="relevant">"192.168.0.0/24",</span>
+...</p>
+
+	</body>
+</html>

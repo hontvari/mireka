@@ -1,0 +1,31 @@
+<html>
+	<head>
+		<title>Designating the Postmaster</title>
+		<link rel="stylesheet" type="text/css" href="../doc.css" />
+	</head>
+
+	<body>
+		<h1>Designating the Postmaster</h1>
+		
+According to <cite>RFC 5321</cite>:
+<q cite="http://tools.ietf.org/html/rfc5321">Any system that includes an SMTP server 
+supporting mail relaying or delivery MUST support the reserved mailbox "postmaster" as a 
+case-insensitive local name.</q>
+
+<p>Edit <code>local-recipients.js</code> and change the value of the <code>PostmasterAliasMapper.canonical</code> 
+attribute. 
+For example if the local user, <code>john@example.com</code>, should receive mails sent to the postmaster addresses 
+then the result should look like this:
+<p class="code">...
+	setup(PostmasterAliasMapper, {
+		canonical: "<span class="relevant">john@example.com</span>"
+	}),
+...
+</p>
+
+<p>The designated Postmaster will receive mails sent to the Postmaster of any local 
+domains (for example <code>Postmaster@example.com</code>)
+and also to the special <code>Postmaster</code> (without domain) address.
+
+	</body>
+</html>

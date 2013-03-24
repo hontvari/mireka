@@ -1,0 +1,57 @@
+<html>
+	<head>
+		<title>Installing on Windows</title>
+		<link rel="stylesheet" type="text/css" href="../doc.css" />
+	</head>
+
+	<body>
+		<h1>Installing on Windows</h1>
+
+<h3>Dependencies</h3>
+<p>Download and install the Java Runtime Environment. JRE 7 or newer is required:<br>
+<a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle Java SE downloads</a>
+
+<h3>Extract binary archive</h3>
+<a href="http://code.google.com/p/mireka/downloads/list">Download</a> and extract the binary archive. 
+Use a target directory like <code>C:\ProgramData\Mireka</code>. 
+Mails are stored in subdirectories in the installation directory, 
+so the protected <code>Program Files</code> directory is not ideal, 
+unless you replace the affected subdirectories with links to <code>C:\ProgramData\Mireka</code> subdirectories.
+
+<h3>Permissions</h3>
+<p>Setup permissions if your use case requires it.
+The recommended permissions are the same as on Linux. 
+See the comments in the Setup file ownerships section of the <a href="ubuntu-tarball.html">Installing binary tarball on Ubuntu</a> page.
+
+<h3>Run Mireka as a Service</h3>
+<p>Download the Apache Commons Daemon Windows binary archive from here:
+<a href="http://www.apache.org/dist/commons/daemon/binaries/windows/">www.apache.org/dist/commons/daemon/binaries/windows/</a>
+<p>You can find more information about Commons Daemon here: <a href="http://commons.apache.org/proper/commons-daemon/binaries.html">commons.apache.org/proper/commons-daemon/binaries.html</a>
+<p>The archive contains binaries for both 32 and 64 bit systems.
+Copy <code>prunmgr.exe</code> and the <code>prunsrv.exe</code> corresponding to your processor architecture into the <code>bin</code> directory of Mireka.
+<p>Start a command shell running it as administrator in the Mireka home directory.
+<p>Rename the two exe files to be more specific:
+<p class=code>rename bin\prunsrv.exe mireka.exe
+rename bin\prunmgr.exe mirekaw.exe
+<p>Install the service:
+<p class="code">bin\mireka install mireka --DisplayName="Mireka Mail Server" --Description="Mireka Mail Server and SMTP Proxy" --StartMode=jvm --StopMode=jvm --StartPath="%CD%" --StopPath="%CD%" --Classpath=classes;lib/*;conf ++JvmOptions=-Dlogback.configurationFile=conf/logback.xml ++JvmOptions=-Dmireka.home="%CD%" ++JvmOptions=-Djava.net.preferIPv4Stack=true --Startup=auto --StartClass=mireka.startup.Start --StopClass=mireka.startup.Stop --LogPath=log
+
+</p>
+<p>You can start the Mireka service in the Services Management Console GUI, or by issuing the command:
+<p class="code">net start mireka</p>
+
+<h5>Troubleshooting / Maintenance</h5>
+<p>Check the logs, including the daemon utility log in the <code>log</code> subdirectory. 
+<p>To remove the service:
+<p class="code">bin\mireka delete</p>
+<p>GUI to view/change service parameters:
+<p class="code">bin\mirekaw</p>
+<p>Detailed status information about the service:
+<p class="code">sc query mireka</p>
+
+<h3>Next steps</h3>
+<p>Mireka home directory is the directory where you extracted the Mireka zip file. 
+You will find the log files in the <code>log</code>, the configuration files in the <code>conf</code> subdirectories. 
+ 
+	</body>
+</html>

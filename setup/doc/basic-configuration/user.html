@@ -1,0 +1,34 @@
+<html>
+	<head>
+		<title>Adding a user account</title>
+		<link rel="stylesheet" type="text/css" href="../doc.css" />
+	</head>
+
+	<body>
+		<h1>Adding a user account</h1>
+
+
+<p><kbd>global-users.js</kbd> contains the list of users who are authorized to 
+use the Message Submission and POP3 services. It contains username, password pairs. 
+An email client (MUA) must authenticate using such an account before submitting and
+retrieving messages. 
+
+<p>Note: The users listed here will receive a POP maildrop and become valid recipients 
+for all local domains listed in <code>domains.js</code>. 
+For example, you have a user account with the name <kbd>john</kbd>, and the local 
+domains are <kbd>example.com</kbd> and <kbd>example.net</kbd>. 
+In this case the Mireka accepts both <kbd>john@example.com</kbd> and <kbd>john@example.org</kbd>.
+
+<p>Edit the <code>global-users.js</code> file and add your user to the <code>users</code> list. 
+For example if you have two users, John and Jane, the result should look something like this:
+<p class="code">globalUsers = setup(GlobalUsers, { users: [
+
+	<span class="relevant">globalUser("john", "changeit"),
+	globalUser("jane", "changeit"),</span>
+			
+]});</p>
+
+<p>Do not forget to <a href="postmaster.html">designate a user as postmaster</a>.
+
+	</body>
+</html>

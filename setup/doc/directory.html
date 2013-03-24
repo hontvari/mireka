@@ -1,0 +1,38 @@
+<html>
+<head>
+<title>Directory layout</title>
+</head>
+
+<body>
+<h1>Directory layout</h1>
+
+Mireka has a single home directory, <var>MIREKA_HOME</var>, which contains almost everything related to it:
+configuration, mails, log, Java code. The actual data may reside on some other part of 
+the file hierarcy, but even then, the home directory contains a file system link  
+to the actual place of the data.
+For example in case of the Ubuntu deb installation, <var>MIREKA_HOME</var> is <code>/var/lib/mireka</code>,
+which contains a soft link named <code>log</code>, which points to the <code>/var/log/mireka</code> directory, 
+which in turn contains the log files.
+<p>The place of <var>MIREKA_HOME</var> depends on your system and installation method:
+<ul>
+	<li>If you installed Mireka by extracting a binary distribution archive then 
+	the home directory is the one into which you extracted the archive. For example <code>/opt/mireka</code>.
+	<li>If you installed the deb package then the home directory is <code>/var/lib/mireka</code>.
+</ul>
+See the installation pages for more information.
+<p>Directories within <var>MIREKA_HOME</var>:
+<ul>
+<li><code>bin</code>: start programs/scripts
+<li><code>classes</code>: custom, compiled Java classes can be but here
+<li><code>conf</code>: configuration files
+<li><code>doc</code>: HTML user documentation, you are reading it now
+<li><code>lib</code>: Java libraries, including Mireka itself. Custom libraries can also be put here.
+<li><code>log</code>: log files
+<li><code>maildrops</code>: contains one subdirectory for each user account, received 
+mails are stored here, until the user downloads and deletes them via POP3
+<li><code>postmaster</code>: Mireka stores a copy of each mail sent to Postmaster in this directory for debugging purposes
+<li><code>queues</code>: mails waiting for transmission to another server are stored here
+</ul>
+
+</body>
+</html>

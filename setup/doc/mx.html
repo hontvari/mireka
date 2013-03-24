@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>MX Service Configuration</title>
+<title>SMTP Service</title>
 <style>
 table          { border-collapse: collapse;
                  border: 1px solid; 
@@ -13,7 +13,7 @@ th             { border: 1px solid; padding: 1em; }
 </head>
 
 <body>
-<h1>How to Configure the SMTP Service</h1>
+<h1>SMTP Service</h1>
 		
 <p>The SMTP service receives mails sent to the local domains by any server on the 
 internet. The service, in turn, relays all received mails to the backend server,
@@ -23,40 +23,15 @@ record.
 </p>
 
 <p>
-Configuration files specific to the MX service are located in the 
-<kbd>${mirekaHome}/conf/mx</kbd> directory.
-</p>
+<code>mx.js</code> is the most strongly associated configuration file. 
+It configures the SMTP service, the filter chain, and most filter parameters.
 
-<table>
-<tr><th>mx.xml</th><td>primary configuration file of the MX 
-service. It configures the SMTP service, 
-the filter chain, and most filter parameters. 
-In turn, it imports all the other configuration files of 
-the MX service.
 <ul>
 <li>SMTP server: accepts incoming connections, sends mail transactions to the 
 filter chain
 <li><a href="filters.html">filter chain</a>: filters are responsible for the 
 processing of incoming mail transactions.
-<li>valid recipients: used by filters. This section itself doesn't contain
-concrete recipient specifications, but imports them from several other 
-configuration files.
-<li>recipient table: specifies where to send which recipient. In the default 
-configuration, all recipients which match the "valid recipients" list are 
-relayed to the default backend server, which is specified in 
-<kbd>mireka.xml</kbd>.
 </ul>
-</td></tr>
-<tr><th>individual-recipients.xml</th><td>simple recipient addresses, like 
-<kbd>john@example.com</kbd>. If a recipient sent by the client equals with a 
-recipient adress supplied  
-here then it will be accepted (assuming other conditions are also met). 
-<p>This file is imported by <kbd>mx.xml</kbd>.</p>  </td></tr>
-<tr><th>wildcard-recipients.xml</th><td>more complex address specificatons, like
-<cite>"any recipient which includes <kbd>bounce</kbd> in its local part, and of which 
-remote part is <kbd>lists.example.com</kbd>"</cite>.
-<p>This file is imported by <kbd>mx.xml</kbd>.</p></td></tr>
-</table> 
 
 </body>
 </html>

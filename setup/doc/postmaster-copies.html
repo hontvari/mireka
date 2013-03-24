@@ -1,0 +1,24 @@
+<html>
+<head>
+<title>Postmaster mail copies</title>
+</head>
+
+<body>
+<h1>Postmaster mail copies</h1>
+
+<p>
+All mails sent to the special <kbd>Postmaster</kbd> addresses are saved into the
+<code><var>MIREKA_HOME</var>/postmaster</code> directory. They are sent to their assigned 
+destination as well. There are two types of postmaster addresses. In the 
+first form, no domain is specified. This is always accepted. In the second form, 
+domain part is also specified. These are only accepted if the domain is a local 
+domain. This feature is useful for debugging. The saved file shows the content 
+of the message before any processing. The mails are saved even if an error
+occurs later in the processing chain, e.g. the back-end server cannot be 
+connected in proxy mode. 
+</p>
+
+<p>You may need to clear the directory occasionally.</p>
+
+</body>
+</html>

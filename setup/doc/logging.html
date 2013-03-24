@@ -1,0 +1,36 @@
+<html>
+<head>
+<title>Logging</title>
+</head>
+
+<body>
+<h1>Logging</h1>
+
+<h2>Log files</h2>
+
+Log files are in the <code><var>MIREKA_HOME</var>/log</code> directory.
+
+<h3><code>error.log</code></h3>
+It contains errors and warnings. If everything goes well, it should only contain
+startup and shutdown messages.
+
+<h3><code>access.log</code></h3>
+It contains every SMTP command received or sent and some additional information 
+from  
+filters. It contains errors and warnings as well. If you have more then 100 000 
+mail transactions per day, then you may want to switch on buffering on this log.
+
+<h3><code>unknown-user.log</code></h3>
+Every recipients, which are rejected because they are not in the list of 
+valid recipients, although they are addressed to a local domain, are logged in 
+this file. This log file is useful on a fresh installation of Mireka, to
+make sure that no valid recipients are rejected because of wrong configuration. 
+By default it is switched off.
+
+<h2>Configuring logging</h2>
+Mireka uses the Logback logging library. 
+The log configuration file is <code><var>MIREKA_HOME</var>/conf/logback.xml</code>. 
+For more information, see the <a href="http://logback.qos.ch/">documentation of Logback</a>.
+
+</body>
+</html>

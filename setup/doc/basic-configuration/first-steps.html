@@ -1,0 +1,45 @@
+<html>
+	<head>
+		<title>First steps after installation</title>
+		<link rel="stylesheet" type="text/css" href="../doc.css" />
+	</head>
+
+	<body>
+		<h1>First steps after installation</h1>
+
+<p>After installating Mireka, you have to configure the following settings, which has no sensible defaults.
+<h3>Server name</h3>
+The server identifies itself for others with its domain name. 
+If this server will send mails to external servers, then it is important to setup this correctly. 
+In this case always use the fully qualified domain name of the server. 
+Otherwise you should come up with something meaningful for you.   
+<p>Edit <code>mireka.js</code> and change the value of the <code>helo</code> variable. 
+For example if your server is named <code>mail.example.com</code> the result should look like this:
+<p class="code">...
+var helo="<span class="relevant">mail.example.com</span>";
+...
+</p>
+
+<h3>SRS key</h3>
+<p>If Mireka will be configured to sometime forward incoming mail to an external server, than it has to use a mechanism named SRS to successfully deliver the mail. 
+SRS needs a secret key. Choose a random hexadecimal value which should be about 32 characters long.
+<p>Edit <code>mireka.js</code>, uncomment the <code>secretKey</code> line and edit its value. 
+For example if you have choosen <code>12AB34CD</code> as the secret,  the result should look like this:
+<p class="code">...
+	<span class="relevant">secretKey: "12AB34CD",</span>
+...
+</p>
+
+<h3>Postmaster</h3>
+If your server is not only a proxy, then you have to designate a user as the postmaster. 
+Do this after you have setup user accounts.  
+See the page <a href="postmaster.html">Designate the Postmaster</a> for instructions.
+<p>
+
+<h3>Mailer-daemon name and address</h3>
+You have to change the mailer daemon address at the top of the <code>submission/queues.js</code>
+configuration file, to reflect your own domain. The mailer daemon address is used as the <cite>from</cite> 
+address in automatically generated delivery status notification mails.  
+
+	</body>
+</html>

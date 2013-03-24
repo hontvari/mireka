@@ -1,6 +1,7 @@
 <html>
 <head>
-<title>Configuration</title>
+<title>Configuration files</title>
+<link rel="stylesheet" type="text/css" href="doc.css" />
 <style>
 table          { border-collapse: collapse;
                  border: 1px solid; 
@@ -8,59 +9,53 @@ table          { border-collapse: collapse;
 		 margin-right: 2em
 	       }	
 td             { border: 1px solid; padding: 1em; }
-th             { border: 1px solid; padding: 1em; }
+th             { border: 1px solid; padding: 1em; white-space: nowrap }
 </style>
 </head>
 
 <body>
-<h1>How to Configure Mireka</h1>
-		
-<h3>Container: Resin Application Server</h3>
-<p>Mireka is using the Resin application server for configuration and startup.
-Therefore it is distibuted in a standard Java Web Application archive, although 
-currently it has no web interface. In the unlikely event, that some additonal  
-configuration of Resin is needed, other than what was already done during 
-installation, you can find more information about Resin on its web site at
-<a href="http://www.caucho.com/products/resin/">http://www.caucho.com/products/resin/</a>.
+<h1>Configuration files</h1>
+
+Configuration files are located in <code><var>MIREKA_HOME</var>/conf</code>.
+They will be read and processed by Mireka on startup.
+
+<p><code>mireka.js</code> is the primary configuration file of Mireka. 
+The JavaScript evaluator starts with this file. This file in turn imports all 
+other .js files. 
+It also imports helper functions from a non-configuration file: 
+<code><var>MIREKA_HOME</var>/lib/configuration.js</code>. 
+These helper functions are described in detail in comment blocks within that file. 
 </p>
 
-<h3>Mail services</h3>
-<p>
-Mireka configuration files are located in the <kbd>${mirekaHome}/conf/</kbd> 
-directory.
-</p>
+<p>In addition to the standard EcmaScript objects and Mireka mailing specific Java objects, 
+the script can access the <a href="javadoc/mireka/startup/ScriptApi.html"><code>mireka.startup.ScriptApi</code></a> object using the <code>configuration</code> variable.</p>  
 
 <p>
-<kbd>mireka.xml</kbd> is the primary configuration file of Mireka. 
-It is imported by 
-<kbd>resin-web.xml</kbd> in the Mireka web application archive during runtime. 
-<kbd>mireka.xml</kbd> in turn imports most of the other configuration 
-files. 
-</p>
+Essentially, the JavaScript code in the configuration files create new Mireka objects, which are written in Java,  
+and assigns values to their properties.
+A typical pattern looks like this:
+<p class="code">setup(Member, {
+	address: "john@example.com",
+	name: "John Doe",
+}),</p>
+As in almost all cases, the <code>setup</code> JavaScript function is used.
+It creates a new instance of the <a href="javadoc/mireka/forward/Member.html"><code>mireka.forward.Member</code></a> class, 
+and set its properties by calling <code>Member.setAddress</code> with the value <code>"john@example.com"</code>, 
+and <code>Member.setName</code> with <code>"John Doe"</code>.   
+<code>setup</code> does a few other things, see the comment block preceeding it. 
 
-<p>
-These configuration files will be read and processed by Resin. 
-Essentially, they control what objects must be created in runtime. The name of a tag 
-is a Java class name. An element assigns a value to a property of the object. 
-It is also possible to specify another objest as a property value, either 
-defining it inline, or referencing it by an EL expression.    
-For more information on the syntax, see the Resin documentation.
-</p>
-
-<p>
-For more information on the Mireka classes which are referenced in the 
-configuration, see the <a href="javadoc/index.html">javadoc</a>.
+<p>It is also possible to specify another object as a property value, either 
+defining it inline, or referencing it by a variable name.    
 </p>
 
 <p>
-The import structure of configuration files should be considered as an example. 
-It is possible to include all data in <kbd>mireka.xml</kbd>. It is also possible 
-to divide the configuration into more files than what is supplied by default.  
+For more information on Mireka objects, see the <a href="javadoc/index.html">Javadoc</a>.
 </p>
 
+<h2>List of configuration files<h2>
 <table>
-
-<tr><th>mireka.xml</th><td>Enables/disables SMTP, Submission and POP3 
+<tr><th>File name</th><th>Function</th></tr>
+<tr><th><code>mireka.js</code></th><td>Enables/disables SMTP, Message Submission and POP3 
 services by importing or not importing their respective configuration files. 
 It contains common elements used by more than one services. Some of these are 
 default objects which are referred by other parts of the configuration, but it 
@@ -69,67 +64,58 @@ very few, mostly static configuration related to Mireka as a whole.
 See the comments in the file for more information.
 </td></tr>
 
-<tr><th><a href="mx.html">mx</a></th><td>Configuration files related to the 
-public SMTP  
+<tr><th><code>mx.js</code></th><td>Configures the public SMTP   
 service, which receives mails sent to the local domains by any server on the 
 internet. The service, in turn, stores the mail in a POP3 mailbox, relays it in 
 real time to a backend server behaving like a proxy, forwards it, etc.
 </td></tr>
 
-<tr><th><a href="submission.html">submission</a></th><td>Configuration files 
-related to the Message Submission service, used by local users to send mails either to 
-other local users, or to other domains on the internet. The service, in turn, stores the mail in a POP3 mailbox, relays it in 
-real time to a backend server behaving like a proxy, forwards it, etc.
+<tr><th><code><a href="submission.html">submission/*</a></code></th><td>
+These files configure the <a href="submission.html">Message Submission service</a>, 
+used by local users to send mails either to 
+other local users, or to other domains on the internet. 
 </td></tr>
 
-<tr><th>pop/pop.xml</th><td>Configures the POP3 service itself and the POP3 
+<tr><th><code>pop.js</th><td>Configures the POP3 service itself and the POP3 
 Importer. POP3 Importer is useful for migration. It retrieves each users' mails from another 
 POP3 server after startup. To use it, it is necessary that the user names and
 the passwords match on both system.
 </td></tr>
 
-<tr><th>domains.xml</th><td>List of local domain names. 
+<tr><th><code>domains.js</code></th><td>List of local domain names. 
 If the domain part of a recipient is not in this list, then the recipient will 
 be rejected by the MX SMTP service.
 </td></tr>
 
-<tr><th><a href="global-users.html">global-users.xml</a></th>
+<tr><th><code>global-users.js</code></th>
 <td>Authorized users of the Mail Submission, POP3 services, in addition they
 are also valid wildcard recipients in the MX SMTP service. 
 </td></tr>
 
-<tr><th>alias.xml</th>
+<tr><th><code>local-recipients.js</code></th>
 <td>
-List of aliases. An alias maps one or more virtual recipients to a 
-canonical recipient address. 
+It tells what to do with mails sent to local domains. 
+It maps recipient addresses to a destinations, like store the mail in a maildrop for 
+later retrieval via POP3, forward it to another domain, etc. 
 </td></tr>
 
-<tr><th>forwards.xml</th>
+<tr><th><code>circular.js</code></th>
 <td>
-Forward lists. Forward lists are used to redistribute incoming mail to multiple 
-other addresses.
+This file exists purely for a technical reason, to break circular dependencies.
+If a configuration object named A refers to another object B, but B also refers to A, then 
+neither A nor B could be created and fully initialized before the other. In such cases 
+an unitialized A object is created in this file, then it is referenced when object B and other 
+depending objects are created and initialized. 
+Finally object A is initialized in the usual configuration file corresponding to its function.
 </td></tr>
 
-<tr><th>lists.xml</th>
-<td>
-List of (very) simple mailing lists.
-</td></tr>
 
-<tr><th>others.xml</th>
+<tr><th><code>logback.xml</code></th>
 <td>
-Other local recipients not included in the alias.xml, forwards.xml etc. 
-configuration files.
+It configures <a href="logging.html">logging</a>.
 </td></tr>
 
 </table>
-
-<h3>Logging</h3>
-<p>
-<kbd>${mirekaHome}/conf/logback.xml</kbd> configures logging.
-For more information, see the documentation of 
-<a href="http://logback.qos.ch/">Logback</a> and the  
-<a href="administration.html">Administration</a> section.
-</p>
 
 </body>
 </html>

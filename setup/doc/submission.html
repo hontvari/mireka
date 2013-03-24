@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Submission Service Configuration</title>
+<title>Message Submission Service</title>
 <style>
 table          { border-collapse: collapse;
                  border: 1px solid; 
@@ -8,20 +8,21 @@ table          { border-collapse: collapse;
 		 margin-right: 2em
 	       }	
 td             { border: 1px solid; padding: 1em; }
-th             { border: 1px solid; padding: 1em; }
+th             { border: 1px solid; padding: 1em; white-space: nowrap }
 </style>
 </head>
 
 <body>
-<h1>How to Configure the Submission Service</h1>
+<h1>Message Submission Service</h1>
 		
 <p>
-The Submission service is used by local users to send mails to either 
+The submission service is used by local users to send mails to either 
 other local users, or to other domains on the internet. The service, in turn, 
 transmits mails to the public SMTP server of the recipient domain, delivers them 
 locally, relays them locally, etc. 
 This service is specified by 
 <a href="http://tools.ietf.org/html/rfc4409">RFC 4409, Message Submission for Mail</a>.
+It is a variant of SMTP.
 </p>
 <p>
 If the transmission of a mail to a remote domain fails on the first attempt, 
@@ -37,13 +38,16 @@ The service usually runs on port 587. Its address is NOT published in a DNS MX
 record.
 </p>
 
+<h2>List of configuration files</h2>
+
 <p>
-Configuration files specific to the Submission service are located in the 
-<kbd>${mirekaHome}/conf/submission</kbd> directory.
+Configuration files specific to the Message Submission service are located in the 
+<code><var>MIREKA_HOME</var>/conf/submission</code> directory.
 </p>
 
 <table>
-<tr><th>submission.xml</th><td>primary configuration file of the Submission 
+<tr><th>File name</th><th>Function</th></tr>
+<tr><th><code>submission.js</code></th><td>The primary configuration file of the Submission 
 service. It configures the SMTP server, the filter chain, and most 
 filter parameters. In turn, it imports all the other configuration files of 
 the Submission service.
@@ -53,16 +57,19 @@ Sections:
 filter chain
 <li><a href="filters.html">filter chain</a>: Filters are responsible for the 
 processing of submitted mail transactions.
-<li>recipient table: it does not have any interesting role in this service, it 
-just specifies that all recipients must be transmitted to the mail server of
-the recipient's domain.
+<li>recipient table: the recipient table used here simply specifies 
+that the service delivers mail to local recipients according to the <code>local-recipients.js</code>
+configuration file, just like the SMTP service. Mails sent to non-local 
+addresses are transmitted to the mail server of the recipient's domain.
 </ul>
 </td></tr>
-<tr><th>authorized-ip.xml</th><td>list of ip addresses or address ranges. 
-Mails can be submitted from these ip addresses without further authentication of 
-the sender.
-<p>This file is imported by <kbd>submission.xml</kbd>.</p></td></tr>
-<tr><th>queues.xml</th><td>The submission service uses file system based 
+
+<tr><th><code>authorized-ip.js</code></th><td>List of ip addresses or address ranges. 
+Mails can be submitted from these ip addresses without any further authentication.
+
+<p>This file is imported by <code>submission.js</code>.</p></td></tr>
+
+<tr><th><code>queues.js</code></th><td>The submission service uses file system based 
 queues to make sure no mails are lost. Until a mail is confirmed to be received
 by the recipient domain the mail stays in a queue. The queues are managed by 
 transmitters.

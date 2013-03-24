@@ -1,0 +1,27 @@
+<html>
+	<head>
+		<title>Specifying forwarding</title>
+		<link rel="stylesheet" type="text/css" href="../doc.css" />
+	</head>
+
+	<body>
+		<h1>Specifying forwarding</h1>
+		
+<p>Forwarding is used to redistribute incoming mail to one or more  
+other addresses, including remote addresses too. In contrast to a mailing list, 
+if delivery to any of the destination addresses fails, then the bounce message goes 
+to the original sender, not to a third person, like a mailing list owner.
+
+<p>NOTE: Before first configuring forwarding to a remote address, you must configure the SRS module.
+See <a href="first-steps.html">First steps</a>.
+
+<p>Edit <code>local-recipients.js</code> and insert a new forwarding rule below the 
+comment <cite>ENTER YOUR RECIPIENT-DESTINATION MAPPINGS HERE</cite>.
+For example if you want that all mails sent to the address <code>project-halo@example.com</code> be 
+forwarded to <code>john@example.com</code> and <code>customer@example.net</code>, then insert the following line:
+<p class=code>...
+<span class="relevant">forward("project-halo@example.com", "john@example.com", "customer@example.net"),</span>
+...</p>
+
+	</body>
+</html>

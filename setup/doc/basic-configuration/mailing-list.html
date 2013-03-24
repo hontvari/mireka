@@ -1,0 +1,47 @@
+<html>
+	<head>
+		<title>Defining a simple mailing list</title>
+		<link rel="stylesheet" type="text/css" href="../doc.css" />
+	</head>
+
+	<body>
+		<h1>Defining a simple mailing list</h1>
+		
+<p>Mireka provides very simple mailing lists. This implementation is 
+appropriate for small, internal, closed membership lists. There is no 
+archiving, automatized subscription/unsubscription address, moderation etc. If the 
+requirements are more complex, then a dedicated list manager software should be used.
+
+<p>Edit <code>local-recipients.js</code> and insert a new mailing list definition below the 
+comment <cite>ENTER YOUR RECIPIENT-DESTINATION MAPPINGS HERE</cite>.
+For example if you want that all mails sent to the address <code>admin@example.com</code> be 
+distributed to <code>john@example.com</code> and <code>jane@example.net</code>, then insert the following lines:
+<p class="code">...
+<span class="relevant">mailingList({
+	address: "admin@example.com",                 
+	subjectPrefix: "[SYS-ADMIN]",          <span class="comment">// Subject of mails will be prefixed by this text. Default: no prefix.</span>
+	membersOnly: false,                    <span class="comment">// Only members are allowed to send mails to the list. Default: true</span>
+	attachmentsAllowed: true,              <span class="comment">// Default is true.</span>
+	replyToList: true,
+	reversePath: "list-owner@example.com", <span class="comment">// Bounce messages will go to this address. Required.</span>
+	membersOnlyMessage: "Only example.com system administrators can post onto this list.",
+	nonMemberSenderValidator: setup(SubjectRegexpValidator, { 
+		pattern: ".*TICKET-NO.*"
+	}),
+	members: listMembers([
+		"john@example.com",
+		"jane@example.net",
+	]),
+}),</span>
+...</p>
+
+<p>Fields not commented above:
+<ul>
+<li><code>replyToList</code>: If true, pressing the Reply button in a mail client send a mail to the list, and not the original sender. Default: true.
+<li><code>membersOnlyMessage</code>: Mails from non-members (if they are disabled) will be bounced with this message. Default:</span>
+	<q>Only members of the list are allowed to send a message to this list address.</q>
+<li><code>nonMemberSenderValidator</code>: Mails from non-members with subjects matching the supplied regular expressions will be always allowed. Optional. 
+</ul>
+
+	</body>
+</html>

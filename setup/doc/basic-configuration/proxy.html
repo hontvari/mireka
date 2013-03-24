@@ -1,0 +1,76 @@
+<html>
+	<head>
+		<title>Using as proxy</title>
+		<link rel="stylesheet" type="text/css" href="../doc.css" />
+	</head>
+
+	<body>
+		<h1>Using as proxy</h1>
+		
+<p>Mireka can relay mails sent to one or more or even any addresses to another SMTP server.
+<p>Mireka relays the SMTP statements received in a mail 
+session to a backend server step-by-step in real-time. In this way both 
+this server and the backend server is able to reject a mail within the 
+SMTP session, before accepting the responsibility of delivering the 
+mail. This fast-fail behaviour is useful in some situations.  
+
+<p>First edit <code>mireka.js</code> and configure the value of the <code>backendServer</code>
+variable. For example if your backend server is <code>backend.example.com</code> and 
+listens on port 2525, your configuration should look like this:
+<p class="code">...
+backendServer = setup(BackendServer, {
+	host: "<span class="relevant">backend.example.com</span>",
+	<span class="relevant">port: 2525,</span>
+	clientFactory: clientFactory
+});
+...</p>
+
+<p>Note: you can freely specify another backend server for a different set of recipient addresses.
+
+<p>Next, edit <code>local-recipients.js</code> and insert the proxy mapping below the 
+comment <cite>ENTER YOUR RECIPIENT-DESTINATION MAPPINGS HERE</cite>.
+For example if you want to relay everything to the backend server, then insert the following code:
+<p class="code">...
+<span class="relevant">massProxy(backendServer, [ setup(AnyRecipient) ]);</span>
+...</p>
+
+<p>Here is a complex example for selectively relaying specific addresses:
+<p class="code">...
+<span class="relevant">
+massProxy(backendServer, [
+
+	<span class="comment">// Fully specified recipients</span>
+	setup(InlineRecipientRegistry, {
+		addresses: [
+			"john@example.com",
+			"jack@example.com"
+		]
+	}),
+	
+	<span class="comment">// A wildcard recipient, only the local part is specified</span>
+	setup(CaseInsensitiveAnyDomainRecipient, {
+		localPart: "anonymous"
+	}),
+		
+	<span class="comment">// Another wildcard recipient with regular expression</span>
+	setup(RegexAddressSpecification, {
+		localPartRegex: ".*-bounces-.*",
+		remotePart: "lists.example.com"
+	}),
+		
+	<span class="comment">// Any postmaster address</span>
+	setup(AnyPostmaster),
+	
+	<span class="comment">// Addresses corresponding to local user accounts</span>
+	setup(GlobalUsersRecipientSpecification, {
+		users: globalUsers
+	}),
+]),</span>
+...</p>
+	
+<p><em>Tip:</em> Proxy mappings should be placed near the end of 
+<code>local-recipients.js</code>, so locally handled addresses will not be shadowed 
+accidentally by proxied addresses specified using wildcards.
+
+	</body>
+</html>

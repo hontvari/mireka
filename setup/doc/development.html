@@ -8,8 +8,8 @@
 
 <p>
 Almost anything can be changed in Mireka without modifying Mireka source code, 
-just by adding new Java classes for example in a jar and configuring them in
-the XML configuration files. Particularly useful are the filters, which can 
+just by adding new Java classes for example in a jar and initializing these new objects in
+the configuration files. Particularly useful are the filters, which can 
 alter the processing of a mail immediately within the SMTP transaction.
 </p>
 		
@@ -20,6 +20,7 @@ package.
 
 <h3>Filters</h3>
 
+<p>For an overview about the filter mechanism, see the <a href="filters.html">Filters</a> section.
 <p>
 A filter consists of two classes. 
 <a href="javadoc/index.html?mireka/filter/FilterType.html"><code>FilterType</code></a> 
@@ -42,10 +43,9 @@ The built-in filters can be used as example.
 <h3>Installation</h3>
 
 <p>
-Place your jars and classes into <kbd>${mirekaHome}/lib</kbd> and 
-<kbd>${mirekaHome}/classes</kbd>, 
-respectively. You can even place Java source files into 
-<kbd>${mirekaHome}/classes</kbd>, Resin will compile it automatically.
+Place your jars and compiled classes into <code><var>MIREKA_HOME</var>/lib</code> and 
+<code><var>MIREKA_HOME</var>/classes</code> 
+respectively.
 </p>
 
 <p>

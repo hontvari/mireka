@@ -1,0 +1,66 @@
+<html>
+	<head>
+		<title>Quick start on Linux</title>
+		<link rel="stylesheet" type="text/css" href="doc.css" />
+		<script type="text/javascript">
+			function getStyle(id) {
+				return document.getElementById(id).style;
+			}
+			onload = function() {
+				getStyle("option1").display = "none";
+				getStyle("option2").display = "none";
+				getStyle("option3").display = "none";
+			}
+			function toggleVisible(id) {
+				var elem = getStyle(id);
+				elem.display = elem.display == "none" ? "block" : "none"; 
+			}
+		</script>
+	</head>
+
+	<body>
+		<h1>Quick start on Linux</h1>
+
+
+<p>Install the Java runtime (JRE 7 or newer) and unzip. For example on Debian, Ubuntu:
+<p class="code">sudo apt-get install openjdk-7-jre-headless unzip
+<p>Download and extract the release archive:
+<p class="code">wget http://mireka.googlecode.com/files/mireka-4.0.zip 
+unzip mireka-4.0.zip
+cd mireka-4.0
+<p>Make the start script executable:
+<p class="code">chmod +x bin/start.sh
+<p>The default configuration opens the usual mail related TCP ports, all below 1024, and that is only allowed to root. 
+Choose from the following three options, ordered by their difficulty.
+
+<h3><a href="javascript:toggleVisible('option1')">Option 1: Run as root</a></h3>
+<p id="option1" class="code">sudo ./bin/start.sh</p>
+
+<h3><a href="javascript:toggleVisible('option2')">Option 2: Run as non-root, using non-standard ports</a></h3>
+<div id="option2"> 
+<p>Update the configuration to use port numbers greater than 1024:
+<p class="code">sed -i '/setup(PopServer/ a\\tport: 1110,' conf/pop.js
+sed -i '/setup(SMTPServer/ a\\tport: 1025,' conf/mx.js
+sed -i '/setup(SubmissionServer/ a\\tport: 1587,' conf/submission/submission.js
+<p>Now you can run it as a non-root user:
+<p class="code">./bin/start.sh</p>
+</div>
+
+<h3><a href="javascript:toggleVisible('option3')">Option 3: Run as non-root on stardard ports with the help of authbind</a></h3>
+<div id="option3"> 
+<p>Install authbind. For example on Debian, Ubuntu:
+<p class="code">sudo apt-get install authbind
+<p>Configure authbind to enable mail ports for you:
+<p class="code">echo -e "0.0.0.0/0:25,25\n0.0.0.0/0:110,110\n0.0.0.0/0:587,587" | sudo tee /etc/authbind/byuid/$UID /etc/authbind/byuid/\!$UID > /dev/null
+<p>Modify start.sh to use authbind:
+<p class="code">sed -i 's/^$JAVA_CMD/authbind &/' bin/start.sh
+<p>Now you can run it as a non-root user and still use standard ports:
+<p class="code">./bin/start.sh
+</div>
+
+<h3>After startup</h3>
+<p>You will see log messages showing that Mireka listens on port 25 (SMTP), 110 (POP), 587 (Message Submission) or on the ports you configured.
+<p>Press Ctrl+C to shutdown Mireka.
+
+	</body>
+</html>

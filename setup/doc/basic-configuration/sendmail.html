@@ -1,0 +1,24 @@
+<html>
+	<head>
+		<title>Sendmail command on Linux</title>
+		<link rel="stylesheet" type="text/css" href="../doc.css" />
+	</head>
+
+	<body>
+		<h1>Sendmail command on Linux</h1>
+		
+<p>Many Linux software depends on the <code>sendmail</code> program to send mail. 
+We have good experience with the sSMTP application. It provides a sendmail 
+implementation which sends the mail directly to an SMTP server.
+<p>To install sSMTP on Ubuntu:
+<p class="code">sudo apt-get install ssmtp</p>
+<p>Edit its main configuration file:
+<p class="code">sudoedit /etc/ssmtp/ssmtp.conf</p>
+<p>Set sSMTP to send mail to the Message Submission port of Mireka. For example:
+<p class="code">mailhub=<span class="relevant">mail.example.com:587</span></p>
+<p>You may also want to set other properties and edit the other configuration file, <code>/etc/ssmtp/revaliases</code>.
+<p>If sSMTP is on a different host than Mireka, then set Mireka to allow message submission from the sSMTP host. 
+See <a href="auhenticate-by-ip.html">Authenticate by IP address</a>.
+
+	</body>
+</html>
