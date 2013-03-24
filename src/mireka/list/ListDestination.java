@@ -70,7 +70,7 @@ public class ListDestination implements MailDestination {
     /**
      * if true, only members can post to the list.
      */
-    private boolean membersOnly = false;
+    private boolean membersOnly = true;
 
     /**
      * If false, attachments are not allowed.
