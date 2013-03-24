@@ -1,9 +1,5 @@
 /* 
 	POP3 and POP3 Mail Importer configuration.
-	
-	For more information on the individual configuration elements see the 
-	Javadoc documentation in the doc/javadoc directory. For an overview read
-	the documentation in the doc directory.  
 */
 
 /*
@@ -30,10 +26,7 @@ setup(PopServer, {
 	principalMaildropTable: setup(GlobalUsersPrincipalMaildropTable),
 	maildropRepository: maildropRepository,
 
-	/* 
-		Uncomment to specify TLS configuration specific to this 
-		service.
-	*/
+	// Uncomment to specify TLS configuration specific to this service.
 	/*
 	tlsConfiguration: setup(PrivateTlsConfiguration, {
 		enabled: true

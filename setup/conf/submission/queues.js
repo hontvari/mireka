@@ -1,10 +1,6 @@
 /* 
 	Configuration of the persistent mail queues used by the SMTP Mail 
 	Submission service.
-	
-	For more information on the individual configuration elements see the 
-	Javadoc documentation in the doc/javadoc directory. For an overview read
-	the documentation in the doc directory.  
 */
 
 /*

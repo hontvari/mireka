@@ -1,10 +1,6 @@
 /* 
 	Public SMTP service configuration. This is the service which usually 
 	runs on port 25.
-	
-	For more information on the individual configuration elements see the 
-	Javadoc documentation in the doc/javadoc directory. For an overview read
-	the documentation in the doc directory.  
 */
 
 /*
@@ -60,6 +56,7 @@ mxMessageHandler = setup(MessageHandlerFactoryImpl, {
 mx = setup(SMTPServer(mxMessageHandler), {
 	hostName: helo,
 	/* bindAddress: "192.0.2.0", */
+	
 	/* uncomment to enable STARTTLS if JSSE is correctly configured */
 	/* enableTLS: true, */
 });

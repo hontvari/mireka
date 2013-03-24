@@ -1,13 +1,7 @@
 /*
 	The main configuration file, which is read and executed by Mireka 
 	during startup. All other configuration scripts are included directly
-	or indirectly by this script. In addition to the standard EcmaScript 
-	objects, the script can access the mireka.startup.ScriptApi object using the
-	"configuration" variable.  
-	
-	For more information on the individual configuration elements see the 
-	Javadoc documentation in the doc/javadoc directory. For an overview read
-	the documentation in the doc directory.  
+	or indirectly by this script.
 */
 
 configuration.include("lib/configuration.js");
@@ -21,9 +15,9 @@ include("conf/circular.js");
 var helo="mail.example.com";
 
 /* 
-	Uncomment to set global JSSE TLS settings. This is not necessary 
-	if TLS is not used or if it is configured for each service 
-	separately.
+	Uncomment to set global Java Secure Socket Extension (JSSE) TLS settings. 
+	This is not necessary if TLS is not used or if it is configured for each 
+	service 	separately.
 */
 /*
 System.setProperty("javax.net.ssl.keyStore", "conf/keystore.jks");

@@ -1,5 +1,5 @@
 /*
-	Javascript utility code for configuration scripts.
+	JavaScript utility code for configuration scripts.
 */
 
 /*
@@ -9,7 +9,7 @@
 importClass(java.lang.System);
 
 /*
- * Import those Mireka classes into the global Javascript namespace, which are
+ * Import those Mireka classes into the global JavaScript namespace, which are
  * useful in a configuration.
  */
 importPackage(Packages.mireka);
@@ -39,7 +39,7 @@ importPackage(Packages.mireka.transmission.immediate);
 
 /*
  * Make the include function global. The include function reads and executes
- * another Javascript configuration file. It has a single parameter, the file
+ * another JavaScript configuration file. It has a single parameter, the file
  * path. The path can be relative, in that case the parent directory is the
  * Mireka home directory.
  */
@@ -52,7 +52,7 @@ var include = configuration.include;
  * a new instance of this class. If the bean parameter is an object instance,
  * then it will set the properties of that JavaBean.
  * 
- * The optional content parameter is a Javascript object, intended to be
+ * The optional content parameter is a JavaScript object, intended to be
  * specified using the object literal syntax, of which attributes will be copied
  * into the specified by the bean argument.
  * 
@@ -125,8 +125,9 @@ function setupDefault(bean, content) {
 }
 
 /*
- * Returns an array which contains all elements of the arrays and all non-array
- * objects which were supplied in the argument list.
+ * Converts the argument list into an array.  
+ * The returned array contains all elements of array arguments and all 
+ * non-array arguments. For example: deepList([1, 2], 3) returns [1, 2, 3].
  */
 function deepList() {
 	var result = [];

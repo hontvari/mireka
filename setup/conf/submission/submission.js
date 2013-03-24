@@ -1,10 +1,6 @@
 /* 
 	SMTP Submission service configuration. This is the service which usually
 	runs on port 587.
-	
-	For more information on the individual configuration elements see the 
-	Javadoc documentation in the doc/javadoc directory. For an overview read
-	the documentation in the doc directory.  
 */
 	
 /* 
