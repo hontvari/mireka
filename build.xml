@@ -379,6 +379,14 @@
 	<target name="release"
 	        depends="clean, dist, deb, test"
 	        description="Uploads release archives to Google Code">
+		<basename file="${debFilename}" property="debFileBasename"/>
+		<gcupload username="${gc.username}"
+		          password="${gc.password}"
+		          projectname="mireka"
+		          filename="${debFilename}"
+		          targetfilename="${debFileBasename}"
+		          summary="Mireka ${build.version} deb package for Ubuntu"
+		          labels="Type-Package, OpSys-Ubuntu" />
 		<gcupload username="${gc.username}"
 		          password="${gc.password}"
 		          projectname="mireka"
@@ -393,14 +401,6 @@
 		          targetfilename="${dist.name}.zip"
 		          summary="Mireka ${build.version}"
 		          labels="Featured, Type-Archive, OpSys-All" />
-		<basename file="${debFilename}" property="debFileBasename"/>
-		<gcupload username="${gc.username}"
-		          password="${gc.password}"
-		          projectname="mireka"
-		          filename="${debFilename}"
-		          targetfilename="${debFileBasename}"
-		          summary="Mireka ${build.version} deb package for Ubuntu"
-		          labels="Type-Package, OpSys-Ubuntu" />
 	</target>
 
 	<target name="clean" description="Cleans all previous build artifacts">
