@@ -348,6 +348,7 @@
 
 		<deb todir="build/dist/ubuntu"
 		     package="${name}"
+		     debFilenameProperty="debFilename"
 		     section="mail"
 		     architecture="all"
 		     depends="adduser, authbind, java7-runtime-headless | openjdk-7-jre-headless, upstart-job"
@@ -376,7 +377,7 @@
           target: release              
          ================================= -->
 	<target name="release"
-	        depends="clean, dist, test"
+	        depends="clean, dist, deb, test"
 	        description="Uploads release archives to Google Code">
 		<gcupload username="${gc.username}"
 		          password="${gc.password}"
@@ -392,6 +393,14 @@
 		          targetfilename="${dist.name}.zip"
 		          summary="Mireka ${build.version}"
 		          labels="Featured, Type-Archive, OpSys-All" />
+		<basename file="${debFilename}" property="debFileBasename"/>
+		<gcupload username="${gc.username}"
+		          password="${gc.password}"
+		          projectname="mireka"
+		          filename="${debFilename}"
+		          targetfilename="${debFileBasename}"
+		          summary="Mireka ${build.version} deb package for Ubuntu"
+		          labels="Type-Package, OpSys-Ubuntu" />
 	</target>
 
 	<target name="clean" description="Cleans all previous build artifacts">
