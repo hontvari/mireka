@@ -1,10 +1,13 @@
-package mireka.transmission.immediate;
+package mireka.transmission.immediate.host;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
 import org.subethamail.smtp.client.SmartClient;
 
+/**
+ * An {@link OutputStream} which redirects all writes to a {@link SmartClient}.
+ */
 class SmartClientOutputStreamAdapter extends OutputStream {
 
     private final SmartClient client;

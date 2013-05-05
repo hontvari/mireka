@@ -1,21 +1,17 @@
 package mireka.transmission.immediate;
 
-import mireka.transmission.immediate.dns.AddressLookupFactory;
-import mireka.transmission.immediate.dns.MxLookupFactory;
-
-public class ImmediateSenderFactory {
-    private MailToHostTransmitterFactory mailToHostTransmitterFactory;
-
-    public ImmediateSender create() {
-        return new ImmediateSender(new MxLookupFactory(),
-                new AddressLookupFactory(), mailToHostTransmitterFactory);
-    }
+/**
+ * Factory for {@link ImmediateSender}. 
+ */
+public interface ImmediateSenderFactory {
+    /**
+     * Returns a new instance of {@link ImmediateSender}.
+     */
+    ImmediateSender create();
 
     /**
-     * @category GETSET
+     * Returns true if the created {@link ImmediateSender} requires that all 
+     * recipients of the mail to be sent have the same remote-part.  
      */
-    public void setMailToHostTransmitterFactory(
-            MailToHostTransmitterFactory mailToHostTransmitterFactory) {
-        this.mailToHostTransmitterFactory = mailToHostTransmitterFactory;
-    }
+    boolean singleDomainOnly();
 }

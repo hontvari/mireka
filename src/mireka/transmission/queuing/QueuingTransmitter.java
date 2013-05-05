@@ -21,13 +21,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class QueuingTransmitter implements Transmitter, MailProcessorFactory {
-    private Logger logger = LoggerFactory.getLogger(QueuingTransmitter.class);
+    private final Logger logger = LoggerFactory.getLogger(QueuingTransmitter.class);
     private ScheduleFileDirQueue queue;
     private ImmediateSenderFactory immediateSenderFactory;
     private RetryPolicy retryPolicy;
     private LogIdFactory logIdFactory;
     private TransmitterSummary summary;
 
+    @Override
     public void transmit(Mail mail) throws QueueStorageException {
         logger.debug("Mail received for transmission: {}", mail);
         queueByRemotePart(mail);

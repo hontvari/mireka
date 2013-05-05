@@ -55,7 +55,7 @@ mailToHostTransmitterFactory = setup(MailToHostTransmitterFactory, {
 	logIdFactory: logIdFactory,
 });
 
-immediateSenderFactory = setup(ImmediateSenderFactory, {
+immediateSenderFactory = setup(DirectImmediateSenderFactory, {
 	mailToHostTransmitterFactory: mailToHostTransmitterFactory
 });
 

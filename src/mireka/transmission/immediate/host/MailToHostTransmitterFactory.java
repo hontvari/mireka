@@ -1,8 +1,12 @@
-package mireka.transmission.immediate;
+package mireka.transmission.immediate.host;
 
 import mireka.smtp.ClientFactory;
+import mireka.transmission.immediate.RemoteMta;
 import mireka.transmission.queuing.LogIdFactory;
 
+/**
+ * Factory for creating {@link MailToHostTransmitter} instances. 
+ */
 public class MailToHostTransmitterFactory {
     private ClientFactory clientFactory;
     private OutgoingConnectionsRegistry outgoingConnectionRegistry;

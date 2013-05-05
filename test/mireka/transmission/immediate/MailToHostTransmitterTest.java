@@ -12,6 +12,8 @@ import mireka.ExampleMail;
 import mireka.smtp.ClientFactory;
 import mireka.smtp.EnhancedStatus;
 import mireka.transmission.Mail;
+import mireka.transmission.immediate.host.MailToHostTransmitter;
+import mireka.transmission.immediate.host.OutgoingConnectionsRegistry;
 import mireka.transmission.queuing.LogIdFactory;
 import mockit.Expectations;
 import mockit.Mocked;

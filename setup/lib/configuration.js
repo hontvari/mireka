@@ -35,7 +35,8 @@ importPackage(Packages.mireka.transmission);
 importPackage(Packages.mireka.transmission.dsn);
 importPackage(Packages.mireka.transmission.queue);
 importPackage(Packages.mireka.transmission.queuing);
-importPackage(Packages.mireka.transmission.immediate);
+importPackage(Packages.mireka.transmission.immediate.direct);
+importPackage(Packages.mireka.transmission.immediate.host);
 
 /*
  * Make the include function global. The include function reads and executes

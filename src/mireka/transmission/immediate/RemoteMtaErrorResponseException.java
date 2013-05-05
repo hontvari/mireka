@@ -5,6 +5,9 @@ import mireka.smtp.MailSystemStatus;
 
 import org.subethamail.smtp.client.SMTPException;
 
+/**
+ * Thrown to indicate that the remote MTA returned an error message. 
+ */
 public class RemoteMtaErrorResponseException extends SendException {
     private static final long serialVersionUID = -2886452940130526142L;
     private final MailSystemStatus remoteMtaStatus;

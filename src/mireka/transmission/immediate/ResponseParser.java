@@ -12,7 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.subethamail.smtp.client.SMTPClient.Response;
 
-public class ResponseParser {
+/**
+ * ResponseParser parses an SMTP reply to separate basic status code, 
+ * enhanced status code, textual message.
+ */
+class ResponseParser {
     private static final Pattern pattern = Pattern.compile("\\A([245]\\."
             + "(0|([1-9]\\d{0,2}))\\." + "(0|([1-9]\\d{0,2})))\\ ");
     private final Logger logger = LoggerFactory.getLogger(ResponseParser.class);

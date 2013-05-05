@@ -1,7 +1,19 @@
-package mireka.transmission.immediate;
+package mireka.transmission.immediate.direct;
 
-import static mireka.ExampleAddress.*;
-import static org.junit.Assert.*;
+import static mireka.ExampleAddress.ADA_ADDRESS_LITERAL_AS_RECIPIENT;
+import static mireka.ExampleAddress.GLOBAL_POSTMASTER_AS_RECIPIENT;
+import static mireka.ExampleAddress.HOST1_EXAMPLE_COM_NAME;
+import static mireka.ExampleAddress.HOST2_EXAMPLE_COM_NAME;
+import static mireka.ExampleAddress.IP;
+import static mireka.ExampleAddress.IP1;
+import static mireka.ExampleAddress.IP2;
+import static mireka.ExampleAddress.IP_ADDRESS_ONLY;
+import static mireka.ExampleAddress.JANE_AS_RECIPIENT;
+import static mireka.ExampleAddress.JOHN_AS_RECIPIENT;
+import static mireka.ExampleAddress.NANCY_NET_AS_RECIPIENT;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.net.InetAddress;
 import java.util.Arrays;
@@ -11,10 +23,16 @@ import mireka.address.Domain;
 import mireka.address.Recipient;
 import mireka.smtp.EnhancedStatus;
 import mireka.transmission.Mail;
+import mireka.transmission.immediate.PostponeException;
+import mireka.transmission.immediate.RecipientsWereRejectedException;
+import mireka.transmission.immediate.RemoteMta;
+import mireka.transmission.immediate.SendException;
 import mireka.transmission.immediate.dns.AddressLookup;
 import mireka.transmission.immediate.dns.AddressLookupFactory;
 import mireka.transmission.immediate.dns.MxLookup;
 import mireka.transmission.immediate.dns.MxLookupFactory;
+import mireka.transmission.immediate.host.MailToHostTransmitter;
+import mireka.transmission.immediate.host.MailToHostTransmitterFactory;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
@@ -47,7 +65,7 @@ public class ImmediateSenderTest {
     private Mail adaAddressLiteralMail;
     private Mail janeJoeMail;
 
-    private ImmediateSender sender;
+    private DirectImmediateSender sender;
 
     private SendException permanentSendException = new SendException(
             "Example permanent failure",
@@ -70,7 +88,7 @@ public class ImmediateSenderTest {
         janeJoeMail.recipients =
                 Arrays.asList(JANE_AS_RECIPIENT, JOHN_AS_RECIPIENT);
         sender =
-                new ImmediateSender(mxLookupFactory, addressLookupFactory,
+                new DirectImmediateSender(mxLookupFactory, addressLookupFactory,
                         mailToHostTransmitterFactory);
 
         new NonStrictExpectations() {

@@ -1,11 +1,10 @@
-package mireka.submission;
+package mireka.transmission.immediate;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.MailSystemStatus;
-import mireka.transmission.immediate.Rfc821Status;
-import mireka.transmission.immediate.ResponseParser;
 
 import org.junit.Test;
 import org.subethamail.smtp.client.SMTPClient.Response;

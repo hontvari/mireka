@@ -2,6 +2,10 @@ package mireka.transmission.immediate;
 
 import mireka.address.Recipient;
 
+/**
+ * RecipientRejection contains the rejected recipient and the rejection 
+ * exception. 
+ */
 public class RecipientRejection {
     public final Recipient recipient;
     public final SendException sendException;

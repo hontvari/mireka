@@ -1,4 +1,4 @@
-package mireka.transmission.immediate;
+package mireka.transmission.immediate.host;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -12,6 +12,12 @@ import mireka.address.Recipient;
 import mireka.smtp.ClientFactory;
 import mireka.smtp.EnhancedStatus;
 import mireka.transmission.Mail;
+import mireka.transmission.immediate.PostponeException;
+import mireka.transmission.immediate.RecipientRejection;
+import mireka.transmission.immediate.RecipientsWereRejectedException;
+import mireka.transmission.immediate.RemoteMta;
+import mireka.transmission.immediate.RemoteMtaErrorResponseException;
+import mireka.transmission.immediate.SendException;
 import mireka.transmission.queuing.LogIdFactory;
 
 import org.slf4j.Logger;
@@ -24,11 +30,11 @@ import org.subethamail.smtp.client.SmartClient;
  * address.
  */
 @NotThreadSafe
-class MailToHostTransmitter {
+public class MailToHostTransmitter {
     private final Logger logger = LoggerFactory
             .getLogger(MailToHostTransmitter.class);
     private final ClientFactory clientFactory;
-    private OutgoingConnectionsRegistry outgoingConnectionsRegistry;
+    private final OutgoingConnectionsRegistry outgoingConnectionsRegistry;
     private final LogIdFactory logIdFactory;
     private final RemoteMta remoteMta;
     private Mail mail;
