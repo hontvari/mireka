@@ -10,7 +10,8 @@ import mireka.filter.local.LookupDestinationFilter;
 import mireka.filter.local.table.AnyRecipient;
 import mireka.filter.local.table.RecipientSpecificationDestinationPair;
 import mireka.filterchain.Filters;
-import mireka.smtp.ClientFactory;
+import mireka.smtp.client.BackendServer;
+import mireka.smtp.client.ClientFactory;
 import mireka.smtp.server.MessageHandlerFactoryImpl;
 import mireka.smtp.server.SMTPServer;
 

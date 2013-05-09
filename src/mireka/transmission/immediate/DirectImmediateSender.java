@@ -1,8 +1,6 @@
-package mireka.transmission.immediate.direct;
+package mireka.transmission.immediate;
 
 import java.net.InetAddress;
-
-import javax.annotation.concurrent.NotThreadSafe;
 
 import mireka.address.AddressLiteral;
 import mireka.address.Domain;
@@ -10,44 +8,53 @@ import mireka.address.DomainPart;
 import mireka.address.Recipient;
 import mireka.address.RemotePart;
 import mireka.address.RemotePartContainingRecipient;
+import mireka.smtp.SendException;
+import mireka.smtp.client.ClientFactory;
+import mireka.smtp.client.MtaAddress;
+import mireka.smtp.client.SmtpClient;
 import mireka.transmission.Mail;
-import mireka.transmission.immediate.ImmediateSender;
-import mireka.transmission.immediate.PostponeException;
-import mireka.transmission.immediate.RecipientsWereRejectedException;
-import mireka.transmission.immediate.RemoteMta;
-import mireka.transmission.immediate.SendException;
-import mireka.transmission.immediate.dns.AddressLookupFactory;
-import mireka.transmission.immediate.dns.MxLookupFactory;
-import mireka.transmission.immediate.host.MailToHostTransmitterFactory;
+import mireka.transmission.immediate.dns.AddressLookup;
+import mireka.transmission.immediate.dns.MxLookup;
+import mireka.transmission.immediate.host.MailToHostTransmitter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xbill.DNS.Name;
 
 /**
- * DirectImmediateSender synchronously sends a mail to a domain, which may
- * include attempting delivery to more than one MX hosts of the domain until a
- * working one is found. If it cannot transmit the mail to any of the MX hosts
- * of the domain, then it throws an exception, it does not retry later.
+ * DirectImmediateSender synchronously sends a mail directly to an SMTP server
+ * of a single remote domain, which may include attempting delivery to more than
+ * one MX hosts of the domain until a working one is found.
+ * <p>
+ * The remote domain is specified by the remote part of the recipient addresses,
+ * which must be the same for all recipients in case of this implementation.
+ * <p>
+ * The receiving SMTP servers are usually specified by the MX records of the
+ * remote domain, except if the remote part is a literal address, or the domain
+ * has an implicit MX record only.
+ * <p>
+ * If it cannot transmit the mail to any of the MX hosts of the domain, then it
+ * throws an exception, it does not retry later.
  * <p>
  * TODO: if a recipient is rejected because of a transient failure, then it
  * should be retried on another host.
  */
-@NotThreadSafe
 public class DirectImmediateSender implements ImmediateSender {
     private final Logger logger = LoggerFactory
             .getLogger(DirectImmediateSender.class);
-    private final MxLookupFactory mxLookupFactory;
-    private final AddressLookupFactory addressLookupFactory;
-    private final MailToHostTransmitterFactory mailToHostTransmitterFactory;
-    private Mail mail;
+    private MxLookup mxLookup;
+    private AddressLookup addressLookup;
+    private ClientFactory clientFactory;
+    private MailToHostTransmitter mailToHostTransmitter;
 
-    DirectImmediateSender(MxLookupFactory mxLookupFactory,
-            AddressLookupFactory addressLookupFactory,
-            MailToHostTransmitterFactory mailToHostTransmitterFactory) {
-        this.mxLookupFactory = mxLookupFactory;
-        this.addressLookupFactory = addressLookupFactory;
-        this.mailToHostTransmitterFactory = mailToHostTransmitterFactory;
+    public DirectImmediateSender() {
+        mxLookup = new MxLookup();
+        addressLookup = new AddressLookup();
+    }
+    
+    @Override
+    public boolean singleDomainOnly() {
+        return true;
     }
 
     /**
@@ -65,20 +72,19 @@ public class DirectImmediateSender implements ImmediateSender {
     public void send(Mail mail) throws SendException,
             RecipientsWereRejectedException, IllegalArgumentException,
             PostponeException {
-        this.mail = mail;
-        RemotePart remotePart = commonRecipientRemotePart();
+        RemotePart remotePart = commonRecipientRemotePart(mail);
         if (remotePart instanceof AddressLiteral) {
             AddressLiteral addressLiteral = (AddressLiteral) remotePart;
-            sendToAddressLiteral(addressLiteral);
+            sendToAddressLiteral(mail, addressLiteral);
         } else if (remotePart instanceof DomainPart) {
             Domain domain = ((DomainPart) remotePart).domain;
-            sendToDomain(domain);
+            sendToDomain(mail, domain);
         } else {
             throw new RuntimeException();
         }
     }
 
-    private RemotePart commonRecipientRemotePart()
+    private RemotePart commonRecipientRemotePart(Mail mail)
             throws IllegalArgumentException {
         RemotePart result = null;
         for (Recipient recipient : mail.recipients) {
@@ -103,14 +109,16 @@ public class DirectImmediateSender implements ImmediateSender {
         return result;
     }
 
-    private void sendToAddressLiteral(AddressLiteral target)
+    private void sendToAddressLiteral(Mail mail, AddressLiteral target)
             throws SendException, RecipientsWereRejectedException,
             PostponeException {
-        RemoteMta remoteMta =
-                new RemoteMta(target.toString(), target.inetAddress()
-                        .getHostAddress());
-        mailToHostTransmitterFactory.create(remoteMta).transmit(mail,
-                target.inetAddress());
+        MtaAddress mtaAddress =
+                new MtaAddress(target.smtpText(), target.inetAddress());
+
+        SmtpClient client = clientFactory.create();
+        client.setMtaAddress(mtaAddress);
+
+        mailToHostTransmitter.transmit(mail, client);
     }
 
     /**
@@ -121,9 +129,9 @@ public class DirectImmediateSender implements ImmediateSender {
      *             if transmission to all of the hosts must be postponed,
      *             because all of them are assumed to be busy at this moment.
      */
-    private void sendToDomain(Domain domain) throws SendException,
+    private void sendToDomain(Mail mail, Domain domain) throws SendException,
             RecipientsWereRejectedException, PostponeException {
-        Name[] mxNames = mxLookupFactory.create(domain).queryMxTargets();
+        Name[] mxNames = mxLookup.queryMxTargets(domain);
 
         // a PostponeException does not prevent successful delivery using
         // another host, but it must be saved so if there are no more hosts then
@@ -140,7 +148,7 @@ public class DirectImmediateSender implements ImmediateSender {
         for (Name name : mxNames) {
             InetAddress[] addresses;
             try {
-                addresses = addressLookupFactory.create(name).queryAddresses();
+                addresses = addressLookup.queryAddresses(name);
             } catch (SendException e) {
                 if (e.errorStatus().shouldRetry())
                     lastRetryableException = e;
@@ -154,11 +162,10 @@ public class DirectImmediateSender implements ImmediateSender {
 
             try {
                 for (InetAddress hostAddress : addresses) {
-                    RemoteMta remoteMta =
-                            new RemoteMta(name.toString(),
-                                    hostAddress.getHostAddress());
-                    mailToHostTransmitterFactory.create(remoteMta).transmit(
-                            mail, hostAddress);
+                    MtaAddress mtaAddress = new MtaAddress(name, hostAddress);
+                    SmtpClient client = clientFactory.create();
+                    client.setMtaAddress(mtaAddress);
+                    mailToHostTransmitter.transmit(mail, client);
                     return;
                 }
             } catch (PostponeException e) {
@@ -192,5 +199,47 @@ public class DirectImmediateSender implements ImmediateSender {
             throw new RuntimeException(); // impossible, but prevents warning
         // an unrecoverable DNS exception
         throw lastUnrecoverableDnsException;
+    }
+
+    /** @category GETSET **/
+    public MxLookup getMxLookup() {
+        return mxLookup;
+    }
+
+    /** @category GETSET **/
+    public void setMxLookup(MxLookup mxLookup) {
+        this.mxLookup = mxLookup;
+    }
+
+    /** @category GETSET **/
+    public AddressLookup getAddressLookup() {
+        return addressLookup;
+    }
+
+    /** @category GETSET **/
+    public void setAddressLookup(
+            AddressLookup addressLookup) {
+        this.addressLookup = addressLookup;
+    }
+
+    /** @category GETSET **/
+    public ClientFactory getClientFactory() {
+        return clientFactory;
+    }
+
+    /** @category GETSET **/
+    public void setClientFactory(ClientFactory clientFactory) {
+        this.clientFactory = clientFactory;
+    }
+
+    /** @category GETSET **/
+    public MailToHostTransmitter getMailToHostTransmitter() {
+        return mailToHostTransmitter;
+    }
+
+    /** @category GETSET **/
+    public void setMailToHostTransmitter(
+            MailToHostTransmitter mailToHostTransmitter) {
+        this.mailToHostTransmitter = mailToHostTransmitter;
     }
 }

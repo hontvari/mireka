@@ -8,6 +8,7 @@ import mireka.destination.Session;
 import mireka.destination.SessionDestination;
 import mireka.filter.RecipientContext;
 import mireka.smtp.RejectExceptionExt;
+import mireka.smtp.client.BackendServer;
 import mireka.transmission.Mail;
 
 import org.slf4j.Logger;

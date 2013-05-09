@@ -1,23 +1,20 @@
 package mireka.transmission.immediate.host;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.concurrent.NotThreadSafe;
-
 import mireka.address.Recipient;
-import mireka.smtp.ClientFactory;
 import mireka.smtp.EnhancedStatus;
+import mireka.smtp.SendException;
+import mireka.smtp.client.MtaAddress;
+import mireka.smtp.client.SmtpClient;
 import mireka.transmission.Mail;
 import mireka.transmission.immediate.PostponeException;
 import mireka.transmission.immediate.RecipientRejection;
 import mireka.transmission.immediate.RecipientsWereRejectedException;
-import mireka.transmission.immediate.RemoteMta;
 import mireka.transmission.immediate.RemoteMtaErrorResponseException;
-import mireka.transmission.immediate.SendException;
 import mireka.transmission.queuing.LogIdFactory;
 
 import org.slf4j.Logger;
@@ -29,56 +26,41 @@ import org.subethamail.smtp.client.SmartClient;
  * MailToHostTransmitter transmits a mail to a specific host specified by its IP
  * address.
  */
-@NotThreadSafe
 public class MailToHostTransmitter {
     private final Logger logger = LoggerFactory
             .getLogger(MailToHostTransmitter.class);
-    private final ClientFactory clientFactory;
-    private final OutgoingConnectionsRegistry outgoingConnectionsRegistry;
-    private final LogIdFactory logIdFactory;
-    private final RemoteMta remoteMta;
-    private Mail mail;
-
-    public MailToHostTransmitter(ClientFactory clientFactory,
-            OutgoingConnectionsRegistry outgoingConnectionsRegistry,
-            LogIdFactory logIdFactory, RemoteMta remoteMta) {
-        this.clientFactory = clientFactory;
-        this.outgoingConnectionsRegistry = outgoingConnectionsRegistry;
-        this.logIdFactory = logIdFactory;
-        this.remoteMta = remoteMta;
-
-    }
+    private OutgoingConnectionsRegistry outgoingConnectionRegistry;
+    private LogIdFactory logIdFactory;
 
     /**
      * Delivers the mail to the SMTP server running on the specified host.
      * 
-     * @param inetAddress
-     *            The receiving SMTP host. The name (if there is one) must
-     *            already be resolved (using dnsJava).
+     * @param client
+     *            an unconnected, but otherwise fully initialized
+     *            {@link SmtpClient}.
      * @throws PostponeException
      *             if it has not even tried connecting to the host, because it
      *             is likely that the host is busy at this moment.
      */
-    public void transmit(Mail mail, InetAddress inetAddress)
-            throws SendException, RecipientsWereRejectedException,
-            PostponeException {
-        this.mail = mail;
-        SmartClient smartClient = null;
+    public void transmit(Mail mail, SmtpClient client) throws SendException,
+            RecipientsWereRejectedException, PostponeException {
+        MtaAddress remoteMta = client.getMtaAddress();
         try {
-            outgoingConnectionsRegistry.openConnection(inetAddress);
+            outgoingConnectionRegistry
+                    .openConnection(client.getMtaAddress().address);
         } catch (PostponeException e) {
             e.setRemoteMta(remoteMta);
             throw e;
         }
         try {
-            smartClient = clientFactory.create(inetAddress);
-            smartClient.from(mail.from.getSmtpText());
+            client.connect();
+            client.from(mail.from.getSmtpText());
             List<RecipientRejection> recipientRejections =
                     new ArrayList<RecipientRejection>();
             List<Recipient> acceptedRecipients = new ArrayList<Recipient>();
             for (Recipient recipient : mail.recipients) {
                 try {
-                    smartClient.to(recipient.sourceRouteStripped());
+                    client.to(recipient.sourceRouteStripped());
                     acceptedRecipients.add(recipient);
                 } catch (SMTPException e) {
                     RemoteMtaErrorResponseException sendException =
@@ -97,9 +79,9 @@ public class MailToHostTransmitter {
                 logger.debug("All recipients were rejected");
                 throw new RecipientsWereRejectedException(recipientRejections);
             }
-            smartClient.dataStart();
-            writeDataTo(smartClient);
-            smartClient.dataEnd();
+            client.dataStart();
+            writeMailConent(mail, client);
+            client.dataEnd();
             if (!recipientRejections.isEmpty())
                 throw new RecipientsWereRejectedException(recipientRejections);
             else
@@ -112,18 +94,41 @@ public class MailToHostTransmitter {
         } catch (IOException e) {
             throw new SendException("Connection failed: " + e.toString(), e,
                     new EnhancedStatus(450, "4.4.0",
-                            "No answer from host or bad connection"), remoteMta);
+                            "No answer from host or bad connection"));
         } finally {
-            if (smartClient != null) {
-                smartClient.quit();
+            if (client != null) {
+                client.quit();
             }
-            outgoingConnectionsRegistry.releaseConnection(inetAddress);
+            outgoingConnectionRegistry.releaseConnection(remoteMta.address);
         }
     }
 
-    private void writeDataTo(SmartClient smartClient) throws IOException {
+    private void writeMailConent(Mail mail, SmartClient smartClient)
+            throws IOException {
         SmartClientOutputStreamAdapter out =
                 new SmartClientOutputStreamAdapter(smartClient);
         mail.mailData.writeTo(out);
+    }
+
+    /**
+     * @category GETSET
+     */
+    public void setOutgoingConnectionRegistry(
+            OutgoingConnectionsRegistry outgoingConnectionRegistry) {
+        this.outgoingConnectionRegistry = outgoingConnectionRegistry;
+    }
+
+    /**
+     * @category GETSET
+     */
+    public OutgoingConnectionsRegistry getOutgoingConnectionRegistry() {
+        return outgoingConnectionRegistry;
+    }
+
+    /**
+     * @category GETSET
+     */
+    public void setLogIdFactory(LogIdFactory logIdFactory) {
+        this.logIdFactory = logIdFactory;
     }
 }

@@ -1,10 +1,7 @@
-package mireka.transmission.immediate;
+package mireka.smtp;
 
 import java.util.Date;
 
-import javax.annotation.Nullable;
-
-import mireka.smtp.EnhancedStatus;
 
 /**
  * Signals an error occurred while attempting to transmit a mail to a remote
@@ -15,8 +12,6 @@ public class SendException extends Exception {
     private static final long serialVersionUID = 379604390803596371L;
 
     private final EnhancedStatus errorStatus;
-    @Nullable
-    private final RemoteMta remoteMta;
     public final Date failureDate = new Date();
     /**
      * It must be set by the function which logs this exception by calling
@@ -27,38 +22,16 @@ public class SendException extends Exception {
     public SendException(String message, EnhancedStatus status) {
         super(message);
         this.errorStatus = status;
-        this.remoteMta = null;
-    }
-
-    /**
-     * Constructs a new exception where the message is coming from the
-     * {@link EnhancedStatus} but it is complemented with a comment (following a
-     * colon).
-     */
-    public SendException(String message, EnhancedStatus status,
-            RemoteMta remoteMta) {
-        super(message);
-        this.errorStatus = status;
-        this.remoteMta = remoteMta;
     }
 
     public SendException(Throwable e, EnhancedStatus status) {
         super(e);
         this.errorStatus = status;
-        this.remoteMta = null;
     }
 
-    public SendException(Throwable e, EnhancedStatus status, RemoteMta remoteMta) {
-        super(e);
-        this.errorStatus = status;
-        this.remoteMta = remoteMta;
-    }
-
-    public SendException(String message, Throwable e, EnhancedStatus status,
-            RemoteMta remoteMta) {
+    public SendException(String message, Throwable e, EnhancedStatus status) {
         super(message, e);
         this.errorStatus = status;
-        this.remoteMta = remoteMta;
     }
 
     /**
@@ -68,14 +41,6 @@ public class SendException extends Exception {
      */
     public EnhancedStatus errorStatus() {
         return errorStatus;
-    }
-
-    /**
-     * Returns null if the remote MTA is not yet determined. This is the case
-     * when the exception occurs before a successful DNS MX lookup.
-     */
-    public RemoteMta remoteMta() {
-        return remoteMta;
     }
 
     /**

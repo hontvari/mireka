@@ -5,13 +5,14 @@ import mireka.ExampleMail;
 import mireka.address.NullReversePath;
 import mireka.destination.Session;
 import mireka.filter.RecipientContext;
+import mireka.smtp.client.BackendServer;
+import mireka.smtp.client.SmtpClient;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrict;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.subethamail.smtp.client.SmartClient;
 
 public class RelayMailTransactionTest {
     @Mocked
@@ -19,11 +20,11 @@ public class RelayMailTransactionTest {
 
     @NonStrict
     @Mocked(stubOutClassInitialization = false)
-    private SmartClient smartClient;
+    private SmtpClient client;
 
-    private RecipientContext recipientContextJane = new RecipientContext(null,
+    private final RecipientContext recipientContextJane = new RecipientContext(null,
             ExampleAddress.JANE_AS_RECIPIENT);
-    private RecipientContext recipientContextJohn = new RecipientContext(null,
+    private final RecipientContext recipientContextJohn = new RecipientContext(null,
             ExampleAddress.JOHN_AS_RECIPIENT);
 
     private Session session;
@@ -40,13 +41,13 @@ public class RelayMailTransactionTest {
 
         new Expectations() {
             {
-                backendServer.connect();
-                result = smartClient;
+                backendServer.createClient();
+                result = client;
 
-                smartClient.dataEnd();
+                client.dataEnd();
                 times = 1;
 
-                smartClient.quit();
+                client.quit();
             }
         };
 
@@ -60,12 +61,12 @@ public class RelayMailTransactionTest {
 
         new Expectations() {
             {
-                backendServer.connect();
-                result = smartClient;
+                backendServer.createClient();
+                result = client;
 
-                smartClient.to(anyString);
+                client.to(anyString);
                 times = 2;
-                smartClient.dataEnd();
+                client.dataEnd();
                 times = 1;
             }
         };

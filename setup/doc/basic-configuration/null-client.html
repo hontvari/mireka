@@ -1,0 +1,58 @@
+<html>
+	<head>
+		<title>Null client: sending all mails via another server</title>
+		<link rel="stylesheet" type="text/css" href="../doc.css" />
+	</head>
+
+	<body>
+		<h1>Null client: sending all mails via another server</h1>
+		
+<p>Mireka can be configured to be a null client, which means that it sends all 
+outgoing mail through another server. The other server is the so called 
+<i>smart host</i>. This is useful for example if the local network connects to the 
+internet through a dynamic IP address. 
+<p>
+In contrast to proxy mode, Mireka, acting as a null client, waits until it 
+completely receives the incoming mail, stores it, and forwards them later, 
+usually within a few milliseconds. Mireka tries all configured smart 
+hosts, and if none of them is accessible, than it tries them again later, up to 
+the configured duration.
+<p><i>NOTE: 
+If it turns out that the mail cannot be forwarded for some reason, then Mireka 
+sends a Delivery Status Notification mail back to the original sender. However,
+if the original sender is not a local user, this bounce mail must also go through 
+the smart host. If the smart host is inaccessible for an extended time, Mireka 
+will give up, and delete the DSN mail too. Depending on the importance of the 
+mails this can be a dangerous situation because the mail is accepted but  
+neither the mail is neither delivered, nor the user is notified. To prevent this, 
+configure appropriate retry intervals and regularly monitor the mail error logs.
+</i><p>
+
+<p>First edit <code>mireka.js</code> and configure the value of the <code>backendServer</code>
+variable. For example if the smarthost is <code>myisp.example.com</code>, 
+listens on port 587, and requires authentication, then your configuration should 
+look like this:
+<p class="code">...
+backendServer = setup(BackendServer, {
+	host: "<span class="relevant">myisp.example.com</span>",
+	<span class="relevant">port: 587,</span>
+	<span class="relevant">user: "mycompany",</span>
+	<span class="relevant">password: "CHANGEIT",</span>
+	clientFactory: clientFactory
+});
+...</p>
+
+<p>Note: you can define more than one smart hosts.
+
+<p>Next, edit <code>submission/queues.js</code> and uncomment the null client
+sender definition.
+Your configuraton should look like this:
+<p class="code">...
+immediateSender = setup(<span class="relevant">NullClientImmediateSender</span>, {
+	mailToHostTransmitter: mailToHostTransmitter,
+	<span class="relevant">smartHosts: [ backendServer ]</span>,
+});
+...</p>
+
+	</body>
+</html>

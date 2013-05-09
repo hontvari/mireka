@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import mireka.address.Recipient;
+import mireka.smtp.SendException;
 import mireka.transmission.LocalMailSystemException;
 import mireka.transmission.Mail;
 import mireka.transmission.Transmitter;
@@ -16,7 +17,6 @@ import mireka.transmission.immediate.PostponeException;
 import mireka.transmission.immediate.RecipientRejection;
 import mireka.transmission.immediate.RecipientsWereRejectedException;
 import mireka.transmission.immediate.RemoteMtaErrorResponseException;
-import mireka.transmission.immediate.SendException;
 
 import org.joda.time.DateTime;
 import org.joda.time.Instant;
@@ -40,7 +40,7 @@ public class RetryPolicy {
      * delayed DSN mail must be sent. For example 3 means that a DSN must be
      * issued after the third failed attempt.
      */
-    private List<Integer> delayReportPoints = new ArrayList<Integer>();
+    private final List<Integer> delayReportPoints = new ArrayList<Integer>();
     private DsnMailCreator dsnMailCreator;
     private Transmitter dsnTransmitter;
     private Transmitter retryTransmitter;
@@ -106,7 +106,7 @@ public class RetryPolicy {
             SendException sendException =
                     new SendException(
                             "Too much postponings of delivery attempt, attempt is considered to be a failure.",
-                            e, e.getEnhancedStatus(), e.getRemoteMta());
+                            e, e.getEnhancedStatus());
             EntireMailFailureHandler failureHandler =
                     new EntireMailFailureHandler(mail, sendException);
             failureHandler.onFailure();
@@ -206,13 +206,13 @@ public class RetryPolicy {
         protected final Mail mail;
 
         private List<SendingFailure> failures;
-        private List<SendingFailure> permanentFailures =
+        private final List<SendingFailure> permanentFailures =
                 new ArrayList<SendingFailure>();
-        private List<SendingFailure> transientFailures =
+        private final List<SendingFailure> transientFailures =
                 new ArrayList<SendingFailure>();
-        private List<PermanentFailureReport> permanentFailureReports =
+        private final List<PermanentFailureReport> permanentFailureReports =
                 new ArrayList<PermanentFailureReport>();
-        private List<DelayReport> delayReports = new ArrayList<DelayReport>();
+        private final List<DelayReport> delayReports = new ArrayList<DelayReport>();
 
         public FailureHandler(Mail mail) {
             this.mail = mail;
@@ -262,11 +262,13 @@ public class RetryPolicy {
             SendException exception = failure.exception;
             report.recipient = failure.recipient;
             report.status = exception.errorStatus();
-            report.remoteMta = exception.remoteMta();
-            if (exception instanceof RemoteMtaErrorResponseException)
+            if (exception instanceof RemoteMtaErrorResponseException) {
+                RemoteMtaErrorResponseException rmerException =
+                        (RemoteMtaErrorResponseException) exception;
+                report.remoteMta = rmerException.remoteMta();
                 report.remoteMtaDiagnosticStatus =
-                        ((RemoteMtaErrorResponseException) exception)
-                                .remoteMtaStatus();
+                        rmerException.remoteMtaStatus();
+            }
             report.failureDate = exception.failureDate;
             report.logId = exception.getLogId();
         }
@@ -290,9 +292,9 @@ public class RetryPolicy {
             if (reports.isEmpty())
                 return;
             if (mail.from.isNull()) {
-                logger.debug("Failure or delay, but reverse-path is null, "
+                logger.error("Failure or delay, but reverse-path is null, "
                         + "DSN must not be sent. "
-                        + "Original mail itself was a notification.");
+                        + "Original mail itself was a notification. {}", mail.toString());
                 return;
             }
             Mail dsnMail = dsnMailCreator.create(mail, reports);

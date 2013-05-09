@@ -1,12 +1,11 @@
 package mireka.transmission.queuing;
 
+import mireka.smtp.SendException;
 import mireka.transmission.LocalMailSystemException;
 import mireka.transmission.Mail;
 import mireka.transmission.immediate.ImmediateSender;
-import mireka.transmission.immediate.ImmediateSenderFactory;
 import mireka.transmission.immediate.PostponeException;
 import mireka.transmission.immediate.RecipientsWereRejectedException;
-import mireka.transmission.immediate.SendException;
 import mireka.transmission.queue.MailProcessor;
 import mireka.transmission.queue.TransmitterSummary;
 
@@ -16,17 +15,17 @@ import org.slf4j.LoggerFactory;
 class OutboundMtaMailProcessor implements MailProcessor {
     private final Logger logger = LoggerFactory
             .getLogger(OutboundMtaMailProcessor.class);
-    private final ImmediateSenderFactory immediateSenderFactory;
+    private final ImmediateSender immediateSender;
     private final RetryPolicy retryPolicy;
     private final LogIdFactory logIdFactory;
     private final Mail mail;
     private final TransmitterSummary summary;
 
     public OutboundMtaMailProcessor(
-            ImmediateSenderFactory immediateSenderFactory,
+            ImmediateSender immediateSender,
             RetryPolicy retryPolicy, LogIdFactory logIdFactory,
             TransmitterSummary summary, Mail mail) {
-        this.immediateSenderFactory = immediateSenderFactory;
+        this.immediateSender = immediateSender;
         this.mail = mail;
         this.retryPolicy = retryPolicy;
         this.logIdFactory = logIdFactory;
@@ -47,12 +46,11 @@ class OutboundMtaMailProcessor implements MailProcessor {
     }
 
     private void send() throws LocalMailSystemException {
-        ImmediateSender sender = immediateSenderFactory.create();
         try {
             logger.debug("Sending mail " + mail + "...");
             summary.mailTransactionsMeter().mark();
 
-            sender.send(mail);
+            immediateSender.send(mail);
 
             logger.debug("Sent successfully");
             summary.successfulMailTransactionsMeter().mark();

@@ -31,8 +31,11 @@ public class ExampleAddress {
     public static final String JANE = "jane@example.com";
     public static final String JOHN = "john@example.com";
     public static final String NANCY_NET = "nancy@example.net";
+    /** jane@example.com **/
     public static final Recipient JANE_AS_RECIPIENT;
+    /** john@example.com **/
     public static final Recipient JOHN_AS_RECIPIENT;
+    /** nancy@example.net **/
     public static final Recipient NANCY_NET_AS_RECIPIENT;
     public static final ReversePath JANE_AS_REVERSE_PATH;
     public static final ReversePath JOHN_AS_REVERSE_PATH;

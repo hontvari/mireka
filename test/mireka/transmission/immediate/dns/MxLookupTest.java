@@ -9,9 +9,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import mireka.transmission.immediate.SendException;
+import mireka.smtp.SendException;
 import mockit.Expectations;
 import mockit.NonStrict;
+import mockit.Tested;
 
 import org.junit.Test;
 import org.xbill.DNS.Lookup;
@@ -19,6 +20,9 @@ import org.xbill.DNS.MXRecord;
 import org.xbill.DNS.Name;
 
 public class MxLookupTest {
+    @Tested
+    private MxLookup mxLookup;
+    
     private final MXRecord HOST1_PRIORITY10 = new MXRecord(EXAMPLE_COM_NAME, 0,
             0, 10, HOST1_EXAMPLE_COM_NAME);
     private final MXRecord HOST2_PRIORITY20 = new MXRecord(EXAMPLE_COM_NAME, 0,
@@ -31,7 +35,6 @@ public class MxLookupTest {
             0, 10, HOST4_EXAMPLE_COM_NAME);
     @NonStrict
     private Lookup lookup;
-    private MxLookup mxLookup = new MxLookup(EXAMPLE_COM_DOMAIN);
 
     @Test()
     public void testNoMxRecords() throws MxLookupException {
@@ -46,7 +49,7 @@ public class MxLookupTest {
 
         };
 
-        Name[] targets = mxLookup.queryMxTargets();
+        Name[] targets = mxLookup.queryMxTargets(EXAMPLE_COM_DOMAIN);
         assertArrayEquals(new Name[] { EXAMPLE_COM_NAME }, targets);
     }
 
@@ -63,7 +66,7 @@ public class MxLookupTest {
 
         };
 
-        mxLookup.queryMxTargets();
+        mxLookup.queryMxTargets(EXAMPLE_COM_DOMAIN);
     }
 
     @Test()
@@ -76,7 +79,7 @@ public class MxLookupTest {
 
         };
 
-        Name[] targets = mxLookup.queryMxTargets();
+        Name[] targets = mxLookup.queryMxTargets(EXAMPLE_COM_DOMAIN);
 
         assertArrayEquals(new Name[] { HOST1_EXAMPLE_COM_NAME,
                 HOST2_EXAMPLE_COM_NAME }, targets);
@@ -92,7 +95,7 @@ public class MxLookupTest {
 
         };
 
-        Name[] result = mxLookup.queryMxTargets();
+        Name[] result = mxLookup.queryMxTargets(EXAMPLE_COM_DOMAIN);
 
         Name[] expected =
                 new Name[] { HOST1_EXAMPLE_COM_NAME, HOST2_EXAMPLE_COM_NAME };
@@ -114,7 +117,7 @@ public class MxLookupTest {
         final int COUNT_OF_TEST_RUNS = 4;
         List<Name[]> listOfResults = new ArrayList<Name[]>();
         for (int i = 0; i < COUNT_OF_TEST_RUNS; i++) {
-            listOfResults.add(mxLookup.queryMxTargets());
+            listOfResults.add(mxLookup.queryMxTargets(EXAMPLE_COM_DOMAIN));
         }
 
         assertTrue(reallyShuffled(listOfResults));

@@ -35,12 +35,15 @@ clientFactory = setup(ClientFactory, {
 
 /*
 	Default backend server. It specifies an SMTP server, to where 
-	mails are relayed for delivery or submission. It can be 
-	referred where SMTP proxy functionality is configured. 
+	mails are relayed for delivery or submission. It is used in 
+	both proxy and null client mode.
 */
 backendServer = setup(BackendServer, {
 	host: "backend.example.com",
-	clientFactory: clientFactory 
+	//port: 587,
+	//user: "office-server",
+	//password: "CHANGEIT",
+	clientFactory: clientFactory,
 });
 
 /*

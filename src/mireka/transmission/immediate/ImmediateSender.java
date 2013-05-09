@@ -1,12 +1,22 @@
 package mireka.transmission.immediate;
 
+import mireka.smtp.SendException;
 import mireka.transmission.Mail;
 
 /**
  * An ImmediateSender makes a single, synchronous attempt to deliver mail to 
  * a remote system. 
+ * 
+ * If it cannot transmit the mail to any of the MX hosts of the domain, then it
+ * throws an exception, it does not retry later.
  */
 public interface ImmediateSender {
+    /**
+     * Returns true if the created {@link ImmediateSender} requires that all 
+     * recipients of the mail to be sent have the same remote-part.  
+     */
+    boolean singleDomainOnly();
+    
     /**
      * Synchronously transmits mail to a single domain.
      * 

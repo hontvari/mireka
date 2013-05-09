@@ -1,6 +1,7 @@
 package mireka.transmission.immediate;
 
 import mireka.address.Recipient;
+import mireka.smtp.SendException;
 
 /**
  * RecipientRejection contains the rejected recipient and the rejection 

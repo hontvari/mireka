@@ -4,29 +4,43 @@ import static mireka.ExampleAddress.*;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Arrays;
 
 import mireka.ExampleMail;
-import mireka.smtp.ClientFactory;
 import mireka.smtp.EnhancedStatus;
+import mireka.smtp.SendException;
+import mireka.smtp.client.MtaAddress;
+import mireka.smtp.client.SmtpClient;
 import mireka.transmission.Mail;
 import mireka.transmission.immediate.host.MailToHostTransmitter;
 import mireka.transmission.immediate.host.OutgoingConnectionsRegistry;
 import mireka.transmission.queuing.LogIdFactory;
 import mockit.Expectations;
+import mockit.Injectable;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
+import mockit.Tested;
 import mockit.Verifications;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.subethamail.smtp.client.SMTPClient;
 import org.subethamail.smtp.client.SMTPException;
-import org.subethamail.smtp.client.SmartClient;
 
 public class MailToHostTransmitterTest {
+    @Tested
+    private MailToHostTransmitter sender;
+    
+    @Injectable
+    private LogIdFactory logIdFactory;
+
+    @Injectable
+    private OutgoingConnectionsRegistry outgoingConnectionsRegistry;
+    
+    @Mocked
+    private SmtpClient client;
+
+    
     private static final PostponeException POSTPONE_EXCEPTION =
             new PostponeException(
                     10,
@@ -36,51 +50,30 @@ public class MailToHostTransmitterTest {
     private static final SMTPException SMTP_EXCEPTION = new SMTPException(
             new SMTPClient.Response(500, "Test error"));
 
-    @Mocked
-    private ClientFactory clientFactory;
 
-    @Mocked
-    private SmartClient smartClient;
-
-    @Mocked
-    private LogIdFactory logIdFactory;
-
-    @Mocked
-    private OutgoingConnectionsRegistry outgoingConnectionsRegistry;
-
-    private Mail mail = ExampleMail.simple();
-
-    private RemoteMta remoteMta = new RemoteMta(HOST1_EXAMPLE_COM,
-            IP1.getHostAddress());
-
-    private MailToHostTransmitter sender;
+    private final Mail mail = ExampleMail.simple();
 
     @Before
-    public void initialize() throws UnknownHostException, SMTPException,
-            IOException {
-        new NonStrictExpectations() {
-            {
-                clientFactory.create((InetAddress) any);
-                result = smartClient;
-            }
-        };
-        sender =
-                new MailToHostTransmitter(clientFactory,
-                        outgoingConnectionsRegistry, logIdFactory, remoteMta);
+    public void beforeTest() {
+        new NonStrictExpectations() {{
+            client.getMtaAddress();
+            result = new MtaAddress(HOST1_EXAMPLE_COM, IP1);
+        }};
+        
     }
-
+    
     @Test
     public void testSend() throws SendException,
             RecipientsWereRejectedException, IOException, PostponeException {
 
-        sender.transmit(mail, IP1);
+        sender.transmit(mail, client);
 
         new Verifications() {
             {
-                smartClient.from(anyString);
-                smartClient.to(anyString);
-                smartClient.dataEnd();
-                smartClient.quit();
+                client.from(anyString);
+                client.to(anyString);
+                client.dataEnd();
+                client.quit();
             }
         };
 
@@ -91,14 +84,14 @@ public class MailToHostTransmitterTest {
             SendException, SMTPException, IOException, PostponeException {
         new NonStrictExpectations() {
             {
-                smartClient.to(anyString);
+                client.to(anyString);
                 result = SMTP_EXCEPTION;
 
             }
         };
 
         try {
-            sender.transmit(mail, IP1);
+            sender.transmit(mail, client);
             fail("Exception must have been thrown");
         } catch (RecipientsWereRejectedException e) {
             assertEquals(e.rejections.size(), 1);
@@ -107,7 +100,7 @@ public class MailToHostTransmitterTest {
 
         new Verifications() {
             {
-                smartClient.dataStart();
+                client.dataStart();
                 times = 0;
             }
         };
@@ -120,7 +113,7 @@ public class MailToHostTransmitterTest {
 
         new NonStrictExpectations() {
             {
-                smartClient.to(anyString);
+                client.to(anyString);
                 result = SMTP_EXCEPTION;
                 result = null;
             }
@@ -129,7 +122,7 @@ public class MailToHostTransmitterTest {
         try {
             mail.recipients =
                     Arrays.asList(JANE_AS_RECIPIENT, JOHN_AS_RECIPIENT);
-            sender.transmit(mail, IP1);
+            sender.transmit(mail, client);
             fail("Exception must have been thrown");
         } catch (RecipientsWereRejectedException e) {
             assertEquals(1, e.rejections.size());
@@ -138,7 +131,7 @@ public class MailToHostTransmitterTest {
 
         new Verifications() {
             {
-                smartClient.dataStart();
+                client.dataStart();
             }
         };
     }
@@ -148,13 +141,13 @@ public class MailToHostTransmitterTest {
             IOException, RecipientsWereRejectedException, PostponeException {
         new NonStrictExpectations() {
             {
-                smartClient.to(anyString);
+                client.to(anyString);
                 result = new IOException();
             }
         };
 
         try {
-            sender.transmit(mail, IP1);
+            sender.transmit(mail, client);
             fail("Exception must have been thrown");
         } catch (SendException e) {
             assertTrue(e.errorStatus().shouldRetry());
@@ -167,12 +160,12 @@ public class MailToHostTransmitterTest {
             RecipientsWereRejectedException, SendException, PostponeException {
         new NonStrictExpectations() {
             {
-                smartClient.dataEnd();
+                client.dataEnd();
                 result = SMTP_EXCEPTION;
             }
         };
 
-        sender.transmit(mail, IP1);
+        sender.transmit(mail, client);
     }
 
     @Test
@@ -184,7 +177,7 @@ public class MailToHostTransmitterTest {
             }
         };
 
-        sender.transmit(mail, IP1);
+        sender.transmit(mail, client);
     }
 
     @Test(expected = PostponeException.class)
@@ -196,6 +189,6 @@ public class MailToHostTransmitterTest {
             }
         };
 
-        sender.transmit(mail, IP1);
+        sender.transmit(mail, client);
     }
 }

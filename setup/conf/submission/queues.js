@@ -49,15 +49,23 @@ outgoingConnectionRegisty = setup(OutgoingConnectionsRegistry, {
 	*/		
 });
 
-mailToHostTransmitterFactory = setup(MailToHostTransmitterFactory, {
-	clientFactory: clientFactory,
+mailToHostTransmitter = setup(MailToHostTransmitter, {
 	outgoingConnectionRegistry: outgoingConnectionRegisty,
 	logIdFactory: logIdFactory,
 });
 
-immediateSenderFactory = setup(DirectImmediateSenderFactory, {
-	mailToHostTransmitterFactory: mailToHostTransmitterFactory
+immediateSender = setup(DirectImmediateSender, {
+	clientFactory: clientFactory,
+	mailToHostTransmitter: mailToHostTransmitter
 });
+
+/* uncomment to send all outgoing mails through a smart host */
+/*
+immediateSender = setup(NullClientImmediateSender, {
+	mailToHostTransmitter: mailToHostTransmitter,
+	smartHosts: [ backendServer ],
+});
+*/
 
 dsnMailCreator = setup(DsnMailCreator, {
 	reportingMtaName: helo, 
@@ -76,7 +84,7 @@ retryPolicy = setup(RetryPolicy, {
 
 setup(primaryTransmitter, {
 	queue: submittedMailQueue,
-	immediateSenderFactory: immediateSenderFactory,
+	immediateSender: immediateSender,
 	retryPolicy: retryPolicy,
 	logIdFactory: logIdFactory,
 	summary: setup(TransmitterSummary, {
@@ -86,7 +94,7 @@ setup(primaryTransmitter, {
 
 setup(dsnTransmitter, {
 	queue: dsnMailQueue,
-	immediateSenderFactory: immediateSenderFactory,
+	immediateSender: immediateSender,
 	retryPolicy: retryPolicy,
 	logIdFactory: logIdFactory,
 	summary: setup(TransmitterSummary, {
@@ -96,7 +104,7 @@ setup(dsnTransmitter, {
 
 setup(retryTransmitter, {
 	queue: retryMailQueue,
-	immediateSenderFactory: immediateSenderFactory,
+	immediateSender: immediateSender,
 	retryPolicy: retryPolicy,
 	logIdFactory: logIdFactory,
 	summary: setup(TransmitterSummary, {

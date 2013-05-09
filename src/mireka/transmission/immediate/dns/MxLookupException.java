@@ -1,7 +1,7 @@
 package mireka.transmission.immediate.dns;
 
 import mireka.smtp.EnhancedStatus;
-import mireka.transmission.immediate.SendException;
+import mireka.smtp.SendException;
 
 public class MxLookupException extends SendException {
     private static final long serialVersionUID = 3089456869348639027L;

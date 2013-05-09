@@ -10,7 +10,7 @@ import mireka.address.RemotePart;
 import mireka.address.RemotePartContainingRecipient;
 import mireka.transmission.Mail;
 import mireka.transmission.Transmitter;
-import mireka.transmission.immediate.ImmediateSenderFactory;
+import mireka.transmission.immediate.ImmediateSender;
 import mireka.transmission.queue.MailProcessor;
 import mireka.transmission.queue.MailProcessorFactory;
 import mireka.transmission.queue.QueueStorageException;
@@ -21,9 +21,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class QueuingTransmitter implements Transmitter, MailProcessorFactory {
-    private final Logger logger = LoggerFactory.getLogger(QueuingTransmitter.class);
+    private final Logger logger = LoggerFactory
+            .getLogger(QueuingTransmitter.class);
     private ScheduleFileDirQueue queue;
-    private ImmediateSenderFactory immediateSenderFactory;
+    private ImmediateSender immediateSender;
     private RetryPolicy retryPolicy;
     private LogIdFactory logIdFactory;
     private TransmitterSummary summary;
@@ -31,7 +32,12 @@ public class QueuingTransmitter implements Transmitter, MailProcessorFactory {
     @Override
     public void transmit(Mail mail) throws QueueStorageException {
         logger.debug("Mail received for transmission: {}", mail);
-        queueByRemotePart(mail);
+        if (immediateSender.singleDomainOnly()) {
+            queueByRemotePart(mail);
+        } else {
+            queue.add(mail);
+            logger.debug("Mail was added to queue: {}", mail);
+        }
     }
 
     private void queueByRemotePart(Mail mail) throws QueueStorageException {
@@ -69,8 +75,8 @@ public class QueuingTransmitter implements Transmitter, MailProcessorFactory {
 
     @Override
     public MailProcessor create(Mail mail) {
-        return new OutboundMtaMailProcessor(immediateSenderFactory,
-                retryPolicy, logIdFactory, summary, mail);
+        return new OutboundMtaMailProcessor(immediateSender, retryPolicy,
+                logIdFactory, summary, mail);
     }
 
     /**
@@ -85,9 +91,8 @@ public class QueuingTransmitter implements Transmitter, MailProcessorFactory {
     /**
      * @category GETSET
      */
-    public void setImmediateSenderFactory(
-            ImmediateSenderFactory immediateSenderFactory) {
-        this.immediateSenderFactory = immediateSenderFactory;
+    public void setImmediateSender(ImmediateSender immediateSender) {
+        this.immediateSender = immediateSender;
     }
 
     /**

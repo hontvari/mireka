@@ -1,7 +1,6 @@
 package mireka.transmission.dsn;
 
-import static mireka.ExampleAddress.IP2;
-import static mireka.ExampleAddress.IP3;
+import static mireka.ExampleAddress.*;
 import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
@@ -19,8 +18,8 @@ import mireka.ExampleMail;
 import mireka.MailData;
 import mireka.address.MailAddressFactory;
 import mireka.smtp.EnhancedStatus;
+import mireka.smtp.client.MtaAddress;
 import mireka.transmission.Mail;
-import mireka.transmission.immediate.RemoteMta;
 import mireka.transmission.immediate.Rfc821Status;
 
 import org.apache.james.mime4j.dom.Message;
@@ -70,7 +69,7 @@ public class DsnMailCreatorTest {
         f.remoteMtaDiagnosticStatus =
                 new Rfc821Status(new Response(550,
                         "Requested action not taken: mailbox unavailable"));
-        f.remoteMta = new RemoteMta(IP3.getHostName());
+        f.remoteMta = new MtaAddress(HOST3_EXAMPLE_COM, IP3);
         f.failureDate = new Date();
         f.logId = "NO_1_ENTRY";
         return Collections.singletonList((RecipientProblemReport) f);
