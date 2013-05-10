@@ -27,11 +27,35 @@ backendServer = setup(BackendServer, {
 
 <p>Note: you can freely specify another backend server for a different set of recipient addresses.
 
-<p>Next, edit <code>local-recipients.js</code> and insert the proxy mapping below the 
-comment <cite>ENTER YOUR RECIPIENT-DESTINATION MAPPINGS HERE</cite>.
-For example if you want to relay everything to the backend server, then insert the following code:
+<h2>Proxying remote addresses by the Message Submission service</h2>
+
+A Message Submission port (587) receives mails addressed to both local and remote addresses.
+If yow want to proxy all mails which were not delivered locally, then edit 
+<code>submission/submission.js</code>, and 
+<ol>
+<li>delete the <code>TransmitterDestination</code> line
+<li>uncomment the <code>RelayDestinaton</code> line.
+</ol>
+The result should look like this:
 <p class="code">...
-<span class="relevant">massProxy(backendServer, [ setup(AnyRecipient) ]);</span>
+<span class="relevant"><del>destination: setup(TransmitterDestination),</del></span>
+		
+<span class="relevant">destination: setup(RelayDestination, {
+	backendServer: backendServer
+})</span>
+...</p>
+
+<p>Note: if you want to proxy each and every mail, then simply do not define any local recipients. 
+
+<h2>Proxying local addresses</h2>
+
+<p>In order to proxy some or all local addresses, edit <code>local-recipients.js</code> 
+and insert the proxy mapping below the 
+comment <cite>ENTER YOUR RECIPIENT-DESTINATION MAPPINGS HERE</cite>.
+For example if you want to relay every <b>local</b> address to the backend server, 
+then insert the following code:
+<p class="code">...
+<span class="relevant">massProxy(backendServer, [ setup(AnyRecipient) ]),</span>
 ...</p>
 
 <p>Here is a complex example for selectively relaying specific addresses:
