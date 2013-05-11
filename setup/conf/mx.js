@@ -60,4 +60,3 @@ mx = setup(SMTPServer(mxMessageHandler), {
 	/* uncomment to enable STARTTLS if JSSE is correctly configured */
 	/* enableTLS: true, */
 });
-	

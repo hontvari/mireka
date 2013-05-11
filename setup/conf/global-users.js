@@ -14,4 +14,3 @@ globalUsers = setup(GlobalUsers, { users: [
 
 
 ]});
-	

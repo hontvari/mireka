@@ -46,4 +46,3 @@ localRecipientDestinations = deepList([
 		destination: setup(SrsDestination)
 	}),
 ]);
-
