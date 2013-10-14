@@ -28,7 +28,7 @@ System.setProperty("javax.net.ssl.keyStorePassword", "changeit");
 	Default SMTP client factory, it specifies the properties of the 
 	outgoing SMTP connections.
 */
-clientFactory = setup(ClientFactory, {
+clientFactory = setupDefault(ClientFactory, {
 	helo: helo,
 	// bind: "192.0.2.0",
 });
@@ -43,7 +43,6 @@ backendServer = setup(BackendServer, {
 	//port: 587,
 	//user: "office-server",
 	//password: "CHANGEIT",
-	clientFactory: clientFactory,
 });
 
 /*

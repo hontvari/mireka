@@ -6,11 +6,18 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.SendException;
+import mireka.transmission.immediate.Upstream;
 
 import org.subethamail.smtp.client.PlainAuthenticator;
 
+/**
+ * BackendServer specifies another SMTP server which is used as a proxy target
+ * or smarthost. It may be part of an {@link Upstream}.
+ */
 public class BackendServer {
     private static final String IPV6_PREFIX = "[IPv6:";
     private static final Pattern dottedQuad = Pattern
@@ -43,6 +50,14 @@ public class BackendServer {
     private int port = 25;
     private String user;
     private String password;
+    /**
+     * {@link BackendServer#setWeight}
+     */
+    private double weight = 1;
+    /**
+     * {@link BackendServer#setBackup}
+     */
+    private boolean backup = false;
 
     /**
      * 
@@ -74,7 +89,7 @@ public class BackendServer {
 
     @Override
     public String toString() {
-        return "BackendServer [" + host + ":" + port + "]";
+        return host + ":" + port;
     }
 
     /**
@@ -150,6 +165,7 @@ public class BackendServer {
         return clientFactory;
     }
 
+    @Inject
     public void setClientFactory(ClientFactory clientFactory) {
         this.clientFactory = clientFactory;
     }
@@ -196,4 +212,36 @@ public class BackendServer {
         this.password = password;
     }
 
+    /**
+     * @category GETSET
+     */
+    public double getWeight() {
+        return weight;
+    }
+
+    /**
+     * Relative weight of the server in an Upstream. Default is 1.
+     * 
+     * @category GETSET
+     */
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    /**
+     * @category GETSET
+     */
+    public boolean isBackup() {
+        return backup;
+    }
+
+    /**
+     * True indicates that the server should only be used in an Upstream if all
+     * non-backup servers failed. Default is false.
+     * 
+     * @category GETSET
+     */
+    public void setBackup(boolean backup) {
+        this.backup = backup;
+    }
 }
