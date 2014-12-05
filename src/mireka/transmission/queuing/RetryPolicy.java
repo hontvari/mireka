@@ -31,7 +31,8 @@ import org.slf4j.LoggerFactory;
 public class RetryPolicy {
     private final Logger logger = LoggerFactory.getLogger(RetryPolicy.class);
     private List<Period> retryPeriods = Arrays.asList(Period.minutes(3),
-            Period.minutes(27), Period.minutes(30), Period.hours(2),
+            Period.minutes(3), Period.minutes(9), Period.minutes(15),
+            Period.minutes(30), Period.hours(2),
             Period.hours(2), Period.hours(2), Period.hours(2), Period.hours(2),
             Period.hours(2), Period.hours(2), Period.hours(2), Period.hours(2),
             Period.hours(2), Period.hours(3));
