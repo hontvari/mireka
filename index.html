@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Mireka : Mireka mail server and SMTP proxy">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Mireka</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/hontvari/mireka">View on GitHub</a>
+
+          <h1 id="project_title">Mireka</h1>
+          <h2 id="project_tagline">Mireka mail server and SMTP proxy</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/hontvari/mireka/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/hontvari/mireka/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="mireka" class="anchor" href="#mireka" aria-hidden="true"><span class="octicon octicon-link"></span></a>mireka</h1>
+
+<p>Mireka is a mail server with SMTP, Mail Submission and POP3 services. It is also an SMTP proxy. As a proxy, it can help to prevent or diagnose mail problems, like outgoing backscatter spam.</p>
+
+<p>Features:</p>
+
+<ul>
+<li>detailed logging</li>
+<li>basic mail traffic statistics</li>
+<li>filtering by DNSBL </li>
+<li>filtering by SPF</li>
+<li>accepting mail only for local domains and recipients</li>
+<li>wildcards (regular expressions) can be used to specify local recipients</li>
+<li>basic tarpit, to prevent e-mail address harvesting</li>
+<li>loop detection</li>
+<li>configurable maximum message size</li>
+<li>easy implementation and installation of custom filters written in Java</li>
+<li>separate Message Transfer Agent and Message Submission Agent ports: 25 and 587 by default</li>
+<li>proxy functionality for incoming mails (both MSA and MTA)</li>
+<li>the proxy can select from more than one backend server, based on the recipient </li>
+<li>standalone (non-proxy) Message Submission Agent implementation with file system based mail queues</li>
+<li>submission port authentication by IP address or by username-password pair through SMTP authentication</li>
+<li>POP3 service for retrieving mail, file system based mail store</li>
+<li>aliases, forward lists and (very) simple mail lists</li>
+<li>Sender Rewriting Scheme (SRS) for SPF compatible forwarding</li>
+<li>secure communication using STARTTLS on all services</li>
+<li>"delayed" DSN reports on temporary failures</li>
+<li>embeddable</li>
+<li>runs equally well on any OS, where Java is available: Windows, Linux etc.</li>
+</ul>
+
+<p>How it works in proxy mode:</p>
+
+<p>Mireka can proxy both incoming and outgoing SMTP connections.
+It accepts an SMTP connection, logs communication between client and server, runs filters in various stages of the mail transaction, and sends the mail to a back-end SMTP server. It relays steps of the mail transaction immediately, without queuing the mail. In this way the back-end server can also reject recipients and message content before accepting irrevocable responsibility for delivery. Proxy mode works for both outgoing and incoming mail.</p>
+
+<p>Any number of ports can be configured, and the proxy and standalone modes can be mixed. For example incoming mails can be proxied on one port, while outgoing mails received on another port are transmitted directly by Mireka alone.</p>
+
+<p>Documentation:</p>
+
+<ul>
+<li><a href="http://mireka.googlecode.com/svn/doc/index.html">Mireka Documentation</a></li>
+<li><a href="http://mireka.googlecode.com/svn/doc/javadoc/index.html">Javadoc</a></li>
+</ul>
+
+<p>Mireka is written in Java. A large part of the functionality is provided by components produced by other projects: </p>
+
+<ul>
+<li>
+<a href="http://code.google.com/p/subethasmtp/">SubEthaSMTP</a> for receiving mails</li>
+<li>
+<a href="http://logback.qos.ch/">Logback</a> for logging</li>
+<li>
+<a href="http://james.apache.org/mime4j/">Mime4J</a> for parsing message content and constructing DSN messages</li>
+<li>
+<a href="http://www.dnsjava.org/">dnsjava</a> for querying DNSBLs and determining the SMTP servers of recipient domains</li>
+<li>
+<a href="http://james.apache.org/jspf/">jSPF</a> for checking the sender</li>
+</ul>
+
+<p>Current usage:
+Mireka was used as a proxy in front of two <a href="http://james.apache.org/server/index.html">Apache James Servers</a> receiving 50.000 mail transactions daily. Now it is used both as full mail server and a send only mail server with similar traffic.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Mireka maintained by <a href="https://github.com/hontvari">hontvari</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-10945390-2");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+
+  </body>
+</html>
