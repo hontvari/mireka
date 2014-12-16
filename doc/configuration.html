@@ -1,0 +1,121 @@
+<html>
+<head>
+<title>Configuration files</title>
+<link rel="stylesheet" type="text/css" href="doc.css" />
+<style>
+table          { border-collapse: collapse;
+                 border: 1px solid; 
+		 margin-left: 2em;
+		 margin-right: 2em
+	       }	
+td             { border: 1px solid; padding: 1em; }
+th             { border: 1px solid; padding: 1em; white-space: nowrap }
+</style>
+</head>
+
+<body>
+<h1>Configuration files</h1>
+
+Configuration files are located in <code><var>MIREKA_HOME</var>/conf</code>.
+They will be read and processed by Mireka on startup.
+
+<p><code>mireka.js</code> is the primary configuration file of Mireka. 
+The JavaScript evaluator starts with this file. This file in turn imports all 
+other .js files. 
+It also imports helper functions from a non-configuration file: 
+<code><var>MIREKA_HOME</var>/lib/configuration.js</code>. 
+These helper functions are described in detail in comment blocks within that file. 
+</p>
+
+<p>In addition to the standard EcmaScript objects and Mireka mailing specific Java objects, 
+the script can access the <a href="javadoc/mireka/startup/ScriptApi.html"><code>mireka.startup.ScriptApi</code></a> object using the <code>configuration</code> variable.</p>  
+
+<p>
+Essentially, the JavaScript code in the configuration files create new Mireka objects, which are written in Java,  
+and assigns values to their properties.
+A typical pattern looks like this:
+<p class="code">setup(Member, {
+	address: "john@example.com",
+	name: "John Doe",
+}),</p>
+As in almost all cases, the <code>setup</code> JavaScript function is used.
+It creates a new instance of the <a href="javadoc/mireka/forward/Member.html"><code>mireka.forward.Member</code></a> class, 
+and set its properties by calling <code>Member.setAddress</code> with the value <code>"john@example.com"</code>, 
+and <code>Member.setName</code> with <code>"John Doe"</code>.   
+<code>setup</code> does a few other things, see the comment block preceeding it. 
+
+<p>It is also possible to specify another object as a property value, either 
+defining it inline, or referencing it by a variable name.    
+</p>
+
+<p>
+For more information on Mireka objects, see the <a href="javadoc/index.html">Javadoc</a>.
+</p>
+
+<h2>List of configuration files<h2>
+<table>
+<tr><th>File name</th><th>Function</th></tr>
+<tr><th><code>mireka.js</code></th><td>Enables/disables SMTP, Message Submission and POP3 
+services by importing or not importing their respective configuration files. 
+It contains common elements used by more than one services. Some of these are 
+default objects which are referred by other parts of the configuration, but it 
+is also possible to define and use other instances of them. It also contains a 
+very few, mostly static configuration related to Mireka as a whole. 
+See the comments in the file for more information.
+</td></tr>
+
+<tr><th><code>mx.js</code></th><td>Configures the public SMTP   
+service, which receives mails sent to the local domains by any server on the 
+internet. The service, in turn, stores the mail in a POP3 mailbox, relays it in 
+real time to a backend server behaving like a proxy, forwards it, etc.
+</td></tr>
+
+<tr><th><code><a href="submission.html">submission/*</a></code></th><td>
+These files configure the <a href="submission.html">Message Submission service</a>, 
+used by local users to send mails either to 
+other local users, or to other domains on the internet. 
+</td></tr>
+
+<tr><th><code>pop.js</th><td>Configures the POP3 service itself and the POP3 
+Importer. POP3 Importer is useful for migration. It retrieves each users' mails from another 
+POP3 server after startup. To use it, it is necessary that the user names and
+the passwords match on both system.
+</td></tr>
+
+<tr><th><code>domains.js</code></th><td>List of local domain names. 
+If the domain part of a recipient is not in this list, then the recipient will 
+be rejected by the MX SMTP service.
+</td></tr>
+
+<tr><th><code>global-users.js</code></th>
+<td>Authorized users of the Mail Submission, POP3 services, in addition they
+are also valid wildcard recipients in the MX SMTP service. 
+</td></tr>
+
+<tr><th><code>local-recipients.js</code></th>
+<td>
+It tells what to do with mails sent to local domains. 
+It maps recipient addresses to a destinations, like store the mail in a maildrop for 
+later retrieval via POP3, forward it to another domain, etc. 
+</td></tr>
+
+<tr><th><code>circular.js</code></th>
+<td>
+This file exists purely for a technical reason, to break circular dependencies.
+If a configuration object named A refers to another object B, but B also refers to A, then 
+neither A nor B could be created and fully initialized before the other. In such cases 
+an unitialized A object is created in this file, then it is referenced when object B and other 
+depending objects are created and initialized. 
+Finally object A is initialized in the usual configuration file corresponding to its function.
+</td></tr>
+
+
+<tr><th><code>logback.xml</code></th>
+<td>
+It configures <a href="logging.html">logging</a>.
+</td></tr>
+
+</table>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+<html>
+<head>
+<title>Monitoring and management via JMX</title>
+<link rel="stylesheet" type="text/css" href="doc.css" />
+</head>
+
+<body>
+<h1>Monitoring and management via JMX</h1>
+
+<p>JMX (Java Management Extensions) makes it possible to connect to the running Mireka process and set and view JRE and Mireka management online. 
+Among others you can change log levels and monitor mail traffic. 
+
+<h2>Enable JMX access</h2>
+<p><strong>JMX access is not enabled by default, because it is insecure without additional measures.</strong></p>
+
+<p>To enable, some Java command line parameters must be added as detailed below.
+JMX will be listening on all interfaces and no authentication will be required.
+Therefore it must be firewalled, otherwise anyone can connect to it.
+Even then, any local user can connect to it.</p>
+
+<p>If it is switched on, and firewalled, JMX can be accessed either locally, or remotely via an SSH tunnel. 
+The port is 4452, but RMI, the default remote access protocol of JMX, also uses a second, random port in the later phases, so it is practically impossible to use it across a firewall.</p> 
+
+<h5>Ubuntu</h5>
+<p>Uncomment the line starting with <code>env JMX_OPTIONS</code> in the Upstart job configuration file, <code>/etc/init/mireka.conf</code>.
+
+<h5>Other Linux</h5>
+<p>Uncomment the JMX options line below the comment <q>Enable JMX</q> in the <code>/etc/default/mireka</code> configuration file. 
+
+<h5>Windows</h5>
+<p>Start Service Manager, <code>bin/mirekaw.exe</code>, go to the <code>Java</code> tab and add the following lines to the <code>Java Options</code> edit box:
+<p class="code">-Dcom.sun.management.jmxremote.port=4452
+-Dcom.sun.management.jmxremote.ssl=false
+-Dcom.sun.management.jmxremote.authenticate=false</p>
+
+<h5>On all platforms</h5>
+<p>Restart Mireka so the changes take effect.
+
+<h2>Remotely connecting to Mireka, using jconsole and Putty</h2>
+Configure a socks proxy in Putty, either using the GUI, or in command line:
+<p class="code">putty -D 9999 -load mireka-session</p>
+
+Start jconsole:
+<p class="code">jconsole -J-DsocksProxyHost=localhost -J-DsocksProxyPort=9999 -debug</p>
+
+<h2>Traffic statistics</h2>
+
+The <a href="javadoc/index.html?mireka/filter/builtin/MeasureTraffic.html"><code>MeasureTraffic</code></a>
+filter publishes statistics in a JMX MBean object under the name 
+<kbd>mireka:type=TrafficSummary</kbd>. 
+It can be displayed for example using the <code>jconsole</code> application of the JDK.
+
+</body>
+</html>

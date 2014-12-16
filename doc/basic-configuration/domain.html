@@ -1,0 +1,29 @@
+<html>
+	<head>
+		<title>Add domain</title>
+		<link rel="stylesheet" type="text/css" href="../doc.css" />
+	</head>
+
+	<body>
+		<h1>Add domain</h1>
+
+<p>If you want Mireka to accept mails from external servers then you have to specify the list of your domain names. 
+For example, if <code>john@example.com</code> and <code>john@example.net</code> 
+are mail addresses of your local users, then you have to add <code>example.com</code> and <code>example.net</code> to the list.
+If the domain part of a recipient is not in this list, then the recipient will be rejected by the MX SMTP service.
+   
+<p>The list is specified in the <code>domains.js</code> configuration file. 
+Edit the file and add your domain to the <code>remoteParts</code> list. 
+For the example above the file should look something like this:
+<p class=code>localDomains = setup(InlineDomainRegistry, {
+	remoteParts: [
+		<span class="relevant">"example.com",
+		"example.net"</span>
+	]
+});
+</p>
+<p>The domain must be double quoted, multiple domains must be separated by commas.
+
+
+	</body>
+</html>

@@ -1,0 +1,69 @@
+<html>
+	<head>
+		<title>Installing binary tarball on Ubuntu</title>
+		<link rel="stylesheet" type="text/css" href="../doc.css" />
+	</head>
+
+	<body>
+		<h1>Installing binary tarball on Ubuntu</h1>
+
+<p>Install dependencies
+<p class="code">sudo apt-get install adduser authbind openjdk-7-jre-headless unzip</p>
+
+<p>Download and extract the binary release into <code>/opt/mireka</code>
+<p class="code"><span class="comment"># Mireka version to be installed</span>
+VERSION=4.0
+cd ~
+
+<span class="comment"># Download binary package:</span>
+wget http://mireka.googlecode.com/files/mireka-$VERSION.zip
+
+<span class="comment"># Extract it</span>
+unzip mireka-$VERSION.zip
+
+<span class="comment"># No more need for the downloaded archive</span>
+rm mireka-$VERSION.zip
+
+<span class="comment"># Move the extracted content to /opt/mireka</span>
+sudo mv mireka-$VERSION /opt/mireka
+
+cd /opt/mireka
+</p>
+
+<p>Create a user account named <code>mireka</code>, Mireka will run as that user
+<p class="code"><span class="comment"># Create mireka user</span>
+sudo adduser --system --home /opt/mireka --no-create-home --group --disabled-password --shell /bin/false mireka</p>
+
+<p>Setup file ownerships
+<p class="code"><span class="comment"># Set the default: owned by root, readable by everybody</span>
+sudo chown -R root:root .
+
+<span class="comment"># Logs are writable by mireka, and readable by operators and nobody else.</span>
+sudo chown -R mireka:adm log
+sudo chmod 2750 log
+
+<span class="comment"># Directories containing mails are writable by mireka and nobody else can see them.</span>
+sudo chown -R mireka:mireka maildrops postmaster queues
+sudo chmod 750 maildrops postmaster queues
+
+<span class="comment"># The configuration file which contains passwords are writable only to root, 
+# readable for mireka, others must not see it.</span>
+sudo chown root:mireka conf/global-users.js
+sudo chmod 640 conf/global-users.js</p>
+
+<p>Configure authbind to enable Mireka to listen on the standard mail ports while running as non-root. 
+These ports are lower than 1024, and by default are reserved for root.
+<p class="code"><span class="comment"># authbind in Ubuntu 12.10 require ports in the 512-1023 to be included in files starting with !</span>
+MIREKA_UID=$(id -u mireka)
+echo -e "0.0.0.0/0:25,25\n0.0.0.0/0:110,110\n0.0.0.0/0:587,587" | sudo tee /etc/authbind/byuid/$MIREKA_UID /etc/authbind/byuid/\!$MIREKA_UID</p>
+
+<p>Install Upstart job configuration file to run Mireka as a dameon and start it.
+<p class="code">sudo cp doc/examples/daemon/upstart.conf /etc/init/mireka.conf
+sudo start mireka</p>
+
+<p>You will find the log files in <code>/opt/mireka/log</code>, the configuration files in <code>/opt/mireka/conf</code>.
+The Mireka home dir is <code>/opt/mireka</code>. 
+<p>You can start it using <code>sudo start mireka</code> and stop it using <code>sudo stop mireka</code>. 
+
+	</body>
+</html>

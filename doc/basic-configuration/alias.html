@@ -1,0 +1,27 @@
+<html>
+	<head>
+		<title>Adding an alias</title>
+		<link rel="stylesheet" type="text/css" href="../doc.css" />
+	</head>
+
+	<body>
+		<h1>Adding an alias</h1>
+		
+<p>Alias is a virtual recipient address which is mapped to another local recipient address.
+Mails sent to the alias are handled exactly as if they were sent to the other address.
+
+<p>Edit <code>local-recipients.js</code> and insert the new alias mapping below the 
+comment <cite>ENTER YOUR RECIPIENT-DESTINATION MAPPINGS HERE</cite>.
+For example if you have a user account with the name <code>jane</code>, and you want 
+to define an alternative address, <code>jeannie</code> for her, you shoud insert the following line:
+<p class=code>...
+<span class="relevant">alias("jeannie@example.com", "jane@example.com"),</span>
+...</p>
+
+<p>From now, mails sent to <code>jeannie@example.com</code> will be delivered to the 
+existing maildrop named <code>jane</code>.
+<p>Note: both addresses must be local addresses.
+
+
+	</body>
+</html>

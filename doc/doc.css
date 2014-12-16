@@ -1,0 +1,4 @@
+.code { 	background: #DDD; padding: 5px; margin: 5px; font-family: monospace; white-space: pre; overflow: auto }
+.relevant { color: #B33;  font-weight:bold }
+.comment { color: #880 }
+

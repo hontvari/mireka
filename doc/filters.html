@@ -1,0 +1,40 @@
+<html>
+<head>
+<title>Filters</title>
+</head>
+
+<body>
+<h1>Filters</h1>
+		
+<p>
+The processing what Mireka does on a mail is mostly determined by 
+the filter chain. The filter chain consists of filters. For example 
+<a href="javadoc/index.html?mireka/filter/local/AcceptGlobalPostmaster.html">AcceptGlobalPostmaster</a>
+is a simple filter, which can be used to make sure that an email sent to the 
+special <kbd>postmaster</kbd> recipient is accepted without further checks. 
+</p>
+
+<p>
+A single filter is called in each step of the mail transaction. For example 
+it is called when the client sends the reverse path (sender) of the mail. Later 
+it is called again when the client sends the address of a recipient. 
+Each time, the filter does some processing and then optionally calls the next 
+filter in the chain. It can also do some processing after the filters 
+following it completed. The result of the processing can be, for example, the 
+rejection of a recipient. In another case, the processing can be the relaying 
+of the message to the backend server. 
+</p> 
+
+<p>
+For the list of available filters, see the 
+<cite>All Known Implementing Classes</cite> section of 
+<a href="javadoc/index.html?mireka/filter/FilterType.html">FilterType</a>.
+</p>
+
+<p>
+The filter chain is configured in <a href="mx.html"><code>mx.js</code></a> and
+<a href="submission.html"><code>submission/submission.js</code></a>.
+</p>
+
+</body>
+</html>

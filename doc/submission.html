@@ -1,0 +1,100 @@
+<html>
+<head>
+<title>Message Submission Service</title>
+<style>
+table          { border-collapse: collapse;
+                 border: 1px solid; 
+		 margin-left: 2em;
+		 margin-right: 2em
+	       }	
+td             { border: 1px solid; padding: 1em; }
+th             { border: 1px solid; padding: 1em; white-space: nowrap }
+</style>
+</head>
+
+<body>
+<h1>Message Submission Service</h1>
+		
+<p>
+The submission service is used by local users to send mails to either 
+other local users, or to other domains on the internet. The service, in turn, 
+transmits mails to the public SMTP server of the recipient domain, delivers them 
+locally, relays them locally, etc. 
+This service is specified by 
+<a href="http://tools.ietf.org/html/rfc4409">RFC 4409, Message Submission for Mail</a>.
+It is a variant of SMTP.
+</p>
+<p>
+If the transmission of a mail to a remote domain fails on the first attempt, 
+then it retries the
+transmission several times. If it eventually decides that the mail is 
+undeliverable, then it sends a delivery status notification message back to the 
+sender.
+</p>
+<p>
+A dedicated MSA is useful for people, who are working outside of the office, 
+and whose internet service provider blocks port 25.
+The service usually runs on port 587. Its address is NOT published in a DNS MX 
+record.
+</p>
+
+<h2>List of configuration files</h2>
+
+<p>
+Configuration files specific to the Message Submission service are located in the 
+<code><var>MIREKA_HOME</var>/conf/submission</code> directory.
+</p>
+
+<table>
+<tr><th>File name</th><th>Function</th></tr>
+<tr><th><code>submission.js</code></th><td>The primary configuration file of the Submission 
+service. It configures the SMTP server, the filter chain, and most 
+filter parameters. In turn, it imports all the other configuration files of 
+the Submission service.
+Sections:
+<ul>
+<li>SMTP server: accepts incoming connections, sends mail transactions to the 
+filter chain
+<li><a href="filters.html">filter chain</a>: Filters are responsible for the 
+processing of submitted mail transactions.
+<li>recipient table: the recipient table used here simply specifies 
+that the service delivers mail to local recipients according to the <code>local-recipients.js</code>
+configuration file, just like the SMTP service. Mails sent to non-local 
+addresses are transmitted to the mail server of the recipient's domain.
+</ul>
+</td></tr>
+
+<tr><th><code>authorized-ip.js</code></th><td>List of ip addresses or address ranges. 
+Mails can be submitted from these ip addresses without any further authentication.
+
+<p>This file is imported by <code>submission.js</code>.</p></td></tr>
+
+<tr><th><code>queues.js</code></th><td>The submission service uses file system based 
+queues to make sure no mails are lost. Until a mail is confirmed to be received
+by the recipient domain the mail stays in a queue. The queues are managed by 
+transmitters.
+In the default configuration there are three transmitters and there are
+three correspongind queues.
+<ul>
+<li>primaryTransmitter: all mails go into the queue of this transmitter. 
+This transmitter is responsible for the first delivery attempt.
+<li>dsnTransmitter: if it becomes clear that a mail cannot be transmitted then 
+the transmitter responsible for the mail generates a Delivery Status Notification
+(DSN) message. This transmitter is responbible for transmitting the DSN messages
+back to the original sender.
+<li>retryTransmitter: if the first attempt to transmit a mail (either a regular
+mail or a DSN message) is unsuccessful, but it seems that the problem is temporary,
+then the original transmitter handles the message to this transmitter. 
+retryTransmitter retries the transmission several times. If it cannot transmit
+the mail after a predefined count of attempts, or if it becomes clear, that 
+no further attempt will be successful, then it generates a DSN message and
+drops the original mail.
+</ul>
+You have to change the mailer daemon address at the top of the file, to reflect 
+your own domain. Otherwise it is unlikely that you have to change other parts 
+of this configuration file. 
+</td></tr>
+</table> 
+
+</body>
+</html>

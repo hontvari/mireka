@@ -1,0 +1,18 @@
+<html>
+	<head>
+		<title>Installing binary tarball on other Linux OS</title>
+		<link rel="stylesheet" type="text/css" href="../doc.css" />
+	</head>
+
+	<body>
+		<h1>Installing binary tarball on other Linux OS</h1>
+
+<p>The installation procedure should be very similar to the <a href="ubuntu-tarball.html">Installing binary tarball on Ubuntu</a> page.
+<p>If your OS uses an init system other than Upstart, then instead of the Upstart job configuration file, use the example SysV init scripts in the examples directory:
+<p class="code">sudo cp doc/examples/daemon/init.sh /etc/init.d/mireka
+sudo cp doc/examples/daemon/default.sh /etc/default/mireka
+sudo chmod 755 /etc/init.d/mireka</p>
+<p>Configure your system to autostart the Mireka service at boot time.
+
+	</body>
+</html>

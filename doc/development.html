@@ -1,0 +1,57 @@
+<html>
+<head>
+<title>Custom components</title>
+</head>
+
+<body>
+<h1>Developing and installing custom components</h1>
+
+<p>
+Almost anything can be changed in Mireka without modifying Mireka source code, 
+just by adding new Java classes for example in a jar and initializing these new objects in
+the configuration files. Particularly useful are the filters, which can 
+alter the processing of a mail immediately within the SMTP transaction.
+</p>
+		
+<p>
+The API for developing custom filters and recipient specifications is the
+<a href="javadoc/index.html?mireka/filter/package-summary.html"><code>mireka.filter</code></a>
+package.
+
+<h3>Filters</h3>
+
+<p>For an overview about the filter mechanism, see the <a href="filters.html">Filters</a> section.
+<p>
+A filter consists of two classes. 
+<a href="javadoc/index.html?mireka/filter/FilterType.html"><code>FilterType</code></a> 
+is referenced in the configuration
+files. It is a factory, which create a new 
+<a href="javadoc/index.html?mireka/filter/Filter.html"><code>Filter</code></a>
+instance for every mail transaction.
+</p>
+
+<p>
+For simple filters, which doesn't have to preserve state between SMTP commands, 
+extend the 
+<a href="javadoc/index.html?mireka/filter/StatelessFilterType.html"><code>StatelessFilterType</code></a> 
+class. This implements both the FilterType and Filter interfaces.
+For more complex cases, implement FilterType, and in another (maybe inner-) class extend 
+<a href="javadoc/index.html?mireka/filter/AbstractFilter.html"><code>AbstractFilter</code></a>.
+The built-in filters can be used as example.
+</p>
+
+<h3>Installation</h3>
+
+<p>
+Place your jars and compiled classes into <code><var>MIREKA_HOME</var>/lib</code> and 
+<code><var>MIREKA_HOME</var>/classes</code> 
+respectively.
+</p>
+
+<p>
+If you created a filter or other component which may be useful for others, 
+consider submitting it as a patch.
+</p>
+
+</body>
+</html>

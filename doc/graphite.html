@@ -1,0 +1,34 @@
+<html>
+<head>
+<title>Realtime graphing and monitoring with Graphite</title>
+<link rel="stylesheet" type="text/css" href="doc.css" />
+</head>
+
+<body>
+<h1>Realtime graphing and monitoring with Graphite</h1>
+
+<p>Mireka can send traffic and JRE statistics to a <a href="http://graphite.wikidot.com/">Graphite</a> 
+server which can produce realtime graphs for monitoring. 
+
+<p>To enable sending data to Graphite, edit <code>mireka.js</code> and uncomment 
+the GraphiteReporter block. 
+If your Graphite server host is <code>graphite.example.com</code>, 
+and the host name of the server running Mireka is <code>mail</code>, 
+then the result should look like this:
+<p class="code">...
+<span class="comment">/*
+	uncomment to send monitoring data to a Graphite server for graphical 
+	viewing
+*/</span>
+<span class="relevant">&#x2588;&#x2588;</span>
+setup(GraphiteReporter, {
+	host: "<span class="relevant">graphite.example.com</span>",
+	prefix: "<span class="relevant">mail.mireka</span>"
+});
+<span class="relevant">&#x2588;&#x2588;</span>
+...</p>
+We have good experience with using <code><u>HOSTNAME</u>.<u>PROGRAM_NAME</u></code>
+for the <code>prefix</code> property, but you can freely choose any value for it.
+Graphite prefixes the name of data elements coming from this Mireka process with the supplied value.
+</body>
+</html>

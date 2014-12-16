@@ -1,0 +1,37 @@
+<html>
+<head>
+<title>SMTP Service</title>
+<style>
+table          { border-collapse: collapse;
+                 border: 1px solid; 
+		 margin-left: 2em;
+		 margin-right: 2em
+	       }	
+td             { border: 1px solid; padding: 1em; }
+th             { border: 1px solid; padding: 1em; }
+</style>
+</head>
+
+<body>
+<h1>SMTP Service</h1>
+		
+<p>The SMTP service receives mails sent to the local domains by any server on the 
+internet. The service, in turn, relays all received mails to the backend server,
+delivers them locally, expands it to a mail list, etc. 
+It always runs on port 25, and its address must be published in a DNS MX 
+record.
+</p>
+
+<p>
+<code>mx.js</code> is the most strongly associated configuration file. 
+It configures the SMTP service, the filter chain, and most filter parameters.
+
+<ul>
+<li>SMTP server: accepts incoming connections, sends mail transactions to the 
+filter chain
+<li><a href="filters.html">filter chain</a>: filters are responsible for the 
+processing of incoming mail transactions.
+</ul>
+
+</body>
+</html>

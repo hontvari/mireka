@@ -1,0 +1,39 @@
+<html>
+	<head>
+		<title>Configuration basics</title>
+		<link rel="stylesheet" type="text/css" href="../doc.css" />
+	</head>
+
+	<body>
+		<h1>Configuration basics</h1>
+
+<h3>How does Mireka store configuration</h3>
+
+<p>Mireka configuration is stored in text files. 
+The configuration files are written in the JavaScript programming language, 
+although only the most basic elements of JavaScript is used. The configuration does two things:
+<ul>
+	<li>Sets up Mireka components and wire them together.
+	<li>Sets up mailing specific informations, like user accounts, forwading lists etc.
+</ul>
+
+<h3>Location of configuration files</h3>
+
+The location of the configuration files depends on how you installed Mireka.
+<ul>
+	<li>If you installed it by extracting the zip distribution archive then they are in the <code>conf</code> subdirectory.
+	<li>If you installed the deb package then they are in <code>/etc/mireka/</code>.
+</ul>
+
+<h3>Editing</h3>
+
+It is best if you edit the files using an editor capable of syntax highlighting JavaScript files.
+For example you can use Vim on the Linux command line, or jEdit on Windows and Linux GUI.
+
+<!-- <h3>How does the changes take effect</h3> -->
+
+<p><b>After changing the configuration you have to restart Mireka.</b>
+
+
+	</body>
+</html>
