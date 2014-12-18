@@ -1,38 +1,76 @@
+
 <!DOCTYPE html>
 <html>
+	<head>
+		<meta charset='utf-8'>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<meta name="description" content="Mireka : Mireka mail server and SMTP proxy">
+		<link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+		<style>
+			.btn {
+				display: block;
+				top:0;
+				z-index: 10;
+				padding: 10px 10px 10px 10px;
+				color: #fff;
+				font-weight: 700;
+				box-shadow: 0 0 10px rgba(0,0,0,.5);
+				border-bottom-left-radius: 2px;
+				border-bottom-right-radius: 2px;
+			}
+			.issuesbtn { background: #d80; }
+			.docbtn { background: #6b0; }
+			.mailbtn { background: #888; }
+			.dlbtn { background: #a6a; }
+			.issuesbtn:hover { background: #e90; }
+			.docbtn:hover { background: #2E7D32; }
+			.mailbtn:hover { background: #9B9B9B; }
+			.dlbtn:hover { background: #b7b; }
+			#forkme_banner {
+				position: relative;
+				margin-left: 10px;
+			}
+			#forkme_banner:hover { background-color: #20a3ff; }
+			#header_wrap { background: #64DD17; }
+			#project_title { 
+				color: #fff;
+				text-shadow: none;
+			}
+			#project_tagline {
+				color: #fff;
+				text-shadow: none;
+			}
+		</style>
+		<title>Mireka</title>
+	</head>
+	<body>
 
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="description" content="Mireka : Mireka mail server and SMTP proxy">
+		<!-- HEADER -->
+		<div id="header_wrap" class="outer">
+			<header class="inner">
+				<table style="margin-top: -61px; border:0">
+					<tr><td style="border:0">
+			  			<a class="dlbtn btn" href="doc">Documentation</a>
+					</td><td style="border:0">
+						<a class="docbtn btn" href="https://github.com/hontvari/mireka/releases">Download</a>
+					</td><td style="border:0">
+						<a class="mailbtn btn" href="http://groups.google.com/group/mireka">Mailing list</a>
+					</td><td style="border:0">
+						<a class="issuesbtn btn" href="https://github.com/hontvari/mireka/issues">Issues</a>
+					</td><td style="border:0">
+						<a id="forkme_banner" style="padding-right: 50px" href="https://github.com/hontvari/mireka">GitHub</a>
+					</td></tr>
+				</table>
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+				<h1 id="project_title">Mireka</h1>
+				<h2 id="project_tagline">Mireka mail server and SMTP proxy</h2>
+			</header>
+		</div>
 
-    <title>Mireka</title>
-  </head>
-
-  <body>
-
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/hontvari/mireka">View on GitHub</a>
-
-          <h1 id="project_title">Mireka</h1>
-          <h2 id="project_tagline">Mireka mail server and SMTP proxy</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/hontvari/mireka/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/hontvari/mireka/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h1>
-<a id="mireka" class="anchor" href="#mireka" aria-hidden="true"><span class="octicon octicon-link"></span></a>mireka</h1>
+		<!-- MAIN CONTENT -->
+		<div id="main_content_wrap" class="outer">
+			<section id="main_content" class="inner">
+				<h1><a id="mireka" class="anchor" href="#mireka" aria-hidden="true"><span class="octicon octicon-link"></span></a></h1>
 
 <p>Mireka is a mail server with SMTP, Mail Submission and POP3 services. It is also an SMTP proxy. As a proxy, it can help to prevent or diagnose mail problems, like outgoing backscatter spam.</p>
 
@@ -73,8 +111,8 @@ It accepts an SMTP connection, logs communication between client and server, run
 <p>Documentation:</p>
 
 <ul>
-<li><a href="http://mireka.googlecode.com/svn/doc/index.html">Mireka Documentation</a></li>
-<li><a href="http://mireka.googlecode.com/svn/doc/javadoc/index.html">Javadoc</a></li>
+<li><a href="doc">Mireka Documentation</a></li>
+<li><a href="doc/javadoc">Javadoc</a></li>
 </ul>
 
 <p>Mireka is written in Java. A large part of the functionality is provided by components produced by other projects: </p>
@@ -94,28 +132,21 @@ It accepts an SMTP connection, logs communication between client and server, run
 
 <p>Current usage:
 Mireka was used as a proxy in front of two <a href="http://james.apache.org/server/index.html">Apache James Servers</a> receiving 50.000 mail transactions daily. Now it is used both as full mail server and a send only mail server with similar traffic.</p>
-      </section>
-    </div>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Mireka maintained by <a href="https://github.com/hontvari">hontvari</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
+<p>License: <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a></p>
 
-              <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
-            try {
-              var pageTracker = _gat._getTracker("UA-10945390-2");
-            pageTracker._trackPageview();
-            } catch(err) {}
-          </script>
-
-
-  </body>
+			</section>
+		</div>
+		<script type="text/javascript">
+			var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+			document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+		<script type="text/javascript">
+			try {
+				var pageTracker = _gat._getTracker("UA-10945390-2");
+				pageTracker._trackPageview();
+			} catch(err) {}
+		</script>
+	</body>
 </html>
+
