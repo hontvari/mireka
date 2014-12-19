@@ -3,7 +3,14 @@ mireka
 
 Mireka is a mail server with SMTP, Mail Submission and POP3 services. It is also an SMTP proxy. As a proxy, it can help to prevent or diagnose mail problems, like outgoing backscatter spam.
 
-Features:
+Homepage
+--------
+
+[mireka.org](http://mireka.org)
+
+Features
+--------
+
  * detailed logging
  * basic mail traffic statistics
  * filtering by DNSBL 
@@ -34,9 +41,41 @@ It accepts an SMTP connection, logs communication between client and server, run
 
 Any number of ports can be configured, and the proxy and standalone modes can be mixed. For example incoming mails can be proxied on one port, while outgoing mails received on another port are transmitted directly by Mireka alone.
 
-Documentation:
- * [Mireka Documentation](http://mireka.googlecode.com/svn/doc/index.html)
- * [Javadoc](http://mireka.googlecode.com/svn/doc/javadoc/index.html)
+Installation
+------------
+
+To run it once: 
+* install a Java JRE
+* download the binary archive mireka-n.n.n.zip from the [GitHub Releases page](https://github.com/hontvari/mireka/releases) and extract it
+* run bin/start.sh or bin/start.bat. Note: the default configuration uses the standard mail ports which are below 1024, and those are only allowed for root on *nix. Run it as root or reconfigure ports or use authbind.
+
+See [Quick start for Linux](http://mireka.org/doc/quick-start-linux.html) and [Quick start for Windows](http://mireka.org/doc/quick-start-windows.html) for more information.
+
+For a real installation use the deb package for Ubuntu. For other OS download the binary archive and follow the Installation sections of the [documentation](http://mireka.org/doc/).
+
+Where to get help
+-----------------
+
+ * [Documentation](http://mireka.googlecode.com/svn/doc/index.html) and  [Javadoc](http://mireka.googlecode.com/svn/doc/javadoc/index.html)
+ * [Mailing list](http://groups.google.com/group/mireka)
+
+Current usage
+-------------
+
+Mireka was used as a proxy in front of two [Apache James Servers](http://james.apache.org/server/index.html) receiving 50.000 mail transactions daily. Now it is used both as full mail server and a send only mail server with similar traffic and also as a relay server.
+
+History
+-------
+
+Previously I contributed a few patch to Apache James, but after a while I had to start to maintain my own branch. That was difficult, so when I needed more feature, I decided to implement it as a separate process, in the form of a proxy, instead of a set of patches. So Mireka was born as a simple proxy, which provided fast fail checks. Features were slowly added and eventually the proxy become a simple, but complete standalone mail server.
+
+Contributors
+------------
+
+Hontvári Levente - I am a Java server side developer and an accidental sysadmin. I work for  [FlyOrDie.com](http://www.flyordie.com). (Levente is my given name.) 
+
+Credits
+-------
 
 Mireka is written in Java. A large part of the functionality is provided by components produced by other projects: 
  * [SubEthaSMTP](http://code.google.com/p/subethasmtp/) for receiving mails
@@ -45,7 +84,8 @@ Mireka is written in Java. A large part of the functionality is provided by comp
  * [dnsjava](http://www.dnsjava.org/) for querying DNSBLs and determining the SMTP servers of recipient domains
  * [jSPF](http://james.apache.org/jspf/) for checking the sender
 
-Current usage:
-Mireka was used as a proxy in front of two [Apache James Servers](http://james.apache.org/server/index.html) receiving 50.000 mail transactions daily. Now it is used both as full mail server and a send only mail server with similar traffic.
+License
+-------
 
+[Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
