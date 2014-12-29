@@ -1,0 +1,8 @@
+build/
+lib-doc/
+requirements.txt
+startDos.bat
+startResin.bat
+temp/
+todo.txt
+user.properties
