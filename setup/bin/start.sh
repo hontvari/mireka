@@ -13,7 +13,7 @@ SYSVARS="$SYSVARS -Djava.net.preferIPv4Stack=true"
 
 if [ -n "$JAVA_HOME" ]; then
 	JAVA_CMD=$JAVA_HOME/bin/java
-else 
+else
 	JAVA_CMD=java
 fi
 
