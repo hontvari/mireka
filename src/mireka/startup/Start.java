@@ -38,14 +38,15 @@ public class Start {
     }
 
     private static void configure() {
+        ScriptApi scriptApi = new ScriptApi();
         try {
             ScriptEngineManager factory = new ScriptEngineManager();
-            ScriptApi.engine = factory.getEngineByName("JavaScript");
-            ScriptApi.engine.put("configuration", new ScriptApi());
-            ScriptApi.include("conf/mireka.js");
+            scriptApi.engine = factory.getEngineByName("JavaScript");
+            scriptApi.engine.put("configuration", scriptApi);
+            scriptApi.include("conf/mireka.js");
         } catch (Exception e) {
             logger.error("Cannot read configuration. Include stack: "
-                    + ScriptApi.includeStack.toString(), e);
+                    + scriptApi.includeStack.toString(), e);
             System.exit(78);
         }
     }

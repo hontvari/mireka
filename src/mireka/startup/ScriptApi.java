@@ -19,15 +19,14 @@ import org.slf4j.LoggerFactory;
  * ScriptApi provides functions which are called from the configuration scripts.
  */
 public class ScriptApi {
-    private static final Logger logger = LoggerFactory
-            .getLogger(ScriptApi.class);
-    public static ScriptEngine engine;
-    public static final Stack<File> includeStack = new Stack<>();
+    private final Logger logger = LoggerFactory.getLogger(ScriptApi.class);
+    public ScriptEngine engine;
+    public final Stack<File> includeStack = new Stack<>();
 
     /**
      * Include another configuration file.
      * 
-     * @return the result of the included file, in case of Javascript, this is
+     * @return the result of the included file, in case of JavaScript, this is
      *         the result of the last statement.
      * @param fileName
      *            the path to the script file to be included. Relative paths are
@@ -38,7 +37,7 @@ public class ScriptApi {
      *             thrown if the script in the included file cannot be run
      *             because of a syntactic or semantic error
      */
-    public static Object include(String fileName) throws IOException,
+    public Object include(String fileName) throws IOException,
             ScriptException {
         File file = new File(fileName);
         String oldSourceFileName = (String) engine.get(ScriptEngine.FILENAME);
@@ -66,7 +65,7 @@ public class ScriptApi {
      * 
      * @see Lifecycle
      */
-    public static Object manage(Object object) {
+    public Object manage(Object object) {
         Lifecycle.addManagedObject(object);
         return object;
     }
@@ -80,7 +79,7 @@ public class ScriptApi {
      * @return the object argument
      * @see DependencyInjection#addInjectable(Object)
      */
-    public static Object addInjectableObject(Object object) {
+    public Object addInjectableObject(Object object) {
         DependencyInjection.addInjectable(object);
         return object;
     }
@@ -96,7 +95,7 @@ public class ScriptApi {
      *            The list of properties which were explicitly initialized.
      * @see DependencyInjection#injectDependencies(Object, List)
      */
-    public static void injectMissingPropertyValues(Object object,
+    public void injectMissingPropertyValues(Object object,
             List<String> initializedProperties) {
         DependencyInjection.injectDependencies(object, initializedProperties);
     }
