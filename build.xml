@@ -279,6 +279,14 @@
 			<fileset file="build/mireka.jar" />
 		</copy>
 
+		<mkdir dir="${build.dist.dir}/classes" />
+		<mkdir dir="${build.dist.dir}/log" />
+		<mkdir dir="${build.dist.dir}/maildrops" />
+		<mkdir dir="${build.dist.dir}/postmaster" />
+		<mkdir dir="${build.dist.dir}/queues/dsn" />
+		<mkdir dir="${build.dist.dir}/queues/retry" />
+		<mkdir dir="${build.dist.dir}/queues/submitted" />
+
 		<dirname property="build.dist.dir.dirname" file="${build.dist.dir}" />
 		<basename property="build.dist.dir.basename" file="${build.dist.dir}" />
 
