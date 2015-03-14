@@ -45,7 +45,9 @@ importPackage(Packages.mireka.transmission.queuing);
  * path. The path can be relative, in that case the parent directory is the
  * Mireka home directory.
  */
-var include = configuration.include;
+function include(file) {
+	return configuration.include(file);
+}
 
 /*
  * Initializes an object by optionally creating a new instance, setting its

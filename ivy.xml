@@ -73,7 +73,9 @@
 			<exclude org="ch.qos.logback" module="logback-core" />
 		</dependency>
 
-
+		<!-- JavaScript engine -->
+		<dependency org="org.mozilla" name="rhino" rev="1.7R5"
+			conf="runtime->default" />
 
 		<!-- ======================================================= -->
 		<!-- retrieve some transitive dependency sources -->

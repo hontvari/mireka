@@ -41,7 +41,7 @@ public class Start {
         ScriptApi scriptApi = new ScriptApi();
         try {
             ScriptEngineManager factory = new ScriptEngineManager();
-            scriptApi.engine = factory.getEngineByName("JavaScript");
+            scriptApi.engine = factory.getEngineByName("rhino");
             scriptApi.engine.put("configuration", scriptApi);
             scriptApi.include("conf/mireka.js");
         } catch (Exception e) {
