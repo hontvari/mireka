@@ -13,7 +13,7 @@ import mireka.destination.Destination;
  * specific postmaster addresses to an {@link AliasDestination}.
  */
 public class PostmasterAliasMapper implements RecipientDestinationMapper {
-    private RecipientSpecification postmasterSpecification =
+    private final RecipientSpecification postmasterSpecification =
             new AnyPostmaster();
     private AliasDestination destination;
 
