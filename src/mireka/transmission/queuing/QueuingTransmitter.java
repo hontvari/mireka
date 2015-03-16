@@ -8,6 +8,7 @@ import java.util.Map;
 import mireka.address.Recipient;
 import mireka.address.RemotePart;
 import mireka.address.RemotePartContainingRecipient;
+import mireka.smtp.EnhancedStatus;
 import mireka.transmission.Mail;
 import mireka.transmission.Transmitter;
 import mireka.transmission.immediate.ImmediateSender;
@@ -56,10 +57,16 @@ public class QueuingTransmitter implements Transmitter, MailProcessorFactory {
     }
 
     private List<List<Recipient>> groupRecipientsByDomain(
-            List<Recipient> recipients) {
+            List<Recipient> recipients) throws QueueStorageException {
         Map<RemotePart, List<Recipient>> map =
                 new LinkedHashMap<RemotePart, List<Recipient>>();
         for (Recipient recipient : recipients) {
+            if (recipient.isGlobalPostmaster())
+                throw new QueueStorageException("System is incorrectly " +
+                            "configured to send mail addressed to the global " +
+                            "postmaster using a domain dependent sender method. " +
+                            "(postmaster should be the alias of a local account)", 
+                            EnhancedStatus.INCORRECT_CONFIGURATION);
             RemotePart remotePart =
                     ((RemotePartContainingRecipient) recipient).getMailbox()
                             .getRemotePart();
