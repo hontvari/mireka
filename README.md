@@ -56,7 +56,7 @@ For a real installation use the deb package for Ubuntu. For other OS download th
 Where to get help
 -----------------
 
- * [Documentation](http://mireka.googlecode.com/svn/doc/index.html) and  [Javadoc](http://mireka.googlecode.com/svn/doc/javadoc/index.html)
+ * [Documentation](http://mireka.org/doc) and  [Javadoc](http://mireka.org/doc/javadoc)
  * [Mailing list](http://groups.google.com/group/mireka)
 
 Current usage
