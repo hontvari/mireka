@@ -221,6 +221,11 @@
 	<target name="doc" depends="clean, init-dist, javadoc">
 		<copy todir="${build.dir}/doc">
 			<fileset dir="${setup.dir}/doc" />
+			<filterset>
+				<filter token="VERSION" value="${build.version}"/>
+			</filterset>
+		</copy>
+		<copy todir="${build.dir}/doc">
 			<fileset dir="${build.dir}">
 				<include name="javadoc/**" />
 			</fileset>
