@@ -47,10 +47,6 @@
 		<fileset dir="lib/runtime" includes="*.jar" />
 	</path>
 
-	<taskdef classname="net.bluecow.googlecode.ant.GoogleCodeUploadTask"
-	         classpath="lib/build/ant-googlecode-0.0.2.jar"
-	         name="gcupload" />
-
 	<taskdef resource="org/apache/ivy/ant/antlib.xml"
 	         uri="antlib:org.apache.ivy.ant"
 	         classpath="lib/build/ivy-2.2.0.jar">
@@ -302,13 +298,12 @@
 		<zip destfile="${build.dir}/${dist.name}-src.zip">
 			<zipfileset dir="." prefix="${dist.name}-src">
 				<exclude name="build/**" />
-				<exclude name="**/.svn" />
+				<exclude name="/.git" />
 				<exclude name="temp/**" />
 				<exclude name="user.properties" />
 				<exclude name="lib-doc/**" />
 				<exclude name="requirements.txt" />
 				<exclude name="todo.txt" />
-				<exclude name="startDos.bat" />
 			</zipfileset>
 		</zip>
 	</target>
@@ -387,35 +382,8 @@
 	</target>
 
 	<!-- ================================= 
-          target: release              
-         ================================= -->
-	<target name="release"
-	        depends="clean, dist, deb, test"
-	        description="Uploads release archives to Google Code">
-		<basename file="${debFilename}" property="debFileBasename"/>
-		<gcupload username="${gc.username}"
-		          password="${gc.password}"
-		          projectname="mireka"
-		          filename="${debFilename}"
-		          targetfilename="${debFileBasename}"
-		          summary="Mireka ${build.version} deb package for Ubuntu"
-		          labels="Type-Package, OpSys-Ubuntu" />
-		<gcupload username="${gc.username}"
-		          password="${gc.password}"
-		          projectname="mireka"
-		          filename="${build.dir}/${dist.name}-src.zip"
-		          targetfilename="${dist.name}-src.zip"
-		          summary="Mireka ${build.version} Source"
-		          labels="Type-Source" />
-		<gcupload username="${gc.username}"
-		          password="${gc.password}"
-		          projectname="mireka"
-		          filename="${build.dir}/${dist.name}.zip"
-		          targetfilename="${dist.name}.zip"
-		          summary="Mireka ${build.version}"
-		          labels="Featured, Type-Archive, OpSys-All" />
-	</target>
-
+	          target: clean
+	         ================================= -->
 	<target name="clean" description="Cleans all previous build artifacts">
 		<delete dir="${build.dir}" />
 	</target>
