@@ -72,7 +72,7 @@ Previously I contributed a few patch to Apache James, but after a while I had to
 Contributors
 ------------
 
-Hontvári Levente - I am a Java server side developer and an accidental sysadmin. I work for  [FlyOrDie.com](http://www.flyordie.com). (Levente is my given name.) 
+HONTVÁRI Levente - I am a Java server side developer and an accidental sysadmin. I work for  [FlyOrDie.com](http://www.flyordie.com).
 
 Credits
 -------

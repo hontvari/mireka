@@ -365,7 +365,7 @@
 		     postrm="${unpacked}/control/postrm">
 
 			<version upstream="${build.version}" />
-			<maintainer name="Hontvari Jozsef Levente"
+			<maintainer name="HONTVARI Levente"
 			            email="hontvari@flyordie.com" />
 			<description synopsis="Mail server and SMTP proxy">
 				Mireka is a mail server with SMTP, Message Submission and POP3 services. It is also an SMTP proxy.
