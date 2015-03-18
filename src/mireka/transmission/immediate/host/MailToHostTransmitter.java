@@ -111,7 +111,7 @@ public class MailToHostTransmitter {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setOutgoingConnectionRegistry(
             OutgoingConnectionsRegistry outgoingConnectionRegistry) {
@@ -119,14 +119,14 @@ public class MailToHostTransmitter {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public OutgoingConnectionsRegistry getOutgoingConnectionRegistry() {
         return outgoingConnectionRegistry;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setLogIdFactory(LogIdFactory logIdFactory) {
         this.logIdFactory = logIdFactory;

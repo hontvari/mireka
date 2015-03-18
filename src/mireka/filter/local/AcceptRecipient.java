@@ -20,14 +20,14 @@ public class AcceptRecipient extends StatelessFilterType {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public RecipientSpecification getRecipientSpecification() {
         return recipientSpecification;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setRecipientSpecification(
             RecipientSpecification recipientSpecification) {

@@ -111,56 +111,56 @@ public class PopMailImporter {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public GlobalUsers getUsers() {
         return users;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setUsers(GlobalUsers users) {
         this.users = users;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public MaildropRepository getMaildropRepository() {
         return maildropRepository;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setMaildropRepository(MaildropRepository maildropRepository) {
         this.maildropRepository = maildropRepository;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getRemoteHost() {
         return remoteHost;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setRemoteHost(String remoteHost) {
         this.remoteHost = remoteHost;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public int getRemotePort() {
         return remotePort;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setRemotePort(int remotePort) {
         this.remotePort = remotePort;

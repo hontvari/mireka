@@ -30,28 +30,28 @@ public class Dnsbl {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getDomain() {
         return domain;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setDomain(String domain) {
         this.domain = domain;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public SmtpReplyTemplate getSmtpReply() {
         return smtpReplyTemplate;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setSmtpReply(SmtpReplyTemplate smtpReplyTemplate) {
         this.smtpReplyTemplate = smtpReplyTemplate;

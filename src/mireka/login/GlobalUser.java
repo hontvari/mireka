@@ -11,28 +11,28 @@ public class GlobalUser {
     private String password;
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public Username getUsernameObject() {
         return username;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setUsername(String username) {
         this.username = new Username(username);
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getPassword() {
         return password;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setPassword(String password) {
         this.password = password;

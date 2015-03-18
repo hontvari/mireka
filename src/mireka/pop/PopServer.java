@@ -112,42 +112,42 @@ public class PopServer {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getBindAddress() {
         return bindAddress;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setBindAddress(String bindAddress) {
         this.bindAddress = bindAddress;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public int getPort() {
         return port;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setPort(int port) {
         this.port = port;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public int getMaximumConnections() {
         return maximumConnections;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setMaximumConnections(int maximumConnections) {
         this.maximumConnections = maximumConnections;
@@ -167,42 +167,42 @@ public class PopServer {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setLoginSpecification(LoginSpecification loginSpecification) {
         this.loginSpecification = loginSpecification;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public LoginSpecification getLoginSpecification() {
         return loginSpecification;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public MaildropRepository getMaildropRepository() {
         return maildropRepository;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setMaildropRepository(MaildropRepository maildropRepository) {
         this.maildropRepository = maildropRepository;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public PrincipalMaildropTable getPrincipalMaildropTable() {
         return principalMaildropTable;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setPrincipalMaildropTable(
             PrincipalMaildropTable principalMaildropTable) {
@@ -210,14 +210,14 @@ public class PopServer {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setTlsConfiguration(TlsConfiguration tlsExtension) {
         this.tlsConfiguration = tlsExtension;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public TlsConfiguration getTlsConfiguration() {
         return tlsConfiguration;

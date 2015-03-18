@@ -21,14 +21,14 @@ public class RejectOnFailedSpfCheck implements FilterType {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public boolean isRejectOnPermanentError() {
         return rejectOnPermanentError;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setRejectOnPermanentError(boolean rejectOnPermanentError) {
         this.rejectOnPermanentError = rejectOnPermanentError;

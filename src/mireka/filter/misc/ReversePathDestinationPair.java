@@ -11,28 +11,28 @@ public class ReversePathDestinationPair {
     private Destination destination;
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setReversePath(String reversePath) {
         this.reversePath = reversePath;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getReversePath() {
         return reversePath;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setDestination(Destination destination) {
         this.destination = destination;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public Destination getDestination() {
         return destination;

@@ -23,14 +23,14 @@ public class RegexLocalPart implements LocalPartSpecification {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getRegex() {
         return regex;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setRegex(String regex) {
         this.regex = regex;

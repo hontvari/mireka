@@ -24,7 +24,7 @@ public class PostmasterAliasMapper implements RecipientDestinationMapper {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setCanonical(String mailbox) {
         destination = new AliasDestination();

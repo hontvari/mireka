@@ -100,42 +100,42 @@ public class TransformDestination implements MailDestination {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getSubject() {
         return subject;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setSubject(String subject) {
         this.subject = subject;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getRecipient() {
         return recipient;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setRecipient(String recipient) {
         this.recipient = recipient;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getReversePath() {
         return reversePath.getSmtpText();
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setReversePath(String reversePath) {
         this.reversePath =
@@ -144,28 +144,28 @@ public class TransformDestination implements MailDestination {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getFrom() {
         return from;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setFrom(String from) {
         this.from = from;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public Transmitter getTransmitter() {
         return transmitter;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setTransmitter(Transmitter transmitter) {
         this.transmitter = transmitter;

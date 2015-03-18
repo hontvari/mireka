@@ -21,14 +21,14 @@ public class DomainPostmasterSpecification implements RecipientSpecification {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public RemotePart getRemotePart() {
         return remotePart;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setRemotePart(RemotePart remotePart) {
         this.remotePart = remotePart;

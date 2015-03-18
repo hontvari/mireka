@@ -333,14 +333,14 @@ public class FileDirStore {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setDir(String dir) {
         this.dir = new File(dir);
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setMaxSize(int maxSize) {
         this.maxSize = maxSize;

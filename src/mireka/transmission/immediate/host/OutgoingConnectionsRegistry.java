@@ -75,7 +75,7 @@ public class OutgoingConnectionsRegistry {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public int getMaxConnectionsToHost() {
         return maxConnectionsToHost;

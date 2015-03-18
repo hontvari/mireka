@@ -121,12 +121,12 @@ public class IndirectImmediateSender implements ImmediateSender {
         throw lastUnrecoverableDnsException;
     }
 
-    /** @category GETSET **/
+    /** @x.category GETSET **/
     public MailToHostTransmitter getMailToHostTransmitter() {
         return mailToHostTransmitter;
     }
 
-    /** @category GETSET **/
+    /** @x.category GETSET **/
     public void setMailToHostTransmitter(
             MailToHostTransmitter mailToHostTransmitter) {
         this.mailToHostTransmitter = mailToHostTransmitter;
@@ -135,18 +135,18 @@ public class IndirectImmediateSender implements ImmediateSender {
     /**
      * Sets the upstream to the supplied single server.
      * 
-     * @category GETSET
+     * @x.category GETSET
      **/
     public void setBackendServer(BackendServer server) {
         upstream.setServers(Arrays.asList(server));
     }
 
-    /** @category GETSET **/
+    /** @x.category GETSET **/
     public Upstream getUpstream() {
         return upstream;
     }
 
-    /** @category GETSET **/
+    /** @x.category GETSET **/
     public void setUpstream(Upstream upstream) {
         this.upstream = upstream;
     }

@@ -89,14 +89,14 @@ public class QueuingTransmitter implements Transmitter, MailProcessorFactory {
     /**
      * configuration
      * 
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setQueue(ScheduleFileDirQueue queue) {
         this.queue = queue;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setImmediateSender(ImmediateSender immediateSender) {
         this.immediateSender = immediateSender;
@@ -105,7 +105,7 @@ public class QueuingTransmitter implements Transmitter, MailProcessorFactory {
     /**
      * configuration
      * 
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setRetryPolicy(RetryPolicy retryPolicy) {
         this.retryPolicy = retryPolicy;
@@ -114,14 +114,14 @@ public class QueuingTransmitter implements Transmitter, MailProcessorFactory {
     /**
      * configuration
      * 
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setLogIdFactory(LogIdFactory logIdFactory) {
         this.logIdFactory = logIdFactory;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setSummary(TransmitterSummary summary) {
         this.summary = summary;

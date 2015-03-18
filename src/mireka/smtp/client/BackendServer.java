@@ -93,7 +93,7 @@ public class BackendServer {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getHost() {
         return host;
@@ -171,49 +171,49 @@ public class BackendServer {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public int getPort() {
         return port;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setPort(int port) {
         this.port = port;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getUser() {
         return user;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setUser(String user) {
         this.user = user;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getPassword() {
         return password;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setPassword(String password) {
         this.password = password;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public double getWeight() {
         return weight;
@@ -222,14 +222,14 @@ public class BackendServer {
     /**
      * Relative weight of the server in an Upstream. Default is 1.
      * 
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setWeight(double weight) {
         this.weight = weight;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public boolean isBackup() {
         return backup;
@@ -239,7 +239,7 @@ public class BackendServer {
      * True indicates that the server should only be used in an Upstream if all
      * non-backup servers failed. Default is false.
      * 
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setBackup(boolean backup) {
         this.backup = backup;

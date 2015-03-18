@@ -35,14 +35,14 @@ public class LookupDestinationFilter implements FilterType {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public RecipientDestinationMapper getRecipientDestinationMapper() {
         return recipientDestinationMapper;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setRecipientDestinationMapper(
             RecipientDestinationMapper recipientDestinationMapper) {

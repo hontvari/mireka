@@ -27,7 +27,7 @@ public class MeasureTraffic implements FilterType {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setIncomingSmtpSummary(IncomingSmtpSummary summary) {
         this.incomingSmtpSummary = summary;

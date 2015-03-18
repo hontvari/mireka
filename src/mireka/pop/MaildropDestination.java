@@ -81,28 +81,28 @@ public class MaildropDestination implements MailDestination {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setMaildropName(String maildropName) {
         this.maildropName = maildropName;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getMaildropName() {
         return maildropName;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setMaildropRepository(MaildropRepository maildropRepository) {
         this.maildropRepository = maildropRepository;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public MaildropRepository getMaildropRepository() {
         return maildropRepository;

@@ -26,14 +26,14 @@ public class SplitRecipientSpecification implements RecipientSpecification {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public LocalPartSpecification getLocalPartSpecification() {
         return localPartSpecification;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setLocalPartSpecification(
             LocalPartSpecification localPartSpecification) {
@@ -41,14 +41,14 @@ public class SplitRecipientSpecification implements RecipientSpecification {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public RemotePartSpecification getRemotePartSpecification() {
         return remotePartSpecification;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setRemotePartSpecification(
             RemotePartSpecification remotePartSpecification) {

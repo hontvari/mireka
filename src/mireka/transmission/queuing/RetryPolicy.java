@@ -119,14 +119,14 @@ public class RetryPolicy {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setRetryPeriods(List<Period> retryPeriods) {
         this.retryPeriods = retryPeriods;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setDelayReportPoints(List<Integer> delayReportPoints) {
         this.delayReportPoints.clear();
@@ -134,7 +134,7 @@ public class RetryPolicy {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setDelayReportPoint(int index) {
         this.delayReportPoints.clear();
@@ -142,21 +142,21 @@ public class RetryPolicy {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setDsnMailCreator(DsnMailCreator dsnMailCreator) {
         this.dsnMailCreator = dsnMailCreator;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setDsnTransmitter(Transmitter dsnTransmitter) {
         this.dsnTransmitter = dsnTransmitter;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setRetryTransmitter(Transmitter retryTransmitter) {
         this.retryTransmitter = retryTransmitter;

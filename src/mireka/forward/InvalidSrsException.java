@@ -16,7 +16,7 @@ public class InvalidSrsException extends Exception {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public EnhancedStatus getStatus() {
         return status;

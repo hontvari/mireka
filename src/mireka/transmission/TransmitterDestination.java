@@ -35,7 +35,7 @@ public class TransmitterDestination implements MailDestination {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     @Inject
     public void setTransmitter(Transmitter transmitter) {
@@ -43,7 +43,7 @@ public class TransmitterDestination implements MailDestination {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public Transmitter getTransmitter() {
         return transmitter;

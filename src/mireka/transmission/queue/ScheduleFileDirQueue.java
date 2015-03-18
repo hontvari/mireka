@@ -99,14 +99,14 @@ public class ScheduleFileDirQueue {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setStore(FileDirStore store) {
         this.store = store;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setMailProcessorFactory(
             MailProcessorFactory mailProcessorFactory) {
@@ -114,14 +114,14 @@ public class ScheduleFileDirQueue {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setExecutor(ScheduledThreadPoolExecutor executor) {
         this.executor = executor;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setThreadCount(int count) {
         this.executor = new ScheduledThreadPoolExecutor(count);

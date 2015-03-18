@@ -39,7 +39,7 @@ public interface MailTransaction {
     void replaceData(MailData mailData);
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     MessageContext getMessageContext();
 

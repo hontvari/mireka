@@ -23,14 +23,14 @@ public class RejectLargeMail implements FilterType {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public int getMaxAllowedSize() {
         return maxAllowedSize;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setMaxAllowedSize(int maxAllowedSize) {
         this.maxAllowedSize = maxAllowedSize;

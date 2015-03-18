@@ -72,7 +72,7 @@ public class ForwardDestination implements MailDestination {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setMembers(List<Member> members) {
         this.members.clear();
@@ -80,7 +80,7 @@ public class ForwardDestination implements MailDestination {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     @Inject
     public void setTransmitter(Transmitter transmitter) {
@@ -88,7 +88,7 @@ public class ForwardDestination implements MailDestination {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     @Inject
     public void setSrs(Srs srs) {

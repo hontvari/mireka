@@ -26,14 +26,14 @@ public class LocalRecipientTable extends RecipientTable {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public RemotePartSpecification getLocalDomains() {
         return localDomains;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setLocalDomains(RemotePartSpecification localDomains) {
         this.localDomains = localDomains;

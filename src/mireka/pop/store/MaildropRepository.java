@@ -51,7 +51,7 @@ public class MaildropRepository {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setDir(String dir) {
         this.dir = dir;

@@ -22,14 +22,14 @@ public class MessageHandlerFactoryImpl implements MessageHandlerFactory {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public Filters getFilters() {
         return filters;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setFilters(Filters filters) {
         this.filters = filters;

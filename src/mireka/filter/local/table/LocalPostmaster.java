@@ -25,14 +25,14 @@ public class LocalPostmaster implements RecipientSpecification {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setLocalDomains(RemotePartSpecification remotePartSpecification) {
         this.localDomains = remotePartSpecification;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public RemotePartSpecification getLocalDomains() {
         return localDomains;

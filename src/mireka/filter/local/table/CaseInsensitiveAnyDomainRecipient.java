@@ -18,7 +18,7 @@ public class CaseInsensitiveAnyDomainRecipient implements
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setLocalPart(String localPart) {
         this.localPart = new CaseInsensitiveLocalPartSpecification(localPart);

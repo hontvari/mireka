@@ -30,7 +30,7 @@ public class RecipientContext {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setDestination(Destination destination) {
         this.destination = destination;
@@ -52,7 +52,7 @@ public class RecipientContext {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public MailTransaction getMailTransaction() {
         return mailTransaction;

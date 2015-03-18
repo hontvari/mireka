@@ -355,14 +355,14 @@ public class ListDestination implements MailDestination {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getAddress() {
         return address.toString();
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setAddress(String address) {
         try {
@@ -373,28 +373,28 @@ public class ListDestination implements MailDestination {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getListId() {
         return listId;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setListId(String listId) {
         this.listId = listId;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void addMember(ListMember listMember) {
         members.add(listMember);
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setMembers(List<ListMember> members) {
         this.members.clear();
@@ -402,70 +402,70 @@ public class ListDestination implements MailDestination {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getSubjectPrefix() {
         return subjectPrefix;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setSubjectPrefix(String subjectPrefix) {
         this.subjectPrefix = subjectPrefix;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public boolean isMembersOnly() {
         return membersOnly;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setMembersOnly(boolean membersOnly) {
         this.membersOnly = membersOnly;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public boolean isAttachmentsAllowed() {
         return attachmentsAllowed;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setAttachmentsAllowed(boolean attachmentsAllowed) {
         this.attachmentsAllowed = attachmentsAllowed;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public boolean isReplyToList() {
         return replyToList;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setReplyToList(boolean replyToList) {
         this.replyToList = replyToList;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getReversePath() {
         return reversePath.getSmtpText();
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setReversePath(String reversePath) {
         this.reversePath =
@@ -474,28 +474,28 @@ public class ListDestination implements MailDestination {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getMembersOnlyMessage() {
         return membersOnlyMessage;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setMembersOnlyMessage(String membersOnlyMessage) {
         this.membersOnlyMessage = membersOnlyMessage;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public MailValidator getNonMemberSenderValidator() {
         return nonMemberSenderValidator;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setNonMemberSenderValidator(
             MailValidator nonMemberSenderValidator) {
@@ -503,14 +503,14 @@ public class ListDestination implements MailDestination {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public Transmitter getTransmitter() {
         return transmitter;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     @Inject
     public void setTransmitter(Transmitter transmitter) {

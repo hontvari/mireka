@@ -38,14 +38,14 @@ public class RegexAddressSpecification implements RecipientSpecification {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getLocalPartRegex() {
         return localPartRegex;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setLocalPartRegex(String localPartRegex) {
         this.localPartRegex = localPartRegex;
@@ -55,14 +55,14 @@ public class RegexAddressSpecification implements RecipientSpecification {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getRemotePart() {
         return remotePartString;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setRemotePart(String remotePart) {
         this.remotePartString = remotePart;

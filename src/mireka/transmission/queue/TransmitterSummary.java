@@ -74,7 +74,7 @@ public class TransmitterSummary implements TransmitterSummaryMBean {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setName(String name) {
         this.name = name;

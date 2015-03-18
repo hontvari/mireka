@@ -24,7 +24,7 @@ public class RecipientDestinationPair implements RecipientDestinationMapper {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setDestination(Destination destination) {
         this.destination = destination;

@@ -10,14 +10,14 @@ public class ListMember extends mireka.forward.Member {
     private boolean noDelivery;
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setNoDelivery(boolean noDelivery) {
         this.noDelivery = noDelivery;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public boolean isNoDelivery() {
         return noDelivery;

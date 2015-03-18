@@ -440,7 +440,7 @@ public class Srs {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public RemotePartSpecification getLocalDomains() {
         return localDomains;
@@ -452,14 +452,14 @@ public class Srs {
      * rewritten. If not set, than it is assumed that the domain of any accepted
      * mail authorizes this server to send mail in its name.
      * 
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setLocalDomains(RemotePartSpecification localDomains) {
         this.localDomains = localDomains;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public RemotePart getDefaultRemotePart() {
         return defaultRemotePart;
@@ -471,14 +471,14 @@ public class Srs {
      * field, but for some reason mails to those domains are accepted. For
      * example mail sent to the global Postmaster address has no domain at all.
      * 
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setDefaultRemotePart(RemotePart defaultRemotePart) {
         this.defaultRemotePart = defaultRemotePart;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setDefaultRemotePart(String defaultRemotePart) {
         this.defaultRemotePart =
@@ -487,7 +487,7 @@ public class Srs {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getSecretKey() {
         return Hex.encodeHexString(secretKey);
@@ -497,7 +497,7 @@ public class Srs {
      * Sets the secret key as a HEX string. It should be long enough to be hard
      * to recover with a brute force attack.
      * 
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setSecretKey(String secretKey) {
         try {
@@ -512,7 +512,7 @@ public class Srs {
      * Sets the secret key by encoding the supplied String with UTF-8 to get the
      * key bytes.
      * 
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setSecretKeyString(String secretKey) {
         try {
@@ -523,14 +523,14 @@ public class Srs {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setMaximumAge(int maximumAge) {
         this.maximumAge = maximumAge;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public int getMaximumAge() {
         return maximumAge;

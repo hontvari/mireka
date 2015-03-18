@@ -42,14 +42,14 @@ public class RelayDestination implements SessionDestination {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public BackendServer getBackendServer() {
         return backendServer;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setBackendServer(BackendServer backendServer) {
         this.backendServer = backendServer;

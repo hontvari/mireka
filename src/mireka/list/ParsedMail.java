@@ -66,7 +66,7 @@ public class ParsedMail {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public Mail getMail() {
         return mail;

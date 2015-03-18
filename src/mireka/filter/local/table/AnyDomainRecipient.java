@@ -16,14 +16,14 @@ public class AnyDomainRecipient implements RecipientSpecification {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public LocalPartSpecification getLocalPart() {
         return localPart;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setLocalPart(LocalPartSpecification localPart) {
         this.localPart = localPart;

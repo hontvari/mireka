@@ -203,44 +203,44 @@ public class DirectImmediateSender implements ImmediateSender {
         throw lastUnrecoverableDnsException;
     }
 
-    /** @category GETSET **/
+    /** @x.category GETSET **/
     public MxLookup getMxLookup() {
         return mxLookup;
     }
 
-    /** @category GETSET **/
+    /** @x.category GETSET **/
     public void setMxLookup(MxLookup mxLookup) {
         this.mxLookup = mxLookup;
     }
 
-    /** @category GETSET **/
+    /** @x.category GETSET **/
     public AddressLookup getAddressLookup() {
         return addressLookup;
     }
 
-    /** @category GETSET **/
+    /** @x.category GETSET **/
     public void setAddressLookup(
             AddressLookup addressLookup) {
         this.addressLookup = addressLookup;
     }
 
-    /** @category GETSET **/
+    /** @x.category GETSET **/
     public ClientFactory getClientFactory() {
         return clientFactory;
     }
 
-    /** @category GETSET **/
+    /** @x.category GETSET **/
     @Inject
     public void setClientFactory(ClientFactory clientFactory) {
         this.clientFactory = clientFactory;
     }
 
-    /** @category GETSET **/
+    /** @x.category GETSET **/
     public MailToHostTransmitter getMailToHostTransmitter() {
         return mailToHostTransmitter;
     }
 
-    /** @category GETSET **/
+    /** @x.category GETSET **/
     public void setMailToHostTransmitter(
             MailToHostTransmitter mailToHostTransmitter) {
         this.mailToHostTransmitter = mailToHostTransmitter;

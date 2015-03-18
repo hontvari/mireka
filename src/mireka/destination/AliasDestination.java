@@ -16,7 +16,7 @@ public class AliasDestination implements Destination {
     private Recipient recipient;
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setRecipient(String recipient) {
         try {
@@ -28,14 +28,14 @@ public class AliasDestination implements Destination {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setRecipient(Recipient recipient) {
         this.recipient = recipient;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public Recipient getRecipient() {
         return recipient;

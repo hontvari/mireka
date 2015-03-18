@@ -27,7 +27,7 @@ public class RecipientSpecificationDestinationPair implements
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void addRecipientSpecification(
             RecipientSpecification recipientSpecification) {
@@ -35,7 +35,7 @@ public class RecipientSpecificationDestinationPair implements
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setRecipientSpecification(
             RecipientSpecification recipientSpecification) {
@@ -44,7 +44,7 @@ public class RecipientSpecificationDestinationPair implements
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setRecipientSpecifications(
             List<RecipientSpecification> recipientSpecifications) {
@@ -55,7 +55,7 @@ public class RecipientSpecificationDestinationPair implements
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setDestination(Destination destination) {
         this.destination = destination;

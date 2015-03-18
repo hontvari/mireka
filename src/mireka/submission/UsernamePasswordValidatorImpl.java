@@ -41,14 +41,14 @@ public class UsernamePasswordValidatorImpl implements UsernamePasswordValidator 
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public LoginSpecification getLoginSpecification() {
         return loginSpecification;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setLoginSpecification(LoginSpecification users) {
         this.loginSpecification = users;

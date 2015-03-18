@@ -36,21 +36,21 @@ public class SubjectRegexpValidator implements MailValidator {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getPattern() {
         return pattern.toString();
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setPattern(String pattern) {
         this.pattern = Pattern.compile(pattern);
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setValue(String pattern) {
         setPattern(pattern);

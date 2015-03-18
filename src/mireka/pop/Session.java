@@ -21,56 +21,56 @@ public class Session {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public PopServer getServer() {
         return server;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public SessionState getSessionState() {
         return sessionState;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setSessionState(SessionState sessionState) {
         this.sessionState = sessionState;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public Maildrop getMaildrop() {
         return maildrop;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setMaildrop(Maildrop maildrop) {
         this.maildrop = maildrop;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public SessionThread getThread() {
         return thread;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public boolean isTlsStarted() {
         return tlsStarted;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setTlsStarted(boolean started) {
         tlsStarted = started;

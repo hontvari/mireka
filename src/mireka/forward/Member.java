@@ -23,7 +23,7 @@ public class Member {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setAddress(String mailbox) {
         try {
@@ -34,35 +34,35 @@ public class Member {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public Recipient getRecipient() {
         return recipient;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getName() {
         return name;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setDisabled(boolean disabled) {
         this.disabled = disabled;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public boolean isDisabled() {
         return disabled;

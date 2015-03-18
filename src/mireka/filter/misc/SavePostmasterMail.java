@@ -46,7 +46,7 @@ public class SavePostmasterMail extends StatelessFilterType {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setDir(String dir) {
         this.dir = new File(dir);

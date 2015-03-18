@@ -205,7 +205,7 @@
 			</fileset>
 
 			<doctitle>&lt;h1&gt;Mireka ${build.version}&lt;/h1&gt;</doctitle>
-			<tag name="category" />
+			<tag name="x.category" scope="methods" description="Category:" />
 			<excludepackage name="org.subethamail.smtp.*" />
 			<arg value="-Xdoclint:all,-missing" />
 		</javadoc>

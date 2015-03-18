@@ -73,12 +73,12 @@ public class Upstream {
         return total;
     }
 
-    /** @category GETSET **/
+    /** @x.category GETSET **/
     public List<BackendServer> getServers() {
         return servers;
     }
 
-    /** @category GETSET **/
+    /** @x.category GETSET **/
     public void setServers(List<BackendServer> servers) {
         this.servers = servers;
     }

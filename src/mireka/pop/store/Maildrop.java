@@ -338,7 +338,7 @@ public class Maildrop {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getName() {
         return name;

@@ -47,7 +47,7 @@ public class SrsDestination implements SessionDestination {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     @Inject
     public void setSrs(Srs srs) {
@@ -55,21 +55,21 @@ public class SrsDestination implements SessionDestination {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public Srs getSrs() {
         return srs;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public Transmitter getTransmitter() {
         return transmitter;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     @Inject
     public void setTransmitter(Transmitter transmitter) {

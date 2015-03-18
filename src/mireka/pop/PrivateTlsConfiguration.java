@@ -104,35 +104,35 @@ public class PrivateTlsConfiguration implements TlsConfiguration {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setEnabled(boolean tlsEnabled) {
         this.enabled = tlsEnabled;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getKeystoreFile() {
         return keystoreFile;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setKeystoreFile(String keystoreFile) {
         this.keystoreFile = keystoreFile;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public String getKeystorePass() {
         return keystorePass;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setKeystorePass(String keystorePass) {
         this.keystorePass = keystorePass;

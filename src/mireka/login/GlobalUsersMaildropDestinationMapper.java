@@ -41,14 +41,14 @@ public class GlobalUsersMaildropDestinationMapper implements
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setMaildropRepository(MaildropRepository maildropRepository) {
         this.maildropRepository = maildropRepository;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public MaildropRepository getMaildropRepository() {
         return maildropRepository;

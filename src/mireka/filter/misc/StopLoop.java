@@ -55,14 +55,14 @@ public class StopLoop extends StatelessFilterType {
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public int getMaxReceivedHeaders() {
         return maxReceivedHeaders;
     }
 
     /**
-     * @category GETSET
+     * @x.category GETSET
      */
     public void setMaxReceivedHeaders(int maxReceivedHeaders) {
         this.maxReceivedHeaders = maxReceivedHeaders;
