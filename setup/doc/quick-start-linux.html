@@ -60,6 +60,8 @@ sed -i '/setup(SubmissionServer/ a\\tport: 1587,' conf/submission/submission.js
 
 <h3>After startup</h3>
 <p>You will see log messages showing that Mireka listens on port 25 (SMTP), 110 (POP), 587 (Message Submission) or on the ports you configured.
+For finer log messages:
+<p class="code">tail -F log/access.log</p>
 <p>Press Ctrl+C to shutdown Mireka.
 
 	</body>
