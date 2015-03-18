@@ -1,5 +1,5 @@
 #!/bin/sh
 set -e
-if [ -e "/etc/init/mireka.conf" ] && [ "$1" = remove ]; then
+if [ -e "/etc/init/mireka.conf" ]; then
 	stop mireka || true
 fi
