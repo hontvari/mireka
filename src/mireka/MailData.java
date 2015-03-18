@@ -15,8 +15,6 @@ public interface MailData {
     /**
      * Returns the data stream positioned to the first byte of the mail data.
      * The caller must close the returned stream.
-     * 
-     * @throws IOException
      */
     InputStream getInputStream() throws IOException;
 

@@ -207,6 +207,7 @@
 			<doctitle>&lt;h1&gt;Mireka ${build.version}&lt;/h1&gt;</doctitle>
 			<tag name="category" />
 			<excludepackage name="org.subethamail.smtp.*" />
+			<arg value="-Xdoclint:all,-missing" />
 		</javadoc>
 		<fixcrlf srcdir="${build.dir}/javadoc" includes="**/*.html,**/*.css" />
 	</target>
