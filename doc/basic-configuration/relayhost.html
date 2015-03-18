@@ -1,0 +1,85 @@
+<html>
+	<head>
+		<title>Sending all outgoing mails via another server</title>
+		<link rel="stylesheet" type="text/css" href="../doc.css" />
+	</head>
+
+	<body>
+		<h1>Sending all outgoing mails via another server</h1>
+		
+<p>Mireka can be configured to send all outgoing mail through another server. 
+The other server is usually the so called <i>smarthost</i>. This is useful for 
+example if the local network connects to the internet through a dynamic IP 
+address. 
+<p>
+In contrast to proxy mode, Mireka in this case waits until it 
+completely receives the incoming mail, stores it, and forwards them later, 
+usually within a few milliseconds. Mireka tries to send to the configured 
+smarthost (or smarthosts, see later), and if is not successful, it try it again 
+later, up to the configured duration.
+<p><i>NOTE: 
+If it turns out that the mail cannot be relayed for some reason, then Mireka 
+sends a Delivery Status Notification mail back to the original sender. However,
+if the original sender is not a local user, this bounce mail must also go through 
+the smarthost. If the smarthost is inaccessible for an extended time, Mireka 
+will give up, and delete the DSN mail too. Depending on the importance of the 
+mails this can be a dangerous situation because the mail is accepted but  
+neither the mail is delivered, nor the user is notified. To prevent this, 
+configure appropriate retry intervals and regularly monitor the mail error logs.
+</i><p>
+
+<p>First edit <code>mireka.js</code> and configure the value of the 
+<code>backendServer</code> variable. For example if the smarthost is 
+<code>myisp.example.com</code>, listens on port 587, and requires authentication, 
+then your configuration should look like this:
+<p class="code">...
+backendServer = setup(BackendServer, {
+	host: "<span class="relevant">myisp.example.com</span>",
+	<span class="relevant">port: 587,</span>
+	<span class="relevant">user: "mycompany",</span>
+	<span class="relevant">password: "CHANGEIT",</span>
+});
+...</p>
+
+<p>Note: you can define more than one backend servers, and reference them later.
+
+<p>Next, edit <code>submission/queues.js</code> and uncomment the indirect 
+sender definition.
+Your configuration should look like this:
+<p class="code">...
+immediateSender = setup(<span class="relevant">IndirectImmediateSender</span>, {
+	mailToHostTransmitter: mailToHostTransmitter,
+	<span class="relevant">backendServer: backendServer</span>,
+});
+...</p>
+
+<h3>Load balancing</h3>
+It is also possible to use more than one smarthosts. Mireka provides basic load 
+balancing using the <code>weight</code> and <code>backup</code> properties of backend servers. For example:
+
+<p class="code">...
+upstream = setup(Upstream, {
+	servers: [
+		setup(BackendServer, {
+			host: "smtp1.example.com",
+			<span class="relevant">weight: 60,</span>
+		}),
+		setup(BackendServer, {
+			host: "smtp2.example.com",
+			<span class="relevant">weight: 40,</span>
+		}),
+		setup(BackendServer, {
+			host: "backup.example.com",
+			<span class="relevant">backup: true,</span>
+		}),
+	],
+});
+immediateSender = setup(IndirectImmediateSender, {
+	mailToHostTransmitter: mailToHostTransmitter,
+	<span class="relevant">upstream: upstream,</span>
+});
+...</p>
+
+
+	</body>
+</html>

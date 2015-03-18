@@ -8,11 +8,11 @@
 		<h1>Installing the deb package on Ubuntu</h1>
 
 <p>Download the deb package:
-<p class="code">wget http://mireka.googlecode.com/files/mireka_4.0-1_all.deb
+<p class="code">wget https://github.com/hontvari/mireka/releases/download/4.2.0/mireka_4.2.0-1_all.deb
 <p>Install the <code>gdebi</code> tool, which can install local deb packages:
 <p class="code">sudo apt-get install gdebi-core
 <p>Install Mireka:
-<p class="code">sudo gdebi mireka_4.0-1_all.deb</p>
+<p class="code">sudo gdebi mireka_4.2.0-1_all.deb</p>
 <p>You will find the log files in <code>/var/log/mireka</code>, the configuration files in <code>/etc/mireka</code>.
 The Mireka home dir is <code>/var/lib/mireka</code>. 
 <p>You can start it using <code>sudo start mireka</code> and stop it using <code>sudo stop mireka</code>. 

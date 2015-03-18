@@ -19,6 +19,7 @@ mireka.pop
 mireka.pop.command
 mireka.pop.store
 mireka.smtp
+mireka.smtp.client
 mireka.smtp.server
 mireka.startup
 mireka.submission
@@ -26,6 +27,7 @@ mireka.transmission
 mireka.transmission.dsn
 mireka.transmission.immediate
 mireka.transmission.immediate.dns
+mireka.transmission.immediate.host
 mireka.transmission.queue
 mireka.transmission.queue.dataprop
 mireka.transmission.queuing
