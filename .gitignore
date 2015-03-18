@@ -1,6 +1,6 @@
 build/
 lib-doc/
-requirements.txt
+requirements
 temp/
-todo.txt
+todo
 user.properties
