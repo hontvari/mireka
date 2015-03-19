@@ -259,7 +259,7 @@
 			</fileset>
 
 			<fileset dir=".">
-				<include name="LICENSE.txt" />
+				<include name="LICENSE" />
 			</fileset>
 		</copy>
 
@@ -343,7 +343,7 @@
 		</copy>
 		<!-- /usr/share/doc/${name} -->
 		<mkdir dir="${unpacked}/usr/share/doc/${name}" />
-		<fixcrlf file="LICENSE.txt"
+		<fixcrlf file="LICENSE"
 		         destdir="${unpacked}/usr/share/doc/${name}"
 		         encoding="UTF-8"
 		         eol="unix" />
