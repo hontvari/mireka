@@ -1,0 +1,41 @@
+<html>
+<head>
+<title>Embedding Mireka</title>
+<style type="text/css">
+	.mainlist {
+		margin-bottom: 0.5em;
+	}
+	li {
+		margin-bottom: 0.1em;
+	}
+</style>
+</head>
+
+<body>
+<h1 style="margin-bottom: -0.1em; margin-left: 0.1em">Embedding Mireka</h1>
+
+<p>
+<ul>
+<li class="mainlist">Add the libraries which are used by Mireka into your project.
+You can copy them from the <code>lib</code> directory of the tarball.
+If you only use a small subset of the functionality then you may omit some jars.
+<li class="mainlist">For assembly and configuration you have two choices:
+	<ul>
+	<li>Instead of using the usual configuration files, assemble Mireka objects in your own code.
+	The configuration files are executable JavaScript code, consider them as recipes.
+	After the assembly a few threads must be started, objects must be initialized. The methods which must be 
+	called are marked with the <code>@PostConstruct</code> annotation. 
+	Search for this annotation for a complete list, however the main classes with such methods:
+		<ul>
+		<li><code>mireka.smtp.server.SMTPServer.start()</code>
+		<li><code>mireka.pop.PopServer.start()</code>
+		<li><code>mireka.transmission.queue.ScheduleFileDirQueue.start()</code>
+		</ul>
+	<li>You can use the the same JavaScript configuration system as the standalone Mireka. 
+	In this case just call <code>the mireka.startup.Start.main()</code> function to initialize Mireka.
+	</ul>
+<li class="mainlist">Some Java system properties might need to be initialized. Use <code>bin/start.sh</code> as a guide.
+<ul>
+
+</body>
+</html>
