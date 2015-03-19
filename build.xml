@@ -208,6 +208,7 @@
 			<tag name="x.category" scope="methods" description="Category:" />
 			<excludepackage name="org.subethamail.smtp.*" />
 			<arg value="-Xdoclint:all,-missing" />
+			<arg value="-notimestamp" />
 		</javadoc>
 		<fixcrlf srcdir="${build.dir}/javadoc" includes="**/*.html,**/*.css" />
 	</target>
