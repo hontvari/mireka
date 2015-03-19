@@ -1,0 +1,22 @@
+Release instructions
+====================
+
+ant
+version=`grep build.version user.properties | cut -d= -f 2`
+git tag -a $version -m "Mireka $version"
+git push
+git push --tags
+create new release entry on GitHub
+  - summarize changes based on commit messages
+  - uplodad binary package
+  - upload deb package
+publish doc
+  pushd ../mireka-site
+  rm -r doc
+  cp -r ../mireka/build/doc .
+  git add .
+  git commit -m "Publish $version documentation"
+  git push
+  popd
+
+
