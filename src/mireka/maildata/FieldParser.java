@@ -18,8 +18,9 @@ public class FieldParser {
     private Scanner scanner;
 
     public HeaderField parseField(String unfoldedField) throws ParseException {
-        this.scanner = new Scanner(new ByteArrayInputStream(
-                TextUtils.getAsciiBytes(unfoldedField)));
+        this.scanner =
+                new Scanner(new ByteArrayInputStream(
+                        TextUtils.getAsciiBytes(unfoldedField)));
         return parseField();
     }
 
@@ -112,43 +113,87 @@ public class FieldParser {
             // starts here.
             // In a phrase whitespace is semantically visible, in addr-spec it
             // is not.
-            StringBuilder phraseBuffer = new StringBuilder();
-            StringBuilder localPartBuffer = new StringBuilder();
-            Token wordToken = parseWord();
-            phraseBuffer.append(wordToken.semanticContent);
-            localPartBuffer.append(wordToken.semanticContent);
-
-            while (isWord() || currentToken.kind == PERIOD) {
-                if (isWord()) {
-                    wordToken = parseWord();
-                    phraseBuffer.append(wordToken
-                            .getSemanticContentWithWsPrefix());
-                    localPartBuffer.append(wordToken.semanticContent);
-                } else if (currentToken.kind == PERIOD) {
-                    phraseBuffer.append(currentToken
-                            .getSemanticContentWithWsPrefix());
-                    localPartBuffer.append(currentToken.semanticContent);
-                    acceptIt();
-                } else {
-                    throw new RuntimeException();
-                }
-            }
-
-            if (currentToken.kind == AT) {
+            switch (lookAheadOverDisplayNameOrLocalPartInMailbox()) {
+            case LOCAL_PART:
                 result.addrSpec = new AddrSpec();
-                result.addrSpec.localPart = localPartBuffer.toString();
-                acceptIt();
+                result.addrSpec.localPart = parseLocalPart();
+                accept(AT);
                 result.addrSpec.domain = parseDomain();
-            } else if (currentToken.kind == LESS_THEN) {
-                result.displayName = phraseBuffer.toString();
+                break;
+            case DISPLAY_NAME:
+                result.displayName = parsePhrase();
                 result.addrSpec = parseAngleAddr();
-            } else {
-                currentToken.syntaxException("addr-spec or angle-addr");
+                break;
             }
         } else {
-            currentToken.syntaxException("mailbox");
+            throw currentToken.syntaxException("mailbox");
         }
         return result;
+    }
+
+    /**
+     * Determines which mailbox alternative matches the input, if it starts with
+     * a display-name or an addr-spec. It assumes that the angle-address without
+     * display-name rule is already excluded.
+     * 
+     * @throws ParseException
+     */
+    private MailboxAlternative lookAheadOverDisplayNameOrLocalPartInMailbox()
+            throws ParseException {
+        if (!isWord())
+            throw new IllegalStateException();
+
+        MailboxAlternative result;
+        Token originalToken = currentToken;
+        Scanner originalScanner = scanner;
+        scanner = scanner.getLookaheadScanner();
+
+        parseWord();
+        while (isWord() || currentToken.kind == PERIOD) {
+            if (isWord()) {
+                parseWord();
+            } else if (currentToken.kind == PERIOD) {
+                acceptIt();
+            } else {
+                throw new RuntimeException();
+            }
+        }
+
+        if (currentToken.kind == AT) {
+            result = MailboxAlternative.LOCAL_PART;
+        } else if (currentToken.kind == LESS_THEN) {
+            result = MailboxAlternative.DISPLAY_NAME;
+        } else {
+            throw currentToken.syntaxException("addr-spec or angle-addr");
+        }
+
+        scanner = originalScanner;
+        currentToken = originalToken;
+        scanner.resetAfterLookahead();
+        return result;
+    }
+
+    /**
+     * In a phrase whitespace is semantically visible, in addr-spec it is not.
+     */
+    private String parsePhrase() throws ParseException {
+        StringBuilder buffer = new StringBuilder();
+        Token wordToken = parseWord();
+        buffer.append(wordToken.semanticContent);
+
+        while (isWord() || currentToken.kind == PERIOD) {
+            if (isWord()) {
+                wordToken = parseWord();
+                buffer.append(wordToken.getSemanticContentWithWsPrefix());
+            } else if (currentToken.kind == PERIOD) {
+                buffer.append(currentToken.getSemanticContentWithWsPrefix());
+                acceptIt();
+            } else {
+                throw new RuntimeException();
+            }
+        }
+
+        return buffer.toString();
     }
 
     private boolean starterMailbox() {
@@ -256,8 +301,9 @@ public class FieldParser {
     }
 
     public AddrSpec parseAddrSpec(String emailAddress) throws ParseException {
-        this.scanner = new Scanner(new ByteArrayInputStream(
-                TextUtils.getAsciiBytes(emailAddress)));
+        this.scanner =
+                new Scanner(new ByteArrayInputStream(
+                        TextUtils.getAsciiBytes(emailAddress)));
         currentToken = scanner.scan();
         return parseAddrSpec();
     }
@@ -362,6 +408,17 @@ public class FieldParser {
                 // Fields are in memory, IOException is not expected.
                 throw new RuntimeException(e);
             }
+        }
+
+        /**
+         * Copy constructor. Deep copy except the InputStream.
+         */
+        private Scanner(Scanner original) {
+            in = original.in;
+            currentChar = original.currentChar;
+            currentSpelling = new StringBuilder(original.currentSpelling);
+            currentSemContent = new StringBuilder(original.currentSemContent);
+            position = original.position;
         }
 
         /**
@@ -819,6 +876,35 @@ public class FieldParser {
             currentSemContent.append((char) currentChar);
         }
 
+        /**
+         * Returns a copy of this scanner for lookahead and marks the current
+         * position of the input stream. After completing the lookup the caller
+         * must call {@link #resetAfterLookahead()} to reset the input stream to
+         * its original position.
+         */
+        public Scanner getLookaheadScanner() {
+            // The InputStream is a ByteArrayInputStream, it supports mark with
+            // unlimited lookahead.
+            if (!in.markSupported())
+                throw new RuntimeException("Assertion failed");
+            in.mark(1000);
+
+            return new Scanner(this);
+        }
+
+        /**
+         * Restores the state of the scanner to the point before the last
+         * lookahead, that is before the call to {@link #getLookaheadScanner()}.
+         */
+        public void resetAfterLookahead() {
+            try {
+                in.reset();
+            } catch (IOException e) {
+                // fields are coming from memory, no IOException can occur
+                throw new RuntimeException(e);
+            }
+        }
+
     }
 
     enum TokenKind {
@@ -884,5 +970,14 @@ public class FieldParser {
         protected String getKindAsString() {
             return kind.toString();
         }
+
+    }
+
+    /**
+     * Result of an lookahead in a Mailbox nonterminal, where it is difficult to
+     * select from the alternative rules without extra lookahead.
+     */
+    private enum MailboxAlternative {
+        DISPLAY_NAME, LOCAL_PART
     }
 }

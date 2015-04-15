@@ -21,8 +21,8 @@ public class FieldParserTest {
     @Test
     public void testParseStrangeAddress() throws ParseException {
         // RFC 822 example
-        AddrSpec addrSpec = new FieldParser()
-                .parseAddrSpec("God@heaven. af.mil");
+        AddrSpec addrSpec =
+                new FieldParser().parseAddrSpec("God@heaven. af.mil");
 
         assertEquals("God", addrSpec.localPart);
         assertTrue(addrSpec.domain instanceof DotAtomDomainPart);
@@ -43,8 +43,9 @@ public class FieldParserTest {
 
     @Test
     public void testUnstructuredField() throws ParseException {
-        UnstructuredHeader header = (UnstructuredHeader) new FieldParser()
-                .parseField("Subject: Hello world!\r\n");
+        UnstructuredHeader header =
+                (UnstructuredHeader) new FieldParser()
+                        .parseField("Subject: Hello world!\r\n");
 
         assertEquals("Subject", header.name);
         assertEquals("subject", header.lowerCaseName);
@@ -53,12 +54,25 @@ public class FieldParserTest {
 
     @Test
     public void testFromField() throws ParseException {
-        FromHeader header = (FromHeader) new FieldParser()
-                .parseField("From: john@example.com, Jane Doe <jane@example.com>, "
-                        + ", \"Jannie Doe\" <jannie@example.com>\r\n");
+        FromHeader header =
+                (FromHeader) new FieldParser()
+                        .parseField("From: john@example.com\r\n");
 
         assertEquals("From", header.name);
         assertEquals("from", header.lowerCaseName);
+        assertEquals(1, header.mailboxList.size());
+        Mailbox mailbox1 = header.mailboxList.get(0);
+        assertEquals("john", mailbox1.addrSpec.localPart);
+        assertNull(mailbox1.displayName);
+    }
+
+    @Test
+    public void testFromFieldList() throws ParseException {
+        FromHeader header =
+                (FromHeader) new FieldParser()
+                        .parseField("From: john@example.com, Jane Doe <jane@example.com>, "
+                                + ", \"Jannie Doe\" <jannie@example.com>\r\n");
+
         assertEquals(3, header.mailboxList.size());
         Mailbox mailbox1 = header.mailboxList.get(0);
         Mailbox mailbox2 = header.mailboxList.get(1);
