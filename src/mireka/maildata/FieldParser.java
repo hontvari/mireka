@@ -10,9 +10,12 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.subethamail.smtp.util.TextUtils;
 
 public class FieldParser {
+    private final Logger logger = LoggerFactory.getLogger(FieldParser.class);
 
     private Token currentToken;
     private Scanner scanner;
@@ -173,18 +176,49 @@ public class FieldParser {
         return result;
     }
 
+    // @formatter:off (Eclipse formatter inserts spaces around hyphen in encoded-word) 
     /**
-     * In a phrase whitespace is semantically visible, in addr-spec it is not.
+     * Parses a 'phrase', which is basically a sequence of words, with some
+     * extra.
+     *
+     * The 'phrase' is a subset of obs-phrase, so consider only the latter.
+     *
+     * <pre>
+     * obs-phrase      =   word *(word / "." / CFWS)
+     * </pre>
+     *
+     * Dot is also allowed. In addition, in a phrase whitespace is semantically
+     * visible, in contrast to for example addr-spec. Series of whitespace
+     * characters between words are semantically equivalent of a single space
+     * character.
+     *
+     * RFC 2047 further enhances this rule:
+     *
+     * <pre>
+     * phrase = 1 * (encoded-word / word)
+     * </pre>
+     *
+     * An additional rule is that the space between two encoded-words are 
+     * semantically invisible.
+     *
+     * All in all a complete rule in EBNF:
+     * <pre>
+     * phrase = phrase-word *(phrase-word / "." / CFWS)
+     * phrase-word = encoded-word-sequence / word
+     * encoded-word-sequence = 1 * encoded-word
+     * </pre>
      */
+    // @formatter:on
     private String parsePhrase() throws ParseException {
         StringBuilder buffer = new StringBuilder();
-        Token wordToken = parseWord();
-        buffer.append(wordToken.semanticContent);
+        String content = parsePhraseWord();
+        buffer.append(content);
 
-        while (isWord() || currentToken.kind == PERIOD) {
-            if (isWord()) {
-                wordToken = parseWord();
-                buffer.append(wordToken.getSemanticContentWithWsPrefix());
+        while (starterPhraseWord() || currentToken.kind == PERIOD) {
+            if (starterPhraseWord()) {
+                buffer.append(currentToken.collapsedWhitespace);
+                content = parsePhraseWord();
+                buffer.append(content);
             } else if (currentToken.kind == PERIOD) {
                 buffer.append(currentToken.getSemanticContentWithWsPrefix());
                 acceptIt();
@@ -194,6 +228,67 @@ public class FieldParser {
         }
 
         return buffer.toString();
+    }
+
+    private boolean starterPhraseWord() {
+        return isWord();
+    }
+
+    private String parsePhraseWord() throws ParseException {
+        StringBuilder buffer = new StringBuilder();
+
+        if (currentToken.kind == QUOTED_STRING) {
+            buffer.append(currentToken.semanticContent);
+            acceptIt();
+        } else if (starterEncodedWord()) {
+            String content = parseEncodedWordSequence();
+            buffer.append(content);
+        } else if (isWord()) {
+            buffer.append(currentToken.semanticContent);
+            acceptIt();
+        } else {
+            throw currentToken
+                    .syntaxException("ATOM including encoded-words or QUOTED_STRING");
+        }
+        return buffer.toString();
+    }
+
+    private String parseEncodedWordSequence() {
+        // semantic content
+        StringBuilder semanticContent = new StringBuilder();
+
+        String content = parseEncodedWord();
+        semanticContent.append(content);
+
+        while (starterEncodedWord()) {
+            content = parseEncodedWord();
+            semanticContent.append(content);
+        }
+
+        return semanticContent.toString();
+    }
+
+    private boolean starterEncodedWord() {
+        return currentToken.kind == ATOM
+                && EncodedWordParser
+                        .isEncodedWord(currentToken.semanticContent);
+    }
+
+    private String parseEncodedWord() {
+        if (currentToken.kind != ATOM)
+            throw new RuntimeException("Assertion failed");
+
+        String result;
+        try {
+            result =
+                    new EncodedWordParser().parse(currentToken.semanticContent);
+        } catch (ParseException e) {
+            logger.debug("encoded-word cannot be parsed, using it as is. '"
+                    + currentToken.semanticContent + "'", e);
+            result = currentToken.semanticContent;
+        }
+        acceptIt();
+        return result;
     }
 
     private boolean starterMailbox() {
@@ -366,6 +461,11 @@ public class FieldParser {
         return wordToken;
     }
 
+    /**
+     * Returns true if the current token "starts" a 'word' non-terminal. It is
+     * worth noting that a word consists of a single token, so the current token
+     * is the sole content of that word.
+     */
     private boolean isWord() {
         return currentToken.kind == ATOM || currentToken.kind == QUOTED_STRING;
     }
@@ -769,9 +869,9 @@ public class FieldParser {
         }
 
         /**
-         * Scans a dtext-string. dtext-string is not defined explicitly in
-         * RFC5322. It is the inner side of a domain-literal, within the square
-         * brackets.
+         * Scans a dtext-string. Note that no dtext-string token is defined
+         * explicitly in RFC5322. It is the inner side of a domain-literal,
+         * within the square brackets.
          * 
          * <pre>
          * dtext-string    =   *([FWS] dtext) [FWS]
@@ -954,13 +1054,13 @@ public class FieldParser {
          * preceded by one or more white space (FWS, comment, CFWS) elements
          * used as separators, or an empty string.
          */
-        String collapsedWhitespace;
+        public String collapsedWhitespace;
         /**
          * Spelling of the token without the semantically invisible characters,
          * e.g. the string within a quoted-string without the external CFWS and
          * double quotes.
          */
-        String semanticContent;
+        public String semanticContent;
 
         public String getSemanticContentWithWsPrefix() {
             return collapsedWhitespace + semanticContent;

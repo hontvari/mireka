@@ -2,31 +2,20 @@ package mireka.maildata;
 
 import java.text.ParseException;
 
-import mireka.maildata.FieldParser.TokenKind;
-
 public abstract class AbstractToken {
     public String spelling;
     public int position;
 
-    public ParseException syntaxException(TokenKind expected) {
+    public ParseException syntaxException(Object expected) {
         return new ParseException("Syntax error. Expected: "
                 + expected.toString() + ", received: " + toString()
-                + " at character position " + position + ".",
-                (int) position);
-    }
-
-    public ParseException syntaxException(String expected) {
-        return new ParseException("Syntax error. Expected: "
-                + expected + ", received: " + toString()
-                + " at character position " + position + ".",
-                (int) position);
+                + " at character position " + position + ".", (int) position);
     }
 
     public ParseException unexpectedHereSyntaxException(String where) {
         return new ParseException("Syntax error. Unexpected token: '"
                 + toString() + "', at the position: '" + where
-                + "' at character position " + position + ".",
-                (int) position);
+                + "' at character position " + position + ".", (int) position);
     }
 
     @Override
@@ -40,7 +29,7 @@ public abstract class AbstractToken {
             return "'" + buffer.toString() + "'";
         }
     }
-    
+
     protected abstract String getKindAsString();
 
     private static String toVisibleChar(char ch) {
@@ -53,5 +42,5 @@ public abstract class AbstractToken {
     private static String toUnicodeEscape(int ch) {
         return "\\u" + String.format("%04X", ch);
     }
-    
+
 }

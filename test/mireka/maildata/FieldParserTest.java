@@ -84,4 +84,29 @@ public class FieldParserTest {
         assertEquals("jannie", mailbox3.addrSpec.localPart);
         assertEquals("Jannie Doe", mailbox3.displayName);
     }
+
+    @Test
+    public void testFromFieldWithEncodedName() throws ParseException {
+        FromHeader header =
+                (FromHeader) new FieldParser()
+                        .parseField("From: =?US-ASCII?Q?Keith_Moore?= <moore@example.org>\r\n");
+
+        assertEquals(1, header.mailboxList.size());
+        Mailbox mailbox1 = header.mailboxList.get(0);
+        assertEquals("moore", mailbox1.addrSpec.localPart);
+        assertEquals("Keith Moore", mailbox1.displayName);
+    }
+
+    @Test
+    public void testFromFieldWithMultiEncodedName() throws ParseException {
+        FromHeader header =
+                (FromHeader) new FieldParser()
+                        .parseField("From: =?US-ASCII?Q?Keith_Mo?= =?US-ASCII?Q?ore?= <moore@example.org>\r\n");
+
+        assertEquals(1, header.mailboxList.size());
+        Mailbox mailbox1 = header.mailboxList.get(0);
+        assertEquals("moore", mailbox1.addrSpec.localPart);
+        assertEquals("Keith Moore", mailbox1.displayName);
+    }
+
 }

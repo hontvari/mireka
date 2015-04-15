@@ -9,6 +9,7 @@
  * correctly specifies an email address from the viewpoint of this package may 
  * be invalid in the context of SMTP.
  * 
- * @see <a href="https://tools.ietf.org/html/rfc5322">RFC 5322 - Internet Message Format</a>  
+ * @see <a href="https://tools.ietf.org/html/rfc5322">RFC 5322 - Internet Message Format</a>
+ * @see <a href="https://tools.ietf.org/html/rfc2047">RFC 2047 - MIME (Multipurpose Internet Mail Extensions) Part Three: Message Header Extensions for Non-ASCII Text</a>
  */
 package mireka.maildata;
