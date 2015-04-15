@@ -7,7 +7,7 @@ import java.util.List;
 
 import mireka.util.CharsetUtil;
 
-public class FieldWriter {
+public class FieldGenerator {
     private Folder folder = new Folder();
 
     public String writeUnstructuredHeader(UnstructuredHeader header) {

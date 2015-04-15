@@ -13,7 +13,7 @@ public class FromHeader extends HeaderField {
 
     @Override
     protected void writeGenerated(OutputStream out) throws IOException {
-        String result = new FieldWriter().writeFromHeader(this);
+        String result = new FieldGenerator().writeFromHeader(this);
         out.write(CharsetUtil.toAsciiBytes(result));
     }
 }

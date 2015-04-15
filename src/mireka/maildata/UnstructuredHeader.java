@@ -17,7 +17,7 @@ public class UnstructuredHeader extends HeaderField {
 
     @Override
     protected void writeGenerated(OutputStream out) throws IOException {
-        String result = new FieldWriter().writeUnstructuredHeader(this);
+        String result = new FieldGenerator().writeUnstructuredHeader(this);
         out.write(CharsetUtil.toAsciiBytes(result));
     }
 }
