@@ -22,6 +22,14 @@ public abstract class HeaderField {
      */
     public String name;
 
+    public HeaderField() {
+        super();
+    }
+
+    public HeaderField(String name) {
+        setName(name);
+    }
+
     /**
      * Field name in lower case, or null if the name cannot be determined.
      */
@@ -29,8 +37,8 @@ public abstract class HeaderField {
 
     public void setName(String name) {
         this.name = name;
-        this.lowerCaseName = name == null ? null : CharsetUtil
-                .toAsciiLowerCase(name);
+        this.lowerCaseName =
+                name == null ? null : CharsetUtil.toAsciiLowerCase(name);
     }
 
     public void writeTo(OutputStream out) throws IOException {

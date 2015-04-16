@@ -56,14 +56,14 @@ public class FieldGenerator {
     }
 
     private void writeMailboxList(List<Mailbox> mailboxList) {
-        boolean isSecondOrLater = false;
-        for (Mailbox mailbox : mailboxList) {
-            if (isSecondOrLater) {
-                folder.t(",");
-                folder.fsp(" ");
-            }
-            writeMailbox(mailbox);
-            isSecondOrLater = true;
+        if (mailboxList.isEmpty())
+            return;
+
+        writeMailbox(mailboxList.get(0));
+        for (int i = 1; i < mailboxList.size(); i++) {
+            folder.t(",");
+            folder.fsp(" ");
+            writeMailbox(mailboxList.get(i));
         }
     }
 
@@ -130,11 +130,8 @@ public class FieldGenerator {
                 currentChar = scanner.scan();
             }
         }
-        if (buffer.length() != 0) {
-            folder.t(buffer.toString());
-        }
-
         buffer.append('"');
+        folder.t(buffer.toString());
         folder.end();
     }
 
@@ -174,11 +171,40 @@ public class FieldGenerator {
     }
 
     private void writePhrase(String phrase) {
-        if (isAtomPhrase(phrase)) {
+        if (!isAscii(phrase)) {
+            writeEncodedWords(phrase, EncodedWordGenerator.Placement.PHRASE);
+        } else if (isAtomPhrase(phrase) && !containsWordLikeEncodedWord(phrase)) {
             writeAtomPhrase(phrase);
         } else {
             writeQuotedString(phrase);
         }
+    }
+
+    private boolean containsWordLikeEncodedWord(String phrase) {
+        return new Scanner(phrase).testAtomPhraseContainsWordLikeEncodedWord();
+    }
+
+    private boolean isAscii(String text) {
+        for (int i = 0; i < text.length(); i++) {
+            if (text.charAt(i) > 127)
+                return false;
+        }
+        return true;
+    }
+
+    private void writeEncodedWords(String text,
+            EncodedWordGenerator.Placement placement) {
+        List<String> words =
+                new EncodedWordGenerator().generate(text, placement);
+        if (words.size() > 1)
+            folder.begin();
+        folder.t(words.get(0));
+        for (int i = 1; i < words.size(); i++) {
+            folder.fsp(" ");
+            folder.t(words.get(i));
+        }
+        if (words.size() > 1)
+            folder.end();
     }
 
     private void writeAtomPhrase(String phrase) {
@@ -221,7 +247,8 @@ public class FieldGenerator {
         private InputStream in;
 
         private Scanner(String source) {
-            this.in = new ByteArrayInputStream(CharsetUtil.toAsciiBytes(source));
+            this.in =
+                    new ByteArrayInputStream(CharsetUtil.toAsciiBytes(source));
             try {
                 currentChar = in.read();
             } catch (IOException e) {
@@ -267,6 +294,47 @@ public class FieldGenerator {
                 }
             }
             return take(isEOF());
+        }
+
+        /**
+         * Tests if an phrase which consists of only space separated atoms
+         * contains a word which is similar to an encoded word.
+         */
+        public boolean testAtomPhraseContainsWordLikeEncodedWord() {
+            StringBuilder atom = new StringBuilder();
+
+            atom.append((char) currentChar);
+            take(isAtext());
+            while (isAtext()) {
+                atom.append((char) currentChar);
+                takeIt();
+            }
+            if (isLikeEncodedWord(atom.toString()))
+                return true;
+
+            while (!isEOF()) {
+                take(isSpace());
+                atom.setLength(0);
+
+                atom.append((char) currentChar);
+                take(isAtext());
+                while (isAtext()) {
+                    atom.append((char) currentChar);
+                    takeIt();
+                }
+                if (isLikeEncodedWord(atom.toString()))
+                    return true;
+            }
+
+            return false;
+        }
+
+        private boolean isLikeEncodedWord(String word) {
+            return word.startsWith("=?") && word.endsWith("?=");
+        }
+
+        private boolean isSpace() {
+            return currentChar == ' ';
         }
 
         private boolean isAtext() {
@@ -337,7 +405,8 @@ public class FieldGenerator {
         private InputStream in;
 
         public CharScanner(String source) {
-            this.in = new ByteArrayInputStream(CharsetUtil.toAsciiBytes(source));
+            this.in =
+                    new ByteArrayInputStream(CharsetUtil.toAsciiBytes(source));
             try {
                 currentChar = in.read();
             } catch (IOException e) {

@@ -9,6 +9,10 @@ import mireka.util.CharsetUtil;
 
 public class FromHeader extends HeaderField {
 
+    public FromHeader() {
+        super("From");
+    }
+
     public List<Mailbox> mailboxList = new ArrayList<>();
 
     @Override

@@ -31,6 +31,9 @@ public class Folder {
     }
 
     public Folder t(String s) {
+        if (s == null)
+            throw new NullPointerException();
+
         Token lastToken = list.isEmpty() ? null : list.get(list.size() - 1);
         if (lastToken instanceof Atom) {
             lastToken.text += s;
@@ -155,8 +158,9 @@ public class Folder {
                 throw new IllegalStateException();
 
             currentPosition++;
-            currentToken = currentPosition < list.size() ? list
-                    .get(currentPosition) : null;
+            currentToken =
+                    currentPosition < list.size() ? list.get(currentPosition)
+                            : null;
         }
 
         private boolean isWithinSoftLimit(int length) {
