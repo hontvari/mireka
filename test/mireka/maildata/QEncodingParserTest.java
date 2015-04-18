@@ -24,7 +24,7 @@ public class QEncodingParserTest extends QEncodingParser {
     @Test
     public void testComplex() throws ParseException {
         QEncodingParser parser = new QEncodingParser();
-        byte[] result = parser.decode(in1);
-        assertArrayEquals(out1, result);
+        byte[] result = parser.decode(in2);
+        assertArrayEquals(out2, result);
     }
 }
