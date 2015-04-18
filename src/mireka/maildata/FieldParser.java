@@ -4,15 +4,14 @@ import static mireka.maildata.FieldParser.TokenKind.*;
 import static mireka.util.CharsetUtil.*;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import mireka.util.CharsetUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.subethamail.smtp.util.TextUtils;
 
 public class FieldParser {
     private final Logger logger = LoggerFactory.getLogger(FieldParser.class);
@@ -21,9 +20,7 @@ public class FieldParser {
     private Scanner scanner;
 
     public HeaderField parseField(String unfoldedField) throws ParseException {
-        this.scanner =
-                new Scanner(new ByteArrayInputStream(
-                        TextUtils.getAsciiBytes(unfoldedField)));
+        this.scanner = new Scanner(unfoldedField);
         return parseField();
     }
 
@@ -172,7 +169,6 @@ public class FieldParser {
 
         scanner = originalScanner;
         currentToken = originalToken;
-        scanner.resetAfterLookahead();
         return result;
     }
 
@@ -396,9 +392,7 @@ public class FieldParser {
     }
 
     public AddrSpec parseAddrSpec(String emailAddress) throws ParseException {
-        this.scanner =
-                new Scanner(new ByteArrayInputStream(
-                        TextUtils.getAsciiBytes(emailAddress)));
+        this.scanner = new Scanner(emailAddress);
         currentToken = scanner.scan();
         return parseAddrSpec();
     }
@@ -492,33 +486,36 @@ public class FieldParser {
     }
 
     private static class Scanner {
-        private InputStream in;
+        private byte[] inputBytes;
+        private ByteArrayInputStream in;
 
         private int currentChar;
         private StringBuilder currentSpelling = new StringBuilder();
         private StringBuilder currentSemContent = new StringBuilder();
+        /**
+         * The index of currentChar in {@link #inputBytes}.
+         */
         private int position;
 
-        public Scanner(InputStream in) {
-            this.in = in;
+        public Scanner(String input) {
+            this.inputBytes = CharsetUtil.toAsciiBytes(input);
+            this.in = new ByteArrayInputStream(inputBytes);
 
-            try {
-                currentChar = in.read();
-            } catch (IOException e) {
-                // Fields are in memory, IOException is not expected.
-                throw new RuntimeException(e);
-            }
+            currentChar = in.read();
         }
 
         /**
-         * Copy constructor. Deep copy except the InputStream.
+         * Copy constructor. Deep copy, except the inputBytes array.
          */
         private Scanner(Scanner original) {
-            in = original.in;
+            inputBytes = original.inputBytes;
+            position = original.position;
+            in =
+                    new ByteArrayInputStream(inputBytes, position + 1,
+                            inputBytes.length - position - 1);
             currentChar = original.currentChar;
             currentSpelling = new StringBuilder(original.currentSpelling);
             currentSemContent = new StringBuilder(original.currentSemContent);
-            position = original.position;
         }
 
         /**
@@ -946,15 +943,10 @@ public class FieldParser {
         }
 
         private void takeIt() {
-            try {
-                if (currentChar != -1)
-                    currentSpelling.append((char) currentChar);
-                currentChar = in.read();
-                position++;
-            } catch (IOException e) {
-                // fields are coming from memory, no IOException can occur
-                throw new RuntimeException(e);
-            }
+            if (currentChar != -1)
+                currentSpelling.append((char) currentChar);
+            currentChar = in.read();
+            position++;
         }
 
         private void take(int c) {
@@ -977,34 +969,12 @@ public class FieldParser {
         }
 
         /**
-         * Returns a copy of this scanner for lookahead and marks the current
-         * position of the input stream. After completing the lookup the caller
-         * must call {@link #resetAfterLookahead()} to reset the input stream to
-         * its original position.
+         * Returns a copy of this scanner for lookahead. The new scanner does
+         * not affect the current scanner in any way.
          */
         public Scanner getLookaheadScanner() {
-            // The InputStream is a ByteArrayInputStream, it supports mark with
-            // unlimited lookahead.
-            if (!in.markSupported())
-                throw new RuntimeException("Assertion failed");
-            in.mark(1000);
-
             return new Scanner(this);
         }
-
-        /**
-         * Restores the state of the scanner to the point before the last
-         * lookahead, that is before the call to {@link #getLookaheadScanner()}.
-         */
-        public void resetAfterLookahead() {
-            try {
-                in.reset();
-            } catch (IOException e) {
-                // fields are coming from memory, no IOException can occur
-                throw new RuntimeException(e);
-            }
-        }
-
     }
 
     enum TokenKind {
