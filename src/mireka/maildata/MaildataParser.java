@@ -1,10 +1,10 @@
 package mireka.maildata;
 
+import static mireka.maildata.MaildataParser.TokenKind.*;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
-
-import static mireka.maildata.MaildataParser.TokenKind.*;
 
 /**
  * MailDataParser is a top level parser for mail data, it separates the heading
@@ -22,7 +22,7 @@ public class MaildataParser {
     public MaildataParser(InputStream in) throws IOException {
         if (in == null)
             throw new NullPointerException();
-        
+
         scanner = new Scanner(in);
     }
 
@@ -31,7 +31,7 @@ public class MaildataParser {
             currentToken = scanner.scan();
             return parseMailData();
         } catch (ParseException e) {
-            // even malformed mail should be parsed without exception 
+            // even malformed mail should be parsed without exception
             throw new RuntimeException("Unexpted exception", e);
         }
     }
@@ -42,8 +42,8 @@ public class MaildataParser {
         result.headerSection = parseHeaderSection();
         switch (currentToken.kind) {
         case CRLF:
-            result.bodyPosition = currentToken.position
-                    + currentToken.spelling.length();
+            result.bodyPosition =
+                    currentToken.position + currentToken.spelling.length();
             result.separator = currentToken.spelling;
             break;
         case EOF:
@@ -60,7 +60,7 @@ public class MaildataParser {
             IOException {
         HeaderSection result = new HeaderSection();
 
-        //TODO: The very first heading field must be accepted even if it is 
+        // TODO: The very first heading field must be accepted even if it is
         // malformed and does not start with UTEXT.
         while (currentToken.kind == UTEXT) {
             HeaderFieldText field = parseFoldedHeaderField();
@@ -226,19 +226,20 @@ public class MaildataParser {
                     (int) position);
         }
     }
-    
+
     public static class Result {
         /**
          * It may be an empty string, although that is semantically invalid.
          */
         HeaderSection headerSection;
         /**
-         * Null, if no separator presents, which also means that there is no body.
+         * Null, if no separator presents, which also means that there is no
+         * body.
          */
         String separator;
         /**
-         * -1 means that there is no body, this happens when no separator is found.
-         * It may point to EOF, if the body is empty.
+         * -1 means that there is no body, this happens when no separator is
+         * found. It may point to EOF, if the body is empty.
          */
         long bodyPosition = -1;
     }
