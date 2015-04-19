@@ -20,11 +20,11 @@ public class HeaderSectionTest {
     @Before
     public void setUp() throws ParseException {
         from1Text = new HeaderFieldText();
-        from1Text.originalSpelling = from1Text.unfoldedSpelling = "From: John Doe <john@example.com>\r\n";
+        from1Text.originalSpelling = from1Text.unfoldedSpelling = "From: John Doe <john@example.com>";
         from2Text = new HeaderFieldText();
-        from2Text.originalSpelling = from2Text.unfoldedSpelling = "From: Jane Doe <jane@example.com>\r\n";
+        from2Text.originalSpelling = from2Text.unfoldedSpelling = "From: Jane Doe <jane@example.com>";
         subjectText = new HeaderFieldText();
-        subjectText.originalSpelling = subjectText.unfoldedSpelling = "Subject: Interesting email\r\n";
+        subjectText.originalSpelling = subjectText.unfoldedSpelling = "Subject: Interesting email";
 
         Mailbox mailboxAddress = new Mailbox();
         mailboxAddress.displayName = "John Doe via alist.example.com";

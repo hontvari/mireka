@@ -678,16 +678,8 @@ public class FieldParser {
             } else if (currentChar == '"') {
                 scanQuotedString();
                 return QUOTED_STRING;
-            } else if (currentChar == '\r') {
-                takeIt();
-                if (currentChar == '\n') {
-                    takeIt();
-                    return CRLF;
-                } else {
-                    // standalone CR character is invalid for this scanner
-                    // method
-                    return ERROR;
-                }
+            } else if (currentChar == -1) {
+                return EOF;
             } else {
                 switch (currentChar) {
                 case '<':
@@ -824,6 +816,8 @@ public class FieldParser {
             return isObsoleteNoWsCtl();
         }
 
+        private boolean isEOF() {
+            return currentChar == -1;
         /**
          * Scans a header field name using special syntax, including the
          * separator colon.
@@ -996,6 +990,14 @@ public class FieldParser {
         COMMA,
         /** '.' */
         PERIOD,
+        /** end of input **/
+        EOF,
+        /**
+         * This special token kind is returned if the source text is
+         * syntactically invalid. Using this object instead of throwing an
+         * exception results in a better error message.
+         */
+        ERROR,
 
         /**
          * This special token can only be returned by

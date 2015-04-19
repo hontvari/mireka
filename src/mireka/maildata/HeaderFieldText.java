@@ -9,7 +9,7 @@ public class HeaderFieldText {
 
     /**
      * The same as the originalSpelling except that any CRLF which is followed
-     * by WSP is removed.
+     * by WSP is removed, and closing CRLF is removed as well.
      * 
      * @see <a href="https://tools.ietf.org/html/rfc5322#section-2.2.3">RFC5322
      *      Long Header Fields</a>

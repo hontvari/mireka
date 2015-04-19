@@ -83,7 +83,6 @@ public class MaildataParser {
             unfolded.append(line);
         }
 
-        unfolded.append("\r\n");
         HeaderFieldText result = new HeaderFieldText();
         result.originalSpelling = spelling.toString();
         result.unfoldedSpelling = unfolded.toString();

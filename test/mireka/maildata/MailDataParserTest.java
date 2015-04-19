@@ -42,9 +42,9 @@ public class MailDataParserTest {
 
                 assertEquals(2, texts.size());
                 assertEquals("H: a\r\n", texts.get(0).originalSpelling);
-                assertEquals("H: a\r\n", texts.get(0).unfoldedSpelling);
+                assertEquals("H: a", texts.get(0).unfoldedSpelling);
                 assertEquals("L: a\r\n b\r\n", texts.get(1).originalSpelling);
-                assertEquals("L: a b\r\n", texts.get(1).unfoldedSpelling);
+                assertEquals("L: a b", texts.get(1).unfoldedSpelling);
 
             }
         };
