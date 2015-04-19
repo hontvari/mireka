@@ -17,15 +17,26 @@ public class FieldParser {
     private final Logger logger = LoggerFactory.getLogger(FieldParser.class);
 
     private Token currentToken;
+    /**
+     * The lexical analyzer, but because the lexical analyzer has a few
+     * specialized scanner subclasses too, for a scan operation the
+     * {@link #scanner} is used, not this object.
+     */
+    private FieldScanner fieldScanner;
+    /**
+     * Active scanner, either fieldScanner itself or one of its specialized
+     * scanner subclass.
+     */
     private Scanner scanner;
 
     public HeaderField parseField(String unfoldedField) throws ParseException {
-        this.scanner = new Scanner(unfoldedField);
+        this.scanner = this.fieldScanner = new FieldScanner(unfoldedField);
         return parseField();
     }
 
     private HeaderField parseField() throws ParseException {
-        currentToken = scanner.scanFieldName();
+        // Unnecessary to set the scanner field for a single scan() operation
+        currentToken = fieldScanner.new FieldNameScanner().scan();
         String name = toAsciiLowerCase(currentToken.semanticContent);
 
         switch (name) {
@@ -47,7 +58,7 @@ public class FieldParser {
         result.setName(currentToken.semanticContent);
         acceptIt();
         result.mailboxList = parseMailboxList();
-        accept(CRLF);
+        accept(EOF);
 
         return result;
     }
@@ -56,10 +67,93 @@ public class FieldParser {
         UnstructuredHeader result = new UnstructuredHeader();
 
         result.setName(currentToken.semanticContent);
-        currentToken = scanner.scanUnstruct();
-        result.body = currentToken.semanticContent;
-        accept(UNSTRUCT);
+        scanner = fieldScanner.new UnstructuredSubscanner();
+        currentToken = scanner.scan();
+        StringBuilder body = new StringBuilder();
 
+        while (currentToken.kind == UNSTRUCT_LWSP
+                || currentToken.kind == UNSTRUCT_WORD) {
+            switch (currentToken.kind) {
+            case UNSTRUCT_LWSP:
+                body.append(currentToken.semanticContent);
+                acceptIt();
+                break;
+            case UNSTRUCT_WORD:
+                if (starterEncodedWordInUnstructured()) {
+                    String decodedText =
+                            parseEncodedWordSequenceInUnstructured();
+                    body.append(decodedText);
+                } else {
+                    body.append(currentToken.semanticContent);
+                    acceptIt();
+                }
+                break;
+            default:
+                throw new RuntimeException("Assertion failed");
+            }
+        }
+        accept(EOF);
+
+        result.body = body.toString();
+        scanner = fieldScanner;
+        return result;
+    }
+
+    private boolean starterEncodedWordInUnstructured() {
+        return currentToken.kind == UNSTRUCT_WORD
+                && EncodedWordParser
+                        .isEncodedWord(currentToken.semanticContent);
+    }
+
+    /**
+     * <pre>
+     * encoded-word-sequence = encoded-word *(LWSP encoded-word) [LWSP]
+     * </pre>
+     * 
+     * The first LWSP is not, but the last, optional LWSP is part of the
+     * semantic content.
+     */
+    private String parseEncodedWordSequenceInUnstructured() {
+        // semantic content
+        StringBuilder semanticContent = new StringBuilder();
+
+        String content = parseEncodedWordInUnstructured();
+        semanticContent.append(content);
+
+        Token unprocessedLWSPToken = null;
+        while (currentToken.kind == UNSTRUCT_LWSP) {
+            unprocessedLWSPToken = currentToken;
+            acceptIt();
+            if (starterEncodedWordInUnstructured()) {
+                // LWSP between two encoded-word is not part of the semantic
+                // content.
+                unprocessedLWSPToken = null;
+                content = parseEncodedWordInUnstructured();
+                semanticContent.append(content);
+            } else {
+                break;
+            }
+        }
+        if (unprocessedLWSPToken != null)
+            semanticContent.append(unprocessedLWSPToken.semanticContent);
+
+        return semanticContent.toString();
+    }
+
+    private String parseEncodedWordInUnstructured() {
+        if (currentToken.kind != UNSTRUCT_WORD)
+            throw new RuntimeException("Assertion failed");
+
+        String result;
+        try {
+            result =
+                    new EncodedWordParser().parse(currentToken.semanticContent);
+        } catch (ParseException e) {
+            logger.debug("encoded-word cannot be parsed, using it as is. '"
+                    + currentToken.semanticContent + "'", e);
+            result = currentToken.semanticContent;
+        }
+        acceptIt();
         return result;
     }
 
@@ -145,8 +239,8 @@ public class FieldParser {
 
         MailboxAlternative result;
         Token originalToken = currentToken;
-        Scanner originalScanner = scanner;
-        scanner = scanner.getLookaheadScanner();
+        // Assume that the current scanner is the fieldScanner itself.
+        scanner = fieldScanner.getLookaheadScanner();
 
         parseWord();
         while (isWord() || currentToken.kind == PERIOD) {
@@ -167,7 +261,7 @@ public class FieldParser {
             throw currentToken.syntaxException("addr-spec or angle-addr");
         }
 
-        scanner = originalScanner;
+        scanner = fieldScanner;
         currentToken = originalToken;
         return result;
     }
@@ -382,7 +476,8 @@ public class FieldParser {
         StringBuilder result = new StringBuilder();
         acceptButDontScanNextToken(LEFT_S_BRACKET);
 
-        currentToken = scanner.scanDtextString();
+        // Unnecessary to set the scanner field for a single scan() operation
+        currentToken = fieldScanner.new DomainLiteralScanner().scan();
         result.append(currentToken.semanticContent);
         acceptIt();
 
@@ -392,7 +487,7 @@ public class FieldParser {
     }
 
     public AddrSpec parseAddrSpec(String emailAddress) throws ParseException {
-        this.scanner = new Scanner(emailAddress);
+        this.scanner = this.fieldScanner = new FieldScanner(emailAddress);
         currentToken = scanner.scan();
         return parseAddrSpec();
     }
@@ -485,7 +580,11 @@ public class FieldParser {
             throw currentToken.syntaxException(requiredKind);
     }
 
-    private static class Scanner {
+    private interface Scanner {
+        Token scan();
+    }
+
+    private static class FieldScanner implements Scanner {
         private byte[] inputBytes;
         private ByteArrayInputStream in;
 
@@ -497,7 +596,7 @@ public class FieldParser {
          */
         private int position;
 
-        public Scanner(String input) {
+        public FieldScanner(String input) {
             this.inputBytes = CharsetUtil.toAsciiBytes(input);
             this.in = new ByteArrayInputStream(inputBytes);
 
@@ -507,7 +606,7 @@ public class FieldParser {
         /**
          * Copy constructor. Deep copy, except the inputBytes array.
          */
-        private Scanner(Scanner original) {
+        private FieldScanner(FieldScanner original) {
             inputBytes = original.inputBytes;
             position = original.position;
             in =
@@ -818,122 +917,6 @@ public class FieldParser {
 
         private boolean isEOF() {
             return currentChar == -1;
-        /**
-         * Scans a header field name using special syntax, including the
-         * separator colon.
-         * 
-         * @return A TokenKind.FIELD_NAME type token
-         */
-        public Token scanFieldName() {
-            Token token = new Token();
-            token.position = position;
-            currentSpelling.setLength(0);
-            currentSemContent.setLength(0);
-
-            addToSemanticContent();
-            take("ftext", isFtext());
-            while (isFtext()) {
-                addToSemanticContent();
-                takeIt();
-            }
-
-            while (isWSP())
-                takeIt();
-            take(':');
-
-            token.kind = FIELD_NAME;
-            token.spelling = currentSpelling.toString();
-            token.collapsedWhitespace = "";
-            token.semanticContent = currentSemContent.toString();
-            return token;
-        }
-
-        /**
-         * Printable US-ASCII characters not including ":".
-         */
-        private boolean isFtext() {
-            if (33 <= currentChar && currentChar <= 57)
-                return true;
-            if (59 <= currentChar && currentChar <= 126)
-                return true;
-            return false;
-        }
-
-        /**
-         * Scans a dtext-string. Note that no dtext-string token is defined
-         * explicitly in RFC5322. It is the inner side of a domain-literal,
-         * within the square brackets.
-         * 
-         * <pre>
-         * dtext-string    =   *([FWS] dtext) [FWS]
-         * 
-         * obs-dtext       =   obs-NO-WS-CTL / quoted-pair
-         * </pre>
-         */
-        public Token scanDtextString() {
-            Token token = new Token();
-            token.position = position;
-            currentSpelling.setLength(0);
-            currentSemContent.setLength(0);
-
-            while (starterFWS() || isDtext() || starterQuotedPair()) {
-                if (starterFWS()) {
-                    scanFWS();
-                } else if (isDtext()) {
-                    addToSemanticContent();
-                    takeIt();
-                } else if (starterQuotedPair()) {
-                    scanQuotedPair();
-                } else {
-                    throw new RuntimeException();
-                }
-            }
-
-            token.kind = DTEXT;
-            token.spelling = currentSpelling.toString();
-            token.collapsedWhitespace = "";
-            token.semanticContent = currentSemContent.toString();
-            return token;
-        }
-
-        private boolean isDtext() {
-            if (33 <= currentChar && currentChar <= 90)
-                return true;
-            if (94 <= currentChar && currentChar <= 126)
-                return true;
-            return isObsoleteNoWsCtl();
-        }
-
-        /**
-         * Returns an UNSTRUCT token. It scans the ending CRLF too.
-         */
-        public Token scanUnstruct() {
-            Token token = new Token();
-            token.position = position;
-            currentSpelling.setLength(0);
-            currentSemContent.setLength(0);
-
-            while (true) {
-                if (currentChar == '\r') {
-                    takeIt();
-                    if (currentChar == '\n') {
-                        takeIt();
-                        break;
-                    } else {
-                        currentSemContent.append('\r');
-                    }
-                } else {
-                    addToSemanticContent();
-                    takeIt();
-                }
-            }
-
-            token.kind = UNSTRUCT;
-            token.spelling = currentSpelling.toString();
-            token.collapsedWhitespace = "";
-            token.semanticContent = currentSemContent.toString();
-            return token;
-
         }
 
         private void takeIt() {
@@ -967,12 +950,153 @@ public class FieldParser {
          * not affect the current scanner in any way.
          */
         public Scanner getLookaheadScanner() {
-            return new Scanner(this);
+            return new FieldScanner(this);
+        }
+
+        public class FieldNameScanner implements Scanner {
+            /**
+             * Scans a header field name using special syntax, including the
+             * separator colon.
+             * 
+             * @return A TokenKind.FIELD_NAME type token
+             */
+            public Token scan() {
+                Token token = new Token();
+                token.position = position;
+                currentSpelling.setLength(0);
+                currentSemContent.setLength(0);
+
+                addToSemanticContent();
+                take("ftext", isFtext());
+                while (isFtext()) {
+                    addToSemanticContent();
+                    takeIt();
+                }
+
+                while (isWSP())
+                    takeIt();
+                take(':');
+
+                token.kind = FIELD_NAME;
+                token.spelling = currentSpelling.toString();
+                token.collapsedWhitespace = "";
+                token.semanticContent = currentSemContent.toString();
+                return token;
+            }
+
+            /**
+             * Printable US-ASCII characters not including ":".
+             */
+            private boolean isFtext() {
+                if (33 <= currentChar && currentChar <= 57)
+                    return true;
+                if (59 <= currentChar && currentChar <= 126)
+                    return true;
+                return false;
+            }
+
+        }
+
+        public class UnstructuredSubscanner implements Scanner {
+            public Token scan() {
+                Token token = new Token();
+                token.position = position;
+                currentSpelling.setLength(0);
+                currentSemContent.setLength(0);
+                TokenKind tokenKind;
+
+                if (isWSP()) {
+                    scanFWS();
+                    tokenKind = UNSTRUCT_LWSP;
+                } else if (isEOF()) {
+                    tokenKind = EOF;
+                } else if (isUtext()) {
+                    scanWord();
+                    tokenKind = UNSTRUCT_WORD;
+                } else {
+                    throw new RuntimeException("Assertion failed");
+                }
+
+                token.kind = tokenKind;
+                token.spelling =
+                        token.semanticContent = currentSpelling.toString();
+                token.collapsedWhitespace = "";
+                return token;
+            }
+
+            private void scanWord() {
+                while (isUtext()) {
+                    addToSemanticContent();
+                    takeIt();
+                }
+            }
+
+            private boolean isUtext() {
+                if (currentChar < 0)
+                    return false;
+                if (currentChar > 127)
+                    return false;
+                switch (currentChar) {
+                case ' ':
+                case '\t':
+                    return false;
+                default:
+                    return true;
+                }
+            }
+        }
+
+        public class DomainLiteralScanner implements Scanner {
+            /**
+             * Scans a dtext-string. Note that no dtext-string token is defined
+             * explicitly in RFC5322. It is the inner side of a domain-literal,
+             * within the square brackets.
+             * 
+             * <pre>
+             * dtext-string    =   *([FWS] dtext) [FWS]
+             * 
+             * obs-dtext       =   obs-NO-WS-CTL / quoted-pair
+             * </pre>
+             */
+            public Token scan() {
+                Token token = new Token();
+                token.position = position;
+                currentSpelling.setLength(0);
+                currentSemContent.setLength(0);
+
+                while (starterFWS() || isDtext() || starterQuotedPair()) {
+                    if (starterFWS()) {
+                        scanFWS();
+                    } else if (isDtext()) {
+                        addToSemanticContent();
+                        takeIt();
+                    } else if (starterQuotedPair()) {
+                        scanQuotedPair();
+                    } else {
+                        throw new RuntimeException();
+                    }
+                }
+
+                token.kind = DTEXT;
+                token.spelling = currentSpelling.toString();
+                token.collapsedWhitespace = "";
+                token.semanticContent = currentSemContent.toString();
+                return token;
+            }
+
+            private boolean isDtext() {
+                if (33 <= currentChar && currentChar <= 90)
+                    return true;
+                if (94 <= currentChar && currentChar <= 126)
+                    return true;
+                return isObsoleteNoWsCtl();
+            }
+
         }
     }
 
     enum TokenKind {
-        ATOM, QUOTED_STRING, CRLF, ERROR,
+        ATOM, QUOTED_STRING,
 
 /** '<' */
         LESS_THEN,
@@ -1010,13 +1134,19 @@ public class FieldParser {
          */
         DTEXT,
         /**
-         * The semantic content is the entire line not including the ending
-         * CRLF.
+         * Sequence of white space characters.
          * 
          * This special token can only be returned by
-         * {@link Scanner#scanUnstruct()}
+         * {@link mireka.maildata.FieldParser.Scanner.UnstructuredSubscanner}
          */
-        UNSTRUCT,
+        UNSTRUCT_LWSP,
+        /**
+         * Sequence of non-whitespace characters, e.g letters.
+         * 
+         * This special token can only be returned by
+         * {@link mireka.maildata.FieldParser.Scanner.UnstructuredSubscanner}
+         */
+        UNSTRUCT_WORD,
     }
 
     private static class Token extends AbstractToken {
