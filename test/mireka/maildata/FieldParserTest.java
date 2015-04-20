@@ -7,130 +7,22 @@ import java.text.ParseException;
 import org.junit.Test;
 
 public class FieldParserTest {
+
     @Test
-    public void testParseAddress() throws ParseException {
-        AddrSpec addrSpec = new FieldParser().parseAddrSpec("john@example.com");
+    public void testSubject() throws ParseException {
+        HeaderField field = FieldParser.parse("Subject: Hello world!");
 
-        assertEquals("john", addrSpec.localPart);
-        assertTrue(addrSpec.domain instanceof DotAtomDomainPart);
-        assertEquals("example.com",
-                ((DotAtomDomainPart) addrSpec.domain).domain);
-
+        assertEquals(UnstructuredHeader.class, field.getClass());
+        assertEquals("Subject", field.name);
+        assertEquals("subject", field.lowerCaseName);
+        assertEquals(" Hello world!", ((UnstructuredHeader) field).body);
     }
 
     @Test
-    public void testParseStrangeAddress() throws ParseException {
-        // RFC 822 example
-        AddrSpec addrSpec =
-                new FieldParser().parseAddrSpec("God@heaven. af.mil");
+    public void testFrom() throws ParseException {
+        HeaderField field = FieldParser.parse("From: john@example.com");
 
-        assertEquals("God", addrSpec.localPart);
-        assertTrue(addrSpec.domain instanceof DotAtomDomainPart);
-        assertEquals("heaven.af.mil",
-                ((DotAtomDomainPart) addrSpec.domain).domain);
-
+        assertEquals(FromHeader.class, field.getClass());
     }
 
-    @Test
-    public void testParseAddressWithDomainLiteral() throws ParseException {
-        AddrSpec addrSpec = new FieldParser().parseAddrSpec("john@[127.0.0.1]");
-
-        assertEquals("john", addrSpec.localPart);
-        assertTrue(addrSpec.domain instanceof LiteralDomainPart);
-        assertEquals("127.0.0.1", ((LiteralDomainPart) addrSpec.domain).literal);
-
-    }
-
-    @Test
-    public void testUnstructuredField() throws ParseException {
-        UnstructuredHeader header =
-                (UnstructuredHeader) new FieldParser()
-                        .parseField("Subject: Hello world!");
-
-        assertEquals("Subject", header.name);
-        assertEquals("subject", header.lowerCaseName);
-        assertEquals(" Hello world!", header.body);
-    }
-
-    @Test
-    public void testUnstructuredFieldWithEncodedWord() throws ParseException {
-        UnstructuredHeader header =
-                (UnstructuredHeader) new FieldParser()
-                        .parseField("Subject: [LIST] =?US-ASCII?Q?Hello_world!?=");
-
-        assertEquals("Subject", header.name);
-        assertEquals("subject", header.lowerCaseName);
-        assertEquals(" [LIST] Hello world!", header.body);
-    }
-
-    @Test
-    public void testUnstructuredFieldWithEncodedWordSequence()
-            throws ParseException {
-        UnstructuredHeader header =
-                (UnstructuredHeader) new FieldParser()
-                        .parseField("Subject: =?ISO-8859-1?B?SWYgeW91IGNhbiByZWFkIHRoaXMgeW8=?= "
-                                + "=?ISO-8859-2?B?dSB1bmRlcnN0YW5kIHRoZSBleGFtcGxlLg==?=");
-
-        assertEquals("Subject", header.name);
-        assertEquals("subject", header.lowerCaseName);
-        assertEquals(" If you can read this you understand the example.",
-                header.body);
-    }
-
-    @Test
-    public void testFromField() throws ParseException {
-        FromHeader header =
-                (FromHeader) new FieldParser()
-                        .parseField("From: john@example.com");
-
-        assertEquals("From", header.name);
-        assertEquals("from", header.lowerCaseName);
-        assertEquals(1, header.mailboxList.size());
-        Mailbox mailbox1 = header.mailboxList.get(0);
-        assertEquals("john", mailbox1.addrSpec.localPart);
-        assertNull(mailbox1.displayName);
-    }
-
-    @Test
-    public void testFromFieldList() throws ParseException {
-        FromHeader header =
-                (FromHeader) new FieldParser()
-                        .parseField("From: john@example.com, Jane Doe <jane@example.com>, "
-                                + ", \"Jannie Doe\" <jannie@example.com>");
-
-        assertEquals(3, header.mailboxList.size());
-        Mailbox mailbox1 = header.mailboxList.get(0);
-        Mailbox mailbox2 = header.mailboxList.get(1);
-        Mailbox mailbox3 = header.mailboxList.get(2);
-        assertEquals("john", mailbox1.addrSpec.localPart);
-        assertNull(mailbox1.displayName);
-        assertEquals("jane", mailbox2.addrSpec.localPart);
-        assertEquals("Jane Doe", mailbox2.displayName);
-        assertEquals("jannie", mailbox3.addrSpec.localPart);
-        assertEquals("Jannie Doe", mailbox3.displayName);
-    }
-
-    @Test
-    public void testFromFieldWithEncodedName() throws ParseException {
-        FromHeader header =
-                (FromHeader) new FieldParser()
-                        .parseField("From: =?US-ASCII?Q?Keith_Moore?= <moore@example.org>");
-
-        assertEquals(1, header.mailboxList.size());
-        Mailbox mailbox1 = header.mailboxList.get(0);
-        assertEquals("moore", mailbox1.addrSpec.localPart);
-        assertEquals("Keith Moore", mailbox1.displayName);
-    }
-
-    @Test
-    public void testFromFieldWithMultiEncodedName() throws ParseException {
-        FromHeader header =
-                (FromHeader) new FieldParser()
-                        .parseField("From: =?US-ASCII?Q?Keith_Mo?= =?US-ASCII?Q?ore?= <moore@example.org>");
-
-        assertEquals(1, header.mailboxList.size());
-        Mailbox mailbox1 = header.mailboxList.get(0);
-        assertEquals("moore", mailbox1.addrSpec.localPart);
-        assertEquals("Keith Moore", mailbox1.displayName);
-    }
 }

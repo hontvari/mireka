@@ -23,6 +23,6 @@ public class AddrSpec {
      *            <code>jonathan@example.org</code>.
      */
     public static AddrSpec fromString(String address) throws ParseException {
-        return new FieldParser().parseAddrSpec(address);
+        return new StructuredFieldBodyParser(address).parseAddrSpec();
     }
 }

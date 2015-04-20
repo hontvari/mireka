@@ -20,14 +20,21 @@ public class HeaderSection {
     private final List<HeaderField> fields = new ArrayList<>();
     boolean isUpdated;
 
+    /**
+     * It adds a header field based on the supplied source text to the list.
+     * This operation will be called for each header field as they are
+     * sequentially extracted from mail data. This operation does not cause the
+     * parsing of the field.
+     */
     void addExtracted(HeaderFieldText text) {
         HeaderField field = new UnparsedHeaderField();
         field.source = text;
 
         int iColon = text.unfoldedSpelling.indexOf(':');
         if (iColon != -1) {
-            field.lowerCaseName = text.unfoldedSpelling.substring(0, iColon)
-                    .trim().toLowerCase(Locale.US);
+            field.lowerCaseName =
+                    text.unfoldedSpelling.substring(0, iColon).trim()
+                            .toLowerCase(Locale.US);
         }
         fields.add(field);
     }
@@ -65,16 +72,29 @@ public class HeaderSection {
         String lowerCaseFieldName = fieldName.toLowerCase(Locale.US);
         for (int i = 0; i < fields.size(); i++) {
             if (lowerCaseFieldName.equals(fields.get(i).lowerCaseName)) {
-                HeaderField field = fields.get(i);
-                if (field instanceof UnparsedHeaderField) {
-                    field = new FieldParser()
-                            .parseField(field.source.unfoldedSpelling);
-                    fields.set(i, field);
-                }
+                HeaderField field = getParsed(i);
                 return fieldClass.cast(field);
             }
         }
         return null;
+    }
+
+    /**
+     * Returns the parsed version of the specified header field. If the field is
+     * currently in unparsed form, then it parses it and stores the parsed
+     * field, so the next time the same parsed object will be returned.
+     * 
+     * @param i
+     *            the index of the header within the {@link #fields} list.
+     */
+    private HeaderField getParsed(int i) throws ParseException {
+        HeaderField field = fields.get(i);
+        if (field instanceof UnparsedHeaderField) {
+            UnparsedHeaderField unparsedVersion = (UnparsedHeaderField) field;
+            field = FieldParser.parse(field.source.unfoldedSpelling);
+            field.source = unparsedVersion.source;
+        }
+        return field;
     }
 
     /**
