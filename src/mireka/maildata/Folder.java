@@ -7,9 +7,23 @@ import mireka.util.CharsetUtil;
 
 /**
  * Folder is able to fold a long header field. If possible it folds at higher
- * level constructs, e.g. if the filed body is comma-separated values then it
+ * level constructs, e.g. if the field body is comma-separated values then it
  * tries to fold only after commas, not within the values, even if folding is
  * allowed within values.
+ * 
+ * Terms:
+ * <ul>
+ * <li>atom - sequence of characters which must not be wrapped.
+ * <li>folding-white-space - typically one linear-white-space character. A line
+ * can be wrapped before a folding-white-space.
+ * <li>construct - a sequence of atom and folding-space tokens and lower level
+ * constructs which together form a semantically significant logical unit.
+ * </ul>
+ * 
+ * This class follows the builder pattern. The content must be added by
+ * consecutive calls to the t, fsp, begin and end operations, and when the
+ * content is complete the toString or toBytes operation must be called to
+ * return the folded string.
  * 
  * @see <a href="https://tools.ietf.org/html/rfc5322#section-2.2.3">RFC5322 Long
  *      Header Fields</a>
@@ -30,29 +44,52 @@ public class Folder {
         return this;
     }
 
+    /**
+     * Adds an atom.
+     * 
+     * If the previous token is also an atom then the supplied string is
+     * concatenated to the previous atom. The concatenation happens by appending
+     * to a StringBuilder object, so it does not cause any excessive memory
+     * usage, even for extremely long strings.
+     */
     public Folder t(String s) {
         if (s == null)
             throw new NullPointerException();
 
         Token lastToken = list.isEmpty() ? null : list.get(list.size() - 1);
         if (lastToken instanceof Atom) {
-            lastToken.text += s;
+            lastToken.text.append(s);
         } else {
             list.add(new Atom(s));
         }
         return this;
     }
 
+    /**
+     * Adds a folding-white-space atom.
+     * 
+     * @param text
+     * @return
+     */
     public Folder fsp(String text) {
         list.add(new Fws(text, currentLevel));
         return this;
     }
 
+    /**
+     * Marks the beginning of a logical construct. It must be paired with an
+     * end() call, but logical constructs can be nested.
+     */
     public Folder begin() {
         currentLevel++;
         return this;
     }
 
+    /**
+     * Marks the end of the logical construct.
+     * 
+     * @return
+     */
     public Folder end() {
         currentLevel--;
         if (currentLevel < 1)
@@ -60,17 +97,23 @@ public class Folder {
         return this;
     }
 
+    /**
+     * Returns the input in folded form as a String.
+     */
     @Override
     public String toString() {
         return new Printer().print();
     }
 
+    /**
+     * Returns the input in folded form as US-ASCII bytes.
+     */
     public byte[] toBytes() {
         return CharsetUtil.toAsciiBytes(toString());
     }
 
     private abstract class Token {
-        public String text;
+        public StringBuilder text = new StringBuilder();
 
         public int length() {
             return text.length();
@@ -80,13 +123,13 @@ public class Folder {
     private class Atom extends Token {
 
         public Atom(String text) {
-            this.text = text;
+            this.text.append(text);
         }
     }
 
     private class Fws extends Token {
         public Fws(String text, int level) {
-            this.text = text;
+            this.text.append(text);
             this.level = level;
         }
 
@@ -182,7 +225,7 @@ public class Folder {
         }
 
         private void printToken() {
-            String text = currentToken.text;
+            StringBuilder text = currentToken.text;
             buffer.append(text);
             column += text.length();
             if (lineIsOnlyWsp)
@@ -195,7 +238,7 @@ public class Folder {
             takeIt();
         }
 
-        private boolean onlyWsp(String s) {
+        private boolean onlyWsp(CharSequence s) {
             for (int i = 0; i < s.length(); i++) {
                 char ch = s.charAt(i);
                 if (ch == ' ' || ch == '\t')
