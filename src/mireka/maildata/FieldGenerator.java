@@ -11,7 +11,7 @@ import mireka.util.CharsetUtil;
 public class FieldGenerator {
     private Folder folder = new Folder();
 
-    public String writeUnstructuredHeader(UnstructuredHeader header) {
+    public String writeUnstructuredHeader(UnstructuredField header) {
         if (header.body == null)
             throw new NullPointerException();
 
@@ -48,7 +48,7 @@ public class FieldGenerator {
         folder.end();
     }
 
-    public String writeFromHeader(FromHeader header) {
+    public String writeFromHeader(FromField header) {
         if (header.mailboxList.isEmpty())
             throw new IllegalStateException("mailboxList is empty");
 

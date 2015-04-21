@@ -22,7 +22,7 @@ public class FieldGeneratorTest {
 
     @Test
     public void testUnstructured() {
-        UnstructuredHeader header = new UnstructuredHeader();
+        UnstructuredField header = new UnstructuredField();
         header.setName("Subject");
         header.body = " To Do Today";
         String result = new FieldGenerator().writeUnstructuredHeader(header);
@@ -31,7 +31,7 @@ public class FieldGeneratorTest {
 
     @Test
     public void testUnstructuredFolded() {
-        UnstructuredHeader header = new UnstructuredHeader();
+        UnstructuredField header = new UnstructuredField();
         header.setName("Subject");
         header.body =
                 " abcdefghijklmnopqrstuvwxyz abcdefghijklmnopqrstuvwxyz abcdefghijklmnopqrstuvwxyz";
@@ -43,7 +43,7 @@ public class FieldGeneratorTest {
 
     @Test
     public void testUnstructuredEncodedWord() {
-        UnstructuredHeader header = new UnstructuredHeader();
+        UnstructuredField header = new UnstructuredField();
         header.setName("Subject");
         header.body = " tyúk";
         String result = new FieldGenerator().writeUnstructuredHeader(header);
@@ -52,7 +52,7 @@ public class FieldGeneratorTest {
 
     @Test
     public void testUnstructuredFakeEncodedWord() {
-        UnstructuredHeader header = new UnstructuredHeader();
+        UnstructuredField header = new UnstructuredField();
         header.setName("Subject");
         header.body = "=?X?=";
         String result = new FieldGenerator().writeUnstructuredHeader(header);
@@ -61,7 +61,7 @@ public class FieldGeneratorTest {
 
     @Test
     public void testFrom() {
-        FromHeader h = new FromHeader();
+        FromField h = new FromField();
         mailbox.displayName = "Jon Postel";
         mailbox.addrSpec.localPart = "jon";
         mailbox.addrSpec.domain = new DotAtomDomainPart("example.net");
@@ -74,7 +74,7 @@ public class FieldGeneratorTest {
 
     @Test
     public void testFromWithoutDisplayName() {
-        FromHeader h = new FromHeader();
+        FromField h = new FromField();
         mailbox.displayName = null;
         h.mailboxList.add(mailbox);
 
@@ -85,7 +85,7 @@ public class FieldGeneratorTest {
 
     @Test
     public void testFromQuotedDisplayName() {
-        FromHeader h = new FromHeader();
+        FromField h = new FromField();
         mailbox.displayName = "Jane H. Doe";
         mailbox.addrSpec.localPart = "jane";
         h.mailboxList.add(mailbox);
@@ -97,7 +97,7 @@ public class FieldGeneratorTest {
 
     @Test
     public void testFromEncodedWordDisplayName() {
-        FromHeader h = new FromHeader();
+        FromField h = new FromField();
         mailbox.displayName = "Hontvári Levente";
         mailbox.addrSpec.localPart = "levi";
         h.mailboxList.add(mailbox);
@@ -111,7 +111,7 @@ public class FieldGeneratorTest {
 
     @Test
     public void testFromFakeEncodedWordInDisplayName() {
-        FromHeader h = new FromHeader();
+        FromField h = new FromField();
         mailbox.displayName = "=?John?= TheKing";
         h.mailboxList.add(mailbox);
 
@@ -123,7 +123,7 @@ public class FieldGeneratorTest {
 
     @Test
     public void testFromFakeEncodedWordInDisplayNameLater() {
-        FromHeader h = new FromHeader();
+        FromField h = new FromField();
         mailbox.displayName = "John =?TheKing?=";
         h.mailboxList.add(mailbox);
 

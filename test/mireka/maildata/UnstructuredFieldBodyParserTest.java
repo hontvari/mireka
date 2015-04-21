@@ -10,7 +10,7 @@ public class UnstructuredFieldBodyParserTest {
 
     @Test
     public void testSimple() throws ParseException {
-        UnstructuredHeader header =
+        UnstructuredField header =
                 new UnstructuredFieldBodyParser(" Hello world!").parse();
 
         assertEquals(" Hello world!", header.body);
@@ -18,7 +18,7 @@ public class UnstructuredFieldBodyParserTest {
 
     @Test
     public void testWithEncodedWord() throws ParseException {
-        UnstructuredHeader header =
+        UnstructuredField header =
                 new UnstructuredFieldBodyParser(
                         " [LIST] =?US-ASCII?Q?Hello_world!?=").parse();
 
@@ -27,7 +27,7 @@ public class UnstructuredFieldBodyParserTest {
 
     @Test
     public void testWithEncodedWordSequence() throws ParseException {
-        UnstructuredHeader header =
+        UnstructuredField header =
                 new UnstructuredFieldBodyParser(
                         " =?ISO-8859-1?B?SWYgeW91IGNhbiByZWFkIHRoaXMgeW8=?= "
                                 + "=?ISO-8859-2?B?dSB1bmRlcnN0YW5kIHRoZSBleGFtcGxlLg==?=")
@@ -39,7 +39,7 @@ public class UnstructuredFieldBodyParserTest {
 
     @Test
     public void testWithoutBeginningSpace() throws ParseException {
-        UnstructuredHeader header =
+        UnstructuredField header =
                 new UnstructuredFieldBodyParser("=?US-ASCII?Q?Hello_world!?=")
                         .parse();
 

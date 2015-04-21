@@ -12,17 +12,17 @@ public class FieldParserTest {
     public void testSubject() throws ParseException {
         HeaderField field = FieldParser.parse("Subject: Hello world!");
 
-        assertEquals(UnstructuredHeader.class, field.getClass());
+        assertEquals(UnstructuredField.class, field.getClass());
         assertEquals("Subject", field.name);
         assertEquals("subject", field.lowerCaseName);
-        assertEquals(" Hello world!", ((UnstructuredHeader) field).body);
+        assertEquals(" Hello world!", ((UnstructuredField) field).body);
     }
 
     @Test
     public void testFrom() throws ParseException {
         HeaderField field = FieldParser.parse("From: john@example.com");
 
-        assertEquals(FromHeader.class, field.getClass());
+        assertEquals(FromField.class, field.getClass());
     }
 
 }

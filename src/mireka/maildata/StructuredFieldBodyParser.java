@@ -39,8 +39,8 @@ public class StructuredFieldBodyParser {
      * obs-from        =   "From" *WSP ":" mailbox-list CRLF
      * </pre>
      */
-    public FromHeader parseFromField() throws ParseException {
-        FromHeader result = new FromHeader();
+    public FromField parseFromField() throws ParseException {
+        FromField result = new FromField();
 
         result.mailboxList = parseMailboxList();
         accept(EOF);

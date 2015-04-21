@@ -18,7 +18,7 @@ public class WritableMailDataTest {
         MailData simpleMail = ExampleMailData.simple();
         WritableMaildata writableMailData = new WritableMaildata(simpleMail);
         HeaderSection headers = writableMailData.getHeaders();
-        UnstructuredHeader testHeader = new UnstructuredHeader();
+        UnstructuredField testHeader = new UnstructuredField();
         testHeader.setName("X-Test");
         testHeader.body = " 1";
         headers.prepend(testHeader);

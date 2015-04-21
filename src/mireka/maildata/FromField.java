@@ -7,9 +7,9 @@ import java.util.List;
 
 import mireka.util.CharsetUtil;
 
-public class FromHeader extends HeaderField {
+public class FromField extends HeaderField {
 
-    public FromHeader() {
+    public FromField() {
         super("From");
     }
 

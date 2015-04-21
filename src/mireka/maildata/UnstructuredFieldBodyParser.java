@@ -22,10 +22,10 @@ public class UnstructuredFieldBodyParser {
         currentToken = scanner.scan();
     }
 
-    public UnstructuredHeader parse() throws ParseException {
+    public UnstructuredField parse() throws ParseException {
         String body = parseBody();
 
-        UnstructuredHeader result = new UnstructuredHeader();
+        UnstructuredField result = new UnstructuredField();
         result.body = body.toString();
         return result;
     }

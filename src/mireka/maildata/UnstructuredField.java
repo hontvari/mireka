@@ -9,7 +9,7 @@ import mireka.util.CharsetUtil;
  * @see <a href="https://tools.ietf.org/html/rfc5322#section-2.2.1">RFC 5322</a>
  *      2.2.1. Unstructured Header Field Bodies
  */
-public class UnstructuredHeader extends HeaderField {
+public class UnstructuredField extends HeaderField {
     /**
      * unfolded single line, without CRLF
      */

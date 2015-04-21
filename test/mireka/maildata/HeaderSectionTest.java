@@ -15,7 +15,7 @@ public class HeaderSectionTest {
     private HeaderFieldText from1Text;
     private HeaderFieldText from2Text;
     private HeaderFieldText subjectText;
-    private FromHeader from3Header;
+    private FromField from3Header;
 
     @Before
     public void setUp() throws ParseException {
@@ -31,7 +31,7 @@ public class HeaderSectionTest {
         mailboxAddress.addrSpec = AddrSpec
                 .fromString("placeholder@example.com");
 
-        from3Header = new FromHeader();
+        from3Header = new FromField();
         from3Header.setName("From");
         from3Header.mailboxList.add(mailboxAddress);
 
