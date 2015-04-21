@@ -42,6 +42,24 @@ public class FieldGeneratorTest {
     }
 
     @Test
+    public void testUnstructuredEncodedWord() {
+        UnstructuredHeader header = new UnstructuredHeader();
+        header.setName("Subject");
+        header.body = " tyúk";
+        String result = new FieldGenerator().writeUnstructuredHeader(header);
+        assertEquals("Subject: =?UTF-8?Q?ty=C3=BAk?=\r\n", result);
+    }
+
+    @Test
+    public void testUnstructuredFakeEncodedWord() {
+        UnstructuredHeader header = new UnstructuredHeader();
+        header.setName("Subject");
+        header.body = "=?X?=";
+        String result = new FieldGenerator().writeUnstructuredHeader(header);
+        assertEquals("Subject:=?UTF-8?Q?=3D=3FX=3F=3D?=\r\n", result);
+    }
+
+    @Test
     public void testFrom() {
         FromHeader h = new FromHeader();
         mailbox.displayName = "Jon Postel";

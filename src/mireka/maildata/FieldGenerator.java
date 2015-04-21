@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import mireka.maildata.EncodedWordGenerator.Placement;
 import mireka.util.CharsetUtil;
 
 public class FieldGenerator {
@@ -15,32 +16,33 @@ public class FieldGenerator {
             throw new NullPointerException();
 
         folder.t(header.name).t(":");
-        writeUnstructured(header.body);
+        writeUnstructuredBody(header.body);
         return folder.toString();
 
     }
 
-    private void writeUnstructured(String text) {
+    private void writeUnstructuredBody(String text) {
+        if (isAscii(text)
+                && !new Scanner(text)
+                        .testUnstructuredBodyContainsWordLikeEncodedWord())
+            writeUnstructuredUtext(text);
+        else
+            writeEncodedWords(text, Placement.TEXT);
+    }
+
+    private void writeUnstructuredUtext(String text) {
         CharScanner scanner = new CharScanner(text);
         int currentChar = scanner.scan();
-        StringBuilder buffer = new StringBuilder();
         folder.begin();
 
         while (currentChar != CharScanner.EOF) {
             if (currentChar == ' ' || currentChar == '\t') {
-                if (buffer.length() != 0) {
-                    folder.t(buffer.toString());
-                    buffer.setLength(0);
-                }
-                folder.fsp(Character.toString((char) currentChar));
+                folder.fsp((char) currentChar);
                 currentChar = scanner.scan();
             } else {
-                buffer.append((char) currentChar);
+                folder.t((char) currentChar);
                 currentChar = scanner.scan();
             }
-        }
-        if (buffer.length() != 0) {
-            folder.t(buffer.toString());
         }
 
         folder.end();
@@ -110,59 +112,45 @@ public class FieldGenerator {
     private void writeQuotedString(String text) {
         CharScanner scanner = new CharScanner(text);
         int currentChar = scanner.scan();
-        StringBuilder buffer = new StringBuilder();
         folder.begin();
-        buffer.append('"');
+        folder.t('"');
 
         while (currentChar != CharScanner.EOF) {
             if (currentChar == '"' || currentChar == '\\') {
-                buffer.append('\\').append(currentChar);
+                folder.t('\\').t((char) currentChar);
                 currentChar = scanner.scan();
             } else if (currentChar == ' ' || currentChar == '\t') {
-                if (buffer.length() != 0) {
-                    folder.t(buffer.toString());
-                    buffer.setLength(0);
-                }
-                folder.fsp(Character.toString((char) currentChar));
+                folder.fsp((char) currentChar);
                 currentChar = scanner.scan();
             } else {
-                buffer.append((char) currentChar);
+                folder.t((char) currentChar);
                 currentChar = scanner.scan();
             }
         }
-        buffer.append('"');
-        folder.t(buffer.toString());
+        folder.t('"');
         folder.end();
     }
 
     private void writeDomainLiteral(String literalAddress) {
         CharScanner scanner = new CharScanner(literalAddress);
         int currentChar = scanner.scan();
-        StringBuilder buffer = new StringBuilder();
         folder.begin();
-        buffer.append('[');
+        folder.t('[');
 
         while (currentChar != CharScanner.EOF) {
             if (currentChar == '[' || currentChar == ']' || currentChar == '\\') {
-                buffer.append('\\').append(currentChar);
+                folder.t("\\").t((char) currentChar);
                 currentChar = scanner.scan();
             } else if (currentChar == ' ' || currentChar == '\t') {
-                if (buffer.length() != 0) {
-                    folder.t(buffer.toString());
-                    buffer.setLength(0);
-                }
-                folder.fsp(Character.toString((char) currentChar));
+                folder.fsp((char) currentChar);
                 currentChar = scanner.scan();
             } else {
-                buffer.append((char) currentChar);
+                folder.t((char) currentChar);
                 currentChar = scanner.scan();
             }
         }
-        if (buffer.length() != 0) {
-            folder.t(buffer.toString());
-        }
 
-        buffer.append(']');
+        folder.t(']');
         folder.end();
     }
 
@@ -210,24 +198,16 @@ public class FieldGenerator {
     private void writeAtomPhrase(String phrase) {
         CharScanner scanner = new CharScanner(phrase);
         int currentChar = scanner.scan();
-        StringBuilder buffer = new StringBuilder();
         folder.begin();
 
         while (currentChar != CharScanner.EOF) {
             if (currentChar == ' ') {
-                if (buffer.length() != 0) {
-                    folder.t(buffer.toString());
-                    buffer.setLength(0);
-                }
                 folder.fsp(" ");
                 currentChar = scanner.scan();
             } else {
-                buffer.append((char) currentChar);
+                folder.t((char) currentChar);
                 currentChar = scanner.scan();
             }
-        }
-        if (buffer.length() != 0) {
-            folder.t(buffer.toString());
         }
 
         folder.end();
@@ -329,6 +309,60 @@ public class FieldGenerator {
             return false;
         }
 
+        public boolean testUnstructuredBodyContainsWordLikeEncodedWord() {
+            while (isLWSP() || isUtext()) {
+                if (isLWSP()) {
+                    scanLWSP();
+                } else if (isUtext()) {
+                    String word = scanUtextWord();
+                    if (isLikeEncodedWord(word))
+                        return true;
+                } else {
+                    throw new RuntimeException("Assertion failed");
+                }
+            }
+            take(isEOF());
+            return false;
+        }
+
+        private String scanUtextWord() {
+            StringBuilder result = new StringBuilder();
+            result.append((char) currentChar);
+            take(isUtext());
+            while (isUtext()) {
+                result.append((char) currentChar);
+                takeIt();
+            }
+            return result.toString();
+        }
+
+        /**
+         * Every ASCII character except LWSP
+         */
+        private boolean isUtext() {
+            if (currentChar < 0 || currentChar > 127)
+                return false;
+
+            switch (currentChar) {
+            case ' ':
+            case '\t':
+                return false;
+            default:
+                return true;
+            }
+        }
+
+        private void scanLWSP() {
+            take(isLWSP());
+            while (isLWSP()) {
+                takeIt();
+            }
+        }
+
+        private boolean isLWSP() {
+            return currentChar == ' ' || currentChar == '\t';
+        }
+
         private boolean isLikeEncodedWord(String word) {
             return word.startsWith("=?") && word.endsWith("?=");
         }
@@ -399,7 +433,7 @@ public class FieldGenerator {
         }
     }
 
-    private class CharScanner {
+    private static class CharScanner {
         private final static int EOF = -1;
         private int currentChar;
         private InputStream in;
@@ -428,5 +462,4 @@ public class FieldGenerator {
             }
         }
     }
-
 }
