@@ -66,13 +66,32 @@ public class Folder {
     }
 
     /**
+     * Adds an atom. Same as {@link #t(String)}, except the atom is supplied as
+     * a char not a String.
+     */
+    public Folder t(char ch) {
+        Token lastToken = list.isEmpty() ? null : list.get(list.size() - 1);
+        if (lastToken instanceof Atom) {
+            lastToken.text.append(ch);
+        } else {
+            list.add(new Atom(String.valueOf(ch)));
+        }
+        return this;
+    }
+
+    /**
      * Adds a folding-white-space atom.
-     * 
-     * @param text
-     * @return
      */
     public Folder fsp(String text) {
         list.add(new Fws(text, currentLevel));
+        return this;
+    }
+
+    /**
+     * Adds a folding-white-space atom.
+     */
+    public Folder fsp(char ch) {
+        list.add(new Fws(String.valueOf(ch), currentLevel));
         return this;
     }
 
