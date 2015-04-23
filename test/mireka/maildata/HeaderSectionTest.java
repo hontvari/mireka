@@ -20,16 +20,21 @@ public class HeaderSectionTest {
     @Before
     public void setUp() throws ParseException {
         from1Text = new HeaderFieldText();
-        from1Text.originalSpelling = from1Text.unfoldedSpelling = "From: John Doe <john@example.com>";
+        from1Text.originalSpelling =
+                from1Text.unfoldedSpelling =
+                        "From: John Doe <john@example.com>";
         from2Text = new HeaderFieldText();
-        from2Text.originalSpelling = from2Text.unfoldedSpelling = "From: Jane Doe <jane@example.com>";
+        from2Text.originalSpelling =
+                from2Text.unfoldedSpelling =
+                        "From: Jane Doe <jane@example.com>";
         subjectText = new HeaderFieldText();
-        subjectText.originalSpelling = subjectText.unfoldedSpelling = "Subject: Interesting email";
+        subjectText.originalSpelling =
+                subjectText.unfoldedSpelling = "Subject: Interesting email";
 
         Mailbox mailboxAddress = new Mailbox();
         mailboxAddress.displayName = "John Doe via alist.example.com";
-        mailboxAddress.addrSpec = AddrSpec
-                .fromString("placeholder@example.com");
+        mailboxAddress.addrSpec =
+                AddrSpec.fromString("placeholder@example.com");
 
         from3Header = new FromField();
         from3Header.setName("From");
@@ -46,8 +51,8 @@ public class HeaderSectionTest {
 
         headerSection.updateOrAppend(from3Header);
 
-        List<HeaderField> fields = Deencapsulation.getField(headerSection,
-                "fields");
+        List<HeaderSection.Entry> fields =
+                Deencapsulation.getField(headerSection, "fields");
         assertEquals(2, fields.size());
         assertEquals("from", fields.get(0).lowerCaseName);
         assertEquals("subject", fields.get(1).lowerCaseName);
