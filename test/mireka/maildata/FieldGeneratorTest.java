@@ -47,7 +47,7 @@ public class FieldGeneratorTest {
         header.setName("Subject");
         header.body = " tyúk";
         String result = new FieldGenerator().writeUnstructuredHeader(header);
-        assertEquals("Subject: =?UTF-8?Q?ty=C3=BAk?=\r\n", result);
+        assertEquals("Subject:=?UTF-8?Q?_ty=C3=BAk?=\r\n", result);
     }
 
     @Test

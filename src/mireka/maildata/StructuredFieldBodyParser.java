@@ -89,50 +89,76 @@ public class StructuredFieldBodyParser {
      * </pre>
      */
     private Mailbox parseMailbox() throws ParseException {
+
+        switch (lookAheadForMailboxAlternatives()) {
+        case ADDR_SPEC:
+            Mailbox result = new Mailbox();
+            result.addrSpec = parseAddrSpec();
+            return result;
+        case NAME_ADDR:
+            return parseNameAddr();
+        default:
+            throw new RuntimeException("Assertion failed");
+        }
+    }
+
+    private Mailbox parseNameAddr() throws ParseException {
         Mailbox result = new Mailbox();
 
-        if (currentToken.kind == LESS_THEN) {
-            result.addrSpec = parseAngleAddr();
-        } else if (isWord()) {
-            // Either phrase (display-name) or the local-part of addr-spec
-            // starts here.
-            // In a phrase whitespace is semantically visible, in addr-spec it
-            // is not.
-            switch (lookAheadOverDisplayNameOrLocalPartInMailbox()) {
-            case LOCAL_PART:
-                result.addrSpec = new AddrSpec();
-                result.addrSpec.localPart = parseLocalPart();
-                accept(AT);
-                result.addrSpec.domain = parseDomain();
-                break;
-            case DISPLAY_NAME:
-                result.displayName = parsePhrase();
-                result.addrSpec = parseAngleAddr();
-                break;
-            }
-        } else {
-            throw currentToken.syntaxException("mailbox");
+        if (isWord()) {
+            result.displayName = parsePhrase();
         }
+        result.addrSpec = parseAngleAddr();
+
         return result;
     }
 
     /**
-     * Determines which mailbox alternative matches the input, if it starts with
-     * a display-name or an addr-spec. It assumes that the angle-address without
-     * display-name rule is already excluded.
+     * Determines which mailbox alternative matches the input. Display-name in
+     * name-addr and local-part are ambiguous and they have different semantics
+     * regarding whitespace, so the decision cannot be easily deferred.
      * 
-     * @throws ParseException
+     * <pre>
+     * mailbox         =   name-addr / addr-spec
+     * 
+     * name-addr       =   [display-name] angle-addr
+     * 
+     * display-name    =   phrase
+     * 
+     * phrase          =   1*word / obs-phrase
+     * 
+     * obs-phrase      =   word *(word / "." / CFWS)
+     * </pre>
      */
-    private MailboxAlternative lookAheadOverDisplayNameOrLocalPartInMailbox()
+    private MailboxAlternative lookAheadForMailboxAlternatives()
             throws ParseException {
-        if (!isWord())
-            throw new IllegalStateException();
-
         MailboxAlternative result;
         Token originalToken = currentToken;
         // Assume that the current scanner is the fieldScanner itself.
         scanner = fieldScanner.getLookaheadScanner();
 
+        if (currentToken.kind == LESS_THEN) {
+            result = MailboxAlternative.NAME_ADDR;
+        } else if (isWord()) {
+            skipPhraseOrLocalPart();
+
+            if (currentToken.kind == AT) {
+                result = MailboxAlternative.ADDR_SPEC;
+            } else if (currentToken.kind == LESS_THEN) {
+                result = MailboxAlternative.NAME_ADDR;
+            } else {
+                throw currentToken.syntaxException("addr-spec or angle-addr");
+            }
+        } else {
+            throw new IllegalStateException();
+        }
+
+        scanner = fieldScanner;
+        currentToken = originalToken;
+        return result;
+    }
+
+    private void skipPhraseOrLocalPart() throws ParseException {
         parseWord();
         while (isWord() || currentToken.kind == PERIOD) {
             if (isWord()) {
@@ -143,18 +169,6 @@ public class StructuredFieldBodyParser {
                 throw new RuntimeException();
             }
         }
-
-        if (currentToken.kind == AT) {
-            result = MailboxAlternative.LOCAL_PART;
-        } else if (currentToken.kind == LESS_THEN) {
-            result = MailboxAlternative.DISPLAY_NAME;
-        } else {
-            throw currentToken.syntaxException("addr-spec or angle-addr");
-        }
-
-        scanner = fieldScanner;
-        currentToken = originalToken;
-        return result;
     }
 
     // @formatter:off (Eclipse formatter inserts spaces around hyphen in encoded-word) 
@@ -444,6 +458,161 @@ public class StructuredFieldBodyParser {
         return currentToken.kind == ATOM || currentToken.kind == QUOTED_STRING;
     }
 
+    /**
+     * For example:
+     * 
+     * <pre>
+     * obs-to          =   "To" *WSP ":" address-list CRLF
+     * </pre>
+     */
+    public AddressListField parseAddressListField() throws ParseException {
+        AddressListField result = new AddressListField();
+
+        result.addressList = parseAddressList();
+        accept(EOF);
+
+        return result;
+    }
+
+    /**
+     * <pre>
+     * obs-addr-list   =   *([CFWS] ",") address *("," [address / CFWS])
+     * </pre>
+     * 
+     * @throws ParseException
+     */
+    private List<Address> parseAddressList() throws ParseException {
+        List<Address> result = new ArrayList<>();
+        Address address;
+
+        while (currentToken.kind == COMMA) {
+            acceptIt();
+        }
+
+        address = parseAddress();
+        result.add(address);
+
+        while (currentToken.kind == COMMA) {
+            acceptIt();
+            if (starterAddress()) {
+                address = parseAddress();
+                result.add(address);
+            }
+        }
+
+        return result;
+    }
+
+    // @formatter:off (Eclipse formatter formats pre here) 
+    /**
+     * 
+     * <pre>
+     * address         =   mailbox / group
+     * mailbox         =   name-addr / addr-spec
+     * name-addr       =   [display-name] angle-addr
+     * group           =   display-name ":" [group-list] ";" [CFWS]
+     * </pre>
+     */
+    // @formatter:on 
+    private Address parseAddress() throws ParseException {
+        switch (lookAheadForAddressAlternatives()) {
+        case MAILBOX:
+            return parseMailbox();
+        case GROUP:
+            return parseGroup();
+        default:
+            throw new RuntimeException("Assertion failed");
+        }
+    }
+
+    // @formatter:off (Eclipse formatter formats pre here) 
+    /**
+     * Determines which address alternative matches the input. Display-name
+     * (both in group and name-addr) and local-part are ambiguous and they have
+     * different semantics regarding whitespace, so the decision cannot be 
+     * easily deferred.
+     * 
+     * <pre>
+     * address         =   mailbox / group
+     * mailbox         =   name-addr / addr-spec
+     * name-addr       =   [display-name] angle-addr
+     * group           =   display-name ":" [group-list] ";" [CFWS]
+     * </pre>
+     */
+    // @formatter:on 
+    private AddressAlternative lookAheadForAddressAlternatives()
+            throws ParseException {
+        AddressAlternative result;
+        Token originalToken = currentToken;
+        // Assume that the current scanner is the fieldScanner itself.
+        scanner = fieldScanner.getLookaheadScanner();
+
+        if (currentToken.kind == LESS_THEN) {
+            // mailbox -> name-addr -> angle-addr
+            result = AddressAlternative.MAILBOX;
+        } else if (isWord()) {
+            skipPhraseOrLocalPart();
+
+            switch (currentToken.kind) {
+            case COLON:
+                result = AddressAlternative.GROUP;
+                break;
+            default:
+                // LESS_THEN, AT (and COMMA, EOF, SEMICOLON if local part
+                // without @ and domain were allowed in a submission server for
+                // example.)
+                result = AddressAlternative.MAILBOX;
+            }
+        } else {
+            throw currentToken.syntaxException("address");
+        }
+
+        scanner = fieldScanner;
+        currentToken = originalToken;
+        return result;
+    }
+
+    /**
+     * <pre>
+     * group           =   display-name ":" [group-list] ";" [CFWS]
+     * </pre>
+     */
+    private Group parseGroup() throws ParseException {
+        Group group = new Group();
+        group.displayName = parsePhrase();
+        accept(COLON);
+        group.mailboxList = parseGroupList();
+        accept(SEMICOLON);
+        return group;
+    }
+
+    /**
+     * <pre>
+     * group-list      =   mailbox-list / CFWS / obs-group-list
+     * obs-group-list  =   1*([CFWS] ",") [CFWS]
+     * </pre>
+     */
+    private List<Mailbox> parseGroupList() throws ParseException {
+        List<Mailbox> result = new ArrayList<>();
+
+        while (currentToken.kind == COMMA || starterMailbox()) {
+            if (currentToken.kind == COMMA) {
+                acceptIt();
+            } else if (starterMailbox()) {
+                Mailbox mailbox = parseMailbox();
+                result.add(mailbox);
+            } else {
+                throw new RuntimeException("Assertion failed");
+            }
+        }
+
+        return result;
+    }
+
+    private boolean starterAddress() {
+        return currentToken.kind == LESS_THEN || isWord();
+    }
+
     private void acceptIt() {
         currentToken = scanner.scan();
     }
@@ -686,6 +855,10 @@ public class StructuredFieldBodyParser {
                     addToSemanticContent();
                     takeIt();
                     return COLON;
+                case ';':
+                    addToSemanticContent();
+                    takeIt();
+                    return SEMICOLON;
                 case '@':
                     addToSemanticContent();
                     takeIt();
@@ -900,6 +1073,8 @@ public class StructuredFieldBodyParser {
         RIGHT_S_BRACKET,
         /** ':' */
         COLON,
+        /** ';' */
+        SEMICOLON,
         /** '@' */
         AT,
         /** '\' */
@@ -953,6 +1128,14 @@ public class StructuredFieldBodyParser {
      * select from the alternative rules without extra lookahead.
      */
     private enum MailboxAlternative {
-        DISPLAY_NAME, LOCAL_PART
+        NAME_ADDR, ADDR_SPEC
+    }
+
+    /**
+     * Result of an lookahead in an Address nonterminal, where it is difficult
+     * to select from the alternative rules without extra lookahead.
+     */
+    private enum AddressAlternative {
+        MAILBOX, GROUP
     }
 }
