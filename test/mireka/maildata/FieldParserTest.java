@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import java.text.ParseException;
 
-import mireka.maildata.field.FromField;
+import mireka.maildata.field.From;
 import mireka.maildata.field.UnstructuredField;
 
 import org.junit.Test;
@@ -25,7 +25,7 @@ public class FieldParserTest {
     public void testFrom() throws ParseException {
         HeaderField field = FieldParser.parse("From: john@example.com");
 
-        assertEquals(FromField.class, field.getClass());
+        assertEquals(From.class, field.getClass());
     }
 
 }

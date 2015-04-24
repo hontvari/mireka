@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import java.text.ParseException;
 
 import mireka.maildata.field.AddressListField;
-import mireka.maildata.field.FromField;
+import mireka.maildata.field.From;
 import mireka.maildata.field.To;
 
 import org.junit.Test;
@@ -52,7 +52,7 @@ public class StructuredFieldBodyParserTest {
 
     @Test
     public void testFromField() throws ParseException {
-        FromField header =
+        From header =
                 new StructuredFieldBodyParser(" john@example.com")
                         .parseFromField();
 
@@ -64,7 +64,7 @@ public class StructuredFieldBodyParserTest {
 
     @Test
     public void testFromFieldList() throws ParseException {
-        FromField header =
+        From header =
                 new StructuredFieldBodyParser(
                         " john@example.com, Jane Doe <jane@example.com>, "
                                 + ", \"Jannie Doe\" <jannie@example.com>")
@@ -84,7 +84,7 @@ public class StructuredFieldBodyParserTest {
 
     @Test
     public void testFromFieldWithEncodedName() throws ParseException {
-        FromField header =
+        From header =
                 new StructuredFieldBodyParser(
                         " =?US-ASCII?Q?Keith_Moore?= <moore@example.org>")
                         .parseFromField();
@@ -97,7 +97,7 @@ public class StructuredFieldBodyParserTest {
 
     @Test
     public void testFromFieldWithMultiEncodedName() throws ParseException {
-        FromField header =
+        From header =
                 new StructuredFieldBodyParser(
                         " =?US-ASCII?Q?Keith_Mo?= =?US-ASCII?Q?ore?= <moore@example.org>")
                         .parseFromField();

@@ -1,7 +1,7 @@
 package mireka.maildata;
 
 import static org.junit.Assert.*;
-import mireka.maildata.field.FromField;
+import mireka.maildata.field.From;
 import mireka.maildata.field.To;
 import mireka.maildata.field.UnstructuredField;
 
@@ -75,7 +75,7 @@ public class FieldGeneratorTest {
 
     @Test
     public void testFrom() {
-        FromField h = new FromField();
+        From h = new From();
         john.displayName = "Jon Postel";
         john.addrSpec.localPart = "jon";
         john.addrSpec.domain = new DotAtomDomainPart("example.net");
@@ -88,7 +88,7 @@ public class FieldGeneratorTest {
 
     @Test
     public void testFromWithoutDisplayName() {
-        FromField h = new FromField();
+        From h = new From();
         john.displayName = null;
         h.mailboxList.add(john);
 
@@ -99,7 +99,7 @@ public class FieldGeneratorTest {
 
     @Test
     public void testFromQuotedDisplayName() {
-        FromField h = new FromField();
+        From h = new From();
         john.displayName = "Jane H. Doe";
         john.addrSpec.localPart = "jane";
         h.mailboxList.add(john);
@@ -111,7 +111,7 @@ public class FieldGeneratorTest {
 
     @Test
     public void testFromEncodedWordDisplayName() {
-        FromField h = new FromField();
+        From h = new From();
         john.displayName = "Hontvári Levente";
         john.addrSpec.localPart = "levi";
         h.mailboxList.add(john);
@@ -125,7 +125,7 @@ public class FieldGeneratorTest {
 
     @Test
     public void testFromFakeEncodedWordInDisplayName() {
-        FromField h = new FromField();
+        From h = new From();
         john.displayName = "=?John?= TheKing";
         h.mailboxList.add(john);
 
@@ -137,7 +137,7 @@ public class FieldGeneratorTest {
 
     @Test
     public void testFromFakeEncodedWordInDisplayNameLater() {
-        FromField h = new FromField();
+        From h = new From();
         john.displayName = "John =?TheKing?=";
         h.mailboxList.add(john);
 

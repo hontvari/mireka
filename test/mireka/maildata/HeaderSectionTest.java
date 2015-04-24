@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import java.text.ParseException;
 import java.util.List;
 
-import mireka.maildata.field.FromField;
+import mireka.maildata.field.From;
 import mockit.Deencapsulation;
 
 import org.junit.Before;
@@ -16,7 +16,7 @@ public class HeaderSectionTest {
     private HeaderFieldText from1Text;
     private HeaderFieldText from2Text;
     private HeaderFieldText subjectText;
-    private FromField from3Header;
+    private From from3Header;
 
     @Before
     public void setUp() throws ParseException {
@@ -37,7 +37,7 @@ public class HeaderSectionTest {
         mailboxAddress.addrSpec =
                 AddrSpec.fromString("placeholder@example.com");
 
-        from3Header = new FromField();
+        from3Header = new From();
         from3Header.setName("From");
         from3Header.mailboxList.add(mailboxAddress);
 

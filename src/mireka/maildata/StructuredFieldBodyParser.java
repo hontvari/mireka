@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mireka.maildata.field.AddressListField;
-import mireka.maildata.field.FromField;
+import mireka.maildata.field.From;
 import mireka.util.CharsetUtil;
 
 import org.apache.james.mime4j.dom.FieldParser;
@@ -41,8 +41,8 @@ public class StructuredFieldBodyParser {
      * obs-from        =   "From" *WSP ":" mailbox-list CRLF
      * </pre>
      */
-    public FromField parseFromField() throws ParseException {
-        FromField result = new FromField();
+    public From parseFromField() throws ParseException {
+        From result = new From();
 
         result.mailboxList = parseMailboxList();
         accept(EOF);

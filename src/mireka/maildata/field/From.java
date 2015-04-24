@@ -10,9 +10,9 @@ import mireka.maildata.HeaderField;
 import mireka.maildata.Mailbox;
 import mireka.util.CharsetUtil;
 
-public class FromField extends HeaderField {
+public class From extends HeaderField {
 
-    public FromField() {
+    public From() {
         super("From");
     }
 
