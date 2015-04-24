@@ -18,6 +18,9 @@ import org.subethamail.smtp.util.TextUtils;
  * @see <a href="https://tools.ietf.org/html/rfc2047">RFC 2047 - MIME
  *      (Multipurpose Internet Mail Extensions) Part Three: Message Header
  *      Extensions for Non-ASCII Text</a>
+ * @see <a href="https://tools.ietf.org/html/rfc2231">RFC 2231 - MIME Parameter
+ *      Value and Encoded Word Extensions: Character Sets, Languages, and
+ *      Continuations
  */
 public class EncodedWordParser {
     private Token currentToken;
@@ -30,11 +33,37 @@ public class EncodedWordParser {
         return parse();
     }
 
+    /**
+     * <pre>
+     * encoded-word = "=?" charset "?" encoding "?" encoded-text "?="
+     * charset = token
+     * encoding = token
+     * token = 1*<Any CHAR except SPACE, CTLs, and especials>
+     * especials = "(" / ")" / "<" / ">" / "@" / "," / ";" / ":" / "
+     *             <"> / "/" / "[" / "]" / "?" / "." / "="
+     * encoded-text = 1*<Any printable ASCII character other than "?"
+     *                   or SPACE>
+     *                ; (but see "Use of encoded-words in message
+     *                ; headers", section 5)
+     * </pre>
+     * 
+     * Note: RFC 2231 makes possible to add a language tag after the charset,
+     * using a '*' character as separator. The '*' has been character already
+     * been permitted in the charset nonterminal, it was not a special
+     * character. This would make parsing difficult. The charset and the
+     * encoding would require different scanners. Instead of this, we can simply
+     * truncate the charset content after the '*'.
+     * 
+     * <pre>
+     * encoded-word := "=?" charset ["*" language] "?" encoding "?" encoded-text "?="
+     * </pre>
+     */
     private String parse() throws ParseException {
         currentToken = scanner.scan();
         accept(EQUAL);
         accept(QUESTION);
         String charset = currentToken.spelling;
+        charset = trimLanguageFromCharset(charset);
         accept(ATOKEN);
         accept(QUESTION);
         String encoding = currentToken.spelling;
@@ -55,6 +84,14 @@ public class EncodedWordParser {
         default:
             return encodedText;
         }
+    }
+
+    private String trimLanguageFromCharset(String charset) {
+        int iAsterisk = charset.indexOf('*');
+        if (iAsterisk == -1)
+            return charset;
+        else
+            return charset.substring(0, iAsterisk);
     }
 
     public static boolean isEncodedWord(String src) {

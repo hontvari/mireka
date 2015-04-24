@@ -12,5 +12,6 @@
  * @see <a href="https://tools.ietf.org/html/rfc5322">RFC 5322 - Internet Message Format</a>
  * @see <a href="https://tools.ietf.org/html/rfc2047">RFC 2047 - MIME (Multipurpose Internet Mail Extensions) Part Three: Message Header Extensions for Non-ASCII Text</a>
  * @see <a href="https://tools.ietf.org/html/rfc6854">RFC 6854 - Update to Internet Message Format to Allow Group Syntax in the "From:" and "Sender:" Header Fields</a>
+ * @see <a href="https://tools.ietf.org/html/rfc2231">RFC 2231 - MIME Parameter Value and Encoded Word Extensions: Character Sets, Languages, and Continuations
  */
 package mireka.maildata;

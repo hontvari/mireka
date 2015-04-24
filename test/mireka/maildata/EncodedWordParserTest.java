@@ -24,4 +24,12 @@ public class EncodedWordParserTest {
         assertEquals("Keld Jørn Simonsen", result);
     }
 
+    @Test
+    public void testLanguageTag() throws ParseException {
+        String result =
+                new EncodedWordParser()
+                        .parse("=?ISO-8859-1*NO?Q?Keld_J=F8rn_Simonsen?=");
+        assertEquals("Keld Jørn Simonsen", result);
+    }
+
 }
