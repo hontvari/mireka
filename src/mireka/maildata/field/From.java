@@ -1,26 +1,13 @@
 package mireka.maildata.field;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
-import mireka.maildata.FieldGenerator;
-import mireka.maildata.HeaderField;
-import mireka.maildata.Mailbox;
-import mireka.util.CharsetUtil;
-
-public class From extends HeaderField {
+/**
+ * Note: RFC 6854 changes the grammar rules for this field to enable usage of
+ * groups, especially a single empty group.
+ */
+public class From extends AddressListField {
 
     public From() {
         super("From");
-    }
-
-    public List<Mailbox> mailboxList = new ArrayList<>();
-
-    @Override
-    protected void writeGenerated(OutputStream out) throws IOException {
-        String result = new FieldGenerator().writeFromField(this);
-        out.write(CharsetUtil.toAsciiBytes(result));
     }
 }

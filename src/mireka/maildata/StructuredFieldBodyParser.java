@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mireka.maildata.field.AddressListField;
-import mireka.maildata.field.From;
 import mireka.util.CharsetUtil;
 
 import org.apache.james.mime4j.dom.FieldParser;
@@ -34,47 +33,6 @@ public class StructuredFieldBodyParser {
     public StructuredFieldBodyParser(String body) {
         this.scanner = this.fieldScanner = new FieldScanner(body);
         currentToken = scanner.scan();
-    }
-
-    /**
-     * <pre>
-     * obs-from        =   "From" *WSP ":" mailbox-list CRLF
-     * </pre>
-     */
-    public From parseFromField() throws ParseException {
-        From result = new From();
-
-        result.mailboxList = parseMailboxList();
-        accept(EOF);
-
-        return result;
-    }
-
-    /**
-     * <pre>
-     * obs-mbox-list   =   *([CFWS] ",") mailbox *("," [mailbox / CFWS])
-     * </pre>
-     */
-    private List<Mailbox> parseMailboxList() throws ParseException {
-        List<Mailbox> result = new ArrayList<>();
-        Mailbox mailbox;
-
-        while (currentToken.kind == COMMA) {
-            acceptIt();
-        }
-
-        mailbox = parseMailbox();
-        result.add(mailbox);
-
-        while (currentToken.kind == COMMA) {
-            acceptIt();
-            if (starterMailbox()) {
-                mailbox = parseMailbox();
-                result.add(mailbox);
-            }
-        }
-
-        return result;
     }
 
     /**
@@ -462,7 +420,8 @@ public class StructuredFieldBodyParser {
 
     /**
      * Parses a To, Cc, Reply-To and other address-list fields and stores the
-     * result into the supplied field object.
+     * result into the supplied field object. Since RFC 6854 the From field also
+     * has the same grammar.
      * 
      * For example, grammar of the To field:
      * 

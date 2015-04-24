@@ -7,6 +7,7 @@ import java.text.ParseException;
 import mireka.maildata.FieldHeaderParser.FieldMap;
 import mireka.maildata.field.AddressListField;
 import mireka.maildata.field.Cc;
+import mireka.maildata.field.From;
 import mireka.maildata.field.ReplyTo;
 import mireka.maildata.field.ResentCc;
 import mireka.maildata.field.ResentTo;
@@ -23,10 +24,13 @@ public class FieldParser {
 
         switch (lowerCaseName) {
         case "from":
-            result = new StructuredFieldBodyParser(body).parseFromField();
+            AddressListField addressListField = new From();
+            new StructuredFieldBodyParser(body)
+                    .parseAddressListFieldInto(addressListField);
+            result = addressListField;
             break;
         case "reply-to":
-            AddressListField addressListField = new ReplyTo();
+            addressListField = new ReplyTo();
             new StructuredFieldBodyParser(body)
                     .parseAddressListFieldInto(addressListField);
             result = addressListField;

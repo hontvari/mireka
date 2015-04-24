@@ -79,9 +79,9 @@ public class FieldGeneratorTest {
         john.displayName = "Jon Postel";
         john.addrSpec.localPart = "jon";
         john.addrSpec.domain = new DotAtomDomainPart("example.net");
-        h.mailboxList.add(john);
+        h.addressList.add(john);
 
-        String result = new FieldGenerator().writeFromField(h);
+        String result = new FieldGenerator().writeAddressListField(h);
 
         assertEquals("From: Jon Postel <jon@example.net>\r\n", result);
     }
@@ -90,9 +90,9 @@ public class FieldGeneratorTest {
     public void testFromWithoutDisplayName() {
         From h = new From();
         john.displayName = null;
-        h.mailboxList.add(john);
+        h.addressList.add(john);
 
-        String result = new FieldGenerator().writeFromField(h);
+        String result = new FieldGenerator().writeAddressListField(h);
 
         assertEquals("From: john@example.com\r\n", result);
     }
@@ -102,9 +102,9 @@ public class FieldGeneratorTest {
         From h = new From();
         john.displayName = "Jane H. Doe";
         john.addrSpec.localPart = "jane";
-        h.mailboxList.add(john);
+        h.addressList.add(john);
 
-        String result = new FieldGenerator().writeFromField(h);
+        String result = new FieldGenerator().writeAddressListField(h);
 
         assertEquals("From: \"Jane H. Doe\" <jane@example.com>\r\n", result);
     }
@@ -114,9 +114,9 @@ public class FieldGeneratorTest {
         From h = new From();
         john.displayName = "Hontvári Levente";
         john.addrSpec.localPart = "levi";
-        h.mailboxList.add(john);
+        h.addressList.add(john);
 
-        String result = new FieldGenerator().writeFromField(h);
+        String result = new FieldGenerator().writeAddressListField(h);
 
         assertEquals(
                 "From: =?UTF-8?Q?Hontv=C3=A1ri_Levente?= <levi@example.com>\r\n",
@@ -127,9 +127,9 @@ public class FieldGeneratorTest {
     public void testFromFakeEncodedWordInDisplayName() {
         From h = new From();
         john.displayName = "=?John?= TheKing";
-        h.mailboxList.add(john);
+        h.addressList.add(john);
 
-        String result = new FieldGenerator().writeFromField(h);
+        String result = new FieldGenerator().writeAddressListField(h);
 
         assertEquals("From: \"=?John?= TheKing\" <john@example.com>\r\n",
                 result);
@@ -139,9 +139,9 @@ public class FieldGeneratorTest {
     public void testFromFakeEncodedWordInDisplayNameLater() {
         From h = new From();
         john.displayName = "John =?TheKing?=";
-        h.mailboxList.add(john);
+        h.addressList.add(john);
 
-        String result = new FieldGenerator().writeFromField(h);
+        String result = new FieldGenerator().writeAddressListField(h);
 
         assertEquals("From: \"John =?TheKing?=\" <john@example.com>\r\n",
                 result);

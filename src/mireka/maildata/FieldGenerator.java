@@ -7,7 +7,6 @@ import java.util.List;
 
 import mireka.maildata.EncodedWordGenerator.Placement;
 import mireka.maildata.field.AddressListField;
-import mireka.maildata.field.From;
 import mireka.maildata.field.UnstructuredField;
 import mireka.util.CharsetUtil;
 
@@ -49,15 +48,6 @@ public class FieldGenerator {
         }
 
         folder.end();
-    }
-
-    public String writeFromField(From field) {
-        if (field.mailboxList.isEmpty())
-            throw new IllegalStateException("mailboxList is empty");
-
-        folder.t("From:").fsp(" ");
-        writeMailboxList(field.mailboxList);
-        return folder.toString();
     }
 
     private void writeMailboxList(List<Mailbox> mailboxList) {

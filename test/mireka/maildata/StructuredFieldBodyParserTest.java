@@ -52,28 +52,33 @@ public class StructuredFieldBodyParserTest {
 
     @Test
     public void testFromField() throws ParseException {
-        From header =
-                new StructuredFieldBodyParser(" john@example.com")
-                        .parseFromField();
+        From field = new From();
+        new StructuredFieldBodyParser(" john@example.com")
+                .parseAddressListFieldInto(field);
 
-        assertEquals(1, header.mailboxList.size());
-        Mailbox mailbox1 = header.mailboxList.get(0);
-        assertEquals("john", mailbox1.addrSpec.localPart);
-        assertNull(mailbox1.displayName);
+        assertEquals(1, field.addressList.size());
+        Address address = field.addressList.get(0);
+        assertEquals(Mailbox.class, address.getClass());
+        Mailbox mailbox = (Mailbox) address;
+        assertEquals("john", mailbox.addrSpec.localPart);
+        assertNull(mailbox.displayName);
     }
 
     @Test
     public void testFromFieldList() throws ParseException {
-        From header =
-                new StructuredFieldBodyParser(
-                        " john@example.com, Jane Doe <jane@example.com>, "
-                                + ", \"Jannie Doe\" <jannie@example.com>")
-                        .parseFromField();
+        From field = new From();
+        new StructuredFieldBodyParser(
+                " john@example.com, Jane Doe <jane@example.com>, "
+                        + ", \"Jannie Doe\" <jannie@example.com>")
+                .parseAddressListFieldInto(field);
 
-        assertEquals(3, header.mailboxList.size());
-        Mailbox mailbox1 = header.mailboxList.get(0);
-        Mailbox mailbox2 = header.mailboxList.get(1);
-        Mailbox mailbox3 = header.mailboxList.get(2);
+        assertEquals(3, field.addressList.size());
+        assertEquals(Mailbox.class, field.addressList.get(0).getClass());
+        assertEquals(Mailbox.class, field.addressList.get(1).getClass());
+        assertEquals(Mailbox.class, field.addressList.get(2).getClass());
+        Mailbox mailbox1 = (Mailbox) field.addressList.get(0);
+        Mailbox mailbox2 = (Mailbox) field.addressList.get(1);
+        Mailbox mailbox3 = (Mailbox) field.addressList.get(2);
         assertEquals("john", mailbox1.addrSpec.localPart);
         assertNull(mailbox1.displayName);
         assertEquals("jane", mailbox2.addrSpec.localPart);
@@ -84,28 +89,49 @@ public class StructuredFieldBodyParserTest {
 
     @Test
     public void testFromFieldWithEncodedName() throws ParseException {
-        From header =
-                new StructuredFieldBodyParser(
-                        " =?US-ASCII?Q?Keith_Moore?= <moore@example.org>")
-                        .parseFromField();
+        From field = new From();
+        new StructuredFieldBodyParser(
+                " =?US-ASCII?Q?Keith_Moore?= <moore@example.org>")
+                .parseAddressListFieldInto(field);
 
-        assertEquals(1, header.mailboxList.size());
-        Mailbox mailbox1 = header.mailboxList.get(0);
+        assertEquals(1, field.addressList.size());
+        assertEquals(Mailbox.class, field.addressList.get(0).getClass());
+        Mailbox mailbox1 = (Mailbox) field.addressList.get(0);
         assertEquals("moore", mailbox1.addrSpec.localPart);
         assertEquals("Keith Moore", mailbox1.displayName);
     }
 
     @Test
     public void testFromFieldWithMultiEncodedName() throws ParseException {
-        From header =
-                new StructuredFieldBodyParser(
-                        " =?US-ASCII?Q?Keith_Mo?= =?US-ASCII?Q?ore?= <moore@example.org>")
-                        .parseFromField();
+        From field = new From();
+        new StructuredFieldBodyParser(
+                " =?US-ASCII?Q?Keith_Mo?= =?US-ASCII?Q?ore?= <moore@example.org>")
+                .parseAddressListFieldInto(field);
 
-        assertEquals(1, header.mailboxList.size());
-        Mailbox mailbox1 = header.mailboxList.get(0);
+        assertEquals(1, field.addressList.size());
+        assertEquals(Mailbox.class, field.addressList.get(0).getClass());
+        Mailbox mailbox1 = (Mailbox) field.addressList.get(0);
         assertEquals("moore", mailbox1.addrSpec.localPart);
         assertEquals("Keith Moore", mailbox1.displayName);
+    }
+
+    @Test
+    public void testToFieldWithNoSpaceAfterGroup() throws ParseException {
+        String addressList = "Nightly Monitor Robot:;";
+        AddressListField field = new From();
+        new StructuredFieldBodyParser(addressList)
+                .parseAddressListFieldInto(field);
+
+        Address address;
+        Group group;
+
+        assertEquals(1, field.addressList.size());
+
+        address = field.addressList.get(0);
+        assertEquals(Group.class, address.getClass());
+        group = (Group) address;
+        assertEquals("Nightly Monitor Robot", group.displayName);
+        assertEquals(0, group.mailboxList.size());
     }
 
     @Test
@@ -243,6 +269,6 @@ public class StructuredFieldBodyParserTest {
         group = (Group) address;
         assertEquals("Cruisers", group.displayName);
         assertEquals(2, group.mailboxList.size());
-
     }
+
 }

@@ -39,7 +39,7 @@ public class HeaderSectionTest {
 
         from3Header = new From();
         from3Header.setName("From");
-        from3Header.mailboxList.add(mailboxAddress);
+        from3Header.addressList.add(mailboxAddress);
 
     }
 
