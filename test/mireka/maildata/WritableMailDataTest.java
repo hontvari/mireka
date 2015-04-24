@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import mireka.ExampleMailData;
 import mireka.MailData;
+import mireka.maildata.field.UnstructuredField;
 
 import org.junit.Test;
 

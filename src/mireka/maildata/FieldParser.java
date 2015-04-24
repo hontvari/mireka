@@ -5,6 +5,12 @@ import static mireka.util.CharsetUtil.*;
 import java.text.ParseException;
 
 import mireka.maildata.FieldHeaderParser.FieldMap;
+import mireka.maildata.field.AddressListField;
+import mireka.maildata.field.Cc;
+import mireka.maildata.field.ReplyTo;
+import mireka.maildata.field.ResentCc;
+import mireka.maildata.field.ResentTo;
+import mireka.maildata.field.To;
 
 public class FieldParser {
 
@@ -20,12 +26,30 @@ public class FieldParser {
             result = new StructuredFieldBodyParser(body).parseFromField();
             break;
         case "reply-to":
+            AddressListField addressListField = new ReplyTo();
+            new StructuredFieldBodyParser(body)
+                    .parseAddressListFieldInto(addressListField);
+            result = addressListField;
+            break;
         case "to":
+            result = addressListField = new To();
+            new StructuredFieldBodyParser(body)
+                    .parseAddressListFieldInto(addressListField);
+            break;
         case "cc":
+            result = addressListField = new Cc();
+            new StructuredFieldBodyParser(body)
+                    .parseAddressListFieldInto(addressListField);
+            break;
         case "resent-to":
+            result = addressListField = new ResentTo();
+            new StructuredFieldBodyParser(body)
+                    .parseAddressListFieldInto(addressListField);
+            break;
         case "resent-cc":
-            result =
-                    new StructuredFieldBodyParser(body).parseAddressListField();
+            result = addressListField = new ResentCc();
+            new StructuredFieldBodyParser(body)
+                    .parseAddressListFieldInto(addressListField);
             break;
         default:
             result = new UnstructuredFieldBodyParser(body).parse();

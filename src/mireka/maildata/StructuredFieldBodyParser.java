@@ -7,6 +7,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import mireka.maildata.field.AddressListField;
+import mireka.maildata.field.FromField;
 import mireka.util.CharsetUtil;
 
 import org.apache.james.mime4j.dom.FieldParser;
@@ -459,19 +461,22 @@ public class StructuredFieldBodyParser {
     }
 
     /**
-     * For example:
+     * Parses a To, Cc, Reply-To and other address-list fields and stores the
+     * result into the supplied field object.
+     * 
+     * For example, grammar of the To field:
      * 
      * <pre>
      * obs-to          =   "To" *WSP ":" address-list CRLF
+     * obs-addr-list   =   *([CFWS] ",") address *("," [address / CFWS])
      * </pre>
      */
-    public AddressListField parseAddressListField() throws ParseException {
-        AddressListField result = new AddressListField();
+    public void parseAddressListFieldInto(AddressListField field)
+            throws ParseException {
 
-        result.addressList = parseAddressList();
+        field.addressList = parseAddressList();
         accept(EOF);
 
-        return result;
     }
 
     /**

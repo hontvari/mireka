@@ -5,6 +5,7 @@ import static mireka.maildata.UnstructuredFieldBodyParser.TokenKind.*;
 import java.io.ByteArrayInputStream;
 import java.text.ParseException;
 
+import mireka.maildata.field.UnstructuredField;
 import mireka.util.CharsetUtil;
 
 import org.slf4j.Logger;

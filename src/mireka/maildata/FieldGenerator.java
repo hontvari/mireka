@@ -6,17 +6,20 @@ import java.io.InputStream;
 import java.util.List;
 
 import mireka.maildata.EncodedWordGenerator.Placement;
+import mireka.maildata.field.AddressListField;
+import mireka.maildata.field.FromField;
+import mireka.maildata.field.UnstructuredField;
 import mireka.util.CharsetUtil;
 
 public class FieldGenerator {
     private Folder folder = new Folder();
 
-    public String writeUnstructuredHeader(UnstructuredField header) {
-        if (header.body == null)
+    public String writeUnstructuredHeader(UnstructuredField field) {
+        if (field.body == null)
             throw new NullPointerException();
 
-        folder.t(header.name).t(":");
-        writeUnstructuredBody(header.body);
+        folder.t(field.name).t(":");
+        writeUnstructuredBody(field.body);
         return folder.toString();
 
     }
@@ -48,19 +51,16 @@ public class FieldGenerator {
         folder.end();
     }
 
-    public String writeFromHeader(FromField header) {
-        if (header.mailboxList.isEmpty())
+    public String writeFromField(FromField field) {
+        if (field.mailboxList.isEmpty())
             throw new IllegalStateException("mailboxList is empty");
 
         folder.t("From:").fsp(" ");
-        writeMailboxList(header.mailboxList);
+        writeMailboxList(field.mailboxList);
         return folder.toString();
     }
 
     private void writeMailboxList(List<Mailbox> mailboxList) {
-        if (mailboxList.isEmpty())
-            return;
-
         writeMailbox(mailboxList.get(0));
         for (int i = 1; i < mailboxList.size(); i++) {
             folder.t(",");
@@ -219,6 +219,61 @@ public class FieldGenerator {
 
     private boolean isDotAtom(String s) {
         return new Scanner(s).testDotAtom();
+    }
+
+    public String writeAddressListField(AddressListField field) {
+        if (field.addressList.isEmpty())
+            throw new IllegalStateException("addressList is empty");
+
+        folder.t(field.name).t(':').fsp(' ');
+        writeAddressList(field.addressList);
+        return folder.toString();
+    }
+
+    private void writeAddressList(List<Address> addressList) {
+        if (addressList.isEmpty())
+            return;
+
+        writeAddress(addressList.get(0));
+        for (int i = 1; i < addressList.size(); i++) {
+            folder.t(",");
+            folder.fsp(" ");
+            writeAddress(addressList.get(i));
+        }
+    }
+
+    private void writeAddress(Address address) {
+        if (address instanceof Mailbox) {
+            writeMailbox((Mailbox) address);
+        } else if (address instanceof Group) {
+            writeGroup((Group) address);
+        } else {
+            throw new RuntimeException("Assertion failed");
+        }
+    }
+
+    private void writeGroup(Group group) {
+        folder.begin();
+        writePhrase(group.displayName);
+        folder.t(':').fsp(' ');
+        writeGroupList(group.mailboxList);
+        folder.t(';');
+        folder.end();
+    }
+
+    /**
+     * <pre>
+     * group           =   display-name ":" [group-list] ";" [CFWS]
+     * group-list      =   mailbox-list / CFWS / obs-group-list
+     * </pre>
+     */
+    private void writeGroupList(List<Mailbox> mailboxList) {
+        if (mailboxList.isEmpty()) {
+            // a CFWS has been already written after the group ':' character for
+            // formatting purposes, so nothing to do here
+        } else {
+            writeMailboxList(mailboxList);
+        }
     }
 
     private class Scanner {

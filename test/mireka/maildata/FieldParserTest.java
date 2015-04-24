@@ -4,6 +4,9 @@ import static org.junit.Assert.*;
 
 import java.text.ParseException;
 
+import mireka.maildata.field.FromField;
+import mireka.maildata.field.UnstructuredField;
+
 import org.junit.Test;
 
 public class FieldParserTest {

@@ -1,8 +1,10 @@
-package mireka.maildata;
+package mireka.maildata.field;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
+import mireka.maildata.FieldGenerator;
+import mireka.maildata.HeaderField;
 import mireka.util.CharsetUtil;
 
 /**

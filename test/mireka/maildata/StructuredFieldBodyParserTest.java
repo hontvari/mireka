@@ -4,6 +4,10 @@ import static org.junit.Assert.*;
 
 import java.text.ParseException;
 
+import mireka.maildata.field.AddressListField;
+import mireka.maildata.field.FromField;
+import mireka.maildata.field.To;
+
 import org.junit.Test;
 
 public class StructuredFieldBodyParserTest {
@@ -106,9 +110,9 @@ public class StructuredFieldBodyParserTest {
 
     @Test
     public void testToField() throws ParseException {
-        AddressListField field =
-                new StructuredFieldBodyParser(" john@example.com")
-                        .parseAddressListField();
+        AddressListField field = new To();
+        new StructuredFieldBodyParser(" john@example.com")
+                .parseAddressListFieldInto(field);
 
         assertEquals(1, field.addressList.size());
         assertEquals(Mailbox.class, field.addressList.get(0).getClass());
@@ -119,9 +123,9 @@ public class StructuredFieldBodyParserTest {
 
     @Test
     public void testToFieldWithGroup() throws ParseException {
-        AddressListField field =
-                new StructuredFieldBodyParser(" Owners: john@example.com;")
-                        .parseAddressListField();
+        AddressListField field = new To();
+        new StructuredFieldBodyParser(" Owners: john@example.com;")
+                .parseAddressListFieldInto(field);
 
         assertEquals(1, field.addressList.size());
         assertEquals(Group.class, field.addressList.get(0).getClass());
@@ -135,10 +139,10 @@ public class StructuredFieldBodyParserTest {
 
     @Test
     public void testToFieldWithGroupWith2Mailbox() throws ParseException {
-        AddressListField field =
-                new StructuredFieldBodyParser(
-                        " Owners: john@example.com, Jane Doe <jane@example.com>;")
-                        .parseAddressListField();
+        AddressListField field = new To();
+        new StructuredFieldBodyParser(
+                " Owners: john@example.com, Jane Doe <jane@example.com>;")
+                .parseAddressListFieldInto(field);
 
         assertEquals(1, field.addressList.size());
         assertEquals(Group.class, field.addressList.get(0).getClass());
@@ -155,10 +159,10 @@ public class StructuredFieldBodyParserTest {
 
     @Test
     public void testToFieldWithGroupAndMailbox() throws ParseException {
-        AddressListField field =
-                new StructuredFieldBodyParser(
-                        " Owners: john@example.com;, Jane Doe <jane@example.com>")
-                        .parseAddressListField();
+        AddressListField field = new To();
+        new StructuredFieldBodyParser(
+                " Owners: john@example.com;, Jane Doe <jane@example.com>")
+                .parseAddressListFieldInto(field);
 
         Address address;
         Mailbox mailbox;
@@ -194,9 +198,9 @@ public class StructuredFieldBodyParserTest {
                         + "           Cheapie@Discount-Liquors;,"
                         + "  Cruisers:  Port@Portugal, Jones@SEA;,"
                         + "    Another@Somewhere.SomeOrg";
-        AddressListField field =
-                new StructuredFieldBodyParser(addressList)
-                        .parseAddressListField();
+        AddressListField field = new To();
+        new StructuredFieldBodyParser(addressList)
+                .parseAddressListFieldInto(field);
 
         Address address;
         Mailbox mailbox;

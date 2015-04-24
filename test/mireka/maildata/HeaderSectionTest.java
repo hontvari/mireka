@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.text.ParseException;
 import java.util.List;
 
+import mireka.maildata.field.FromField;
 import mockit.Deencapsulation;
 
 import org.junit.Before;
