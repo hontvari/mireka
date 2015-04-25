@@ -481,16 +481,12 @@ public class FieldGenerator {
     private static class CharScanner {
         private final static int EOF = -1;
         private int currentChar;
-        private InputStream in;
+        private ByteArrayInputStream in;
 
         public CharScanner(String source) {
             this.in =
                     new ByteArrayInputStream(CharsetUtil.toAsciiBytes(source));
-            try {
-                currentChar = in.read();
-            } catch (IOException e) {
-                throw new RuntimeException("Unexpected exception", e);
-            }
+            currentChar = in.read();
         }
 
         public int scan() {
@@ -500,11 +496,7 @@ public class FieldGenerator {
         }
 
         private void takeIt() {
-            try {
-                currentChar = in.read();
-            } catch (IOException e) {
-                throw new RuntimeException("Unexpected exception", e);
-            }
+            currentChar = in.read();
         }
     }
 }
