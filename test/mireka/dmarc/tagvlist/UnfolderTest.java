@@ -1,8 +1,10 @@
-package mireka.dmarc;
+package mireka.dmarc.tagvlist;
 
 import static org.junit.Assert.*;
 
 import java.text.ParseException;
+
+import mireka.dmarc.tagvlist.Unfolder;
 
 import org.junit.Test;
 

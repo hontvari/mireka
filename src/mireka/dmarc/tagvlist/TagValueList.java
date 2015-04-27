@@ -1,4 +1,4 @@
-package mireka.dmarc;
+package mireka.dmarc.tagvlist;
 
 import java.text.ParseException;
 import java.util.ArrayList;

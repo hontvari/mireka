@@ -1,6 +1,6 @@
-package mireka.dmarc;
+package mireka.dmarc.tagvlist;
 
-import static mireka.dmarc.Unfolder.TokenKind.*;
+import static mireka.dmarc.tagvlist.Unfolder.TokenKind.*;
 
 import java.io.ByteArrayInputStream;
 import java.text.ParseException;
