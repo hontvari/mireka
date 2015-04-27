@@ -1,11 +1,9 @@
 package mireka.maildata;
 
-import static org.subethamail.smtp.util.TextUtils.*;
+import static mireka.util.CharsetUtil.*;
 
 import java.io.IOException;
 import java.io.OutputStream;
-
-import mireka.util.CharsetUtil;
 
 public abstract class HeaderField {
 
@@ -37,13 +35,12 @@ public abstract class HeaderField {
 
     public void setName(String name) {
         this.name = name;
-        this.lowerCaseName =
-                name == null ? null : CharsetUtil.toAsciiLowerCase(name);
+        this.lowerCaseName = name == null ? null : toAsciiLowerCase(name);
     }
 
     public void writeTo(OutputStream out) throws IOException {
         if (source != null)
-            out.write(getAsciiBytes(source.originalSpelling));
+            out.write(toAsciiBytes(source.originalSpelling));
         else
             writeGenerated(out);
     }

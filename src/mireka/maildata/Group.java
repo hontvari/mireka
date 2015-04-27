@@ -8,6 +8,9 @@ import java.util.List;
  * mailbox list.
  */
 public class Group extends Address {
+    /**
+     * It may contain non-ASCII characters.
+     */
     public String displayName;
     public List<Mailbox> mailboxList = new ArrayList<>();
 }

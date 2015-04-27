@@ -13,7 +13,7 @@ import mireka.util.CharsetUtil;
  */
 public class UnstructuredField extends HeaderField {
     /**
-     * unfolded single line, without CRLF
+     * Unfolded single line, without CRLF, it may contain non-ASCII characters.
      */
     public String body;
 
