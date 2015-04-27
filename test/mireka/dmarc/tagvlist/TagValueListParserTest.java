@@ -4,10 +4,6 @@ import static org.junit.Assert.*;
 
 import java.text.ParseException;
 
-import mireka.dmarc.tagvlist.TagSpec;
-import mireka.dmarc.tagvlist.TagValueList;
-import mireka.dmarc.tagvlist.TagValueListParser;
-
 import org.junit.Test;
 
 public class TagValueListParserTest {
@@ -18,7 +14,6 @@ public class TagValueListParserTest {
                 new TagValueListParser()
                         .parse("v=DMARC1; p=none; rua=mailto:dmarc-feedback@example.com");
         assertEquals(3, tags.list.size());
-        assertEquals(3, tags.map.size());
 
         TagSpec tag = tags.list.get(0);
         assertEquals("v", tag.name);
