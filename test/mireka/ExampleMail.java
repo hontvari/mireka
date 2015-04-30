@@ -27,7 +27,7 @@ public class ExampleMail {
      */
     public static Mail veryLong() {
         Mail result = simple();
-        result.mailData = new LongMailData();
+        result.mailData = new LongMaildataFile();
         return result;
     }
 

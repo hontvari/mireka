@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import mireka.MailData;
 import mireka.filter.AbstractFilter;
 import mireka.filter.Filter;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
+import mireka.maildata.MaildataFile;
 import mireka.smtp.RejectExceptionExt;
 import mireka.util.StreamCopier;
 
@@ -32,24 +32,24 @@ public class AddReceivedSpfHeader implements FilterType {
         }
 
         @Override
-        public void data(MailData data) throws RejectExceptionExt,
+        public void data(MaildataFile data) throws RejectExceptionExt,
                 TooMuchDataException, IOException {
             SPFResult spfResult = spfChecker.getResult();
             String headerString = spfResult.getHeader() + "\r\n";
             byte[] headerOctets = TextUtils.getAsciiBytes(headerString);
-            SpfHeaderPrependedMailData prependedMailData =
-                    new SpfHeaderPrependedMailData(headerOctets, data);
+            SpfHeaderPrependedMaildataFile prependedMailData =
+                    new SpfHeaderPrependedMaildataFile(headerOctets, data);
 
             chain.data(prependedMailData);
         }
     }
 
-    private class SpfHeaderPrependedMailData implements MailData {
-        private final MailData originalMailData;
+    private class SpfHeaderPrependedMaildataFile implements MaildataFile {
+        private final MaildataFile originalMailData;
         private final byte[] headerOctets;
 
-        public SpfHeaderPrependedMailData(byte[] headerOctets,
-                MailData originalMailData) {
+        public SpfHeaderPrependedMaildataFile(byte[] headerOctets,
+                MaildataFile originalMailData) {
             this.headerOctets = headerOctets;
             this.originalMailData = originalMailData;
         }

@@ -3,7 +3,7 @@ package mireka.filter;
 import java.net.InetAddress;
 import java.util.List;
 
-import mireka.MailData;
+import mireka.maildata.MaildataFile;
 
 import org.subethamail.smtp.MessageContext;
 
@@ -29,14 +29,14 @@ public interface MailTransaction {
     /**
      * null if data is not received yet
      */
-    MailData getData();
+    MaildataFile getData();
 
     /**
      * filters shouldn't call this method, instead they should simply wrap the
-     * {@link MailData} object they receive and pass it to the next element in
+     * {@link MaildataFile} object they receive and pass it to the next element in
      * the chain.
      */
-    void replaceData(MailData mailData);
+    void replaceData(MaildataFile mailData);
 
     /**
      * @x.category GETSET

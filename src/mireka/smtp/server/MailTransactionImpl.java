@@ -7,11 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mireka.MailData;
 import mireka.address.Recipient;
 import mireka.destination.Destination;
 import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
+import mireka.maildata.MaildataFile;
 
 import org.subethamail.smtp.MessageContext;
 
@@ -26,7 +26,7 @@ public class MailTransactionImpl implements MailTransaction {
     public List<RecipientContext> recipientContexts =
             new ArrayList<RecipientContext>();
 
-    private MailData data;
+    private MaildataFile data;
 
     /**
      * Contains only accepted recipients.
@@ -43,16 +43,16 @@ public class MailTransactionImpl implements MailTransaction {
      * it resets the stream if necessary before returning it
      */
     @Override
-    public MailData getData() {
+    public MaildataFile getData() {
         return data;
     }
 
-    public void setData(MailData data) {
+    public void setData(MaildataFile data) {
         this.data = data;
     }
 
     @Override
-    public void replaceData(MailData mailData) {
+    public void replaceData(MaildataFile mailData) {
         this.data = mailData;
     }
 

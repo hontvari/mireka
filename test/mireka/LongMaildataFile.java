@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class LongMailData implements MailData {
+import mireka.maildata.MaildataFile;
+
+public class LongMaildataFile implements MaildataFile {
 
     @Override
     public void close() {

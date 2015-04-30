@@ -5,10 +5,10 @@ import java.io.IOException;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import mireka.MailData;
+import mireka.maildata.MaildataFile;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.RejectExceptionExt;
-import mireka.smtp.server.DeferredFileMailData;
+import mireka.smtp.server.DeferredFileMaildataFile;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import org.subethamail.smtp.io.DeferredFileOutputStream;
 public class MimeMessageConverter {
     private Logger logger = LoggerFactory.getLogger(MimeMessageConverter.class);
 
-    public MailData createMailDataInSmtpSession(MimeMessage mimeMessage)
+    public MaildataFile createMailDataInSmtpSession(MimeMessage mimeMessage)
             throws RejectExceptionExt {
         DeferredFileOutputStream deferredFileOutputStream =
                 new DeferredFileOutputStream(32768);
@@ -42,7 +42,7 @@ public class MimeMessageConverter {
             throw new RejectExceptionExt(
                     EnhancedStatus.TRANSIENT_LOCAL_ERROR_IN_PROCESSING);
         }
-        return new DeferredFileMailData(deferredFileOutputStream);
+        return new DeferredFileMaildataFile(deferredFileOutputStream);
     }
 
 }

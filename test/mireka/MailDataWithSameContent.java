@@ -3,12 +3,14 @@ package mireka;
 import java.io.IOException;
 import java.io.InputStream;
 
+import mireka.maildata.MaildataFile;
+
 import org.mockito.ArgumentMatcher;
 
-public class MailDataWithSameContent extends ArgumentMatcher<MailData> {
-    private final MailData other;
+public class MailDataWithSameContent extends ArgumentMatcher<MaildataFile> {
+    private final MaildataFile other;
 
-    public MailDataWithSameContent(MailData other) {
+    public MailDataWithSameContent(MaildataFile other) {
         super();
         this.other = other;
     }
@@ -16,7 +18,7 @@ public class MailDataWithSameContent extends ArgumentMatcher<MailData> {
     @Override
     public boolean matches(Object argument) {
         try {
-            InputStream argumentStream = ((MailData) argument).getInputStream();
+            InputStream argumentStream = ((MaildataFile) argument).getInputStream();
             InputStream otherStream = other.getInputStream();
             int argumentChar;
             int expectedChar;

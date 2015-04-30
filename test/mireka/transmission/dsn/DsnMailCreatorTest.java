@@ -15,8 +15,8 @@ import java.util.Date;
 import java.util.List;
 
 import mireka.ExampleMail;
-import mireka.MailData;
 import mireka.address.MailAddressFactory;
+import mireka.maildata.MaildataFile;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.client.MtaAddress;
 import mireka.transmission.Mail;
@@ -83,7 +83,7 @@ public class DsnMailCreatorTest {
         return s;
     }
 
-    private void writeToFileForDebugging(MailData content)
+    private void writeToFileForDebugging(MaildataFile content)
             throws FileNotFoundException, IOException {
         File file =
                 new File(System.getProperty("java.io.tmpdir"), getClass()

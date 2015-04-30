@@ -7,13 +7,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import mireka.MailData;
+import mireka.maildata.MaildataFile;
 
 public class StreamCopier {
 
     public static void writeMailDataInputStreamIntoOutputStream(
-            MailData mailData, OutputStream out) throws IOException {
-        InputStream in = mailData.getInputStream();
+            MaildataFile maildataFile, OutputStream out) throws IOException {
+        InputStream in = maildataFile.getInputStream();
         try {
             writeInputStreamIntoOutputStream(in, out);
         } finally {

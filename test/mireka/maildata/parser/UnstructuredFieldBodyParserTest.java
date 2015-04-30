@@ -1,18 +1,14 @@
 package mireka.maildata.parser;
 
 import static org.junit.Assert.*;
-
-import java.text.ParseException;
-
 import mireka.maildata.field.UnstructuredField;
-import mireka.maildata.parser.UnstructuredFieldBodyParser;
 
 import org.junit.Test;
 
 public class UnstructuredFieldBodyParserTest {
 
     @Test
-    public void testSimple() throws ParseException {
+    public void testSimple() {
         UnstructuredField header =
                 new UnstructuredFieldBodyParser(" Hello world!").parse();
 
@@ -20,7 +16,7 @@ public class UnstructuredFieldBodyParserTest {
     }
 
     @Test
-    public void testWithEncodedWord() throws ParseException {
+    public void testWithEncodedWord() {
         UnstructuredField header =
                 new UnstructuredFieldBodyParser(
                         " [LIST] =?US-ASCII?Q?Hello_world!?=").parse();
@@ -29,7 +25,7 @@ public class UnstructuredFieldBodyParserTest {
     }
 
     @Test
-    public void testWithEncodedWordSequence() throws ParseException {
+    public void testWithEncodedWordSequence() {
         UnstructuredField header =
                 new UnstructuredFieldBodyParser(
                         " =?ISO-8859-1?B?SWYgeW91IGNhbiByZWFkIHRoaXMgeW8=?= "
@@ -41,7 +37,7 @@ public class UnstructuredFieldBodyParserTest {
     }
 
     @Test
-    public void testWithoutBeginningSpace() throws ParseException {
+    public void testWithoutBeginningSpace() {
         UnstructuredField header =
                 new UnstructuredFieldBodyParser("=?US-ASCII?Q?Hello_world!?=")
                         .parse();

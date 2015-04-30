@@ -2,9 +2,9 @@ package mireka.filter;
 
 import java.io.IOException;
 
-import mireka.MailData;
 import mireka.address.ReversePath;
 import mireka.destination.UnknownRecipientDestination;
+import mireka.maildata.MaildataFile;
 import mireka.smtp.RejectExceptionExt;
 
 import org.subethamail.smtp.RejectException;
@@ -45,7 +45,7 @@ public interface FilterBase {
      */
     void recipient(RecipientContext recipientContext) throws RejectExceptionExt;
 
-    void data(MailData data) throws RejectExceptionExt, TooMuchDataException,
+    void data(MaildataFile data) throws RejectExceptionExt, TooMuchDataException,
             IOException;
 
     /**

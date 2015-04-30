@@ -2,13 +2,13 @@ package mireka.filter.misc;
 
 import java.io.IOException;
 
-import mireka.MailData;
 import mireka.filter.AbstractFilter;
 import mireka.filter.Filter;
 import mireka.filter.FilterReply;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
+import mireka.maildata.MaildataFile;
 import mireka.smtp.RejectExceptionExt;
 
 import org.subethamail.smtp.TooMuchDataException;
@@ -46,7 +46,7 @@ public class MeasureTraffic implements FilterType {
         }
 
         @Override
-        public void data(MailData data) throws RejectExceptionExt,
+        public void data(MaildataFile data) throws RejectExceptionExt,
                 TooMuchDataException, IOException {
             incomingSmtpSummary.dataCommands.mark();
             chain.data(data);

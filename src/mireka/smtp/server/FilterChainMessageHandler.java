@@ -91,11 +91,11 @@ public class FilterChainMessageHandler implements MessageHandler {
     public void data(InputStream data) throws RejectException,
             TooMuchDataException, IOException {
         DeferredFileOutputStream deferredFileOutputStream = null;
-        DeferredFileMailData deferredFileMailData = null;
+        DeferredFileMaildataFile deferredFileMailData = null;
         try {
             deferredFileOutputStream = copyDataToDeferredFileOutputStream(data);
             deferredFileMailData =
-                    new DeferredFileMailData(deferredFileOutputStream);
+                    new DeferredFileMaildataFile(deferredFileOutputStream);
             mailTransaction.setData(deferredFileMailData);
             filterChain.getHead().data(mailTransaction.getData());
             checkResponsibilityHasBeenTakenForAllRecipients();

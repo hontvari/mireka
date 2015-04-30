@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import mireka.MailData;
 import mireka.filter.AbstractFilter;
 import mireka.filter.Filter;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
+import mireka.maildata.MaildataFile;
 import mireka.smtp.RejectExceptionExt;
 import mireka.util.StreamCopier;
 
@@ -43,16 +43,16 @@ public class RejectLargeMail implements FilterType {
         }
 
         @Override
-        public void data(MailData data) throws RejectExceptionExt,
+        public void data(MaildataFile data) throws RejectExceptionExt,
                 TooMuchDataException, IOException {
-            chain.data(new LengthLimitingMailData(data));
+            chain.data(new LengthLimitingMaildataFile(data));
         }
     }
 
-    private final class LengthLimitingMailData implements MailData {
-        private final MailData wrappedMailData;
+    private final class LengthLimitingMaildataFile implements MaildataFile {
+        private final MaildataFile wrappedMailData;
 
-        public LengthLimitingMailData(MailData sourceMailData) {
+        public LengthLimitingMaildataFile(MaildataFile sourceMailData) {
             this.wrappedMailData = sourceMailData;
         }
 

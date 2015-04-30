@@ -17,7 +17,7 @@ import java.util.TreeSet;
 
 import javax.annotation.concurrent.GuardedBy;
 
-import mireka.MailData;
+import mireka.maildata.MaildataFile;
 import mireka.smtp.EnhancedStatus;
 import mireka.transmission.Mail;
 import mireka.transmission.queue.dataprop.DataProperties;
@@ -212,7 +212,7 @@ public class FileDirStore {
         return new File(dir, mailName.envelopeFileName());
     }
 
-    private void writeMessageContentIntoFile(MailData mailData,
+    private void writeMessageContentIntoFile(MaildataFile mailData,
             File messageContentFile) throws IOException {
         FileOutputStream out = new FileOutputStream(messageContentFile);
         try {
@@ -253,7 +253,7 @@ public class FileDirStore {
                     new MailEnvelopePersister().readFromProperties(properties);
 
             File mailDataFile = new File(dir, mailName.contentFileName());
-            mail.mailData = new FileMailData(mailDataFile);
+            mail.mailData = new FileMaildataFile(mailDataFile);
             return mail;
         } catch (IOException e) {
             throw new QueueStorageException(e,

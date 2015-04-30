@@ -2,8 +2,8 @@ package mireka.filter;
 
 import java.io.IOException;
 
-import mireka.MailData;
 import mireka.address.ReversePath;
+import mireka.maildata.MaildataFile;
 import mireka.smtp.RejectExceptionExt;
 
 import org.subethamail.smtp.TooMuchDataException;
@@ -24,10 +24,10 @@ public interface FilterChain {
      * optionally wrap the data object for example to prepend trace data 3.
      * invoke the next entity in the chain
      * <p>
-     * The passed {@link MailData} object will become the return value of
+     * The passed {@link MaildataFile} object will become the return value of
      * {@link MailTransaction#getData()} until another filter replaces it
      * possibly by wrapping it
      */
-    void data(MailData data) throws RejectExceptionExt, TooMuchDataException,
+    void data(MaildataFile data) throws RejectExceptionExt, TooMuchDataException,
             IOException;
 }

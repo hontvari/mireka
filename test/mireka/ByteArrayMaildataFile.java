@@ -4,12 +4,13 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import mireka.maildata.MaildataFile;
 import mireka.util.StreamCopier;
 
-public class ByteArrayMailData implements MailData {
+public class ByteArrayMaildataFile implements MaildataFile {
     public final byte[] bytes;
 
-    public ByteArrayMailData(byte[] bytes) {
+    public ByteArrayMaildataFile(byte[] bytes) {
         this.bytes = bytes;
     }
 

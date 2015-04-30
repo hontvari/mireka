@@ -5,13 +5,11 @@ import static org.junit.Assert.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import mireka.maildata.HeaderFieldText;
 import mireka.maildata.HeaderSection;
-import mireka.maildata.parser.MaildataParser;
 import mockit.Mocked;
 import mockit.Verifications;
 
@@ -20,7 +18,7 @@ import org.junit.Test;
 public class MailDataParserTest {
     @Test
     public void testParse(@Mocked final HeaderSection headerSection)
-            throws ParseException, IOException {
+            throws IOException {
 
         // @formatter:off
         String mail = ""
@@ -31,11 +29,11 @@ public class MailDataParserTest {
                 + "Hello\r\n";
         // @formatter:on
 
-        InputStream mailInputStream = new ByteArrayInputStream(
-                mail.getBytes("US-ASCII"));
+        InputStream mailInputStream =
+                new ByteArrayInputStream(mail.getBytes("US-ASCII"));
 
-        MaildataParser.MaildataMap maildataMap = new MaildataParser(mailInputStream)
-                .parse();
+        MaildataParser.MaildataMap maildataMap =
+                new MaildataParser(mailInputStream).parse();
 
         new Verifications() {
             {

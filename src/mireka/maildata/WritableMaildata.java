@@ -10,16 +10,15 @@ import java.io.OutputStream;
 import java.io.SequenceInputStream;
 import java.util.Iterator;
 
-import mireka.MailData;
 import mireka.maildata.parser.MaildataParser;
-import mireka.smtp.server.DeferredFileMailData;
+import mireka.smtp.server.DeferredFileMaildataFile;
 import mireka.util.CharsetUtil;
 import mireka.util.StreamCopier;
 
 import org.subethamail.smtp.io.DeferredFileOutputStream;
 
 public class WritableMaildata {
-    private MailData source;
+    private MaildataFile source;
 
     /**
      * Null if the mail is not yet parsed.
@@ -36,19 +35,17 @@ public class WritableMaildata {
      */
     private SmartHeaderSection smartHeaderSection;
 
-    private InputStream in;
-
-    public WritableMaildata(MailData source) {
+    public WritableMaildata(MaildataFile source) {
         this.source = source;
     }
 
-    public MailData toMailData() throws IOException {
+    public MaildataFile toMailData() throws IOException {
         if (isUpdated()) {
             DeferredFileOutputStream out =
                     new DeferredFileOutputStream(0x10000);
             try {
                 writeTo(out);
-                return new DeferredFileMailData(out);
+                return new DeferredFileMaildataFile(out);
             } catch (IOException e) {
                 out.close();
                 throw e;
@@ -95,11 +92,8 @@ public class WritableMaildata {
     public HeaderSection getHeaders() throws IOException {
         if (headerSection == null) {
             if (sourceMap == null) {
-                in = source.getInputStream();
-                try {
+                try (InputStream in = source.getInputStream()) {
                     sourceMap = new MaildataParser(in).parse();
-                } catch (IOException e) {
-                    in.close();
                 }
             }
             headerSection = sourceMap.headerSection;

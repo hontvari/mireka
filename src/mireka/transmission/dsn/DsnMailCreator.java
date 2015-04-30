@@ -10,11 +10,11 @@ import java.util.List;
 
 import javax.annotation.concurrent.ThreadSafe;
 
-import mireka.MailData;
 import mireka.address.MailAddressFactory;
 import mireka.address.NullReversePath;
 import mireka.address.Recipient;
 import mireka.address.ReversePath;
+import mireka.maildata.MaildataFile;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.MailSystemStatus;
 import mireka.transmission.Mail;
@@ -115,7 +115,7 @@ public class DsnMailCreator {
 
         private void setupMessageContent() {
             Message message = message();
-            resultMail.mailData = new Mime4jMessageMessageContent(message);
+            resultMail.mailData = new Mime4jMessageMaildataFile(message);
         }
 
         private Message message() {
@@ -278,10 +278,10 @@ public class DsnMailCreator {
 
     }
 
-    private static class Mime4jMessageMessageContent implements MailData {
+    private static class Mime4jMessageMaildataFile implements MaildataFile {
         private final Message message;
 
-        public Mime4jMessageMessageContent(Message message) {
+        public Mime4jMessageMaildataFile(Message message) {
             this.message = message;
         }
 
@@ -327,9 +327,9 @@ public class DsnMailCreator {
 
     private static class MessageContentBody extends BinaryBody {
 
-        private final MailData messageContent;
+        private final MaildataFile messageContent;
 
-        public MessageContentBody(MailData messageContent) {
+        public MessageContentBody(MaildataFile messageContent) {
             this.messageContent = messageContent;
         }
 

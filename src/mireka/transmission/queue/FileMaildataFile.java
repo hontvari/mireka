@@ -6,14 +6,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import mireka.MailData;
+import mireka.maildata.MaildataFile;
 import mireka.util.StreamCopier;
 
-class FileMailData implements MailData {
+class FileMaildataFile implements MaildataFile {
 
     private final File file;
 
-    public FileMailData(File file) {
+    public FileMaildataFile(File file) {
         this.file = file;
     }
 

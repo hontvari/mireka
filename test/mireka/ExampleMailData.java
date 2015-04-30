@@ -4,7 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class ExampleMailData {
-    public static ByteArrayMailData simple() {
+    public static ByteArrayMaildataFile simple() {
         return fromResource(ExampleMailData.class, "simpleMail.eml");
     }
 
@@ -16,16 +16,16 @@ public class ExampleMailData {
      * @param name
      *            either an absolute or a relative name, for example /mail.eml
      */
-    public static ByteArrayMailData fromResource(Class<?> caller, String name) {
-        return new ByteArrayMailData(ResourceLoader.loadResource(caller, name));
+    public static ByteArrayMaildataFile fromResource(Class<?> caller, String name) {
+        return new ByteArrayMaildataFile(ResourceLoader.loadResource(caller, name));
     }
 
-    public static ByteArrayMailData mail4k() {
+    public static ByteArrayMaildataFile mail4k() {
         try {
             int requiredSize = 4096;
             ByteArrayOutputStream buffer =
                     new ByteArrayOutputStream(requiredSize);
-            ByteArrayMailData simpleMail = simple();
+            ByteArrayMaildataFile simpleMail = simple();
             buffer.write(simpleMail.bytes);
             byte[] line = create100OctetLine();
             int lineCount = (requiredSize - simpleMail.bytes.length) / 100;
@@ -38,7 +38,7 @@ public class ExampleMailData {
                 buffer.write(66);
             }
 
-            return new ByteArrayMailData(buffer.toByteArray());
+            return new ByteArrayMaildataFile(buffer.toByteArray());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

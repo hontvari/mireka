@@ -2,8 +2,8 @@ package mireka.filter.misc;
 
 import java.io.IOException;
 
-import mireka.MailData;
 import mireka.filter.StatelessFilterType;
+import mireka.maildata.MaildataFile;
 
 import org.apache.james.mime4j.MimeException;
 import org.apache.james.mime4j.io.MaxLineLimitException;
@@ -19,7 +19,7 @@ public class StopLoop extends StatelessFilterType {
     private int maxReceivedHeaders = 100;
 
     @Override
-    public void data(MailData data) throws RejectException,
+    public void data(MaildataFile data) throws RejectException,
             TooMuchDataException, IOException {
         try {
             if (receivedHeaderCount(data) > maxReceivedHeaders)
@@ -34,7 +34,7 @@ public class StopLoop extends StatelessFilterType {
         }
     }
 
-    private int receivedHeaderCount(MailData data) throws IOException,
+    private int receivedHeaderCount(MaildataFile data) throws IOException,
             MimeException {
         int count = 0;
         MimeTokenStream stream = new MimeTokenStream();

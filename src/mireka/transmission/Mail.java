@@ -8,9 +8,9 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import mireka.MailData;
 import mireka.address.Recipient;
 import mireka.address.ReversePath;
+import mireka.maildata.MaildataFile;
 
 /**
  * An SMTP mail object, which contains both an envelope and content.
@@ -23,7 +23,7 @@ public class Mail {
     public ReversePath from;
     @Nonnull
     public List<Recipient> recipients = new ArrayList<Recipient>();
-    public MailData mailData;
+    public MaildataFile mailData;
     /**
      * If the message was generated locally then this time should be the date of
      * creation.

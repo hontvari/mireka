@@ -2,12 +2,12 @@ package mireka.filterchain;
 
 import java.io.IOException;
 
-import mireka.MailData;
 import mireka.address.ReversePath;
 import mireka.filter.FilterChain;
 import mireka.filter.FilterReply;
 import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
+import mireka.maildata.MaildataFile;
 import mireka.smtp.RejectExceptionExt;
 
 import org.subethamail.smtp.RejectException;
@@ -43,7 +43,7 @@ class ChainEnd implements FilterChain {
     }
 
     @Override
-    public void data(MailData data) throws RejectException,
+    public void data(MaildataFile data) throws RejectException,
             TooMuchDataException, IOException {
         mailTransaction.replaceData(data);
     }

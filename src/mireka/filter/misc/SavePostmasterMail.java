@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import mireka.MailData;
 import mireka.filter.RecipientContext;
 import mireka.filter.StatelessFilterType;
+import mireka.maildata.MaildataFile;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ public class SavePostmasterMail extends StatelessFilterType {
     private File dir;
 
     @Override
-    public void dataRecipient(MailData data, RecipientContext recipientContext) {
+    public void dataRecipient(MaildataFile data, RecipientContext recipientContext) {
         if (!recipientContext.recipient.isPostmaster())
             return;
         OutputStream out = null;

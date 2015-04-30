@@ -7,7 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import mireka.MailData;
 import mireka.address.ReversePath;
 import mireka.filter.AbstractDataRecipientFilter;
 import mireka.filter.DataRecipientFilterAdapter;
@@ -15,6 +14,7 @@ import mireka.filter.Filter;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
+import mireka.maildata.MaildataFile;
 import mireka.smtp.RejectExceptionExt;
 import mireka.transmission.Mail;
 
@@ -92,7 +92,7 @@ public class DestinationProcessorFilter implements FilterType {
         }
 
         @Override
-        public void data(MailData data) throws TooMuchDataException,
+        public void data(MaildataFile data) throws TooMuchDataException,
                 RejectExceptionExt, IOException {
             mail.mailData = data;
             mail.arrivalDate = new Date();

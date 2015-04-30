@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import mireka.MailData;
+import mireka.maildata.MaildataFile;
 import mireka.util.StreamCopier;
 
 import org.subethamail.smtp.io.DeferredFileOutputStream;
@@ -13,7 +13,7 @@ import org.subethamail.smtp.io.DeferredFileOutputStream;
  * DeferredFileMailData stores message content in memory if it is short or in a
  * temporary file if it is long.
  */
-public class DeferredFileMailData implements MailData {
+public class DeferredFileMaildataFile implements MaildataFile {
     private final DeferredFileOutputStream deferredFileOutputStream;
 
     /**
@@ -23,7 +23,7 @@ public class DeferredFileMailData implements MailData {
      * @param deferredFileOutputStream
      *            The stream containing the message content.
      */
-    public DeferredFileMailData(
+    public DeferredFileMaildataFile(
             DeferredFileOutputStream deferredFileOutputStream) {
         this.deferredFileOutputStream = deferredFileOutputStream;
     }

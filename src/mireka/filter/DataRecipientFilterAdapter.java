@@ -2,8 +2,8 @@ package mireka.filter;
 
 import java.io.IOException;
 
-import mireka.MailData;
 import mireka.address.ReversePath;
+import mireka.maildata.MaildataFile;
 import mireka.smtp.RejectExceptionExt;
 
 import org.subethamail.smtp.TooMuchDataException;
@@ -61,7 +61,7 @@ public final class DataRecipientFilterAdapter implements Filter {
     }
 
     @Override
-    public void data(MailData data) throws RejectExceptionExt,
+    public void data(MaildataFile data) throws RejectExceptionExt,
             TooMuchDataException, IOException {
         filter.data(data);
 

@@ -73,7 +73,7 @@ public class HeaderSectionTest {
     }
 
     @Test
-    public void testAddExtractedPut() throws ParseException {
+    public void testAddExtractedPut() {
         HeaderSection headerSection = new HeaderSection();
         headerSection.addExtracted(from1Text);
         headerSection.addExtracted(from2Text);
@@ -89,7 +89,7 @@ public class HeaderSectionTest {
     }
 
     @Test
-    public void testRemove() throws ParseException {
+    public void testRemove() {
         HeaderSection headerSection = new HeaderSection();
         headerSection.addExtracted(from1Text);
         headerSection.addExtracted(from2Text);
