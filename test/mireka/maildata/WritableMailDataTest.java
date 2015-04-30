@@ -16,7 +16,7 @@ public class WritableMailDataTest {
     public void testUpdateByPrependingHeader() throws IOException {
         // write
         MaildataFile simpleMail = ExampleMailData.simple();
-        WritableMaildata writableMailData = new WritableMaildata(simpleMail);
+        Maildata writableMailData = new Maildata(simpleMail);
         HeaderSection headers = writableMailData.getHeaders();
         UnstructuredField testHeader = new UnstructuredField();
         testHeader.setName("X-Test");

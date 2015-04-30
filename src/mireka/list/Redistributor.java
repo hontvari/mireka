@@ -21,7 +21,7 @@ import mireka.maildata.DotAtomDomainPart;
 import mireka.maildata.LiteralDomainPart;
 import mireka.maildata.Mailbox;
 import mireka.maildata.MediaType;
-import mireka.maildata.WritableMaildata;
+import mireka.maildata.Maildata;
 import mireka.maildata.field.UnstructuredField;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.RejectExceptionExt;
@@ -37,12 +37,12 @@ class Redistributor {
 
     private Mail source;
     private ListDestination list;
-    private WritableMaildata newMaildata;
+    private Maildata newMaildata;
 
     public Redistributor(Mail source, ListDestination list) {
         this.source = source;
         this.list = list;
-        newMaildata = new WritableMaildata(source.mailData);
+        newMaildata = new Maildata(source.mailData);
     }
 
     public void distribute() throws RejectExceptionExt {

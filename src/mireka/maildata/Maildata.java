@@ -17,7 +17,15 @@ import mireka.util.StreamCopier;
 
 import org.subethamail.smtp.io.DeferredFileOutputStream;
 
-public class WritableMaildata {
+/**
+ * Maildata represents a message sent between computer users in the format of
+ * Internet Message Format. An electronic mail consists of an envelope and the
+ * content. This class represents the content.
+ * 
+ * @see <a href="https://tools.ietf.org/html/rfc5322">RFC 5322 - Internet
+ *      Message Format</a>
+ */
+public class Maildata {
     private MaildataFile source;
 
     /**
@@ -35,7 +43,17 @@ public class WritableMaildata {
      */
     private SmartHeaderSection smartHeaderSection;
 
-    public WritableMaildata(MaildataFile source) {
+    /**
+     * Initializes a new Maildata object with the supplied mail data byte
+     * stream.
+     * 
+     * @param source
+     *            the MaildataFile which contains the byte representation of the
+     *            Mail Data. This object stores a reference to this MaildataFile
+     *            object, but closing it is still the responsibility of the
+     *            caller.
+     */
+    public Maildata(MaildataFile source) {
         this.source = source;
     }
 

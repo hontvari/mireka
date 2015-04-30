@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  * authors. This is in contrast to the {@link HeaderSection} which deals with
  * individual header fields.
  * 
- * Idea: Functionality of this class may be added to {@link WritableMaildata}.
+ * Idea: Functionality of this class may be added to {@link Maildata}.
  */
 public class SmartHeaderSection {
     private final Logger logger = LoggerFactory
