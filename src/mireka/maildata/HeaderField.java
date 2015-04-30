@@ -3,7 +3,6 @@ package mireka.maildata;
 import static mireka.util.CharsetUtil.*;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 public abstract class HeaderField {
 
@@ -28,6 +27,11 @@ public abstract class HeaderField {
         setName(name);
     }
 
+    public HeaderField(FieldDef<?> fieldDef) {
+        this.name = fieldDef.fancyName();
+        this.lowerCaseName = fieldDef.lowerCaseName();
+    }
+
     /**
      * Field name in lower case, or null if the name cannot be determined.
      */
@@ -38,12 +42,5 @@ public abstract class HeaderField {
         this.lowerCaseName = name == null ? null : toAsciiLowerCase(name);
     }
 
-    public void writeTo(OutputStream out) throws IOException {
-        if (source != null)
-            out.write(toAsciiBytes(source.originalSpelling));
-        else
-            writeGenerated(out);
-    }
-
-    protected abstract void writeGenerated(OutputStream out) throws IOException;
+    protected abstract String generate() throws IOException;
 }

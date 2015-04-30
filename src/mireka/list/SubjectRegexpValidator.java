@@ -1,11 +1,12 @@
 package mireka.list;
 
+import java.io.IOException;
 import java.util.regex.Pattern;
 
-import javax.mail.MessagingException;
-
+import mireka.maildata.WritableMaildata;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.RejectExceptionExt;
+import mireka.transmission.Mail;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +21,11 @@ public class SubjectRegexpValidator implements MailValidator {
     private Pattern pattern;
 
     @Override
-    public boolean shouldBeAccepted(ParsedMail mail) throws RejectExceptionExt {
+    public boolean shouldBeAccepted(Mail mail) throws RejectExceptionExt {
         try {
-            String subject = mail.getMimeMessage().getSubject();
+            String subject =
+                    new WritableMaildata(mail.mailData).header().getSubject();
+
             if (subject == null)
                 subject = "";
             boolean result = pattern.matcher(subject).matches();
@@ -30,8 +33,11 @@ public class SubjectRegexpValidator implements MailValidator {
                 logger.debug("Mail accepted, subject matches "
                         + pattern.toString());
             return result;
-        } catch (MessagingException e) {
-            throw new RejectExceptionExt(EnhancedStatus.BAD_MESSAGE_BODY);
+        } catch (IOException e) {
+            // TODO this will not be needed after introduction of
+            // VirtFileReadException
+            throw new RejectExceptionExt(
+                    EnhancedStatus.TRANSIENT_LOCAL_ERROR_IN_PROCESSING);
         }
     }
 

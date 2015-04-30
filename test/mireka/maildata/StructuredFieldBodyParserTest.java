@@ -5,7 +5,9 @@ import static org.junit.Assert.*;
 import java.text.ParseException;
 
 import mireka.maildata.field.AddressListField;
+import mireka.maildata.field.ContentType;
 import mireka.maildata.field.From;
+import mireka.maildata.field.MimeVersion;
 import mireka.maildata.field.To;
 
 import org.junit.Test;
@@ -269,6 +271,38 @@ public class StructuredFieldBodyParserTest {
         group = (Group) address;
         assertEquals("Cruisers", group.displayName);
         assertEquals(2, group.mailboxList.size());
+    }
+
+    @Test
+    public void testMimeVersion() throws ParseException {
+        MimeVersion version =
+                new StructuredFieldBodyParser("1.0").parseMimeVersion();
+        assertEquals(1, version.major);
+        assertEquals(0, version.minor);
+    }
+
+    @Test
+    public void testContentType() throws ParseException {
+        ContentType result =
+                new StructuredFieldBodyParser()
+                        .parseContentType("text/plain; charset=us-ascii (Plain text)");
+        assertEquals("text", result.mediaType.type);
+        assertEquals("plain", result.mediaType.subtype);
+        assertEquals(1, result.mediaType.parameters.size());
+        assertEquals("charset", result.mediaType.parameters.get(0).name);
+        assertEquals("us-ascii", result.mediaType.parameters.get(0).value);
+    }
+
+    @Test
+    public void testContentTypeWithQuoted() throws ParseException {
+        ContentType result =
+                new StructuredFieldBodyParser()
+                        .parseContentType("text/plain; charset=\"us-ascii\"");
+        assertEquals("text", result.mediaType.type);
+        assertEquals("plain", result.mediaType.subtype);
+        assertEquals(1, result.mediaType.parameters.size());
+        assertEquals("charset", result.mediaType.parameters.get(0).name);
+        assertEquals("us-ascii", result.mediaType.parameters.get(0).value);
     }
 
 }

@@ -1,11 +1,10 @@
 package mireka.maildata.field;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
+import mireka.maildata.FieldDef;
 import mireka.maildata.FieldGenerator;
 import mireka.maildata.HeaderField;
-import mireka.util.CharsetUtil;
 
 /**
  * @see <a href="https://tools.ietf.org/html/rfc5322#section-2.2.1">RFC 5322</a>
@@ -17,9 +16,16 @@ public class UnstructuredField extends HeaderField {
      */
     public String body;
 
+    public UnstructuredField() {
+    }
+
+    public UnstructuredField(FieldDef<?> fieldDef, String body) {
+        super(fieldDef);
+        this.body = body;
+    }
+
     @Override
-    protected void writeGenerated(OutputStream out) throws IOException {
-        String result = new FieldGenerator().writeUnstructuredHeader(this);
-        out.write(CharsetUtil.toAsciiBytes(result));
+    protected String generate() throws IOException {
+        return new FieldGenerator().writeUnstructuredHeader(this);
     }
 }

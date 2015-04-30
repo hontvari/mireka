@@ -55,24 +55,76 @@ public class HeaderSection {
         isUpdated = true;
     }
 
-    private Entry createEntryForParsedField(HeaderField field) {
-        if (field.lowerCaseName == null)
-            throw new NullPointerException();
-
-        Entry entry = new Entry();
-        entry.source = null;
-        entry.lowerCaseName = field.lowerCaseName;
-        entry.parsedField = field;
-        return entry;
-    }
-
     public void prepend(HeaderField field) {
         Entry entry = createEntryForParsedField(field);
         fields.add(0, entry);
         isUpdated = true;
     }
 
-    public void updateOrAppend(HeaderField newHeader) {
+    /**
+     * Returns the specified field in parsed form.
+     * 
+     * If there are more fields in the header with the same name, then it
+     * returns the first one.
+     * 
+     * The returned object can be modified, but it has to be reinserted into
+     * this object by calling {@link #updateOrAppend}, otherwise the change will
+     * be lost when the header section is written out.
+     */
+    public <T extends HeaderField> T get(FieldDef<T> fieldDef)
+            throws ParseException {
+        String lowerCaseFieldName = toAsciiLowerCase(fieldDef.lowerCaseName());
+        for (int i = 0; i < fields.size(); i++) {
+            if (lowerCaseFieldName.equals(fields.get(i).lowerCaseName)) {
+                HeaderField field = getParsed(i);
+                return fieldDef.clazz().cast(field);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns all occurrences of the specified field in parsed form.
+     * 
+     * If there are no occurrences of the field then it returns an empty list.
+     * 
+     * A returned field can be modified, but it has to be reinserted into this
+     * object by calling {@link #updateOrAppend}, otherwise the change will be
+     * lost when the header section is written out.
+     */
+    public <T extends HeaderField> List<T> getAll(FieldDef<T> fieldDef)
+            throws ParseException {
+        String lowerCaseFieldName = toAsciiLowerCase(fieldDef.lowerCaseName());
+        List<T> result = new ArrayList<>();
+        for (int i = 0; i < fields.size(); i++) {
+            if (lowerCaseFieldName.equals(fields.get(i).lowerCaseName)) {
+                HeaderField f = getParsed(i);
+                T field = fieldDef.clazz().cast(f);
+                result.add(field);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Returns true if the supplied field presents in the header.
+     */
+    public boolean contains(FieldDef<?> fieldDef) {
+        String lowerCaseFieldName = toAsciiLowerCase(fieldDef.lowerCaseName());
+        for (int i = 0; i < fields.size(); i++) {
+            if (lowerCaseFieldName.equals(fields.get(i).lowerCaseName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Adds the header to the end of the header section if there is no header
+     * with the same name, or replaces the first occurrence of the header and
+     * removes all others.
+     */
+    public void put(HeaderField newHeader) {
         boolean isAlreadyAdded = false;
         for (ListIterator<Entry> it = fields.listIterator(); it.hasNext();) {
             Entry entry = it.next();
@@ -91,23 +143,25 @@ public class HeaderSection {
         isUpdated = true;
     }
 
-    /**
-     * Returns the specified field in parsed form.
-     * 
-     * The returned object can be modified, but it has to be reinserted into
-     * this object by calling {@link #updateOrAppend}, otherwise the change will
-     * be lost when the header section is written out.
-     */
-    public <T> T get(Class<T> fieldClass, String fieldName)
-            throws ParseException {
-        String lowerCaseFieldName = toAsciiLowerCase(fieldName);
-        for (int i = 0; i < fields.size(); i++) {
-            if (lowerCaseFieldName.equals(fields.get(i).lowerCaseName)) {
-                HeaderField field = getParsed(i);
-                return fieldClass.cast(field);
+    public void remove(FieldDef<?> fieldDef) {
+        String lowerCaseFieldName = toAsciiLowerCase(fieldDef.lowerCaseName());
+        for (Iterator<Entry> it = fields.iterator(); it.hasNext();) {
+            if (lowerCaseFieldName.equals(it.next().lowerCaseName)) {
+                it.remove();
+                isUpdated = true;
             }
         }
-        return null;
+    }
+
+    private Entry createEntryForParsedField(HeaderField field) {
+        if (field.lowerCaseName == null)
+            throw new NullPointerException();
+
+        Entry entry = new Entry();
+        entry.source = null;
+        entry.lowerCaseName = field.lowerCaseName;
+        entry.parsedField = field;
+        return entry;
     }
 
     /**

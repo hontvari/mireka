@@ -103,7 +103,7 @@ public class FilterChainMessageHandler implements MessageHandler {
             throw e.toRejectException();
         } finally {
             if (mailTransaction.getData() != null)
-                mailTransaction.getData().dispose();
+                mailTransaction.getData().close();
             if (deferredFileOutputStream != null)
                 deferredFileOutputStream.close();
         }

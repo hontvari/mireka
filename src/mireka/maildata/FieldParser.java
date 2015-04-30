@@ -55,6 +55,12 @@ public class FieldParser {
             new StructuredFieldBodyParser(body)
                     .parseAddressListFieldInto(addressListField);
             break;
+        case "mime-version":
+            result = new StructuredFieldBodyParser(body).parseMimeVersion();
+            break;
+        case "content-type":
+            result = new StructuredFieldBodyParser().parseContentType(body);
+            break;
         default:
             result = new UnstructuredFieldBodyParser(body).parse();
         }

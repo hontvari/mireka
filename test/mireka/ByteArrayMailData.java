@@ -24,7 +24,7 @@ public class ByteArrayMailData implements MailData {
     }
 
     @Override
-    public void dispose() {
+    public void close() {
         // nothing to do
     }
 }

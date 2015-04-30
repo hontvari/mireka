@@ -18,8 +18,12 @@ class FileMailData implements MailData {
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
-        return new FileInputStream(file);
+    public InputStream getInputStream() {
+        try {
+            return new FileInputStream(file);
+        } catch (IOException e) {
+            throw new RuntimeException("Assertion failed");
+        }
     }
 
     @Override
@@ -28,7 +32,7 @@ class FileMailData implements MailData {
     }
 
     @Override
-    public void dispose() {
+    public void close() {
         // nothing to do
     }
 }

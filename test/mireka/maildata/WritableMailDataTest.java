@@ -24,7 +24,8 @@ public class WritableMailDataTest {
         testHeader.body = " 1";
         headers.prepend(testHeader);
         ByteArrayOutputStream resultBuffer = new ByteArrayOutputStream();
-        writableMailData.writeTo(resultBuffer);
+        MailData resultMaildata = writableMailData.toMailData();
+        resultMaildata.writeTo(resultBuffer);
 
         // binary stream check
         ByteArrayOutputStream expectedBuffer = new ByteArrayOutputStream();

@@ -1,0 +1,27 @@
+====== RFC documents related to mail and considered during development ======
+
+RFC 1123 - Requirements for Internet Hosts -- Application and Support
+RFC 1939 - Post Office Protocol - Version 3
+RFC 2034 - SMTP Service Extension for Returning Enhanced Error Codes
+RFC 2045 - Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies
+RFC 2046 - Multipurpose Internet Mail Extensions (MIME) Part Two: Media Types
+RFC 2047 - MIME (Multipurpose Internet Mail Extensions) Part Three: Message Header Extensions for Non-ASCII Text
+RFC 2076 - Common Internet Message Headers
+RFC 2231 - MIME Parameter Value and Encoded Word Extensions: Character Sets, Languages, and Continuations
+RFC 2369 - The Use of URLs as Meta-Syntax for Core Mail List Commands and their Transport through Message Header Fields
+RFC 2449 - POP3 Extension Mechanism
+RFC 2595 - Using TLS with IMAP, POP3 and ACAP
+RFC 2919 - List-Id: A Structured Field and Namespace for the Identification of Mailing Lists
+RFC 3461 - Simple Mail Transfer Protocol (SMTP) Service Extension for Delivery Status Notifications (DSNs)
+RFC 3463 - Enhanced Mail System Status Codes
+RFC 3464 - An Extensible Message Format for Delivery Status Notifications
+RFC 5321 - Simple Mail Transfer Protocol
+RFC 5322 - Internet Message Format
+RFC 5336* - SMTP Extension for Internationalized Email Addresses
+RFC 5598 - Internet Mail Architecture
+RFC 6376 - DomainKeys Identified Mail (DKIM) Signatures
+RFC 6377 - DomainKeys Identified Mail (DKIM) and Mailing Lists
+RFC 6854 - Update to Internet Message Format to Allow Group Syntax in the "From:" and "Sender:" Header Fields
+RFC 7489 INFORMATIONAL - Domain-based Message Authentication, Reporting, and Conformance (DMARC)
+
+* - not implemented at all

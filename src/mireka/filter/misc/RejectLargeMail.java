@@ -68,8 +68,8 @@ public class RejectLargeMail implements FilterType {
         }
 
         @Override
-        public void dispose() {
-            wrappedMailData.dispose();
+        public void close() {
+            wrappedMailData.close();
         }
 
     }

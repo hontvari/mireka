@@ -23,7 +23,7 @@ public class UnstructuredFieldBodyParser {
         currentToken = scanner.scan();
     }
 
-    public UnstructuredField parse() throws ParseException {
+    public UnstructuredField parse() {
         String body = parseBody();
 
         UnstructuredField result = new UnstructuredField();
@@ -31,7 +31,7 @@ public class UnstructuredFieldBodyParser {
         return result;
     }
 
-    private String parseBody() throws ParseException {
+    private String parseBody() {
         StringBuilder body = new StringBuilder();
 
         while (currentToken.kind == LWSP || currentToken.kind == WORD) {
@@ -54,7 +54,10 @@ public class UnstructuredFieldBodyParser {
                 throw new RuntimeException("Assertion failed");
             }
         }
-        accept(EOF);
+        if (currentToken.kind != EOF)
+            throw new RuntimeException("Assertion failed");
+        acceptIt();
+
         return body.toString();
     }
 
@@ -116,13 +119,6 @@ public class UnstructuredFieldBodyParser {
 
     private void acceptIt() {
         currentToken = scanner.scan();
-    }
-
-    private void accept(TokenKind requiredKind) throws ParseException {
-        if (currentToken.kind == requiredKind)
-            acceptIt();
-        else
-            throw currentToken.syntaxException(requiredKind);
     }
 
     private static class Scanner {

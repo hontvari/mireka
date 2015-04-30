@@ -7,7 +7,7 @@ import java.io.OutputStream;
 public class LongMailData implements MailData {
 
     @Override
-    public void dispose() {
+    public void close() {
         // do nothing
     }
 

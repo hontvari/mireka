@@ -8,11 +8,11 @@ public class AddrSpec {
      * as a quoted-string the mail header field, then quotes are not included in
      * this string.
      */
-    String localPart;
+    public String localPart;
     /**
      * Either a {@link DotAtomDomainPart} or a {@link LiteralDomainPart}.
      */
-    DomainPart domain;
+    public DomainPart domain;
 
     /**
      * Creates a new instance from an addr-spec string.

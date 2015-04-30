@@ -7,6 +7,8 @@ import java.util.List;
 
 import mireka.maildata.EncodedWordGenerator.Placement;
 import mireka.maildata.field.AddressListField;
+import mireka.maildata.field.ContentType;
+import mireka.maildata.field.MimeVersion;
 import mireka.maildata.field.UnstructuredField;
 import mireka.util.CharsetUtil;
 
@@ -264,6 +266,14 @@ public class FieldGenerator {
         } else {
             writeMailboxList(mailboxList);
         }
+    }
+
+    public String writeMimeVersion(MimeVersion mimeVersion) {
+        throw new RuntimeException("Not implemented");
+    }
+
+    public String writeContentType(ContentType contentType) {
+        throw new RuntimeException("Not implemented");
     }
 
     private class Scanner {

@@ -89,7 +89,7 @@ public class TransformDestination implements MailDestination {
             logger.error("Cannot transmit mail", e);
             throw new RejectExceptionExt(e.errorStatus());
         } finally {
-            mail.mailData.dispose();
+            mail.mailData.close();
         }
     }
 

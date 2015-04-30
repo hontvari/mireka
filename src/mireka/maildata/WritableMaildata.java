@@ -11,9 +11,13 @@ import java.io.SequenceInputStream;
 import java.util.Iterator;
 
 import mireka.MailData;
+import mireka.smtp.server.DeferredFileMailData;
+import mireka.util.CharsetUtil;
 import mireka.util.StreamCopier;
 
-public class WritableMaildata implements MailData {
+import org.subethamail.smtp.io.DeferredFileOutputStream;
+
+public class WritableMaildata {
     private MailData source;
 
     /**
@@ -26,16 +30,31 @@ public class WritableMaildata implements MailData {
      */
     private HeaderSection headerSection;
 
+    /**
+     * It is initialized on demand, null if it is not yet initialized.
+     */
+    private SmartHeaderSection smartHeaderSection;
+
+    private InputStream in;
+
     public WritableMaildata(MailData source) {
         this.source = source;
     }
 
-    @Override
-    public InputStream getInputStream() throws IOException {
-        if (isUpdated())
-            return createUpdatedInputStream();
-        else
-            return source.getInputStream();
+    public MailData toMailData() throws IOException {
+        if (isUpdated()) {
+            DeferredFileOutputStream out =
+                    new DeferredFileOutputStream(0x10000);
+            try {
+                writeTo(out);
+                return new DeferredFileMailData(out);
+            } catch (IOException e) {
+                out.close();
+                throw e;
+            }
+        } else {
+            return source;
+        }
     }
 
     private InputStream createUpdatedInputStream() throws IOException {
@@ -45,7 +64,9 @@ public class WritableMaildata implements MailData {
                 .hasNext();) {
             HeaderSection.Entry entry = it.next();
             if (entry.source == null) {
-                entry.parsedField.writeGenerated(arrayOutputStream);
+                String fieldAsString = entry.parsedField.generate();
+                arrayOutputStream
+                        .write(CharsetUtil.toAsciiBytes(fieldAsString));
             } else {
                 arrayOutputStream
                         .write(toAsciiBytes(entry.source.originalSpelling));
@@ -64,26 +85,33 @@ public class WritableMaildata implements MailData {
         return new SequenceInputStream(headerInputStream, bodyInputStream);
     }
 
-    @Override
-    public void writeTo(OutputStream out) throws IOException {
-        StreamCopier.writeInputStreamIntoOutputStream(getInputStream(), out);
+    private void writeTo(OutputStream out) throws IOException {
+        StreamCopier.writeInputStreamIntoOutputStream(
+                createUpdatedInputStream(), out);
 
-    }
-
-    @Override
-    public void dispose() {
-        source.dispose();
     }
 
     public HeaderSection getHeaders() throws IOException {
         if (headerSection == null) {
             if (sourceMap == null) {
-                sourceMap = new MaildataParser(getInputStream()).parse();
+                in = source.getInputStream();
+                try {
+                    sourceMap = new MaildataParser(in).parse();
+                } catch (IOException e) {
+                    in.close();
+                }
             }
             headerSection = sourceMap.headerSection;
 
         }
         return headerSection;
+    }
+
+    public SmartHeaderSection header() throws IOException {
+        if (smartHeaderSection == null) {
+            smartHeaderSection = new SmartHeaderSection(getHeaders());
+        }
+        return smartHeaderSection;
     }
 
     /**

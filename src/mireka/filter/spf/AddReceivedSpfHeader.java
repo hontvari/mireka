@@ -68,8 +68,8 @@ public class AddReceivedSpfHeader implements FilterType {
         }
 
         @Override
-        public void dispose() {
-            originalMailData.dispose();
+        public void close() {
+            originalMailData.close();
         }
     }
 }

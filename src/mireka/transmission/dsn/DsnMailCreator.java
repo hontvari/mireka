@@ -291,7 +291,7 @@ public class DsnMailCreator {
         }
 
         @Override
-        public void dispose() {
+        public void close() {
             message.dispose();
         }
 

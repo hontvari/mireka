@@ -7,7 +7,10 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import mireka.address.parser.base.CharUtil;
 import mireka.maildata.field.AddressListField;
+import mireka.maildata.field.ContentType;
+import mireka.maildata.field.MimeVersion;
 import mireka.util.CharsetUtil;
 
 import org.apache.james.mime4j.dom.FieldParser;
@@ -33,6 +36,14 @@ public class StructuredFieldBodyParser {
     public StructuredFieldBodyParser(String body) {
         this.scanner = this.fieldScanner = new FieldScanner(body);
         currentToken = scanner.scan();
+    }
+
+    /**
+     * This constructor does not initialize scanning, it is useful if the field
+     * must be parsed using a non-default scanner.
+     */
+    public StructuredFieldBodyParser() {
+        // nothing to do
     }
 
     /**
@@ -588,6 +599,56 @@ public class StructuredFieldBodyParser {
             throw currentToken.syntaxException(requiredKind);
     }
 
+    public MimeVersion parseMimeVersion() throws ParseException {
+        try {
+            MimeVersion result = new MimeVersion();
+            result.major = Integer.parseInt(currentToken.semanticContent);
+            accept(ATOM);
+            accept(PERIOD);
+            result.minor = Integer.parseInt(currentToken.semanticContent);
+            accept(ATOM);
+            accept(EOF);
+            return result;
+        } catch (NumberFormatException e) {
+            throw new ParseException("Integer expected", 0);
+        }
+    }
+
+    public ContentType parseContentType(String body) throws ParseException {
+        fieldScanner = new FieldScanner(body);
+        scanner = fieldScanner.new MimeTokenScanner();
+        currentToken = scanner.scan();
+
+        ContentType result = new ContentType();
+        result.mediaType = new MediaType();
+
+        result.mediaType.type = currentToken.semanticContent;
+        accept(MIME_TOKEN);
+        accept(SLASH);
+        result.mediaType.subtype = currentToken.semanticContent;
+        accept(MIME_TOKEN);
+
+        while (currentToken.kind == SEMICOLON) {
+            acceptIt();
+            MediaParameter parameter = new MediaParameter();
+            parameter.name = currentToken.semanticContent;
+            accept(MIME_TOKEN);
+            accept(EQUALS);
+            if (currentToken.kind == MIME_TOKEN) {
+                parameter.value = currentToken.semanticContent;
+                acceptIt();
+            } else if (currentToken.kind == QUOTED_STRING) {
+                parameter.value = currentToken.semanticContent;
+                acceptIt();
+            } else {
+                throw currentToken.syntaxException("Media parameter value");
+            }
+            result.mediaType.parameters.add(parameter);
+        }
+        accept(EOF);
+        return result;
+    }
+
     /**
      * Checks the current token, but does not scan the next token, this is
      * useful before switching to a different scanner.
@@ -641,23 +702,37 @@ public class StructuredFieldBodyParser {
          * @return A token of type {@link TokenKind#ATOM}...
          */
         public Token scan() {
-            String collapsedWhiteSpace = "";
-            if (starterCFWS()) {
-                scanCFWS();
-                collapsedWhiteSpace = " ";
+            try {
+                String collapsedWhiteSpace = "";
+                if (starterCFWS()) {
+                    scanCFWS();
+                    collapsedWhiteSpace = " ";
+                }
+
+                Token token = new Token();
+                token.position = position;
+                currentSpelling.setLength(0);
+                currentSemContent.setLength(0);
+
+                TokenKind currentKind = scanToken();
+
+                token.kind = currentKind;
+                token.spelling = currentSpelling.toString();
+                token.collapsedWhitespace = collapsedWhiteSpace;
+                token.semanticContent = currentSemContent.toString();
+                return token;
+            } catch (LexicalException e) {
+                return lexicalExceptionToErrorToken(e);
             }
+        }
 
+        private Token lexicalExceptionToErrorToken(LexicalException e) {
             Token token = new Token();
-            token.position = position;
-            currentSpelling.setLength(0);
-            currentSemContent.setLength(0);
-
-            TokenKind currentKind = scanToken();
-
-            token.kind = currentKind;
-            token.spelling = currentSpelling.toString();
-            token.collapsedWhitespace = collapsedWhiteSpace;
-            token.semanticContent = currentSemContent.toString();
+            token.kind = ERROR;
+            token.position = e.position;
+            token.spelling = "";
+            token.collapsedWhitespace = "";
+            token.semanticContent = "";
             return token;
         }
 
@@ -693,7 +768,7 @@ public class StructuredFieldBodyParser {
          * 
          * </pre>
          */
-        private void scanCFWS() {
+        private void scanCFWS() throws LexicalException {
             while (starterFWS() || starterComment()) {
                 if (starterFWS())
                     scanFWS();
@@ -726,7 +801,7 @@ public class StructuredFieldBodyParser {
             return currentChar == ' ' || currentChar == '\t';
         }
 
-        private void scanComment() {
+        private void scanComment() throws LexicalException {
             take('(');
             while (starterFWS() || starterCContent()) {
                 if (starterFWS()) {
@@ -770,7 +845,7 @@ public class StructuredFieldBodyParser {
             return currentChar == '\\';
         }
 
-        private void scanCContent() {
+        private void scanCContent() throws LexicalException {
             if (isCText())
                 takeIt();
             else if (starterQuotedPair()) {
@@ -782,13 +857,13 @@ public class StructuredFieldBodyParser {
             }
         }
 
-        private void scanQuotedPair() {
+        private void scanQuotedPair() throws LexicalException {
             take('\\');
             addToSemanticContent();
             takeIt();
         }
 
-        private TokenKind scanToken() {
+        private TokenKind scanToken() throws LexicalException {
             if (starterAtom()) {
                 scanAtom();
                 return ATOM;
@@ -885,7 +960,7 @@ public class StructuredFieldBodyParser {
             return 0x30 <= currentChar && currentChar <= 0x39;
         }
 
-        private void scanAtom() {
+        private void scanAtom() throws LexicalException {
             addToSemanticContent();
             take("atext", isAText());
 
@@ -895,7 +970,7 @@ public class StructuredFieldBodyParser {
             }
         }
 
-        private void scanQuotedString() {
+        private void scanQuotedString() throws LexicalException {
             take('"');
             while (starterFWS() || starterQcontent()) {
                 if (starterFWS())
@@ -906,7 +981,7 @@ public class StructuredFieldBodyParser {
             take('"');
         }
 
-        private void scanQcontent() {
+        private void scanQcontent() throws LexicalException {
             if (isQtext()) {
                 addToSemanticContent();
                 takeIt();
@@ -941,6 +1016,14 @@ public class StructuredFieldBodyParser {
             return currentChar == -1;
         }
 
+        private boolean isCtl() {
+            return currentChar <= 0x1F || currentChar == 0x7F;
+        }
+
+        private boolean isAscii() {
+            return 0x00 <= currentChar && currentChar <= 0x7F;
+        }
+
         private void takeIt() {
             if (currentChar != -1)
                 currentSpelling.append((char) currentChar);
@@ -948,21 +1031,23 @@ public class StructuredFieldBodyParser {
             position++;
         }
 
-        private void take(int c) {
+        private void take(int c) throws LexicalException {
             if (currentChar != c)
-                throw new RuntimeException("Expected: " + c + " at position "
-                        + position); // TODO
+                throw new LexicalException(CharUtil.toVisibleChar(c), position);
             takeIt();
         }
 
-        private void take(String terminalName, boolean valid) {
+        private void take(String terminalName, boolean valid)
+                throws LexicalException {
             if (valid)
                 takeIt();
             else
-                throw new RuntimeException("Expected: " + terminalName
-                        + " at position " + position); // TODO
+                throw new LexicalException(terminalName, position);
         }
 
+        /**
+         * Appends the currentChar to the currentSemContent buffer.
+         */
         private void addToSemanticContent() {
             currentSemContent.append((char) currentChar);
         }
@@ -988,29 +1073,33 @@ public class StructuredFieldBodyParser {
              * </pre>
              */
             public Token scan() {
-                Token token = new Token();
-                token.position = position;
-                currentSpelling.setLength(0);
-                currentSemContent.setLength(0);
+                try {
+                    Token token = new Token();
+                    token.position = position;
+                    currentSpelling.setLength(0);
+                    currentSemContent.setLength(0);
 
-                while (starterFWS() || isDtext() || starterQuotedPair()) {
-                    if (starterFWS()) {
-                        scanFWS();
-                    } else if (isDtext()) {
-                        addToSemanticContent();
-                        takeIt();
-                    } else if (starterQuotedPair()) {
-                        scanQuotedPair();
-                    } else {
-                        throw new RuntimeException();
+                    while (starterFWS() || isDtext() || starterQuotedPair()) {
+                        if (starterFWS()) {
+                            scanFWS();
+                        } else if (isDtext()) {
+                            addToSemanticContent();
+                            takeIt();
+                        } else if (starterQuotedPair()) {
+                            scanQuotedPair();
+                        } else {
+                            throw new RuntimeException();
+                        }
                     }
-                }
 
-                token.kind = DTEXT;
-                token.spelling = currentSpelling.toString();
-                token.collapsedWhitespace = "";
-                token.semanticContent = currentSemContent.toString();
-                return token;
+                    token.kind = DTEXT;
+                    token.spelling = currentSpelling.toString();
+                    token.collapsedWhitespace = "";
+                    token.semanticContent = currentSemContent.toString();
+                    return token;
+                } catch (LexicalException e) {
+                    return lexicalExceptionToErrorToken(e);
+                }
             }
 
             private boolean isDtext() {
@@ -1022,12 +1111,141 @@ public class StructuredFieldBodyParser {
             }
 
         }
+
+        // @formatter:off (Eclipse formatter moves comment start to the first column) 
+        /**
+         * Scans a MIME 'token' or quoted-string or a tspecials character.
+         * 
+         * <pre>
+         * value := token / quoted-string
+         * 
+         * token := 1*<any (US-ASCII) CHAR except SPACE, CTLs,
+         *                 or tspecials>
+         * 
+         * tspecials :=  "(" / ")" / "<" / ">" / "@" /
+         *               "," / ";" / ":" / "\" / <">
+         *               "/" / "[" / "]" / "?" / "="
+         *               ; Must be in quoted-string,
+         *               ; to use within parameter values
+         * </pre>
+         * 
+         * @see <a href="https://tools.ietf.org/html/rfc2045#section-5.1">RFC 2045 - 
+         * Multipurpose Internet Mail Extensions (MIME) Part One: Format of 
+         * Internet Message Bodies</a>
+         */
+        // @formatter:on 
+        public class MimeTokenScanner implements Scanner {
+
+            public Token scan() {
+                try {
+                    Token token = new Token();
+                    token.position = position;
+                    token.collapsedWhitespace = "";
+                    currentSpelling.setLength(0);
+                    currentSemContent.setLength(0);
+
+                    if (starterCFWS()) {
+                        scanCFWS();
+                        token.collapsedWhitespace = " ";
+                    }
+
+                    currentSpelling.setLength(0);
+                    currentSemContent.setLength(0);
+
+                    token.kind = scanToken();
+
+                    token.spelling = currentSpelling.toString();
+                    token.semanticContent = currentSemContent.toString();
+                    return token;
+                } catch (LexicalException e) {
+                    return lexicalExceptionToErrorToken(e);
+                }
+            }
+
+            private TokenKind scanToken() throws LexicalException {
+                if (isAtokenText()) {
+                    scanAtoken();
+                    return MIME_TOKEN;
+                } else if (currentChar == '"') {
+                    scanQuotedString();
+                    return QUOTED_STRING;
+                } else if (isEOF()) {
+                    return EOF;
+                } else {
+                    switch (currentChar) {
+                    case '/':
+                        takeIt();
+                        return SLASH;
+                    case '=':
+                        takeIt();
+                        return EQUALS;
+                    case ';':
+                        takeIt();
+                        return SEMICOLON;
+                    default:
+                        return ERROR;
+                    }
+                }
+
+            }
+
+            private void scanAtoken() {
+                addToSemanticContent();
+                takeIt();
+
+                while (isAtokenText()) {
+                    addToSemanticContent();
+                    takeIt();
+                }
+            }
+
+            private boolean isAtokenText() {
+                if (!isAscii())
+                    return false;
+                if (currentChar == ' ')
+                    return false;
+                if (isCtl())
+                    return false;
+                if (isTspecials())
+                    return false;
+                return true;
+            }
+
+            private boolean isTspecials() {
+                switch (currentChar) {
+                case '(':
+                case ')':
+                case '<':
+                case '>':
+                case '@':
+                case ',':
+                case ';':
+                case ':':
+                case '\\':
+                case '"':
+                case '/':
+                case '[':
+                case ']':
+                case '?':
+                case '=':
+                    return true;
+                default:
+                    return false;
+                }
+            }
+        }
     }
 
     enum TokenKind {
-        ATOM, QUOTED_STRING,
-
-/** '<' */
+        /**
+         * 
+         */
+        ATOM,
+        /**
+         * 
+         */
+        QUOTED_STRING,
+        /** &lt; */
         LESS_THEN,
         /** '>' */
         GREATER_THEN,
@@ -1056,9 +1274,24 @@ public class StructuredFieldBodyParser {
 
         /**
          * This special token can only be returned by
-         * {@link Scanner#scanDtext()}
+         * {@link mireka.maildata.StructuredFieldBodyParser.FieldScanner.DomainLiteralScanner}
          */
         DTEXT,
+        /**
+         * This special token can only be returned by
+         * {@link mireka.maildata.StructuredFieldBodyParser.FieldScanner.MimeTokenScanner}
+         */
+        MIME_TOKEN,
+        /**
+         * This special token can only be returned by
+         * {@link mireka.maildata.StructuredFieldBodyParser.FieldScanner.MimeTokenScanner}
+         */
+        SLASH,
+        /**
+         * This special token can only be returned by
+         * {@link mireka.maildata.StructuredFieldBodyParser.FieldScanner.MimeTokenScanner}
+         */
+        EQUALS,
     }
 
     private static class Token extends AbstractToken {

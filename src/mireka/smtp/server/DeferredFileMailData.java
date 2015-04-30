@@ -43,7 +43,7 @@ public class DeferredFileMailData implements MailData {
     }
 
     @Override
-    public void dispose() {
+    public void close() {
         try {
             deferredFileOutputStream.close();
         } catch (IOException e) {

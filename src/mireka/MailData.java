@@ -11,7 +11,7 @@ import java.io.OutputStream;
  * @see <a href="http://tools.ietf.org/html/rfc5321#section-2.3.9">RFC 5321
  *      2.3.9. Message Content and Mail Data</a>
  */
-public interface MailData {
+public interface MailData extends AutoCloseable {
     /**
      * Returns the data stream positioned to the first byte of the mail data.
      * The caller must close the returned stream.
@@ -27,5 +27,5 @@ public interface MailData {
     /**
      * Releases resources, like temporary files.
      */
-    void dispose();
+    void close();
 }
