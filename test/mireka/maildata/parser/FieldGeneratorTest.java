@@ -1,9 +1,14 @@
-package mireka.maildata;
+package mireka.maildata.parser;
 
 import static org.junit.Assert.*;
+import mireka.maildata.AddrSpec;
+import mireka.maildata.DotAtomDomainPart;
+import mireka.maildata.Group;
+import mireka.maildata.Mailbox;
 import mireka.maildata.field.From;
 import mireka.maildata.field.To;
 import mireka.maildata.field.UnstructuredField;
+import mireka.maildata.parser.FieldGenerator;
 
 import org.junit.Before;
 import org.junit.Test;

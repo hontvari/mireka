@@ -1,6 +1,6 @@
-package mireka.maildata;
+package mireka.maildata.parser;
 
-import static mireka.maildata.EncodedWordParser.TokenKind.*;
+import static mireka.maildata.parser.EncodedWordParser.TokenKind.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

@@ -5,7 +5,7 @@ import static mireka.dmarc.tagvlist.Unfolder.TokenKind.*;
 import java.io.ByteArrayInputStream;
 import java.text.ParseException;
 
-import mireka.maildata.AbstractToken;
+import mireka.maildata.parser.AbstractToken;
 import mireka.util.CharsetUtil;
 
 public class Unfolder {

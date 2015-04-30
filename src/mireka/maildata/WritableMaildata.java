@@ -11,6 +11,7 @@ import java.io.SequenceInputStream;
 import java.util.Iterator;
 
 import mireka.MailData;
+import mireka.maildata.parser.MaildataParser;
 import mireka.smtp.server.DeferredFileMailData;
 import mireka.util.CharsetUtil;
 import mireka.util.StreamCopier;
@@ -23,7 +24,7 @@ public class WritableMaildata {
     /**
      * Null if the mail is not yet parsed.
      */
-    private MaildataParser.Result sourceMap;
+    private MaildataParser.MaildataMap sourceMap;
 
     /**
      * It is initialized on demand, null if it is not yet initialized.

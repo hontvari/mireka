@@ -1,10 +1,11 @@
-package mireka.maildata;
+package mireka.maildata.parser;
 
 import static org.junit.Assert.*;
 
 import java.text.ParseException;
 
 import mireka.maildata.field.UnstructuredField;
+import mireka.maildata.parser.UnstructuredFieldBodyParser;
 
 import org.junit.Test;
 

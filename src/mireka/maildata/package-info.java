@@ -1,6 +1,7 @@
 /**
- * Internet Message Format parser and generator for parsing and generating the 
- * message content (also known as Mail Data). 
+ * Provides a domain object model for the Internet Message Format. Internet 
+ * Message Format describes the Mail Data (also known as Message Content), 
+ * which consists of a header section with header fields and a message body.  
  * 
  * Electronic mail consists of an envelope and content. This package deals 
  * exclusively with the content. This distinction is important. There are many 

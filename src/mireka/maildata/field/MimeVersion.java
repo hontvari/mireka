@@ -2,8 +2,8 @@ package mireka.maildata.field;
 
 import java.io.IOException;
 
-import mireka.maildata.FieldGenerator;
 import mireka.maildata.HeaderField;
+import mireka.maildata.parser.FieldGenerator;
 
 public class MimeVersion extends HeaderField {
     public int major;

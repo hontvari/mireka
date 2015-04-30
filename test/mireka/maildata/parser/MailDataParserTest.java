@@ -1,4 +1,4 @@
-package mireka.maildata;
+package mireka.maildata.parser;
 
 import static org.junit.Assert.*;
 
@@ -9,6 +9,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import mireka.maildata.HeaderFieldText;
+import mireka.maildata.HeaderSection;
+import mireka.maildata.parser.MaildataParser;
 import mockit.Mocked;
 import mockit.Verifications;
 
@@ -31,7 +34,7 @@ public class MailDataParserTest {
         InputStream mailInputStream = new ByteArrayInputStream(
                 mail.getBytes("US-ASCII"));
 
-        MaildataParser.Result maildataMap = new MaildataParser(mailInputStream)
+        MaildataParser.MaildataMap maildataMap = new MaildataParser(mailInputStream)
                 .parse();
 
         new Verifications() {

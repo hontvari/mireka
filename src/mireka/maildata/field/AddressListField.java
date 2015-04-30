@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mireka.maildata.Address;
-import mireka.maildata.FieldGenerator;
 import mireka.maildata.HeaderField;
+import mireka.maildata.parser.FieldGenerator;
 
 /**
  * AddressListField represents header fields which consists of an address-field

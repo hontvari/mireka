@@ -1,6 +1,7 @@
-package mireka.maildata;
+package mireka.maildata.parser;
 
 import static org.junit.Assert.*;
+import mireka.maildata.parser.Folder;
 
 import org.junit.Test;
 

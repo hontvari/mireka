@@ -1,6 +1,6 @@
-package mireka.maildata;
+package mireka.maildata.parser;
 
-import static mireka.maildata.FieldHeaderParser.TokenKind.*;
+import static mireka.maildata.parser.FieldHeaderParser.TokenKind.*;
 
 import java.io.ByteArrayInputStream;
 import java.text.ParseException;
@@ -158,8 +158,8 @@ public class FieldHeaderParser {
     }
 
     public static class FieldMap {
-        String name;
-        int indexOfBody;
+        public String name;
+        public int indexOfBody;
     }
 
 }

@@ -1,14 +1,21 @@
-package mireka.maildata;
+package mireka.maildata.parser;
 
 import static org.junit.Assert.*;
 
 import java.text.ParseException;
 
+import mireka.maildata.AddrSpec;
+import mireka.maildata.Address;
+import mireka.maildata.DotAtomDomainPart;
+import mireka.maildata.Group;
+import mireka.maildata.LiteralDomainPart;
+import mireka.maildata.Mailbox;
 import mireka.maildata.field.AddressListField;
 import mireka.maildata.field.ContentType;
 import mireka.maildata.field.From;
 import mireka.maildata.field.MimeVersion;
 import mireka.maildata.field.To;
+import mireka.maildata.parser.StructuredFieldBodyParser;
 
 import org.junit.Test;
 

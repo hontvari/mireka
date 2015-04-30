@@ -1,6 +1,6 @@
-package mireka.maildata;
+package mireka.maildata.parser;
 
-import static mireka.maildata.StructuredFieldBodyParser.TokenKind.*;
+import static mireka.maildata.parser.StructuredFieldBodyParser.TokenKind.*;
 
 import java.io.ByteArrayInputStream;
 import java.text.ParseException;
@@ -8,6 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mireka.address.parser.base.CharUtil;
+import mireka.maildata.AddrSpec;
+import mireka.maildata.Address;
+import mireka.maildata.DomainPart;
+import mireka.maildata.DotAtomDomainPart;
+import mireka.maildata.Group;
+import mireka.maildata.LiteralDomainPart;
+import mireka.maildata.Mailbox;
+import mireka.maildata.MediaParameter;
+import mireka.maildata.MediaType;
 import mireka.maildata.field.AddressListField;
 import mireka.maildata.field.ContentType;
 import mireka.maildata.field.MimeVersion;

@@ -8,7 +8,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import mireka.maildata.FieldHeaderParser.FieldMap;
+import mireka.maildata.parser.FieldHeaderParser;
+import mireka.maildata.parser.FieldHeaderParser.FieldMap;
+import mireka.maildata.parser.FieldParser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,13 +35,12 @@ public class HeaderSection {
      * sequentially extracted from mail data. This operation does not cause the
      * parsing of the field.
      */
-    void addExtracted(HeaderFieldText text) {
+    public void addExtracted(HeaderFieldText text) {
         Entry entry = new Entry();
         entry.source = text;
 
         try {
             FieldMap map = new FieldHeaderParser(text.unfoldedSpelling).parse();
-            // entry.name = map.name;
             entry.lowerCaseName = toAsciiLowerCase(map.name);
         } catch (ParseException e) {
             logger.debug(

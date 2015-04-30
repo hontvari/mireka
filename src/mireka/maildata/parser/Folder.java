@@ -1,4 +1,4 @@
-package mireka.maildata;
+package mireka.maildata.parser;
 
 import java.util.ArrayList;
 import java.util.List;

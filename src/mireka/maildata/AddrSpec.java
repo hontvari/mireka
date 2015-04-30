@@ -2,6 +2,8 @@ package mireka.maildata;
 
 import java.text.ParseException;
 
+import mireka.maildata.parser.StructuredFieldBodyParser;
+
 public class AddrSpec {
     /**
      * The semantic content of the local part. For example if it was specified

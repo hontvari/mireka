@@ -3,8 +3,8 @@ package mireka.maildata.field;
 import java.io.IOException;
 
 import mireka.maildata.FieldDef;
-import mireka.maildata.FieldGenerator;
 import mireka.maildata.HeaderField;
+import mireka.maildata.parser.FieldGenerator;
 
 /**
  * @see <a href="https://tools.ietf.org/html/rfc5322#section-2.2.1">RFC 5322</a>

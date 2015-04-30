@@ -1,15 +1,22 @@
-package mireka.maildata;
+package mireka.maildata.parser;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import mireka.maildata.EncodedWordGenerator.Placement;
+import mireka.maildata.AddrSpec;
+import mireka.maildata.Address;
+import mireka.maildata.DomainPart;
+import mireka.maildata.DotAtomDomainPart;
+import mireka.maildata.Group;
+import mireka.maildata.LiteralDomainPart;
+import mireka.maildata.Mailbox;
 import mireka.maildata.field.AddressListField;
 import mireka.maildata.field.ContentType;
 import mireka.maildata.field.MimeVersion;
 import mireka.maildata.field.UnstructuredField;
+import mireka.maildata.parser.EncodedWordGenerator.Placement;
 import mireka.util.CharsetUtil;
 
 public class FieldGenerator {

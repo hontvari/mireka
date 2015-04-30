@@ -1,6 +1,6 @@
-package mireka.maildata;
+package mireka.maildata.parser;
 
-import static mireka.maildata.UnstructuredFieldBodyParser.TokenKind.*;
+import static mireka.maildata.parser.UnstructuredFieldBodyParser.TokenKind.*;
 
 import java.io.ByteArrayInputStream;
 import java.text.ParseException;

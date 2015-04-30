@@ -1,4 +1,4 @@
-package mireka.maildata;
+package mireka.maildata.parser;
 
 /**
  * This exception is thrown when a scanner encounters an unexpected character.

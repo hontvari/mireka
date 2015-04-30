@@ -1,10 +1,10 @@
-package mireka.maildata;
+package mireka.maildata.parser;
 
 import static mireka.util.CharsetUtil.*;
 
 import java.text.ParseException;
 
-import mireka.maildata.FieldHeaderParser.FieldMap;
+import mireka.maildata.HeaderField;
 import mireka.maildata.field.AddressListField;
 import mireka.maildata.field.Cc;
 import mireka.maildata.field.From;
@@ -12,6 +12,7 @@ import mireka.maildata.field.ReplyTo;
 import mireka.maildata.field.ResentCc;
 import mireka.maildata.field.ResentTo;
 import mireka.maildata.field.To;
+import mireka.maildata.parser.FieldHeaderParser.FieldMap;
 
 public class FieldParser {
 

@@ -7,7 +7,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import mireka.maildata.AbstractToken;
+import mireka.maildata.parser.AbstractToken;
 import mireka.util.CharsetUtil;
 
 public class TagValueListParser {

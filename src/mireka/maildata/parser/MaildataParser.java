@@ -1,10 +1,13 @@
-package mireka.maildata;
+package mireka.maildata.parser;
 
-import static mireka.maildata.MaildataParser.TokenKind.*;
+import static mireka.maildata.parser.MaildataParser.TokenKind.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
+
+import mireka.maildata.HeaderFieldText;
+import mireka.maildata.HeaderSection;
 
 /**
  * MailDataParser is a top level parser for mail data, it separates the heading
@@ -26,7 +29,7 @@ public class MaildataParser {
         scanner = new Scanner(in);
     }
 
-    public Result parse() throws IOException {
+    public MaildataMap parse() throws IOException {
         try {
             currentToken = scanner.scan();
             return parseMailData();
@@ -36,8 +39,8 @@ public class MaildataParser {
         }
     }
 
-    private Result parseMailData() throws ParseException, IOException {
-        Result result = new Result();
+    private MaildataMap parseMailData() throws ParseException, IOException {
+        MaildataMap result = new MaildataMap();
 
         result.headerSection = parseHeaderSection();
         switch (currentToken.kind) {
@@ -227,20 +230,20 @@ public class MaildataParser {
         }
     }
 
-    public static class Result {
+    public static class MaildataMap {
         /**
          * It may be an empty string, although that is semantically invalid.
          */
-        HeaderSection headerSection;
+        public HeaderSection headerSection;
         /**
          * Null, if no separator presents, which also means that there is no
          * body.
          */
-        String separator;
+        public String separator;
         /**
          * -1 means that there is no body, this happens when no separator is
          * found. It may point to EOF, if the body is empty.
          */
-        long bodyPosition = -1;
+        public long bodyPosition = -1;
     }
 }

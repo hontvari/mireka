@@ -1,8 +1,10 @@
-package mireka.maildata;
+package mireka.maildata.parser;
 
 import static org.junit.Assert.*;
 
 import java.text.ParseException;
+
+import mireka.maildata.parser.QEncodingParser;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package mireka.maildata;
+package mireka.maildata.parser;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

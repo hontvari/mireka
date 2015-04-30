@@ -1,9 +1,10 @@
-package mireka.maildata;
+package mireka.maildata.parser;
 
 import static org.junit.Assert.*;
 
 import java.util.List;
 
+import mireka.maildata.parser.EncodedWordGenerator;
 import mockit.Deencapsulation;
 
 import org.junit.Test;
