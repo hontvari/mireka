@@ -5,7 +5,7 @@ import java.nio.charset.Charset;
 import java.util.Locale;
 
 public class CharsetUtil {
-    private static final Charset ASCII = Charset.forName("US-ASCII");
+    public static final Charset ASCII = Charset.forName("US-ASCII");
 
     public static String toAsciiLowerCase(String s) {
         return s.toLowerCase(Locale.US);

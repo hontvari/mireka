@@ -2,9 +2,10 @@ package mireka;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
-import mireka.maildata.MaildataFile;
+import mireka.maildata.io.MaildataFile;
+import mireka.maildata.io.MaildataFileInputStream;
+import mireka.maildata.io.MaildataFileReadException;
 
 public class LongMaildataFile implements MaildataFile {
 
@@ -14,20 +15,10 @@ public class LongMaildataFile implements MaildataFile {
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
-        return new InputStreamGenerator(ResourceLoader.loadResource(getClass(),
-                "emptyMail.eml"));
-    }
-
-    @Override
-    public void writeTo(OutputStream out) throws IOException {
-        InputStream in = getInputStream();
-        byte[] buffer = new byte[8192];
-        int cRead;
-        while (-1 != (cRead = in.read(buffer))) {
-            out.write(buffer, 0, cRead);
-        }
-        in.close();
+    public MaildataFileInputStream getInputStream()
+            throws MaildataFileReadException {
+        return new MaildataFileInputStream(new InputStreamGenerator(
+                ResourceLoader.loadResource(getClass(), "emptyMail.eml")));
     }
 
     private static class InputStreamGenerator extends InputStream {

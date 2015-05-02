@@ -11,7 +11,7 @@ import mireka.address.Recipient;
 import mireka.destination.Destination;
 import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
-import mireka.maildata.MaildataFile;
+import mireka.maildata.Maildata;
 
 import org.subethamail.smtp.MessageContext;
 
@@ -26,7 +26,7 @@ public class MailTransactionImpl implements MailTransaction {
     public List<RecipientContext> recipientContexts =
             new ArrayList<RecipientContext>();
 
-    private MaildataFile data;
+    private Maildata data;
 
     /**
      * Contains only accepted recipients.
@@ -43,17 +43,19 @@ public class MailTransactionImpl implements MailTransaction {
      * it resets the stream if necessary before returning it
      */
     @Override
-    public MaildataFile getData() {
+    public Maildata getData() {
         return data;
     }
 
-    public void setData(MaildataFile data) {
+    public void setData(Maildata data) {
         this.data = data;
     }
 
     @Override
-    public void replaceData(MaildataFile mailData) {
-        this.data = mailData;
+    public void replaceData(Maildata maildata) {
+        if (this.data != null && this.data != maildata)
+            this.data.close();
+        this.data = maildata;
     }
 
     @Override

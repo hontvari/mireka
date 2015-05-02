@@ -14,9 +14,11 @@ import mireka.address.MailAddressFactory;
 import mireka.address.NullReversePath;
 import mireka.address.Recipient;
 import mireka.address.ReversePath;
-import mireka.maildata.MaildataFile;
+import mireka.maildata.Maildata;
+import mireka.maildata.io.TmpMaildataFile;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.MailSystemStatus;
+import mireka.transmission.LocalMailSystemException;
 import mireka.transmission.Mail;
 import mireka.util.DateTimeRfc822Formatter;
 import mireka.util.MultilineParser;
@@ -67,7 +69,8 @@ public class DsnMailCreator {
      * @param recipientReports
      *            recipient specific information about the status
      */
-    public Mail create(Mail mail, List<RecipientProblemReport> recipientReports) {
+    public Mail create(Mail mail, List<RecipientProblemReport> recipientReports)
+            throws LocalMailSystemException {
         return new DsnMailCreatorInner(mail, recipientReports).create();
     }
 
@@ -96,7 +99,7 @@ public class DsnMailCreator {
             this.recipientReports = recipientReports;
         }
 
-        public Mail create() {
+        public Mail create() throws LocalMailSystemException {
             setupEnvelope();
             setupMessageContent();
             return resultMail;
@@ -113,9 +116,22 @@ public class DsnMailCreator {
             resultMail.recipients.add(recipient);
         }
 
-        private void setupMessageContent() {
+        private void setupMessageContent() throws LocalMailSystemException {
             Message message = message();
-            resultMail.mailData = new Mime4jMessageMaildataFile(message);
+            TmpMaildataFile maildataFile = new TmpMaildataFile();
+            try {
+                try (OutputStream out =
+                        maildataFile.deferredFile.getOutputStream()) {
+                    new DefaultMessageWriter().writeMessage(message, out);
+                }
+                message.dispose();
+
+                resultMail.maildata = new Maildata(maildataFile);
+            } catch (IOException e) {
+                maildataFile.close();
+                throw new LocalMailSystemException(e,
+                        EnhancedStatus.TRANSIENT_LOCAL_ERROR_IN_PROCESSING);
+            }
         }
 
         private Message message() {
@@ -270,36 +286,12 @@ public class DsnMailCreator {
         }
 
         private BodyPart originalMessageBodyPart() {
-            BinaryBody body = new MessageContentBody(originalMail.mailData);
+            BinaryBody body = new MessageContentBody(originalMail.maildata);
             BodyPart result = new BodyPart();
             result.setBody(body, "message/rfc822");
             return result;
         }
 
-    }
-
-    private static class Mime4jMessageMaildataFile implements MaildataFile {
-        private final Message message;
-
-        public Mime4jMessageMaildataFile(Message message) {
-            this.message = message;
-        }
-
-        @Override
-        public void writeTo(OutputStream out) throws IOException {
-            new DefaultMessageWriter().writeMessage(message, out);
-        }
-
-        @Override
-        public void close() {
-            message.dispose();
-        }
-
-        @Override
-        public InputStream getInputStream() throws IOException {
-            // not used
-            throw new UnsupportedOperationException();
-        }
     }
 
     private static class HeaderPrinter {
@@ -327,20 +319,25 @@ public class DsnMailCreator {
 
     private static class MessageContentBody extends BinaryBody {
 
-        private final MaildataFile messageContent;
+        private final Maildata maildata;
 
-        public MessageContentBody(MaildataFile messageContent) {
-            this.messageContent = messageContent;
+        public MessageContentBody(Maildata maildata) {
+            this.maildata = maildata;
         }
 
         @Override
         public InputStream getInputStream() throws IOException {
-            return messageContent.getInputStream();
+            return maildata.getInputStream();
         }
 
         @Override
         public void writeTo(OutputStream out) throws IOException {
-            messageContent.writeTo(out);
+            maildata.writeTo(out);
+        }
+
+        @Override
+        public void dispose() {
+            maildata.close();
         }
     }
 }

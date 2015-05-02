@@ -1,11 +1,11 @@
 package mireka.filter;
 
-import mireka.maildata.MaildataFile;
+import mireka.maildata.Maildata;
 import mireka.smtp.RejectExceptionExt;
 
 /**
  * a simpler alternative to {@link Filter}. It must be adapted to {@link Filter}
- * using {@link DataRecipientFilter}
+ * using {@link DataRecipientFilterAdapter}
  */
 public interface DataRecipientFilter extends FilterBase {
 
@@ -14,6 +14,6 @@ public interface DataRecipientFilter extends FilterBase {
      * methods of the next filter will be called only after both methods have
      * been run.
      */
-    void dataRecipient(MaildataFile data, RecipientContext recipientContext)
+    void dataRecipient(Maildata data, RecipientContext recipientContext)
             throws RejectExceptionExt;
 }

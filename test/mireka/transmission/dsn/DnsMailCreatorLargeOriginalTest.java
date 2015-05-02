@@ -28,7 +28,7 @@ public class DnsMailCreatorLargeOriginalTest {
                 new File(System.getProperty("java.io.tmpdir"), getClass()
                         .getSimpleName() + ".eml");
         FileOutputStream fout = new FileOutputStream(file);
-        dsnMail.mailData.writeTo(fout);
+        dsnMail.maildata.writeTo(fout);
         fout.close();
 
         FileInputStream in = new FileInputStream(file);

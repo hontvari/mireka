@@ -49,7 +49,7 @@ public class MaildropDestination implements MailDestination {
             }
             try {
                 out.write(constructReturnPathLine(mail));
-                mail.mailData.writeTo(out);
+                mail.maildata.writeTo(out);
             } catch (IOException e) {
                 logger.error(
                         "Cannot accept mail because of an IO error "

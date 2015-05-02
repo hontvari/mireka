@@ -1,9 +1,11 @@
 package mireka.filter;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import mireka.address.ReversePath;
-import mireka.maildata.MaildataFile;
+import mireka.maildata.Maildata;
+import mireka.maildata.io.MaildataFile;
 import mireka.smtp.RejectExceptionExt;
 
 import org.subethamail.smtp.TooMuchDataException;
@@ -18,6 +20,9 @@ public interface FilterChain {
 
     void recipient(RecipientContext recipientContext) throws RejectExceptionExt;
 
+    void dataStream(InputStream in) throws RejectExceptionExt,
+            TooMuchDataException, IOException;
+
     /**
      * A typical implementation of this method would follow the following
      * pattern: 1. examine the complete mail data or only its headers 2.
@@ -28,6 +33,6 @@ public interface FilterChain {
      * {@link MailTransaction#getData()} until another filter replaces it
      * possibly by wrapping it
      */
-    void data(MaildataFile data) throws RejectExceptionExt, TooMuchDataException,
+    void data(Maildata data) throws RejectExceptionExt, TooMuchDataException,
             IOException;
 }

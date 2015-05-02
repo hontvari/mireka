@@ -3,7 +3,6 @@ package mireka.list;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-import mireka.maildata.Maildata;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.RejectExceptionExt;
 import mireka.transmission.Mail;
@@ -23,8 +22,7 @@ public class SubjectRegexpValidator implements MailValidator {
     @Override
     public boolean shouldBeAccepted(Mail mail) throws RejectExceptionExt {
         try {
-            String subject =
-                    new Maildata(mail.mailData).header().getSubject();
+            String subject = mail.maildata.header().getSubject();
 
             if (subject == null)
                 subject = "";

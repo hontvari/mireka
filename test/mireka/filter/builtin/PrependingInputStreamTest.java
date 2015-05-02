@@ -37,6 +37,7 @@ public class PrependingInputStreamTest {
 
     @Test
     public void testBlockRead() throws IOException {
+        @SuppressWarnings("resource")
         PrependingInputStream stream =
                 new PrependingInputStream(header, bodyStream);
         byte[] buffer = new byte[100];

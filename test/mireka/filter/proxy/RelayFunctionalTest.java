@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 
-import mireka.ExampleMailData;
+import mireka.ExampleMaildataFile;
 import mireka.destination.DestinationProcessorFilter;
 import mireka.filter.local.LookupDestinationFilter;
 import mireka.filter.local.table.AnyRecipient;
@@ -74,6 +74,7 @@ public class RelayFunctionalTest {
                 new MessageHandlerFactoryImpl();
         handlerFactory.setFilters(filters);
         relayServer = new SMTPServer(handlerFactory);
+        relayServer.setPort(2524);
         relayServer.start();
 
     }
@@ -86,11 +87,12 @@ public class RelayFunctionalTest {
 
     @Test
     public void testQuit() throws Exception {
-        SmartClient smartClient = new SmartClient("localhost", 25, "localhost");
+        SmartClient smartClient =
+                new SmartClient("localhost", 2524, "localhost");
         smartClient.from("");
         smartClient.to("postmaster@example.org");
         smartClient.dataStart();
-        byte[] bytes = ExampleMailData.simple().bytes;
+        byte[] bytes = ExampleMaildataFile.simple().bytes;
         smartClient.dataWrite(bytes, bytes.length);
         smartClient.dataEnd();
         smartClient.quit();

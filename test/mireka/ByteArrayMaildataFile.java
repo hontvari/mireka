@@ -1,11 +1,9 @@
 package mireka;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 
-import mireka.maildata.MaildataFile;
-import mireka.util.StreamCopier;
+import mireka.maildata.io.MaildataFile;
+import mireka.maildata.io.MaildataFileInputStream;
 
 public class ByteArrayMaildataFile implements MaildataFile {
     public final byte[] bytes;
@@ -14,14 +12,15 @@ public class ByteArrayMaildataFile implements MaildataFile {
         this.bytes = bytes;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * Remark: the returned input stream does not use any system resources,
+     * closing it is optional.
+     */
     @Override
-    public ByteArrayInputStream getInputStream() {
-        return new ByteArrayInputStream(bytes);
-    }
-
-    @Override
-    public void writeTo(OutputStream out) throws IOException {
-        StreamCopier.writeMailDataInputStreamIntoOutputStream(this, out);
+    public MaildataFileInputStream getInputStream() {
+        return new MaildataFileInputStream(new ByteArrayInputStream(bytes));
     }
 
     @Override

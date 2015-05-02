@@ -1,6 +1,6 @@
 package mireka;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -59,7 +59,7 @@ public class MxPopTest extends TempDirectory {
         client.from("jane@example.com");
         client.to("john@example.com");
         client.dataStart();
-        byte[] exampleMail = ExampleMailData.simple().bytes;
+        byte[] exampleMail = ExampleMaildataFile.simple().bytes;
         client.dataWrite(exampleMail, exampleMail.length);
         client.dataEnd();
         client.quit();

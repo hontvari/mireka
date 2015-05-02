@@ -1,9 +1,10 @@
 package mireka.filter.misc;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import mireka.filter.StatelessFilterType;
-import mireka.maildata.MaildataFile;
+import mireka.maildata.Maildata;
 
 import org.apache.james.mime4j.MimeException;
 import org.apache.james.mime4j.io.MaxLineLimitException;
@@ -19,7 +20,7 @@ public class StopLoop extends StatelessFilterType {
     private int maxReceivedHeaders = 100;
 
     @Override
-    public void data(MaildataFile data) throws RejectException,
+    public void data(Maildata data) throws RejectException,
             TooMuchDataException, IOException {
         try {
             if (receivedHeaderCount(data) > maxReceivedHeaders)
@@ -34,24 +35,28 @@ public class StopLoop extends StatelessFilterType {
         }
     }
 
-    private int receivedHeaderCount(MaildataFile data) throws IOException,
+    @SuppressWarnings("incomplete-switch")
+    private int receivedHeaderCount(Maildata data) throws IOException,
             MimeException {
         int count = 0;
         MimeTokenStream stream = new MimeTokenStream();
-        stream.parse(data.getInputStream());
-        for (EntityState state = stream.getState(); state != EntityState.T_END_OF_STREAM; state =
-                stream.next()) {
-            switch (state) {
-            case T_FIELD:
-                if ("Received".equalsIgnoreCase(stream.getField().getName()))
-                    count++;
-                break;
-            case T_END_HEADER:
-                stream.stop();
-                break;
+        try (InputStream maildataStream = data.getInputStream()) {
+            stream.parse(maildataStream);
+            for (EntityState state = stream.getState(); state != EntityState.T_END_OF_STREAM; state =
+                    stream.next()) {
+                switch (state) {
+                case T_FIELD:
+                    if ("Received"
+                            .equalsIgnoreCase(stream.getField().getName()))
+                        count++;
+                    break;
+                case T_END_HEADER:
+                    stream.stop();
+                    break;
+                }
             }
+            return count;
         }
-        return count;
     }
 
     /**

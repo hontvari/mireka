@@ -20,8 +20,8 @@ import mireka.maildata.DomainPart;
 import mireka.maildata.DotAtomDomainPart;
 import mireka.maildata.LiteralDomainPart;
 import mireka.maildata.Mailbox;
-import mireka.maildata.MediaType;
 import mireka.maildata.Maildata;
+import mireka.maildata.MediaType;
 import mireka.maildata.field.UnstructuredField;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.RejectExceptionExt;
@@ -42,7 +42,6 @@ class Redistributor {
     public Redistributor(Mail source, ListDestination list) {
         this.source = source;
         this.list = list;
-        newMaildata = new Maildata(source.mailData);
     }
 
     public void distribute() throws RejectExceptionExt {
@@ -63,6 +62,10 @@ class Redistributor {
                     EnhancedStatus.TRANSIENT_LOCAL_ERROR_IN_PROCESSING);
         } catch (ParseException e) {
             throw new RejectExceptionExt(EnhancedStatus.BAD_MESSAGE_BODY);
+        } finally {
+            if (newMaildata != null) {
+                newMaildata.close();
+            }
         }
     }
 
@@ -92,7 +95,7 @@ class Redistributor {
         if (list.isAttachmentsAllowed())
             return;
 
-        if (newMaildata.header().getMediaType()
+        if (source.maildata.header().getMediaType()
                 .equalTypeIdentifiers(MediaType.MULTIPART_MIXED))
             throw new RejectExceptionExt(new EnhancedStatus(550, "5.7.0",
                     "Attachments are not allowed on this mailing list"));
@@ -107,7 +110,7 @@ class Redistributor {
      * @see <a href="http://tools.ietf.org/html/rfc2919">RFC 2919</a>
      */
     private void checkListLoop() throws RejectExceptionExt, IOException {
-        if (newMaildata.getHeaders().contains(LIST_ID))
+        if (source.maildata.getHeaders().contains(LIST_ID))
             throw new RejectExceptionExt(new EnhancedStatus(450, "4.4.6",
                     "Mail list loop detected"));
 
@@ -115,6 +118,8 @@ class Redistributor {
 
     private void setupNewMaildata() throws IOException, RejectExceptionExt,
             ParseException {
+        newMaildata = source.maildata.copy();
+
         // We need to remove this header from the copy we're sending around
         newMaildata.getHeaders().remove(RETURN_PATH);
 
@@ -311,7 +316,7 @@ class Redistributor {
         return result;
     }
 
-    private void sendMail() throws RejectExceptionExt, IOException {
+    private void sendMail() throws RejectExceptionExt {
         Mail mail = new Mail();
         mail.from = list.reversePath;
         for (ListMember member : list.members) {
@@ -325,7 +330,7 @@ class Redistributor {
             return;
         }
 
-        mail.mailData = newMaildata.toMailData();
+        mail.maildata = newMaildata;
         try {
             mail.arrivalDate = source.arrivalDate;
             mail.scheduleDate = mail.arrivalDate; // try to preserve order
@@ -335,8 +340,6 @@ class Redistributor {
         } catch (LocalMailSystemException e) {
             logger.error("Cannot transmit mail", e);
             throw new RejectExceptionExt(e.errorStatus());
-        } finally {
-            mail.mailData.close();
         }
     }
 

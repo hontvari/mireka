@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 
 import mireka.address.Recipient;
 import mireka.address.ReversePath;
-import mireka.maildata.MaildataFile;
+import mireka.maildata.Maildata;
 
 /**
  * An SMTP mail object, which contains both an envelope and content.
@@ -23,7 +23,7 @@ public class Mail {
     public ReversePath from;
     @Nonnull
     public List<Recipient> recipients = new ArrayList<Recipient>();
-    public MaildataFile mailData;
+    public Maildata maildata;
     /**
      * If the message was generated locally then this time should be the date of
      * creation.
@@ -62,17 +62,17 @@ public class Mail {
 
     /**
      * Creates an essentially deep copy of this instance. The same
-     * {@link #mailData} object is used, otherwise every other field is a deep
+     * {@link #maildata} object is used, otherwise every other field is a deep
      * copy.
      * 
-     * @return A deep copy of this mail, except the {@link #mailData} object,
+     * @return A deep copy of this mail, except the {@link #maildata} object,
      *         which is used in both the new and in this object.
      */
     public Mail copy() {
         Mail result = new Mail();
         result.from = from;
         result.recipients.addAll(recipients);
-        result.mailData = mailData;
+        result.maildata = maildata;
         result.arrivalDate = arrivalDate;
         result.receivedFromMtaName = receivedFromMtaName;
         result.receivedFromMtaAddress = receivedFromMtaAddress;
@@ -83,8 +83,8 @@ public class Mail {
     }
 
     /**
-     * Returns a short descriptive information about the mail, useful for 
-     * logging. 
+     * Returns a short descriptive information about the mail, useful for
+     * logging.
      */
     @Override
     public String toString() {

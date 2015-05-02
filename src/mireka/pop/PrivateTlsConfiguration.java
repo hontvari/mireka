@@ -37,7 +37,6 @@ public class PrivateTlsConfiguration implements TlsConfiguration {
     private String keystorePass = "changeit";
     private SSLSocketFactory socketFactory;
 
-    @SuppressWarnings("unused")
     @PostConstruct
     private void init() {
         if (!enabled)

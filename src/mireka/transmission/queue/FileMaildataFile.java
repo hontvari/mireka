@@ -3,11 +3,9 @@ package mireka.transmission.queue;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
-import mireka.maildata.MaildataFile;
-import mireka.util.StreamCopier;
+import mireka.maildata.io.MaildataFile;
+import mireka.maildata.io.MaildataFileInputStream;
 
 class FileMaildataFile implements MaildataFile {
 
@@ -18,17 +16,12 @@ class FileMaildataFile implements MaildataFile {
     }
 
     @Override
-    public InputStream getInputStream() {
+    public MaildataFileInputStream getInputStream() {
         try {
-            return new FileInputStream(file);
+            return new MaildataFileInputStream(new FileInputStream(file));
         } catch (IOException e) {
             throw new RuntimeException("Assertion failed");
         }
-    }
-
-    @Override
-    public void writeTo(OutputStream out) throws IOException {
-        StreamCopier.writeMailDataInputStreamIntoOutputStream(this, out);
     }
 
     @Override

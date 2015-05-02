@@ -2,6 +2,7 @@ package mireka.smtp.server;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.ParseException;
 
 import mireka.ConfigurationException;
@@ -12,15 +13,17 @@ import mireka.destination.UnknownRecipientDestination;
 import mireka.filter.FilterReply;
 import mireka.filter.RecipientContext;
 import mireka.filterchain.FilterInstances;
+import mireka.maildata.Maildata;
+import mireka.maildata.io.TmpMaildataFile;
 import mireka.smtp.RejectExceptionExt;
 import mireka.smtp.UnknownUserException;
+import mireka.util.StreamCopier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.subethamail.smtp.MessageHandler;
 import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.TooMuchDataException;
-import org.subethamail.smtp.io.DeferredFileOutputStream;
 
 public class FilterChainMessageHandler implements MessageHandler {
     private final Logger logger = LoggerFactory
@@ -90,35 +93,25 @@ public class FilterChainMessageHandler implements MessageHandler {
     @Override
     public void data(InputStream data) throws RejectException,
             TooMuchDataException, IOException {
-        DeferredFileOutputStream deferredFileOutputStream = null;
-        DeferredFileMaildataFile deferredFileMailData = null;
-        try {
-            deferredFileOutputStream = copyDataToDeferredFileOutputStream(data);
-            deferredFileMailData =
-                    new DeferredFileMaildataFile(deferredFileOutputStream);
-            mailTransaction.setData(deferredFileMailData);
-            filterChain.getHead().data(mailTransaction.getData());
-            checkResponsibilityHasBeenTakenForAllRecipients();
+        try (TmpMaildataFile tmpMaildataFile = new TmpMaildataFile()) {
+            filterChain.getHead().dataStream(data);
+
+            try (OutputStream tmpOut =
+                    tmpMaildataFile.deferredFile.getOutputStream()) {
+                StreamCopier.writeInputStreamIntoOutputStream(data, tmpOut);
+            }
+            try (Maildata maildata = new Maildata(tmpMaildataFile)) {
+                mailTransaction.setData(maildata);
+                filterChain.getHead().data(mailTransaction.getData());
+                checkResponsibilityHasBeenTakenForAllRecipients();
+            }
         } catch (RejectExceptionExt e) {
             throw e.toRejectException();
         } finally {
+            // Maildata may be replaced with another Maildata by a filter.
             if (mailTransaction.getData() != null)
                 mailTransaction.getData().close();
-            if (deferredFileOutputStream != null)
-                deferredFileOutputStream.close();
         }
-    }
-
-    private DeferredFileOutputStream copyDataToDeferredFileOutputStream(
-            InputStream src) throws IOException {
-        byte[] buffer = new byte[8192];
-        DeferredFileOutputStream deferredFileOutputStream =
-                new DeferredFileOutputStream(32768);
-        int cRead;
-        while ((cRead = src.read(buffer)) > 0) {
-            deferredFileOutputStream.write(buffer, 0, cRead);
-        }
-        return deferredFileOutputStream;
     }
 
     private void checkResponsibilityHasBeenTakenForAllRecipients()

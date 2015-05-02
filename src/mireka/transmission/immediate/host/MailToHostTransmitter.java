@@ -107,7 +107,7 @@ public class MailToHostTransmitter {
             throws IOException {
         SmartClientOutputStreamAdapter out =
                 new SmartClientOutputStreamAdapter(smartClient);
-        mail.mailData.writeTo(out);
+        mail.maildata.writeTo(out);
     }
 
     /**

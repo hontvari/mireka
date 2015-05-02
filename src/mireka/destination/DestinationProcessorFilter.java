@@ -14,7 +14,7 @@ import mireka.filter.Filter;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
-import mireka.maildata.MaildataFile;
+import mireka.maildata.Maildata;
 import mireka.smtp.RejectExceptionExt;
 import mireka.transmission.Mail;
 
@@ -92,9 +92,9 @@ public class DestinationProcessorFilter implements FilterType {
         }
 
         @Override
-        public void data(MaildataFile data) throws TooMuchDataException,
+        public void data(Maildata data) throws TooMuchDataException,
                 RejectExceptionExt, IOException {
-            mail.mailData = data;
+            mail.maildata = data;
             mail.arrivalDate = new Date();
             mail.scheduleDate = mail.arrivalDate;
             for (Map.Entry<ResponsibleDestination, DestinationState> entry : destinations

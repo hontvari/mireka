@@ -32,10 +32,10 @@ public class RetryPolicy {
     private final Logger logger = LoggerFactory.getLogger(RetryPolicy.class);
     private List<Period> retryPeriods = Arrays.asList(Period.minutes(3),
             Period.minutes(3), Period.minutes(9), Period.minutes(15),
-            Period.minutes(30), Period.hours(2),
+            Period.minutes(30), Period.hours(2), Period.hours(2),
             Period.hours(2), Period.hours(2), Period.hours(2), Period.hours(2),
             Period.hours(2), Period.hours(2), Period.hours(2), Period.hours(2),
-            Period.hours(2), Period.hours(3));
+            Period.hours(3));
     /**
      * Elements indicates the count of failed delivery attempts after which a
      * delayed DSN mail must be sent. For example 3 means that a DSN must be
@@ -213,7 +213,8 @@ public class RetryPolicy {
                 new ArrayList<SendingFailure>();
         private final List<PermanentFailureReport> permanentFailureReports =
                 new ArrayList<PermanentFailureReport>();
-        private final List<DelayReport> delayReports = new ArrayList<DelayReport>();
+        private final List<DelayReport> delayReports =
+                new ArrayList<DelayReport>();
 
         public FailureHandler(Mail mail) {
             this.mail = mail;
@@ -295,7 +296,8 @@ public class RetryPolicy {
             if (mail.from.isNull()) {
                 logger.error("Failure or delay, but reverse-path is null, "
                         + "DSN must not be sent. "
-                        + "Original mail itself was a notification. {}", mail.toString());
+                        + "Original mail itself was a notification. {}",
+                        mail.toString());
                 return;
             }
             Mail dsnMail = dsnMailCreator.create(mail, reports);

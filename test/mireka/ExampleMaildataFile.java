@@ -3,9 +3,9 @@ package mireka;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class ExampleMailData {
+public class ExampleMaildataFile {
     public static ByteArrayMaildataFile simple() {
-        return fromResource(ExampleMailData.class, "simpleMail.eml");
+        return fromResource(ExampleMaildataFile.class, "simpleMail.eml");
     }
 
     /**

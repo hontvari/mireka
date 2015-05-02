@@ -8,7 +8,7 @@ import java.io.OutputStream;
 
 import mireka.filter.RecipientContext;
 import mireka.filter.StatelessFilterType;
-import mireka.maildata.MaildataFile;
+import mireka.maildata.Maildata;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,29 +19,22 @@ public class SavePostmasterMail extends StatelessFilterType {
     private File dir;
 
     @Override
-    public void dataRecipient(MaildataFile data, RecipientContext recipientContext) {
+    public void dataRecipient(Maildata data, RecipientContext recipientContext) {
         if (!recipientContext.recipient.isPostmaster())
             return;
-        OutputStream out = null;
         try {
             File destFile = File.createTempFile("mail", ".txt", dir);
-            out = new FileOutputStream(destFile);
-            InputStream in = data.getInputStream();
-            byte[] buffer = new byte[8192];
-            int numRead;
-            while ((numRead = in.read(buffer)) > 0) {
-                out.write(buffer, 0, numRead);
+            try (OutputStream out = new FileOutputStream(destFile);
+                    InputStream in = data.getInputStream()) {
+
+                byte[] buffer = new byte[8192];
+                int numRead;
+                while ((numRead = in.read(buffer)) > 0) {
+                    out.write(buffer, 0, numRead);
+                }
             }
         } catch (IOException e) {
             logger.error("Mail cannot be saved", e);
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    logger.warn("Mail content file cannot be closed", e);
-                }
-            }
         }
     }
 

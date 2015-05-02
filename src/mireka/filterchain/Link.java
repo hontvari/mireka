@@ -1,6 +1,7 @@
 package mireka.filterchain;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import mireka.address.ReversePath;
 import mireka.filter.Filter;
@@ -8,11 +9,14 @@ import mireka.filter.FilterChain;
 import mireka.filter.FilterReply;
 import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
-import mireka.maildata.MaildataFile;
+import mireka.maildata.Maildata;
 import mireka.smtp.RejectExceptionExt;
 
 import org.subethamail.smtp.TooMuchDataException;
 
+/**
+ * A head or middle element in the filter chain associated with a filter.
+ */
 class Link implements FilterChain {
     private final Filter filter;
     private final MailTransaction mailTransaction;
@@ -45,7 +49,13 @@ class Link implements FilterChain {
     }
 
     @Override
-    public void data(MaildataFile data) throws RejectExceptionExt,
+    public void dataStream(InputStream in) throws RejectExceptionExt,
+            TooMuchDataException, IOException {
+        filter.dataStream(in);
+    }
+
+    @Override
+    public void data(Maildata data) throws RejectExceptionExt,
             TooMuchDataException, IOException {
         mailTransaction.replaceData(data);
         filter.data(data);

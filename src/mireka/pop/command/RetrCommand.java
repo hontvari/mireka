@@ -34,14 +34,18 @@ public class RetrCommand implements Command {
         int messageNumber = commandParser.parseSingleNumericArgument();
         ScanListing scanListing =
                 session.getMaildrop().getScanListing(messageNumber);
-        InputStream mailAsStream =
-                session.getMaildrop().getMailAsStream(messageNumber);
-        try {
+
+        try (InputStream mailAsStream =
+                session.getMaildrop().getMailAsStream(messageNumber)) {
             session.getThread().sendResponse(
                     "+OK " + scanListing.length + " octets");
             DotTerminatedOutputStream dotTerminatedOutputStream =
                     new DotTerminatedOutputStream(session.getThread()
                             .getOutputStream());
+            // The ExtraDotOutputStream is only a temporary wrapper around the
+            // TCP connection. It must not be closed, because that would
+            // prematurely close the TCP connection!
+            @SuppressWarnings("resource")
             ExtraDotOutputStream dotOutputStream =
                     new ExtraDotOutputStream(dotTerminatedOutputStream);
             byte[] buffer = new byte[4096];
@@ -53,8 +57,6 @@ public class RetrCommand implements Command {
             dotTerminatedOutputStream.writeTerminatingSequence();
             dotTerminatedOutputStream.flush();
             logger.debug("Message sent");
-        } finally {
-            mailAsStream.close();
         }
     }
 }

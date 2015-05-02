@@ -15,10 +15,9 @@ public class ResourceLoader {
      *            either an absolute or a relative name, for example /mail.eml
      */
     public static byte[] loadResource(Class<?> caller, String name) {
-        InputStream resouceStream = caller.getResourceAsStream(name);
-        if (resouceStream == null)
-            throw new IllegalArgumentException(name + " not found");
-        try {
+        try (InputStream resouceStream = caller.getResourceAsStream(name)) {
+            if (resouceStream == null)
+                throw new IllegalArgumentException(name + " not found");
             ByteArrayOutputStream inMemoryOut = new ByteArrayOutputStream();
             byte[] buffer = new byte[8192];
             int cBytesRead;
@@ -28,13 +27,6 @@ public class ResourceLoader {
             return inMemoryOut.toByteArray();
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } finally {
-            try {
-                resouceStream.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
         }
     }
-
 }

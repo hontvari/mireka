@@ -4,6 +4,7 @@ import static mireka.ExampleAddress.*;
 
 import java.util.Date;
 
+import mireka.maildata.Maildata;
 import mireka.transmission.Mail;
 
 public class ExampleMail {
@@ -18,7 +19,7 @@ public class ExampleMail {
         result.receivedFromMtaName = IP1.getHostName();
         result.recipients.add(JANE_AS_RECIPIENT);
         result.scheduleDate = result.arrivalDate;
-        result.mailData = ExampleMailData.simple();
+        result.maildata = ExampleMaildata.simple();
         return result;
     }
 
@@ -27,7 +28,7 @@ public class ExampleMail {
      */
     public static Mail veryLong() {
         Mail result = simple();
-        result.mailData = new LongMaildataFile();
+        result.maildata = new Maildata(new LongMaildataFile());
         return result;
     }
 

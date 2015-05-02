@@ -3,13 +3,13 @@ package mireka.filter.builtin;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
+import java.io.InputStream;
 
-import mireka.ExampleMailData;
-import mireka.MailDataWithSameContent;
+import mireka.ExampleMaildataFile;
+import mireka.IsStreamEquals;
 import mireka.filter.Filter;
 import mireka.filter.FilterChain;
 import mireka.filter.misc.RejectLargeMail;
-import mireka.maildata.MaildataFile;
 import mireka.smtp.RejectExceptionExt;
 
 import org.junit.Before;
@@ -38,26 +38,27 @@ public class RejectLargeMailTest {
     @Test
     public void testSmallMail() throws TooMuchDataException,
             RejectExceptionExt, IOException {
-        filter.data(ExampleMailData.simple());
+        filter.dataStream(ExampleMaildataFile.simple().getInputStream());
 
-        verify(chain).data(exampleSimpleMail());
+        verify(chain).dataStream(exampleSimpleMail());
     }
 
-    private MaildataFile exampleSimpleMail() {
-        return Matchers.argThat(new MailDataWithSameContent(ExampleMailData
-                .simple()));
+    private InputStream exampleSimpleMail() {
+        return Matchers.argThat(new IsStreamEquals(ExampleMaildataFile.simple()
+                .getInputStream()));
     }
 
     @Test(expected = TooMuchDataException.class)
     public void testLargeMail() throws TooMuchDataException,
             RejectExceptionExt, IOException {
-        filter.data(ExampleMailData.mail4k());
+        filter.dataStream(ExampleMaildataFile.mail4k().getInputStream());
 
-        ArgumentCaptor<MaildataFile> producedMailDataArgument =
-                ArgumentCaptor.forClass(MaildataFile.class);
-        verify(chain).data(producedMailDataArgument.capture());
-        MaildataFile producedMailData = producedMailDataArgument.getValue();
+        ArgumentCaptor<InputStream> producedInputStreamArgument =
+                ArgumentCaptor.forClass(InputStream.class);
+        verify(chain).dataStream(producedInputStreamArgument.capture());
+        InputStream producedInputStream =
+                producedInputStreamArgument.getValue();
         byte[] buffer = new byte[5000]; // larger then allowed
-        producedMailData.getInputStream().read(buffer);
+        producedInputStream.read(buffer);
     }
 }

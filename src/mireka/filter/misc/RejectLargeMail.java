@@ -2,20 +2,17 @@ package mireka.filter.misc;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import mireka.filter.AbstractFilter;
 import mireka.filter.Filter;
 import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
-import mireka.maildata.MaildataFile;
 import mireka.smtp.RejectExceptionExt;
-import mireka.util.StreamCopier;
 
 import org.subethamail.smtp.TooMuchDataException;
 
 public class RejectLargeMail implements FilterType {
-    private int maxAllowedSize = 20000000;
+    private int maxAllowedSize = 25000000;
 
     @Override
     public Filter createInstance(MailTransaction mailTransaction) {
@@ -43,33 +40,9 @@ public class RejectLargeMail implements FilterType {
         }
 
         @Override
-        public void data(MaildataFile data) throws RejectExceptionExt,
+        public void dataStream(InputStream in) throws RejectExceptionExt,
                 TooMuchDataException, IOException {
-            chain.data(new LengthLimitingMaildataFile(data));
-        }
-    }
-
-    private final class LengthLimitingMaildataFile implements MaildataFile {
-        private final MaildataFile wrappedMailData;
-
-        public LengthLimitingMaildataFile(MaildataFile sourceMailData) {
-            this.wrappedMailData = sourceMailData;
-        }
-
-        @Override
-        public InputStream getInputStream() throws IOException {
-            return new LengthLimitingInputStream(
-                    wrappedMailData.getInputStream(), maxAllowedSize);
-        }
-
-        @Override
-        public void writeTo(OutputStream out) throws IOException {
-            StreamCopier.writeMailDataInputStreamIntoOutputStream(this, out);
-        }
-
-        @Override
-        public void close() {
-            wrappedMailData.close();
+            chain.dataStream(new LengthLimitingInputStream(in, maxAllowedSize));
         }
 
     }

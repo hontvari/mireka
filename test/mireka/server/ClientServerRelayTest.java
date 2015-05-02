@@ -1,12 +1,12 @@
 package mireka.server;
 
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 
 import mireka.ArrayEndsWith;
 import mireka.ExampleAddress;
-import mireka.ExampleMailData;
+import mireka.ExampleMaildataFile;
 import mireka.destination.DestinationProcessorFilter;
 import mireka.filter.local.AcceptAllRecipient;
 import mireka.filter.local.LookupDestinationFilter;
@@ -92,7 +92,7 @@ public class ClientServerRelayTest {
         client.from("john@example.com");
         client.to("jane@example.com");
         client.dataStart();
-        byte[] exampleMail = ExampleMailData.simple().bytes;
+        byte[] exampleMail = ExampleMaildataFile.simple().bytes;
         client.dataWrite(exampleMail, exampleMail.length);
         client.dataEnd();
         client.quit();

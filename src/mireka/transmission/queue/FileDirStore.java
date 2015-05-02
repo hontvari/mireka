@@ -17,7 +17,7 @@ import java.util.TreeSet;
 
 import javax.annotation.concurrent.GuardedBy;
 
-import mireka.maildata.MaildataFile;
+import mireka.maildata.Maildata;
 import mireka.smtp.EnhancedStatus;
 import mireka.transmission.Mail;
 import mireka.transmission.queue.dataprop.DataProperties;
@@ -128,7 +128,7 @@ public class FileDirStore {
         File contentFile = contentFileForName(mailName);
         File envelopeFile = envelopeFileForName(mailName);
         try {
-            writeMessageContentIntoFile(srcMail.mailData,
+            writeMessageContentIntoFile(srcMail.maildata,
                     contentFileForName(mailName));
         } catch (IOException e) {
             if (contentFile.exists() && !contentFile.delete()) {
@@ -212,11 +212,11 @@ public class FileDirStore {
         return new File(dir, mailName.envelopeFileName());
     }
 
-    private void writeMessageContentIntoFile(MaildataFile mailData,
+    private void writeMessageContentIntoFile(Maildata maildata,
             File messageContentFile) throws IOException {
         FileOutputStream out = new FileOutputStream(messageContentFile);
         try {
-            mailData.writeTo(out);
+            maildata.writeTo(out);
         } finally {
             out.close();
         }
@@ -252,8 +252,8 @@ public class FileDirStore {
             Mail mail =
                     new MailEnvelopePersister().readFromProperties(properties);
 
-            File mailDataFile = new File(dir, mailName.contentFileName());
-            mail.mailData = new FileMaildataFile(mailDataFile);
+            File file = new File(dir, mailName.contentFileName());
+            mail.maildata = new Maildata(new FileMaildataFile(file));
             return mail;
         } catch (IOException e) {
             throw new QueueStorageException(e,
@@ -263,7 +263,7 @@ public class FileDirStore {
 
     public void moveToErrorDir(MailName mailName) throws QueueStorageException {
         File envelopeFile = new File(dir, mailName.envelopeFileName());
-        File mailDataFile = new File(dir, mailName.contentFileName());
+        File maildataFile = new File(dir, mailName.contentFileName());
         try {
             File errorDir = new File(dir, "error");
             errorDir.mkdir();
@@ -280,24 +280,24 @@ public class FileDirStore {
                         + envelopeFile);
             }
 
-            if (mailDataFile.exists()) {
-                File mailDataTargetFile =
+            if (maildataFile.exists()) {
+                File maildataTargetFile =
                         new File(errorDir, mailName.contentFileName());
-                StreamCopier.copyFile(mailDataFile, mailDataTargetFile);
+                StreamCopier.copyFile(maildataFile, maildataTargetFile);
                 logger.info("Mail data file has been successfully moved into "
                         + "the error directory: " + envelopeFile);
             } else {
                 logger.error("Mail data file could not be moved to the error "
                         + "directory, because it does not exist: "
-                        + mailDataFile);
+                        + maildataFile);
             }
 
             envelopeFile.delete();
-            mailDataFile.delete();
+            maildataFile.delete();
         } catch (IOException e) {
             throw new QueueStorageException(e, EnhancedStatus.MAIL_SYSTEM_FULL);
         }
-        if (!envelopeFile.exists() && !mailDataFile.exists()) {
+        if (!envelopeFile.exists() && !maildataFile.exists()) {
             releaseMailName(mailName);
         } else {
             throw new QueueStorageException(
@@ -315,11 +315,11 @@ public class FileDirStore {
             if (!fSuccess)
                 throw new IOException("Cannot delete envelope file "
                         + envelopeFile);
-            File mailDataFile = new File(dir, mailName.contentFileName());
-            fSuccess = mailDataFile.delete();
+            File maildataFile = new File(dir, mailName.contentFileName());
+            fSuccess = maildataFile.delete();
             if (!fSuccess)
                 throw new IOException("Cannot delete mail data file "
-                        + mailDataFile);
+                        + maildataFile);
             releaseMailName(mailName);
         } catch (IOException e) {
             throw new QueueStorageException(e,

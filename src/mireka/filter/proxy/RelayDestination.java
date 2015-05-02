@@ -107,13 +107,9 @@ public class RelayDestination implements SessionDestination {
         public void data(Mail mail) throws RejectExceptionExt, IOException {
             if (!client.hasAcceptedRecipient())
                 return;
-            InputStream dataStream = mail.mailData.getInputStream();
-            try {
+            try (InputStream dataStream = mail.maildata.getInputStream()) {
                 client.data(dataStream);
-            } finally {
-                dataStream.close();
             }
-
         }
 
         @Override

@@ -46,13 +46,18 @@ public class TopCommand implements Command {
             throw new CommandSyntaxException(
                     "Two numeric arguments are expected");
 
-        InputStream mailAsStream =
-                session.getMaildrop().getMailAsStream(messageNumber);
-        try {
+        try (InputStream mailAsStream =
+                session.getMaildrop().getMailAsStream(messageNumber)) {
             session.getThread().sendResponse("+OK");
+            // Response to the client will go via this stream.
+            // It must not be closed, because that would close the TCP
+            // connection to the client! This object only temporarily wraps
+            // around the TCP connection.
+            @SuppressWarnings("resource")
             ExtraDotOutputStream dotOutputStream =
                     new ExtraDotOutputStream(session.getThread()
                             .getOutputStream());
+            // mail data from the file will be read via this stream
             CrLfInputStream in = new CrLfInputStream(mailAsStream);
             byte[] buffer = new byte[1000];
             int cRead;
@@ -81,8 +86,6 @@ public class TopCommand implements Command {
             }
 
             dotOutputStream.flush();
-        } finally {
-            mailAsStream.close();
         }
         session.getThread().sendResponse(".");
     }

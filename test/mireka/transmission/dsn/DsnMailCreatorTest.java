@@ -1,7 +1,7 @@
 package mireka.transmission.dsn;
 
 import static mireka.ExampleAddress.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -16,7 +16,7 @@ import java.util.List;
 
 import mireka.ExampleMail;
 import mireka.address.MailAddressFactory;
-import mireka.maildata.MaildataFile;
+import mireka.maildata.Maildata;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.client.MtaAddress;
 import mireka.transmission.Mail;
@@ -37,9 +37,9 @@ public class DsnMailCreatorTest {
                 createRecipientFailure();
         Mail dsnMail = dsnMailCreator.create(mail, recipientStatuses);
 
-        writeToFileForDebugging(dsnMail.mailData);
+        writeToFileForDebugging(dsnMail.maildata);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        dsnMail.mailData.writeTo(out);
+        dsnMail.maildata.writeTo(out);
         byte[] bytes = out.toByteArray();
         ByteArrayInputStream in = new ByteArrayInputStream(bytes);
         Message message = new DefaultMessageBuilder().parseMessage(in);
@@ -83,7 +83,7 @@ public class DsnMailCreatorTest {
         return s;
     }
 
-    private void writeToFileForDebugging(MaildataFile content)
+    private void writeToFileForDebugging(Maildata content)
             throws FileNotFoundException, IOException {
         File file =
                 new File(System.getProperty("java.io.tmpdir"), getClass()

@@ -1,10 +1,11 @@
 package mireka.filter;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import mireka.address.ReversePath;
 import mireka.destination.UnknownRecipientDestination;
-import mireka.maildata.MaildataFile;
+import mireka.maildata.Maildata;
 import mireka.smtp.RejectExceptionExt;
 
 import org.subethamail.smtp.RejectException;
@@ -45,7 +46,19 @@ public interface FilterBase {
      */
     void recipient(RecipientContext recipientContext) throws RejectExceptionExt;
 
-    void data(MaildataFile data) throws RejectExceptionExt, TooMuchDataException,
+    /**
+     * Wraps the specified incoming data stream in another InputStream, in order
+     * to check or modify the stream. It is called after the SMTP DATA command
+     * is acknowledged and the client starts to send the mail data.
+     */
+    void dataStream(InputStream in) throws RejectExceptionExt,
+            TooMuchDataException, IOException;
+
+    /**
+     * Checks, updates or consumes the complete received Mail Data. It is called
+     * after #dataStream is called on all filters.
+     */
+    void data(Maildata data) throws RejectExceptionExt, TooMuchDataException,
             IOException;
 
     /**

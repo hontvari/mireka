@@ -7,8 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+
+import mireka.util.CharsetUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,9 +127,8 @@ class UidManager {
         InputStreamReader reader;
         try {
             reader =
-                    new InputStreamReader(new FileInputStream(file), "US-ASCII");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Assertion failed");
+                    new InputStreamReader(new FileInputStream(file),
+                            CharsetUtil.ASCII);
         } catch (FileNotFoundException e) {
             throw new InvalidUidFileException(e);
         }

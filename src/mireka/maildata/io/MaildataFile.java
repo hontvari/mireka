@@ -1,8 +1,4 @@
-package mireka.maildata;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+package mireka.maildata.io;
 
 /**
  * MaildataFile represents a byte stream which can be read multiple times, it is
@@ -18,16 +14,7 @@ public interface MaildataFile extends AutoCloseable {
      * Returns the data stream positioned to the first byte of the mail data.
      * The caller must close the returned stream.
      */
-    InputStream getInputStream() throws IOException;
-
-    /**
-     * Copies the message content into the supplied stream. It does not close
-     * the target stream.
-     * 
-     * @deprecated use {@link mireka.util.StreamCopier}
-     */
-    @Deprecated
-    void writeTo(OutputStream out) throws IOException;
+    MaildataFileInputStream getInputStream() throws MaildataFileReadException;
 
     /**
      * Releases resources, like temporary files.

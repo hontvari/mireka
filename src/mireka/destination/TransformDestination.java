@@ -76,7 +76,7 @@ public class TransformDestination implements MailDestination {
             throw new ConfigurationException(e);
         }
 
-        mail.mailData =
+        mail.maildata =
                 new MimeMessageConverter()
                         .createMailDataInSmtpSession(mimeMessage);
         try {
@@ -89,7 +89,7 @@ public class TransformDestination implements MailDestination {
             logger.error("Cannot transmit mail", e);
             throw new RejectExceptionExt(e.errorStatus());
         } finally {
-            mail.mailData.close();
+            mail.maildata.close();
         }
     }
 
