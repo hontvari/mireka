@@ -4,12 +4,17 @@ import java.io.ByteArrayInputStream;
 
 import mireka.maildata.io.MaildataFile;
 import mireka.maildata.io.MaildataFileInputStream;
+import mireka.util.CharsetUtil;
 
 public class ByteArrayMaildataFile implements MaildataFile {
     public final byte[] bytes;
 
     public ByteArrayMaildataFile(byte[] bytes) {
         this.bytes = bytes;
+    }
+
+    public ByteArrayMaildataFile(String maildata) {
+        this.bytes = CharsetUtil.toAsciiBytes(maildata);
     }
 
     /**

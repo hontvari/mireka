@@ -2,12 +2,12 @@ package mireka.maildata.parser;
 
 import static mireka.maildata.parser.MaildataParser.TokenKind.*;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 
 import mireka.maildata.HeaderFieldText;
 import mireka.maildata.HeaderSection;
+import mireka.maildata.io.MaildataFileInputStream;
+import mireka.maildata.io.MaildataFileReadException;
 
 /**
  * MailDataParser is a top level parser for mail data, it separates the heading
@@ -22,14 +22,15 @@ public class MaildataParser {
     private StringBuilder spelling = new StringBuilder(4096);
     private Scanner scanner;
 
-    public MaildataParser(InputStream in) throws IOException {
+    public MaildataParser(MaildataFileInputStream in)
+            throws MaildataFileReadException {
         if (in == null)
             throw new NullPointerException();
 
         scanner = new Scanner(in);
     }
 
-    public MaildataMap parse() throws IOException {
+    public MaildataMap parse() throws MaildataFileReadException {
         try {
             currentToken = scanner.scan();
             return parseMailData();
@@ -39,7 +40,7 @@ public class MaildataParser {
         }
     }
 
-    private MaildataMap parseMailData() throws ParseException, IOException {
+    private MaildataMap parseMailData() throws ParseException {
         MaildataMap result = new MaildataMap();
 
         result.headerSection = parseHeaderSection();
@@ -59,8 +60,7 @@ public class MaildataParser {
         return result;
     }
 
-    private HeaderSection parseHeaderSection() throws ParseException,
-            IOException {
+    private HeaderSection parseHeaderSection() throws ParseException {
         HeaderSection result = new HeaderSection();
 
         // TODO: The very first heading field must be accepted even if it is
@@ -73,8 +73,7 @@ public class MaildataParser {
         return result;
     }
 
-    private HeaderFieldText parseFoldedHeaderField() throws IOException,
-            ParseException {
+    private HeaderFieldText parseFoldedHeaderField() throws ParseException {
         spelling.setLength(0);
         StringBuilder unfolded = new StringBuilder(1024);
 
@@ -93,8 +92,7 @@ public class MaildataParser {
 
     }
 
-    private String parseFoldedHeaderFieldFirstLine() throws IOException,
-            ParseException {
+    private String parseFoldedHeaderFieldFirstLine() throws ParseException {
         StringBuilder result = new StringBuilder(80);
 
         result.append(currentToken.spelling);
@@ -110,8 +108,7 @@ public class MaildataParser {
         return result.toString();
     }
 
-    private String parseFoldedHeaderFieldAdditionalLine() throws IOException,
-            ParseException {
+    private String parseFoldedHeaderFieldAdditionalLine() throws ParseException {
         StringBuilder result = new StringBuilder(80);
 
         result.append(currentToken.spelling);
@@ -127,13 +124,13 @@ public class MaildataParser {
         return result.toString();
     }
 
-    private void acceptIt() throws IOException {
+    private void acceptIt() throws MaildataFileReadException {
         spelling.append(currentToken.spelling);
         currentToken = scanner.scan();
     }
 
     private void accept(TokenKind requiredKind) throws ParseException,
-            IOException {
+            MaildataFileReadException {
         if (currentToken.kind == requiredKind)
             acceptIt();
         else
@@ -144,17 +141,18 @@ public class MaildataParser {
      * 
      */
     private class Scanner {
-        private InputStream in;
+        private MaildataFileInputStream in;
         private int currentChar;
         private long position;
         private StringBuilder currentSpelling = new StringBuilder();
 
-        public Scanner(InputStream in) throws IOException {
+        public Scanner(MaildataFileInputStream in)
+                throws MaildataFileReadException {
             this.in = in;
             currentChar = in.read();
         }
 
-        public Token scan() throws IOException {
+        public Token scan() throws MaildataFileReadException {
             currentSpelling.setLength(0);
             Token token = new Token();
             token.position = position;
@@ -164,7 +162,7 @@ public class MaildataParser {
             return token;
         }
 
-        private TokenKind scanToken() throws IOException {
+        private TokenKind scanToken() {
             switch (currentChar) {
             case '\r':
                 takeIt();
@@ -186,7 +184,7 @@ public class MaildataParser {
             }
         }
 
-        private void takeIt() throws IOException {
+        private void takeIt() {
             if (currentChar != -1)
                 currentSpelling.append((char) currentChar);
             position++;

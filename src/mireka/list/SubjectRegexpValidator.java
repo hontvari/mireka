@@ -1,9 +1,7 @@
 package mireka.list;
 
-import java.io.IOException;
 import java.util.regex.Pattern;
 
-import mireka.smtp.EnhancedStatus;
 import mireka.smtp.RejectExceptionExt;
 import mireka.transmission.Mail;
 
@@ -21,22 +19,14 @@ public class SubjectRegexpValidator implements MailValidator {
 
     @Override
     public boolean shouldBeAccepted(Mail mail) throws RejectExceptionExt {
-        try {
-            String subject = mail.maildata.header().getSubject();
+        String subject = mail.maildata.getSubject();
 
-            if (subject == null)
-                subject = "";
-            boolean result = pattern.matcher(subject).matches();
-            if (result)
-                logger.debug("Mail accepted, subject matches "
-                        + pattern.toString());
-            return result;
-        } catch (IOException e) {
-            // TODO this will not be needed after introduction of
-            // VirtFileReadException
-            throw new RejectExceptionExt(
-                    EnhancedStatus.TRANSIENT_LOCAL_ERROR_IN_PROCESSING);
-        }
+        if (subject == null)
+            subject = "";
+        boolean result = pattern.matcher(subject).matches();
+        if (result)
+            logger.debug("Mail accepted, subject matches " + pattern.toString());
+        return result;
     }
 
     /**

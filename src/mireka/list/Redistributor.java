@@ -90,13 +90,12 @@ class Redistributor {
         return false;
     }
 
-    private void checkAttachmentsAllowed() throws RejectExceptionExt,
-            IOException {
+    private void checkAttachmentsAllowed() throws RejectExceptionExt {
         if (list.isAttachmentsAllowed())
             return;
 
-        if (source.maildata.header().getMediaType()
-                .equalTypeIdentifiers(MediaType.MULTIPART_MIXED))
+        if (source.maildata.getMediaType().equalTypeIdentifiers(
+                MediaType.MULTIPART_MIXED))
             throw new RejectExceptionExt(new EnhancedStatus(550, "5.7.0",
                     "Attachments are not allowed on this mailing list"));
     }
@@ -109,8 +108,8 @@ class Redistributor {
      * 
      * @see <a href="http://tools.ietf.org/html/rfc2919">RFC 2919</a>
      */
-    private void checkListLoop() throws RejectExceptionExt, IOException {
-        if (source.maildata.getHeaders().contains(LIST_ID))
+    private void checkListLoop() throws RejectExceptionExt {
+        if (source.maildata.headers().contains(LIST_ID))
             throw new RejectExceptionExt(new EnhancedStatus(450, "4.4.6",
                     "Mail list loop detected"));
 
@@ -121,7 +120,7 @@ class Redistributor {
         newMaildata = source.maildata.copy();
 
         // We need to remove this header from the copy we're sending around
-        newMaildata.getHeaders().remove(RETURN_PATH);
+        newMaildata.headers().remove(RETURN_PATH);
 
         setupSubject();
         setupReplyTo();
@@ -129,12 +128,12 @@ class Redistributor {
         mangleAddressesForDmarc();
     }
 
-    private void setupSubject() throws IOException {
+    private void setupSubject() {
         if (list.getSubjectPrefix() == null)
             return;
-        String subj = newMaildata.header().getSubject();
+        String subj = newMaildata.getSubject();
         subj = normalizeSubject(subj, list.getSubjectPrefix());
-        newMaildata.header().setSubject(subj);
+        newMaildata.setSubject(subj);
     }
 
     /**
@@ -215,27 +214,27 @@ class Redistributor {
         return subject.toString();
     }
 
-    private void setupReplyTo() throws IOException {
+    private void setupReplyTo() {
         // If replies should go to this list, we need to set the header
         if (list.isReplyToList()) {
             Mailbox mailbox = new Mailbox();
             mailbox.displayName = list.getShortListName();
             mailbox.addrSpec = getListAddrSpec();
-            newMaildata.header().setReplyToAddresses(
-                    Collections.<Address> singletonList(mailbox));
+            newMaildata.setReplyToAddresses(Collections
+                    .<Address> singletonList(mailbox));
         }
     }
 
-    private void setupListFields() throws IOException {
-        newMaildata.getHeaders().put(
+    private void setupListFields() {
+        newMaildata.headers().put(
                 new UnstructuredField(LIST_ID, " <" + list.getListId() + ">"));
-        newMaildata.getHeaders()
+        newMaildata.headers()
                 .put(new UnstructuredField(LIST_POST, " <" + list.getAddress()
                         + ">"));
-        newMaildata.getHeaders().remove(LIST_HELP);
-        newMaildata.getHeaders().remove(LIST_SUBSCRIBE);
-        newMaildata.getHeaders().remove(LIST_UNSUBSCRIBE);
-        newMaildata.getHeaders().remove(LIST_OWNER);
+        newMaildata.headers().remove(LIST_HELP);
+        newMaildata.headers().remove(LIST_SUBSCRIBE);
+        newMaildata.headers().remove(LIST_UNSUBSCRIBE);
+        newMaildata.headers().remove(LIST_OWNER);
         // This list does not maintain an archive so it must not remove
         // List-Archive (if it would be a nested list).
     }
@@ -246,9 +245,9 @@ class Redistributor {
      *      Requirements Doc for MLM Patches to Support Basic DMARC
      *      Compliance</a>
      */
-    private void mangleAddressesForDmarc() throws IOException,
-            RejectExceptionExt, ParseException {
-        List<Address> fromAddresses = newMaildata.header().getFromAddresses();
+    private void mangleAddressesForDmarc() throws RejectExceptionExt,
+            ParseException {
+        List<Address> fromAddresses = newMaildata.getFromAddresses();
         List<Mailbox> mangledMailboxes = new ArrayList<>();
 
         for (int i = 0; i < fromAddresses.size(); i++) {
@@ -273,14 +272,13 @@ class Redistributor {
                 throw new AssertionException();
             }
         }
-        newMaildata.header().setFromAddresses(fromAddresses);
+        newMaildata.setFromAddresses(fromAddresses);
 
         if (list.isReplyToList()) {
-            List<Address> ccAddresses = newMaildata.header().getCcAddresses();
+            List<Address> ccAddresses = newMaildata.getCcAddresses();
             ccAddresses.addAll(mangledMailboxes);
         } else {
-            List<Address> replyToAddresses =
-                    newMaildata.header().getReplyToAddresses();
+            List<Address> replyToAddresses = newMaildata.getReplyToAddresses();
             replyToAddresses.addAll(mangledMailboxes);
         }
     }
