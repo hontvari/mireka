@@ -77,6 +77,14 @@
 		<dependency org="org.mozilla" name="rhino" rev="1.7R5"
 			conf="runtime->default" />
 
+		<!-- JMockit testing toolkit -->
+		<dependency org="org.jmockit" name="jmockit" rev="1.17"
+			conf="compile->master;build->default;sources" />
+
+		<!-- JMockit testing toolkit / coverage report -->
+		<dependency org="org.jmockit" name="jmockit-coverage" rev="1.17"
+			conf="build->default" />
+
 		<!-- ======================================================= -->
 		<!-- retrieve some transitive dependency sources -->
 

@@ -1,6 +1,6 @@
 package mireka.transmission.queuing;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -155,42 +155,39 @@ public class RetryPolicyTest {
 
     @Test
     public void testMailPostponedFirst() throws Exception {
-        new Expectations() {
+
+        retryPolicy.actOnPostponeRequired(mail, postponeException);
+
+        new Verifications() {
             {
-                onInstance(retryTransmitter).transmit((Mail) any);
-                forEachInvocation = new Object() {
-                    @SuppressWarnings("unused")
-                    void validate(Mail mail) {
-                        assertEquals(0, mail.deliveryAttempts);
-                        assertEquals(1, mail.postpones);
-                        double actualDelay =
-                                (mail.scheduleDate.getTime() - System
-                                        .currentTimeMillis()) / 1000;
-                        assertEquals(postponeException.getRecommendedDelay(),
-                                actualDelay, 10);
-                    }
-                };
+                Mail m;
+                onInstance(retryTransmitter).transmit(m = withCapture());
+
+                assertEquals(0, m.deliveryAttempts);
+                assertEquals(1, m.postpones);
+                double actualDelay =
+                        (m.scheduleDate.getTime() - System.currentTimeMillis()) / 1000;
+                assertEquals(postponeException.getRecommendedDelay(),
+                        actualDelay, 10);
             }
         };
-        retryPolicy.actOnPostponeRequired(mail, postponeException);
+
     }
 
     @Test
     public void testMailPostponedRepeatedly() throws Exception {
-        new Expectations() {
+        mail.postpones = 3;
+
+        retryPolicy.actOnPostponeRequired(mail, postponeException);
+
+        new Verifications() {
             {
-                onInstance(retryTransmitter).transmit((Mail) any);
-                forEachInvocation = new Object() {
-                    @SuppressWarnings("unused")
-                    void validate(Mail mail) {
-                        assertEquals(1, mail.deliveryAttempts);
-                        assertEquals(0, mail.postpones);
-                    }
-                };
+                Mail m;
+                onInstance(retryTransmitter).transmit(m = withCapture());
+                assertEquals(1, m.deliveryAttempts);
+                assertEquals(0, m.postpones);
             }
         };
-        mail.postpones = 3;
-        retryPolicy.actOnPostponeRequired(mail, postponeException);
-    }
 
+    }
 }

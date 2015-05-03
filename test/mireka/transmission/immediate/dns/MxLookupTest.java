@@ -11,7 +11,7 @@ import java.util.Set;
 
 import mireka.smtp.SendException;
 import mockit.Expectations;
-import mockit.NonStrict;
+import mockit.Mocked;
 import mockit.Tested;
 
 import org.junit.Test;
@@ -22,7 +22,7 @@ import org.xbill.DNS.Name;
 public class MxLookupTest {
     @Tested
     private MxLookup mxLookup;
-    
+
     private final MXRecord HOST1_PRIORITY10 = new MXRecord(EXAMPLE_COM_NAME, 0,
             0, 10, HOST1_EXAMPLE_COM_NAME);
     private final MXRecord HOST2_PRIORITY20 = new MXRecord(EXAMPLE_COM_NAME, 0,
@@ -33,7 +33,8 @@ public class MxLookupTest {
             0, 10, HOST3_EXAMPLE_COM_NAME);
     private final MXRecord HOST4_PRIORITY10 = new MXRecord(EXAMPLE_COM_NAME, 0,
             0, 10, HOST4_EXAMPLE_COM_NAME);
-    @NonStrict
+
+    @Mocked
     private Lookup lookup;
 
     @Test()

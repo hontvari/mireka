@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" output="build/test" path="test"/>
-	<classpathentry kind="lib" path="lib/build/jmockit.jar"/>
+	<classpathentry kind="lib" path="lib/build/ivy/jmockit-1.17.jar"/>
 	<classpathentry kind="lib" path="lib/runtime/ivy/jsr305-2.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/runtime/mail.jar" sourcepath="lib-doc/javamail-1.4.4-src.zip">
 		<attributes>

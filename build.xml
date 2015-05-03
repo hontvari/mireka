@@ -153,13 +153,13 @@
 			<sysproperty key="jmockit-coverage-outputDir"
 			             file="build/coverage-report" />
 			<classpath>
-				<pathelement location="lib/build/jmockit.jar" />
+				<fileset dir="lib/build/ivy" includes="jmockit-*.jar"/>
 				<pathelement location="${build.dir}/test" />
 				<pathelement location="${build.dir}/classes" />
 				<pathelement location="${build.dir}/version" />
 				<fileset dir="lib/build">
 					<include name="**/*.jar" />
-					<exclude name="jmockit.jar" />
+					<exclude name="ivy/jmockit-*.jar" />
 				</fileset>
 				<fileset dir="lib/runtime" includes="**/*.jar" />
 			</classpath>

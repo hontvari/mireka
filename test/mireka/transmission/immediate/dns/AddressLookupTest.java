@@ -7,7 +7,7 @@ import java.net.InetAddress;
 
 import mireka.smtp.SendException;
 import mockit.Expectations;
-import mockit.NonStrict;
+import mockit.Mocked;
 import mockit.Tested;
 
 import org.junit.Test;
@@ -21,7 +21,7 @@ public class AddressLookupTest {
     @Tested
     private AddressLookup addressLookup;
 
-    @NonStrict
+    @Mocked
     private Lookup lookup;
 
     @Test

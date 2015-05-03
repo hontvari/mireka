@@ -9,7 +9,6 @@ import mireka.smtp.client.BackendServer;
 import mireka.smtp.client.SmtpClient;
 import mockit.Expectations;
 import mockit.Mocked;
-import mockit.NonStrict;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,14 +17,13 @@ public class RelayMailTransactionTest {
     @Mocked
     private BackendServer backendServer;
 
-    @NonStrict
     @Mocked(stubOutClassInitialization = false)
     private SmtpClient client;
 
-    private final RecipientContext recipientContextJane = new RecipientContext(null,
-            ExampleAddress.JANE_AS_RECIPIENT);
-    private final RecipientContext recipientContextJohn = new RecipientContext(null,
-            ExampleAddress.JOHN_AS_RECIPIENT);
+    private final RecipientContext recipientContextJane = new RecipientContext(
+            null, ExampleAddress.JANE_AS_RECIPIENT);
+    private final RecipientContext recipientContextJohn = new RecipientContext(
+            null, ExampleAddress.JOHN_AS_RECIPIENT);
 
     private Session session;
 
@@ -54,6 +52,7 @@ public class RelayMailTransactionTest {
         session.from(new NullReversePath());
         session.recipient(recipientContextJane);
         session.data(ExampleMail.simple());
+        session.done();
     }
 
     @Test

@@ -8,7 +8,6 @@ import mireka.transmission.immediate.ImmediateSender;
 import mireka.transmission.immediate.PostponeException;
 import mireka.transmission.immediate.RecipientsWereRejectedException;
 import mireka.transmission.queue.TransmitterSummary;
-import mockit.Cascading;
 import mockit.Expectations;
 import mockit.Mocked;
 
@@ -19,7 +18,7 @@ public class OutboundMtaMailProcessorTest {
     @Mocked
     private ImmediateSender immediateSender;
 
-    @Cascading
+    @Mocked
     private TransmitterSummary transmitterSummary;
 
     private final Mail mail = ExampleMail.simple();
