@@ -120,6 +120,15 @@ public class HeaderSection {
         return false;
     }
 
+    public int countOf(FieldDef<?> field) {
+        int result = 0;
+        for (Entry entry : fields) {
+            if (field.lowerCaseName().equals(entry.lowerCaseName))
+                result++;
+        }
+        return result;
+    }
+
     /**
      * Adds the header to the end of the header section if there is no header
      * with the same name, or replaces the first occurrence of the header and
