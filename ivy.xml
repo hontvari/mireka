@@ -85,6 +85,15 @@
 		<dependency org="org.jmockit" name="jmockit-coverage" rev="1.17"
 			conf="build->default" />
 
+		<!-- JUnit testing framework -->
+		<dependency org="junit" name="junit" rev="4.12"
+			conf="compile->master;build->default;sources" />
+			
+		<!-- Hamcrest matcher library for tests. It is also a JUnit dependency 
+			with tight coupling, version must match! -->
+		<dependency org="org.hamcrest" name="hamcrest-core" rev="1.3"
+			conf="compile->master;build->default;sources" />
+			
 		<!-- ======================================================= -->
 		<!-- retrieve some transitive dependency sources -->
 
