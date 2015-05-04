@@ -1,34 +1,30 @@
 package mireka.transmission.queue;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-
 import java.util.Date;
 
 import mireka.smtp.EnhancedStatus;
 import mireka.transmission.LocalMailSystemException;
 import mireka.transmission.Mail;
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.Verifications;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)
 public class MailProcessingTaskTest {
 
-    @Mock
+    @Mocked
     private ScheduleFileDirQueue mockedQueue;
-    @Mock
+    @Mocked
     private FileDirStore mockedStore;
-    @Mock
+    @Mocked
     private MailProcessorFactory mockedMailProcessorFactory;
-    @Mock
+    @Mocked
     private MailProcessor mockedMailProcessor;
+
     private MailProcessingTask task;
     private MailName mailName = new MailName(new Date().getTime(), 0);
 
@@ -37,30 +33,59 @@ public class MailProcessingTaskTest {
         task =
                 new MailProcessingTask(mockedQueue, mockedStore,
                         mockedMailProcessorFactory, mailName);
-        when(mockedMailProcessorFactory.create(any(Mail.class))).thenReturn(
-                mockedMailProcessor);
+
+        new Expectations() {
+            {
+                mockedMailProcessorFactory.create((Mail) any);
+                result = mockedMailProcessor;
+            }
+        };
     }
 
     @Test
     public void testRunSuccessful() throws QueueStorageException {
         task.run();
-        verify(mockedStore).delete(mailName);
+
+        new Verifications() {
+            {
+                mockedStore.delete(mailName);
+            }
+        };
     }
 
     @Test
     public void testRunLocalTransientFailure() throws LocalMailSystemException {
-        doThrow(new QueueStorageException(EnhancedStatus.MAIL_SYSTEM_FULL))
-                .when(mockedMailProcessor).run();
+        new Expectations() {
+            {
+                mockedMailProcessor.run();
+                result =
+                        new QueueStorageException(
+                                EnhancedStatus.MAIL_SYSTEM_FULL);
+            }
+        };
+
         task.run();
-        verify(mockedQueue).rescheduleFailedTask(task);
-        verify(mockedStore, Mockito.never()).delete(mailName);
+
+        new Verifications() {
+            {
+                mockedQueue.rescheduleFailedTask(task);
+                mockedStore.delete(mailName);
+                times = 0;
+            }
+        };
     }
 
     @Test
     public void testRunLocalTransientFailureForTooLong()
             throws LocalMailSystemException {
-        doThrow(new QueueStorageException(EnhancedStatus.MAIL_SYSTEM_FULL))
-                .when(mockedMailProcessor).run();
+        new Expectations() {
+            {
+                mockedMailProcessor.run();
+                result =
+                        new QueueStorageException(
+                                EnhancedStatus.MAIL_SYSTEM_FULL);
+            }
+        };
 
         task.run(); // first attempt
         long twoDaysLater = new DateTime().plusDays(2).getMillis();
@@ -68,19 +93,37 @@ public class MailProcessingTaskTest {
         task.run(); // second attempt, now it is too late for another attempt
         DateTimeUtils.setCurrentMillisSystem();
 
-        verify(mockedQueue, times(1)).rescheduleFailedTask(task);
-        verify(mockedStore).moveToErrorDir(mailName);
+        new Verifications() {
+            {
+                mockedQueue.rescheduleFailedTask(task);
+                times = 1;
+
+                mockedStore.moveToErrorDir(mailName);
+            }
+        };
     }
 
     @Test
     public void testRunLocalPermanentFailure() throws LocalMailSystemException {
-        doThrow(
-                new QueueStorageException(
-                        EnhancedStatus.PERMANENT_INTERNAL_ERROR)).when(
-                mockedMailProcessor).run();
+        new Expectations() {
+            {
+                mockedMailProcessor.run();
+                result =
+                        new QueueStorageException(
+                                EnhancedStatus.PERMANENT_INTERNAL_ERROR);
+            }
+        };
+
         task.run();
-        verify(mockedStore).moveToErrorDir(mailName);
-        verify(mockedQueue, never()).rescheduleFailedTask(task);
+
+        new Verifications() {
+            {
+                mockedStore.moveToErrorDir(mailName);
+
+                mockedQueue.rescheduleFailedTask(task);
+                times = 0;
+            }
+        };
     }
 
 }

@@ -8,42 +8,48 @@ import java.lang.reflect.Modifier;
 import mireka.ExampleMail;
 import mireka.transmission.Mail;
 import mireka.transmission.queue.dataprop.DataProperties;
+import mockit.Tested;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 
-@RunWith(MockitoJUnitRunner.class)
 public class MailEnvelopePersisterTest {
 
+    @Tested
+    MailEnvelopePersister persister;
+
+    /**
+     * This is just a reminder to update the MailEnvelopePersister if a new
+     * field is added to {@link Mail}.
+     */
     @Test
-    public void testAllFieldsAreSaved() {
-        CountingMockAnswer countingMockAnswer = new CountingMockAnswer();
-        DataProperties mockedProperties =
-                Mockito.mock(DataProperties.class, countingMockAnswer);
-        MailEnvelopePersister persister = new MailEnvelopePersister();
-
-        persister.storeMailFieldsIntoProperties(ExampleMail.simple(),
-                mockedProperties);
-
-        assertEquals(calculateCountOfAttributesToBeStoredInProperties(),
-                countingMockAnswer.count);
+    public void testExtraFieldReminder() {
+        assertEquals(8, calculateCountOfAttributesToBeStoredInProperties());
     }
 
     @Test
-    public void testAllFieldsAreRead() {
-        CountingMockAnswer countingMockAnswer = new CountingMockAnswer();
-        DataProperties mockedProperties =
-                Mockito.mock(DataProperties.class, countingMockAnswer);
-        MailEnvelopePersister persister = new MailEnvelopePersister();
+    public void testSaveAndLoad() {
 
-        persister.readFromProperties(mockedProperties);
+        Mail s = ExampleMail.simple();
+        DataProperties properties = new DataProperties();
 
-        assertEquals(calculateCountOfAttributesToBeStoredInProperties(),
-                countingMockAnswer.count);
+        persister.storeMailFieldsIntoProperties(s, properties);
+
+        // 8 - 2 null propertiess
+        assertEquals(6, properties.size());
+
+        Mail d = persister.readFromProperties(properties);
+
+        assertEquals(s.from.getSmtpText(), d.from.getSmtpText());
+        assertEquals(1, d.recipients.size());
+        assertEquals(s.recipients.get(0).sourceRouteStripped(), d.recipients
+                .get(0).sourceRouteStripped());
+        assertEquals(s.arrivalDate, d.arrivalDate);
+        assertEquals(s.receivedFromMtaName, d.receivedFromMtaName);
+        assertEquals(s.receivedFromMtaAddress, d.receivedFromMtaAddress);
+        assertEquals(s.scheduleDate, d.scheduleDate);
+        assertEquals(s.deliveryAttempts, d.deliveryAttempts);
+        assertEquals(s.postpones, d.postpones);
+
     }
 
     private static int calculateCountOfAttributesToBeStoredInProperties() {
@@ -56,16 +62,4 @@ public class MailEnvelopePersisterTest {
         int countOfFieldsNotStoredAsProperty = 1; // mailData
         return c - countOfFieldsNotStoredAsProperty;
     }
-
-    public static class CountingMockAnswer implements Answer<Object> {
-        public int count = 0;
-
-        @Override
-        public Object answer(InvocationOnMock invocation) throws Throwable {
-            count++;
-            return Mockito.RETURNS_SMART_NULLS.answer(invocation);
-        }
-
-    }
-
 }

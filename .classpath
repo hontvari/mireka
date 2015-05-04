@@ -10,12 +10,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/runtime/subethasmtp-UNVERSIONED.jar" sourcepath="lib-doc/subethasmtp-UNVERSIONED.zip"/>
-	<classpathentry kind="lib" path="lib/build/mockito-core-1.8.0.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/mireka/lib-doc/mockito-1.8.0-doc.zip!/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/build/com.springsource.org.objenesis-1.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/build/cpsuite-1.2.5.jar" sourcepath="lib-doc/cpsuite-1.2.5-src.zip"/>
 	<classpathentry kind="lib" path="lib/runtime/joda-time-1.6.jar" sourcepath="lib-doc/joda-time-1.6-sources.jar"/>
 	<classpathentry kind="lib" path="lib/runtime/commons-codec-1.5.jar" sourcepath="lib-doc/commons-codec-1.5-sources.jar"/>
