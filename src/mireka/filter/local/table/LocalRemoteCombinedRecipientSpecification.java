@@ -1,8 +1,8 @@
 package mireka.filter.local.table;
 
-import mireka.address.Recipient;
-import mireka.address.RemotePart;
-import mireka.address.RemotePartContainingRecipient;
+import mireka.smtp.address.Recipient;
+import mireka.smtp.address.RemotePart;
+import mireka.smtp.address.RemotePartContainingRecipient;
 
 /**
  * LocalRemoteCombinedRecipientSpecification combines a

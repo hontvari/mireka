@@ -3,8 +3,8 @@ package mireka.filter.local.table;
 import java.util.ArrayList;
 import java.util.List;
 
-import mireka.address.Recipient;
 import mireka.destination.Destination;
+import mireka.smtp.address.Recipient;
 
 /**
  * RecipientSpecificationDestinationPair assigns a {@link Destination} to one or

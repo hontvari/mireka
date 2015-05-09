@@ -1,7 +1,7 @@
 package mireka.transmission.queue;
 
-import mireka.address.MailAddressFactory;
-import mireka.address.Recipient;
+import mireka.smtp.address.MailAddressFactory;
+import mireka.smtp.address.Recipient;
 import mireka.transmission.Mail;
 import mireka.transmission.queue.dataprop.DataProperties;
 import mireka.transmission.queue.dataprop.StringToElementConverter;

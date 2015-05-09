@@ -2,8 +2,8 @@ package mireka.forward;
 
 import java.text.ParseException;
 
-import mireka.address.MailAddressFactory;
-import mireka.address.Recipient;
+import mireka.smtp.address.MailAddressFactory;
+import mireka.smtp.address.Recipient;
 
 /**
  * Member holds information about a mailing or forward list member.

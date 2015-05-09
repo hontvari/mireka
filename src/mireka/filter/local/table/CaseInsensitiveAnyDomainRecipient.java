@@ -1,6 +1,6 @@
 package mireka.filter.local.table;
 
-import mireka.address.Recipient;
+import mireka.smtp.address.Recipient;
 
 /**
  * CaseInsensitiveAnyDomainRecipient is a convenience class for configuration,

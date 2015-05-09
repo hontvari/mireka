@@ -1,9 +1,9 @@
 package mireka.destination;
 
-import mireka.address.ReversePath;
 import mireka.filter.RecipientContext;
 import mireka.smtp.RejectExceptionExt;
 import mireka.smtp.UnknownUserException;
+import mireka.smtp.address.ReversePath;
 import mireka.transmission.Mail;
 
 /**

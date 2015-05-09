@@ -1,7 +1,7 @@
 package mireka.transmission.immediate.dns;
 
 import static org.junit.Assert.*;
-import mireka.address.Domain;
+import mireka.smtp.address.Domain;
 
 import org.junit.Test;
 

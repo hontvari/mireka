@@ -1,6 +1,6 @@
 package mireka.smtp;
 
-import mireka.address.Recipient;
+import mireka.smtp.address.Recipient;
 
 /**
  * Signals that the mailbox specified in the just received SMTP RCPT TO command

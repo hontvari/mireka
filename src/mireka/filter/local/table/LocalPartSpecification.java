@@ -1,6 +1,6 @@
 package mireka.filter.local.table;
 
-import mireka.address.LocalPart;
+import mireka.smtp.address.LocalPart;
 
 /**
  * LocalPartSpecification is able to decide if the local part of a recipient

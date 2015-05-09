@@ -3,8 +3,8 @@ package mireka.destination;
 import java.text.ParseException;
 
 import mireka.ConfigurationException;
-import mireka.address.MailAddressFactory;
-import mireka.address.Recipient;
+import mireka.smtp.address.MailAddressFactory;
+import mireka.smtp.address.Recipient;
 
 /**
  * An AliasDestination indicates that the final destination of mails sent to the

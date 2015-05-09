@@ -3,8 +3,8 @@ package mireka.filter.proxy;
 import java.io.IOException;
 import java.io.InputStream;
 
-import mireka.address.Recipient;
 import mireka.smtp.SendException;
+import mireka.smtp.address.Recipient;
 import mireka.smtp.client.BackendServer;
 import mireka.smtp.client.SmtpClient;
 

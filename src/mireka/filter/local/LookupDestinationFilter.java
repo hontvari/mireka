@@ -1,7 +1,6 @@
 package mireka.filter.local;
 
 import mireka.ConfigurationException;
-import mireka.address.Recipient;
 import mireka.destination.AliasDestination;
 import mireka.destination.Destination;
 import mireka.filter.FilterSession;
@@ -10,6 +9,7 @@ import mireka.filter.RecipientContext;
 import mireka.filter.RecipientVerificationResult;
 import mireka.filter.StatelessFilter;
 import mireka.filter.local.table.RecipientDestinationMapper;
+import mireka.smtp.address.Recipient;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

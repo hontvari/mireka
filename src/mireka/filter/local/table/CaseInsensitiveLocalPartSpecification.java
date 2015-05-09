@@ -2,7 +2,7 @@ package mireka.filter.local.table;
 
 import java.util.Locale;
 
-import mireka.address.LocalPart;
+import mireka.smtp.address.LocalPart;
 
 /**
  * This implementation does case-insensitive comparisons using the US locale.

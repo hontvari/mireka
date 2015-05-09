@@ -7,7 +7,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import mireka.address.parser.base.CharUtil;
 import mireka.maildata.AddrSpec;
 import mireka.maildata.Address;
 import mireka.maildata.DomainPart;
@@ -20,6 +19,7 @@ import mireka.maildata.MediaType;
 import mireka.maildata.field.AddressListField;
 import mireka.maildata.field.ContentType;
 import mireka.maildata.field.MimeVersion;
+import mireka.smtp.address.parser.base.CharUtil;
 import mireka.util.CharsetUtil;
 
 import org.apache.james.mime4j.dom.FieldParser;

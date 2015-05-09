@@ -2,10 +2,10 @@ package mireka.filter.local.table;
 
 import java.util.regex.Pattern;
 
-import mireka.address.MailAddressFactory;
-import mireka.address.Recipient;
-import mireka.address.RemotePart;
-import mireka.address.RemotePartContainingRecipient;
+import mireka.smtp.address.MailAddressFactory;
+import mireka.smtp.address.Recipient;
+import mireka.smtp.address.RemotePart;
+import mireka.smtp.address.RemotePartContainingRecipient;
 
 /**
  * RegexAddressSpecification compares the local part of a recipient address with

@@ -1,6 +1,6 @@
 package mireka.filter.local.table;
 
-import mireka.address.Recipient;
+import mireka.smtp.address.Recipient;
 
 /**
  * AnyPostmaster matches the special "Postmaster" (without remote part) and

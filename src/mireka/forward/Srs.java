@@ -10,15 +10,15 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import mireka.ConfigurationException;
-import mireka.address.MailAddressFactory;
-import mireka.address.Mailbox;
-import mireka.address.RealReversePath;
-import mireka.address.Recipient;
-import mireka.address.RemotePart;
-import mireka.address.RemotePartContainingRecipient;
-import mireka.address.ReversePath;
 import mireka.filter.local.table.RemotePartSpecification;
 import mireka.smtp.EnhancedStatus;
+import mireka.smtp.address.MailAddressFactory;
+import mireka.smtp.address.Mailbox;
+import mireka.smtp.address.RealReversePath;
+import mireka.smtp.address.Recipient;
+import mireka.smtp.address.RemotePart;
+import mireka.smtp.address.RemotePartContainingRecipient;
+import mireka.smtp.address.ReversePath;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;

@@ -1,6 +1,6 @@
 package mireka.filter.local.table;
 
-import mireka.address.RemotePart;
+import mireka.smtp.address.RemotePart;
 
 /**
  * A DomainSpecification represents a constraint on a {@link RemotePart}, and it

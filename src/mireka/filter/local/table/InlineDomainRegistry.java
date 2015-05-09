@@ -3,9 +3,9 @@ package mireka.filter.local.table;
 import java.util.HashSet;
 import java.util.Set;
 
-import mireka.address.AddressLiteral;
-import mireka.address.MailAddressFactory;
-import mireka.address.RemotePart;
+import mireka.smtp.address.AddressLiteral;
+import mireka.smtp.address.MailAddressFactory;
+import mireka.smtp.address.RemotePart;
 
 /**
  * InlineDomainRegistry is used to easily configure the list of domains and

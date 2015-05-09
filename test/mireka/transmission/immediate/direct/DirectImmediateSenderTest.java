@@ -7,10 +7,10 @@ import java.net.InetAddress;
 import java.util.Arrays;
 
 import mireka.ExampleMail;
-import mireka.address.Domain;
-import mireka.address.Recipient;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.SendException;
+import mireka.smtp.address.Domain;
+import mireka.smtp.address.Recipient;
 import mireka.smtp.client.ClientFactory;
 import mireka.smtp.client.MtaAddress;
 import mireka.smtp.client.SmtpClient;

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import mireka.address.Recipient;
 import mireka.smtp.SendException;
+import mireka.smtp.address.Recipient;
 import mireka.transmission.LocalMailSystemException;
 import mireka.transmission.Mail;
 import mireka.transmission.Transmitter;

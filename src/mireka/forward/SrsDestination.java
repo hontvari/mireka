@@ -5,13 +5,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import mireka.address.NullReversePath;
-import mireka.address.Recipient;
-import mireka.address.ReversePath;
 import mireka.destination.Session;
 import mireka.destination.SessionDestination;
 import mireka.filter.RecipientContext;
 import mireka.smtp.RejectExceptionExt;
+import mireka.smtp.address.NullReversePath;
+import mireka.smtp.address.Recipient;
+import mireka.smtp.address.ReversePath;
 import mireka.transmission.LocalMailSystemException;
 import mireka.transmission.Mail;
 import mireka.transmission.Transmitter;

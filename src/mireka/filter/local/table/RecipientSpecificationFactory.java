@@ -2,13 +2,13 @@ package mireka.filter.local.table;
 
 import java.text.ParseException;
 
-import mireka.address.MailAddressFactory;
-import mireka.address.RemotePart;
-import mireka.address.parser.RecipientParser;
-import mireka.address.parser.ast.DomainPostmasterRecipientAST;
-import mireka.address.parser.ast.MailboxRecipientAST;
-import mireka.address.parser.ast.RecipientAST;
-import mireka.address.parser.ast.SystemPostmasterRecipientAST;
+import mireka.smtp.address.MailAddressFactory;
+import mireka.smtp.address.RemotePart;
+import mireka.smtp.address.parser.RecipientParser;
+import mireka.smtp.address.parser.ast.DomainPostmasterRecipientAST;
+import mireka.smtp.address.parser.ast.MailboxRecipientAST;
+import mireka.smtp.address.parser.ast.RecipientAST;
+import mireka.smtp.address.parser.ast.SystemPostmasterRecipientAST;
 
 /**
  * RecipientSpecificationFactory can convert a mail address like string into a

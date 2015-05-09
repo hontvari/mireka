@@ -8,9 +8,9 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import mireka.address.Recipient;
-import mireka.address.ReversePath;
 import mireka.maildata.Maildata;
+import mireka.smtp.address.Recipient;
+import mireka.smtp.address.ReversePath;
 
 /**
  * An SMTP mail object, which contains both an envelope and content.

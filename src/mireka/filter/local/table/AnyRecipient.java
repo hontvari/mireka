@@ -1,6 +1,6 @@
 package mireka.filter.local.table;
 
-import mireka.address.Recipient;
+import mireka.smtp.address.Recipient;
 
 /**
  * AnyRecipient matches any recipient, for any domain, including the reserved

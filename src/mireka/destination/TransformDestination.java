@@ -11,10 +11,10 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
 
 import mireka.ConfigurationException;
-import mireka.address.MailAddressFactory;
-import mireka.address.ReversePath;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.RejectExceptionExt;
+import mireka.smtp.address.MailAddressFactory;
+import mireka.smtp.address.ReversePath;
 import mireka.transmission.LocalMailSystemException;
 import mireka.transmission.Mail;
 import mireka.transmission.Transmitter;

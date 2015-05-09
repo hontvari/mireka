@@ -1,7 +1,7 @@
 package mireka.forward;
 
-import mireka.address.Recipient;
 import mireka.filter.local.table.RecipientSpecification;
+import mireka.smtp.address.Recipient;
 
 /**
  * Matches any recipient which seems to be an SRS reverse path. It does not

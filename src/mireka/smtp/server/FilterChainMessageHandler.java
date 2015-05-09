@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mireka.ConfigurationException;
-import mireka.address.MailAddressFactory;
-import mireka.address.Recipient;
-import mireka.address.ReversePath;
 import mireka.destination.UnknownRecipientDestination;
 import mireka.filter.Filter;
 import mireka.filter.FilterSession;
@@ -23,6 +20,9 @@ import mireka.maildata.io.TmpMaildataFile;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.RejectExceptionExt;
 import mireka.smtp.UnknownUserException;
+import mireka.smtp.address.MailAddressFactory;
+import mireka.smtp.address.Recipient;
+import mireka.smtp.address.ReversePath;
 import mireka.util.StreamCopier;
 
 import org.slf4j.Logger;

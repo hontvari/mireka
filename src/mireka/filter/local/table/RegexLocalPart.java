@@ -2,7 +2,7 @@ package mireka.filter.local.table;
 
 import java.util.regex.Pattern;
 
-import mireka.address.LocalPart;
+import mireka.smtp.address.LocalPart;
 
 /**
  * RegexLocalPart compares the local part of an address with the specified

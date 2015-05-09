@@ -2,10 +2,10 @@ package mireka.destination;
 
 import java.io.IOException;
 
-import mireka.address.ReversePath;
 import mireka.filter.FilterSession;
 import mireka.filter.RecipientContext;
 import mireka.smtp.RejectExceptionExt;
+import mireka.smtp.address.ReversePath;
 import mireka.transmission.Mail;
 
 /**

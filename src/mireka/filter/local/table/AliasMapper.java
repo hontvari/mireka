@@ -4,10 +4,10 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import mireka.address.MailAddressFactory;
-import mireka.address.Recipient;
 import mireka.destination.AliasDestination;
 import mireka.destination.Destination;
+import mireka.smtp.address.MailAddressFactory;
+import mireka.smtp.address.Recipient;
 
 /**
  * AliasMapper is a convenience class used in configuration files to create an

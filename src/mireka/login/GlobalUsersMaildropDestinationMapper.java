@@ -1,11 +1,11 @@
 package mireka.login;
 
-import mireka.address.LocalPart;
-import mireka.address.Recipient;
 import mireka.destination.Destination;
 import mireka.filter.local.table.RecipientDestinationMapper;
 import mireka.pop.MaildropDestination;
 import mireka.pop.store.MaildropRepository;
+import mireka.smtp.address.LocalPart;
+import mireka.smtp.address.Recipient;
 
 /**
  * This class assigns a {@link MaildropDestination} to a {@link GlobalUsers}

@@ -3,7 +3,7 @@ package mireka.filter.local.table;
 import java.util.ArrayList;
 import java.util.List;
 
-import mireka.address.Recipient;
+import mireka.smtp.address.Recipient;
 
 /**
  * InlineRecipientRegistry is a convenience class, it makes easy to specify

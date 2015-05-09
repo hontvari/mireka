@@ -3,15 +3,15 @@ package mireka.filter.local;
 import java.util.ArrayList;
 import java.util.List;
 
-import mireka.address.GlobalPostmaster;
-import mireka.address.Recipient;
-import mireka.address.RemotePart;
-import mireka.address.RemotePartContainingRecipient;
 import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
 import mireka.filter.RecipientVerificationResult;
 import mireka.filter.StatelessFilter;
 import mireka.filter.local.table.RemotePartSpecification;
+import mireka.smtp.address.GlobalPostmaster;
+import mireka.smtp.address.Recipient;
+import mireka.smtp.address.RemotePart;
+import mireka.smtp.address.RemotePartContainingRecipient;
 
 import org.subethamail.smtp.RejectException;
 

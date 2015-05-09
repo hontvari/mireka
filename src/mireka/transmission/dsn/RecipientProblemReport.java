@@ -4,9 +4,9 @@ import java.util.Date;
 
 import javax.annotation.Nullable;
 
-import mireka.address.Recipient;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.MailSystemStatus;
+import mireka.smtp.address.Recipient;
 import mireka.smtp.client.MtaAddress;
 
 /**

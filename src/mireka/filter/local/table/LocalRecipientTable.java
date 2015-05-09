@@ -1,9 +1,9 @@
 package mireka.filter.local.table;
 
-import mireka.address.Recipient;
-import mireka.address.RemotePart;
-import mireka.address.RemotePartContainingRecipient;
 import mireka.destination.Destination;
+import mireka.smtp.address.Recipient;
+import mireka.smtp.address.RemotePart;
+import mireka.smtp.address.RemotePartContainingRecipient;
 
 /**
  * LocalRecipientTable contains recipient-destination mappings like

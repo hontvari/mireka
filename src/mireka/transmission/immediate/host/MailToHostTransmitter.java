@@ -5,9 +5,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import mireka.address.Recipient;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.SendException;
+import mireka.smtp.address.Recipient;
 import mireka.smtp.client.MtaAddress;
 import mireka.smtp.client.SmtpClient;
 import mireka.transmission.Mail;

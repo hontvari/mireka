@@ -1,7 +1,7 @@
 package mireka.filter.local.table;
 
-import mireka.address.DomainPostmaster;
-import mireka.address.Recipient;
+import mireka.smtp.address.DomainPostmaster;
+import mireka.smtp.address.Recipient;
 
 /**
  * AnyDomainPostmaster matches the special Postmaster@... type of addresses,

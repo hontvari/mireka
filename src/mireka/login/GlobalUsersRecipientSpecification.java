@@ -1,8 +1,8 @@
 package mireka.login;
 
-import mireka.address.LocalPart;
-import mireka.address.Recipient;
 import mireka.filter.local.table.RecipientSpecification;
+import mireka.smtp.address.LocalPart;
+import mireka.smtp.address.Recipient;
 
 /**
  * A {@link RecipientSpecification} which accepts those recipient addresses

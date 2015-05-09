@@ -8,11 +8,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import mireka.address.MailAddressFactory;
-import mireka.address.Recipient;
-import mireka.address.ReversePath;
 import mireka.destination.MailDestination;
 import mireka.smtp.RejectExceptionExt;
+import mireka.smtp.address.MailAddressFactory;
+import mireka.smtp.address.Recipient;
+import mireka.smtp.address.ReversePath;
 import mireka.transmission.Mail;
 import mireka.transmission.Transmitter;
 

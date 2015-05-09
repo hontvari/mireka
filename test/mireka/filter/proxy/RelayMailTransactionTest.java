@@ -2,9 +2,9 @@ package mireka.filter.proxy;
 
 import mireka.ExampleAddress;
 import mireka.ExampleMail;
-import mireka.address.NullReversePath;
 import mireka.destination.Session;
 import mireka.filter.RecipientContext;
+import mireka.smtp.address.NullReversePath;
 import mireka.smtp.client.BackendServer;
 import mireka.smtp.client.SmtpClient;
 import mockit.Expectations;

@@ -3,12 +3,12 @@ package mireka.filter.proxy;
 import java.io.IOException;
 import java.io.InputStream;
 
-import mireka.address.ReversePath;
 import mireka.destination.Session;
 import mireka.destination.SessionDestination;
 import mireka.filter.RecipientContext;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.RejectExceptionExt;
+import mireka.smtp.address.ReversePath;
 import mireka.smtp.client.BackendServer;
 import mireka.transmission.Mail;
 

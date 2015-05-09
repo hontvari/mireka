@@ -15,9 +15,9 @@ import java.util.Date;
 import java.util.List;
 
 import mireka.ExampleMail;
-import mireka.address.MailAddressFactory;
 import mireka.maildata.Maildata;
 import mireka.smtp.EnhancedStatus;
+import mireka.smtp.address.MailAddressFactory;
 import mireka.smtp.client.MtaAddress;
 import mireka.transmission.Mail;
 import mireka.transmission.immediate.Rfc821Status;

@@ -5,10 +5,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import mireka.address.Recipient;
-import mireka.address.RemotePart;
-import mireka.address.RemotePartContainingRecipient;
 import mireka.smtp.EnhancedStatus;
+import mireka.smtp.address.Recipient;
+import mireka.smtp.address.RemotePart;
+import mireka.smtp.address.RemotePartContainingRecipient;
 import mireka.transmission.Mail;
 import mireka.transmission.Transmitter;
 import mireka.transmission.immediate.ImmediateSender;

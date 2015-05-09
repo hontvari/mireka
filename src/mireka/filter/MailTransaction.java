@@ -8,11 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mireka.address.Recipient;
-import mireka.address.ReversePath;
 import mireka.destination.Destination;
 import mireka.filter.spf.SpfChecker;
 import mireka.maildata.Maildata;
+import mireka.smtp.address.Recipient;
+import mireka.smtp.address.ReversePath;
 import mireka.smtp.server.SmtpDataReadException;
 
 import org.apache.james.jspf.executor.SPFResult;

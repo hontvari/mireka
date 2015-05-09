@@ -10,14 +10,14 @@ import java.util.List;
 
 import javax.annotation.concurrent.ThreadSafe;
 
-import mireka.address.MailAddressFactory;
-import mireka.address.NullReversePath;
-import mireka.address.Recipient;
-import mireka.address.ReversePath;
 import mireka.maildata.Maildata;
 import mireka.maildata.io.TmpMaildataFile;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.MailSystemStatus;
+import mireka.smtp.address.MailAddressFactory;
+import mireka.smtp.address.NullReversePath;
+import mireka.smtp.address.Recipient;
+import mireka.smtp.address.ReversePath;
 import mireka.transmission.LocalMailSystemException;
 import mireka.transmission.Mail;
 import mireka.util.DateTimeRfc822Formatter;

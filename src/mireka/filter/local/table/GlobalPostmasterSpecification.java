@@ -1,7 +1,7 @@
 package mireka.filter.local.table;
 
-import mireka.address.GlobalPostmaster;
-import mireka.address.Recipient;
+import mireka.smtp.address.GlobalPostmaster;
+import mireka.smtp.address.Recipient;
 
 /**
  * GlobalPostmasterSpecification matches only a {@link GlobalPostmaster}

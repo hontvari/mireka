@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import javax.annotation.concurrent.ThreadSafe;
 
-import mireka.address.LocalPart;
+import mireka.smtp.address.LocalPart;
 
 /**
  * case-insensitive user name, where case-insensitivity is defined by the en_US

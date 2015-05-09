@@ -1,6 +1,6 @@
 package mireka.filter.local.table;
 
-import mireka.address.RemotePart;
+import mireka.smtp.address.RemotePart;
 
 /**
  * AnyRemotePart matches any remote part.

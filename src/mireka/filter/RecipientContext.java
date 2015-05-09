@@ -1,8 +1,8 @@
 package mireka.filter;
 
 import mireka.ConfigurationException;
-import mireka.address.Recipient;
 import mireka.destination.Destination;
+import mireka.smtp.address.Recipient;
 
 /**
  * RecipientContext collects information about a specific recipient during the

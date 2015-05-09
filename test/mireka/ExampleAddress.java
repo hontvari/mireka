@@ -4,11 +4,11 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.ParseException;
 
-import mireka.address.Domain;
-import mireka.address.GlobalPostmaster;
-import mireka.address.MailAddressFactory;
-import mireka.address.Recipient;
-import mireka.address.ReversePath;
+import mireka.smtp.address.Domain;
+import mireka.smtp.address.GlobalPostmaster;
+import mireka.smtp.address.MailAddressFactory;
+import mireka.smtp.address.Recipient;
+import mireka.smtp.address.ReversePath;
 
 import org.xbill.DNS.Name;
 import org.xbill.DNS.TextParseException;

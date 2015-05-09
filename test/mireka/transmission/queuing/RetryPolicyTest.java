@@ -7,8 +7,8 @@ import java.util.List;
 
 import mireka.ExampleAddress;
 import mireka.ExampleMail;
-import mireka.address.NullReversePath;
 import mireka.smtp.EnhancedStatus;
+import mireka.smtp.address.NullReversePath;
 import mireka.smtp.client.MtaAddress;
 import mireka.transmission.LocalMailSystemException;
 import mireka.transmission.Mail;

@@ -4,13 +4,13 @@ import java.net.InetAddress;
 
 import javax.inject.Inject;
 
-import mireka.address.AddressLiteral;
-import mireka.address.Domain;
-import mireka.address.DomainPart;
-import mireka.address.Recipient;
-import mireka.address.RemotePart;
-import mireka.address.RemotePartContainingRecipient;
 import mireka.smtp.SendException;
+import mireka.smtp.address.AddressLiteral;
+import mireka.smtp.address.Domain;
+import mireka.smtp.address.DomainPart;
+import mireka.smtp.address.Recipient;
+import mireka.smtp.address.RemotePart;
+import mireka.smtp.address.RemotePartContainingRecipient;
 import mireka.smtp.client.ClientFactory;
 import mireka.smtp.client.MtaAddress;
 import mireka.smtp.client.SmtpClient;

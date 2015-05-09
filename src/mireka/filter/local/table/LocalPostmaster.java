@@ -1,8 +1,8 @@
 package mireka.filter.local.table;
 
-import mireka.address.DomainPostmaster;
-import mireka.address.Recipient;
-import mireka.address.RemotePart;
+import mireka.smtp.address.DomainPostmaster;
+import mireka.smtp.address.Recipient;
+import mireka.smtp.address.RemotePart;
 
 /**
  * LocalPostmaster matches the special global postmaster and any domain

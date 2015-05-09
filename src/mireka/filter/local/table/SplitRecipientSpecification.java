@@ -1,8 +1,8 @@
 package mireka.filter.local.table;
 
-import mireka.address.Mailbox;
-import mireka.address.Recipient;
-import mireka.address.RemotePartContainingRecipient;
+import mireka.smtp.address.Mailbox;
+import mireka.smtp.address.Recipient;
+import mireka.smtp.address.RemotePartContainingRecipient;
 
 /**
  * SplitRecipientSpecification matches a recipient if its remote part matches

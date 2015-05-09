@@ -7,12 +7,12 @@ import java.security.Key;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import mireka.address.DomainPart;
-import mireka.address.MailAddressFactory;
-import mireka.address.Recipient;
-import mireka.address.RemotePartContainingRecipient;
-import mireka.address.ReversePath;
 import mireka.filter.local.table.InlineDomainRegistry;
+import mireka.smtp.address.DomainPart;
+import mireka.smtp.address.MailAddressFactory;
+import mireka.smtp.address.Recipient;
+import mireka.smtp.address.RemotePartContainingRecipient;
+import mireka.smtp.address.ReversePath;
 
 import org.apache.commons.codec.binary.Hex;
 import org.joda.time.DateTimeUtils;

@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.List;
 
 import mireka.ConfigurationException;
-import mireka.address.ReversePath;
 import mireka.dmarc.PolicyDiscovery;
 import mireka.dmarc.PolicyRecord;
 import mireka.dmarc.PolicyRecord.Request;
@@ -25,6 +24,7 @@ import mireka.maildata.MediaType;
 import mireka.maildata.field.UnstructuredField;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.RejectExceptionExt;
+import mireka.smtp.address.ReversePath;
 import mireka.transmission.LocalMailSystemException;
 import mireka.transmission.Mail;
 import mireka.util.AssertionException;

@@ -1,7 +1,7 @@
 package mireka.filter.local.table;
 
-import mireka.address.Recipient;
 import mireka.destination.Destination;
+import mireka.smtp.address.Recipient;
 
 /**
  * RecipientDestinationPair is a configuration helper object which assigns a
