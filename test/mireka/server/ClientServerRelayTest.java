@@ -8,12 +8,12 @@ import mireka.ArrayEndsWith;
 import mireka.ExampleAddress;
 import mireka.ExampleMaildataFile;
 import mireka.destination.DestinationProcessorFilter;
+import mireka.filter.FilterChain;
 import mireka.filter.local.AcceptAllRecipient;
 import mireka.filter.local.LookupDestinationFilter;
 import mireka.filter.local.table.RecipientSpecificationDestinationPair;
 import mireka.filter.local.table.RecipientSpecificationFactory;
 import mireka.filter.proxy.RelayDestination;
-import mireka.filterchain.Filters;
 import mireka.smtp.client.BackendServer;
 import mireka.smtp.client.ClientFactory;
 import mireka.smtp.server.MessageHandlerFactoryImpl;
@@ -38,7 +38,7 @@ public class ClientServerRelayTest {
     }
 
     private void setupSmtpService() {
-        Filters filters = createFilters();
+        FilterChain filters = createFilters();
 
         MessageHandlerFactoryImpl handlerFactoryImpl =
                 new MessageHandlerFactoryImpl();
@@ -48,8 +48,8 @@ public class ClientServerRelayTest {
         smtpServer.start();
     }
 
-    private Filters createFilters() {
-        Filters filters = new Filters();
+    private FilterChain createFilters() {
+        FilterChain filters = new FilterChain();
 
         ClientFactory client = new ClientFactory();
         client.setHelo("relay.localdomain");

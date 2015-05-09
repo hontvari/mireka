@@ -3,9 +3,10 @@ package mireka.filter.misc;
 import java.util.ArrayList;
 import java.util.List;
 
-import mireka.filter.FilterReply;
+import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
-import mireka.filter.StatelessFilterType;
+import mireka.filter.RecipientVerificationResult;
+import mireka.filter.StatelessFilter;
 import mireka.smtp.RejectExceptionExt;
 
 import org.slf4j.Logger;
@@ -19,17 +20,18 @@ import org.slf4j.LoggerFactory;
  * filter sorts these mails bases on the reverse path. If no mapping matches the
  * reverse path then this filter does nothing.
  */
-public class RedirectPostmasterMail extends StatelessFilterType {
+public class RedirectPostmasterMail extends StatelessFilter {
     private final Logger logger = LoggerFactory
             .getLogger(RedirectPostmasterMail.class);
     private List<ReversePathDestinationPair> mappings =
             new ArrayList<ReversePathDestinationPair>();
 
     @Override
-    public FilterReply verifyRecipient(RecipientContext recipientContext)
+    public RecipientVerificationResult verifyRecipient(
+            MailTransaction transaction, RecipientContext recipientContext)
             throws RejectExceptionExt {
         assignDestination(recipientContext);
-        return FilterReply.NEUTRAL;
+        return RecipientVerificationResult.NEUTRAL;
     }
 
     private void assignDestination(RecipientContext recipientContext) {
@@ -38,7 +40,8 @@ public class RedirectPostmasterMail extends StatelessFilterType {
         if (!recipientContext.recipient.isPostmaster())
             return;
 
-        String reversePath = recipientContext.getMailTransaction().getFrom();
+        String reversePath =
+                recipientContext.getMailTransaction().reversePath.getSmtpText();
         for (ReversePathDestinationPair mapping : mappings) {
             if (mapping.getReversePath().equals(reversePath)) {
                 recipientContext.setDestination(mapping.getDestination());

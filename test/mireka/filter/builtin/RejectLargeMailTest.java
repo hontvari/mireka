@@ -3,14 +3,13 @@ package mireka.filter.builtin;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import mireka.ExampleMaildataFile;
 import mireka.IsStreamEquals;
-import mireka.filter.Filter;
-import mireka.filter.FilterChain;
+import mireka.filter.FilterSession;
+import mireka.filter.MailTransaction;
 import mireka.filter.misc.RejectLargeMail;
-import mireka.smtp.RejectExceptionExt;
+import mockit.Injectable;
 import mockit.Mocked;
 import mockit.Verifications;
 
@@ -20,45 +19,54 @@ import org.subethamail.smtp.TooMuchDataException;
 
 public class RejectLargeMailTest {
     @Mocked
-    private FilterChain chain;
-    private Filter filter;
+    // Do not mock the entire type because the tested object is the same type
+    @Injectable
+    private FilterSession nextLink;
+
+    private FilterSession tested;
+
+    private MailTransaction transaction = new MailTransaction(null);
 
     @Before
     public void setup() {
         RejectLargeMail rejectLargeMail = new RejectLargeMail();
         rejectLargeMail.setMaxAllowedSize(3000);
-        filter = rejectLargeMail.createInstance(null);
-        filter.setChain(chain);
+        tested = rejectLargeMail.createSession();
+        tested.setNextLink(nextLink);
+        tested.setMailTransaction(transaction);
     }
 
     @Test
-    public void testSmallMail() throws TooMuchDataException,
-            RejectExceptionExt, IOException {
+    public void testSmallMail() {
 
-        filter.dataStream(ExampleMaildataFile.simple().getInputStream());
+        transaction.dataStream =
+                ExampleMaildataFile.simple().getInputStream();
+        tested.dataStream();
 
         new Verifications() {
             {
-                InputStream stream;
-                chain.dataStream(stream = withCapture());
-                assertThat(stream, new IsStreamEquals(ExampleMaildataFile
-                        .simple().getInputStream()));
+                nextLink.dataStream();
             }
         };
+
+        assertThat(transaction.dataStream, new IsStreamEquals(
+                ExampleMaildataFile.simple().getInputStream()));
     }
 
     @Test(expected = TooMuchDataException.class)
-    public void testLargeMail() throws TooMuchDataException,
-            RejectExceptionExt, IOException {
+    public void testLargeMail() throws TooMuchDataException, IOException {
 
-        filter.dataStream(ExampleMaildataFile.mail4k().getInputStream());
+        transaction.dataStream =
+                ExampleMaildataFile.mail4k().getInputStream();
+
+        tested.dataStream();
 
         new Verifications() {
             {
-                InputStream stream;
-                chain.dataStream(stream = withCapture());
-                stream.read(new byte[5000]); // larger then allowed
+                nextLink.dataStream();
             }
         };
+
+        transaction.dataStream.read(new byte[5000]); // larger then allowed
     }
 }

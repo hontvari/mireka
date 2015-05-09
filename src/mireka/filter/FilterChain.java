@@ -1,38 +1,26 @@
 package mireka.filter;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-import mireka.address.ReversePath;
-import mireka.maildata.Maildata;
-import mireka.maildata.io.MaildataFile;
-import mireka.smtp.RejectExceptionExt;
+/**
+ * The list of filters. During a mail transaction the first filter will call the
+ * second, the second will call the third and so on.
+ */
+public class FilterChain {
+    private final List<Filter> filters = new ArrayList<Filter>();
 
-import org.subethamail.smtp.TooMuchDataException;
+    public void setFilters(List<Filter> filters) {
+        this.filters.clear();
+        this.filters.addAll(filters);
+    }
 
-public interface FilterChain {
-    void begin();
+    public List<Filter> getFilters() {
+        return filters;
+    }
 
-    void from(ReversePath from) throws RejectExceptionExt;
+    public void addFilter(Filter filter) {
+        filters.add(filter);
+    }
 
-    FilterReply verifyRecipient(RecipientContext recipientContext)
-            throws RejectExceptionExt;
-
-    void recipient(RecipientContext recipientContext) throws RejectExceptionExt;
-
-    void dataStream(InputStream in) throws RejectExceptionExt,
-            TooMuchDataException, IOException;
-
-    /**
-     * A typical implementation of this method would follow the following
-     * pattern: 1. examine the complete mail data or only its headers 2.
-     * optionally wrap the data object for example to prepend trace data 3.
-     * invoke the next entity in the chain
-     * <p>
-     * The passed {@link MaildataFile} object will become the return value of
-     * {@link MailTransaction#getData()} until another filter replaces it
-     * possibly by wrapping it
-     */
-    void data(Maildata data) throws RejectExceptionExt, TooMuchDataException,
-            IOException;
 }

@@ -1,29 +1,22 @@
 package mireka.filter.misc;
 
-import java.io.IOException;
-
-import mireka.filter.AbstractFilter;
 import mireka.filter.Filter;
-import mireka.filter.FilterReply;
-import mireka.filter.FilterType;
-import mireka.filter.MailTransaction;
+import mireka.filter.FilterSession;
 import mireka.filter.RecipientContext;
-import mireka.maildata.Maildata;
+import mireka.filter.RecipientVerificationResult;
 import mireka.smtp.RejectExceptionExt;
-
-import org.subethamail.smtp.TooMuchDataException;
 
 /**
  * The MeasureTraffic filter collects statistics information about the incoming
  * traffic of a Mireka SMTP server port in an {@link IncomingSmtpSummary}
  * object.
  */
-public class MeasureTraffic implements FilterType {
+public class MeasureTraffic implements Filter {
     private IncomingSmtpSummary incomingSmtpSummary;
 
     @Override
-    public Filter createInstance(MailTransaction mailTransaction) {
-        return new FilterImpl(mailTransaction);
+    public FilterSession createSession() {
+        return new FilterImpl();
     }
 
     /**
@@ -33,33 +26,28 @@ public class MeasureTraffic implements FilterType {
         this.incomingSmtpSummary = summary;
     }
 
-    private class FilterImpl extends AbstractFilter {
-
-        public FilterImpl(MailTransaction mailTransaction) {
-            super(mailTransaction);
-        }
+    private class FilterImpl extends FilterSession {
 
         @Override
         public void begin() {
             incomingSmtpSummary.mailTransactions.mark();
-            chain.begin();
+            super.begin();
         }
 
         @Override
-        public void data(Maildata data) throws RejectExceptionExt,
-                TooMuchDataException, IOException {
+        public void data() throws RejectExceptionExt {
             incomingSmtpSummary.dataCommands.mark();
-            chain.data(data);
+            super.data();
             incomingSmtpSummary.acceptedMessages.mark();
-            incomingSmtpSummary.messageRecipients.mark(mailTransaction
-                    .getAcceptedRecipientContexts().size());
+            incomingSmtpSummary.messageRecipients
+                    .mark(transaction.recipientContexts.size());
         }
 
         @Override
-        public FilterReply verifyRecipient(RecipientContext recipientContext)
-                throws RejectExceptionExt {
+        public RecipientVerificationResult verifyRecipient(
+                RecipientContext recipientContext) throws RejectExceptionExt {
             incomingSmtpSummary.rcptCommands.mark();
-            return chain.verifyRecipient(recipientContext);
+            return super.verifyRecipient(recipientContext);
         }
     }
 }

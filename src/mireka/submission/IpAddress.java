@@ -4,7 +4,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * a single IP address or a subnet
+ * IpAddress specifies a single IP address or a subnet.
  */
 public class IpAddress {
     private final String name;

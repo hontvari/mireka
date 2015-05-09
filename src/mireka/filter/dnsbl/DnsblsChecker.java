@@ -4,6 +4,10 @@ import java.util.List;
 
 import mireka.filter.MailTransaction;
 
+/**
+ * DnsblsChecker queries several Dnsbl instances and caches the result. If any
+ * of the black lists returns a positive answer than the result is positive.
+ */
 public class DnsblsChecker {
     private final List<Dnsbl> blacklists;
 

@@ -3,18 +3,19 @@ package mireka.filter.dnsbl;
 import java.util.ArrayList;
 import java.util.List;
 
-import mireka.filter.AbstractDataRecipientFilter;
-import mireka.filter.DataRecipientFilterAdapter;
 import mireka.filter.Filter;
-import mireka.filter.FilterReply;
-import mireka.filter.FilterType;
-import mireka.filter.MailTransaction;
+import mireka.filter.FilterSession;
 import mireka.filter.RecipientContext;
+import mireka.filter.RecipientVerificationResult;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.RejectExceptionExt;
 import mireka.smtp.SmtpReplyTemplate;
 
-public class RefuseBlacklistedRecipient implements FilterType {
+/**
+ * This filter rejects any recipient if the client SMTP server appears in any of
+ * the configured DNS-based blackhole lists.
+ */
+public class RefuseBlacklistedRecipient implements Filter {
     private final List<Dnsbl> blacklists = new ArrayList<Dnsbl>();
     private SmtpReplyTemplate smtpReplyTemplate = new SmtpReplyTemplate(530,
             "5.7.1",
@@ -22,12 +23,8 @@ public class RefuseBlacklistedRecipient implements FilterType {
                     + "Contact the postmaster for details.");
 
     @Override
-    public Filter createInstance(MailTransaction mailTransaction) {
-        DnsblsChecker dnsblChecker =
-                new DnsblsChecker(blacklists, mailTransaction);
-        FilterImpl filterInstance =
-                new FilterImpl(mailTransaction, dnsblChecker);
-        return new DataRecipientFilterAdapter(filterInstance, mailTransaction);
+    public FilterSession createSession() {
+        return new FilterImpl();
     }
 
     public void addBlacklist(Dnsbl dnsbl) {
@@ -41,31 +38,31 @@ public class RefuseBlacklistedRecipient implements FilterType {
         this.blacklists.addAll(lists);
     }
 
-    private class FilterImpl extends AbstractDataRecipientFilter {
-        private final DnsblsChecker dnsblChecker;
+    private class FilterImpl extends FilterSession {
+        private DnsblsChecker dnsblChecker;
 
-        private FilterImpl(MailTransaction mailTransaction,
-                DnsblsChecker dnsblChecker) {
-            super(mailTransaction);
-            this.dnsblChecker = dnsblChecker;
+        @Override
+        public void begin() {
+            dnsblChecker = new DnsblsChecker(blacklists, transaction);
+            super.begin();
         }
 
         @Override
-        public FilterReply verifyRecipient(RecipientContext recipientContext)
-                throws RejectExceptionExt {
+        public RecipientVerificationResult verifyRecipient(
+                RecipientContext recipientContext) throws RejectExceptionExt {
             DnsblResult dnsblResult = dnsblChecker.getResult();
             if (dnsblResult.isListed) {
                 EnhancedStatus smtpReply = calculateSmtpReply(dnsblResult);
                 throw new RejectExceptionExt(smtpReply);
             }
-            return FilterReply.NEUTRAL;
+            return RecipientVerificationResult.NEUTRAL;
         }
 
         private EnhancedStatus calculateSmtpReply(DnsblResult dnsblResult) {
             SmtpReplyTemplate reply =
                     dnsblResult.dnsbl.smtpReplyTemplate
                             .resolveDefaultsFrom(smtpReplyTemplate);
-            reply = reply.format(mailTransaction.getRemoteInetAddress());
+            reply = reply.format(transaction.getRemoteInetAddress());
             return reply.toEnhancedStatus();
         }
     }

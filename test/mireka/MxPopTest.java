@@ -16,8 +16,8 @@ import javax.mail.Store;
 import javax.mail.URLName;
 
 import mireka.destination.DestinationProcessorFilter;
+import mireka.filter.FilterChain;
 import mireka.filter.local.LookupDestinationFilter;
-import mireka.filterchain.Filters;
 import mireka.login.GlobalUser;
 import mireka.login.GlobalUsers;
 import mireka.login.GlobalUsersLoginSpecification;
@@ -118,7 +118,7 @@ public class MxPopTest extends TempDirectory {
         lookupDestinationFilter
                 .setRecipientDestinationMapper(recipientDestinationMapper);
 
-        Filters filters = new Filters();
+        FilterChain filters = new FilterChain();
         filters.addFilter(lookupDestinationFilter);
         filters.addFilter(new DestinationProcessorFilter());
 

@@ -2,7 +2,6 @@ package mireka;
 
 import mireka.maildata.Maildata;
 
-//TODO rename
 public class ExampleMaildata {
     public static Maildata simple() {
         return new Maildata(ExampleMaildataFile.simple());

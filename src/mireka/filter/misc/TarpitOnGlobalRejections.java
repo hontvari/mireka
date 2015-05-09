@@ -1,11 +1,9 @@
 package mireka.filter.misc;
 
-import mireka.filter.AbstractFilter;
 import mireka.filter.Filter;
-import mireka.filter.FilterReply;
-import mireka.filter.FilterType;
-import mireka.filter.MailTransaction;
+import mireka.filter.FilterSession;
 import mireka.filter.RecipientContext;
+import mireka.filter.RecipientVerificationResult;
 import mireka.smtp.RejectExceptionExt;
 import mireka.smtp.UnknownUserException;
 
@@ -16,27 +14,23 @@ import org.slf4j.LoggerFactory;
  * The TarpitOnGlobalRejections filter slows down replies to RCPT command on all
  * connections if unknown recipients are submitted by a client.
  */
-public class TarpitOnGlobalRejections implements FilterType {
+public class TarpitOnGlobalRejections implements Filter {
     private final Logger logger = LoggerFactory
             .getLogger(TarpitOnGlobalRejections.class);
     private final Tarpit tarpit = new Tarpit();
 
     @Override
-    public Filter createInstance(MailTransaction mailTransaction) {
-        return new FilterImpl(mailTransaction);
+    public FilterSession createSession() {
+        return new FilterImpl();
     }
 
-    private class FilterImpl extends AbstractFilter {
-
-        protected FilterImpl(MailTransaction mailTransaction) {
-            super(mailTransaction);
-        }
+    private class FilterImpl extends FilterSession {
 
         @Override
-        public FilterReply verifyRecipient(RecipientContext recipientContext)
-                throws RejectExceptionExt {
+        public RecipientVerificationResult verifyRecipient(
+                RecipientContext recipientContext) throws RejectExceptionExt {
             try {
-                return chain.verifyRecipient(recipientContext);
+                return super.verifyRecipient(recipientContext);
             } catch (UnknownUserException e) {
                 tarpit.addRejection();
                 sleep();
@@ -48,7 +42,7 @@ public class TarpitOnGlobalRejections implements FilterType {
         public void recipient(RecipientContext recipientContext)
                 throws RejectExceptionExt {
             try {
-                chain.recipient(recipientContext);
+                super.recipient(recipientContext);
             } catch (UnknownUserException e) {
                 tarpit.addRejection();
                 throw e;

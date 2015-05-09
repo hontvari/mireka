@@ -6,26 +6,38 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
-import mireka.filter.StatelessFilterType;
-import mireka.maildata.Maildata;
+import mireka.filter.StatelessFilter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SavePostmasterMail extends StatelessFilterType {
+/**
+ * The SavePostmasterMail filter saves the mail data part of every mail whose
+ * recipient is the postmaster into the configured folder for debugging
+ * purposes.
+ */
+public class SavePostmasterMail extends StatelessFilter {
     private final Logger logger = LoggerFactory
             .getLogger(SavePostmasterMail.class);
     private File dir;
 
     @Override
-    public void dataRecipient(Maildata data, RecipientContext recipientContext) {
-        if (!recipientContext.recipient.isPostmaster())
-            return;
+    public void data(MailTransaction transaction) {
+        for (RecipientContext recipientContext : transaction.recipientContexts) {
+            if (recipientContext.recipient.isPostmaster()) {
+                saveMaildata(transaction);
+                return;
+            }
+        }
+    }
+
+    private void saveMaildata(MailTransaction transaction) {
         try {
             File destFile = File.createTempFile("mail", ".txt", dir);
             try (OutputStream out = new FileOutputStream(destFile);
-                    InputStream in = data.getInputStream()) {
+                    InputStream in = transaction.data.getInputStream()) {
 
                 byte[] buffer = new byte[8192];
                 int numRead;

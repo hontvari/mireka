@@ -1,19 +1,26 @@
 package mireka.filter.local;
 
-import mireka.filter.FilterReply;
+import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
-import mireka.filter.StatelessFilterType;
+import mireka.filter.RecipientVerificationResult;
+import mireka.filter.StatelessFilter;
 
 import org.subethamail.smtp.RejectException;
 
-public class AcceptGlobalPostmaster extends StatelessFilterType {
+/**
+ * The AcceptGlobalPostmaster filter accepts the recipient if it is the global
+ * postmaster address. The global postmaster address looks like "postmaster",
+ * without a domain part.
+ */
+public class AcceptGlobalPostmaster extends StatelessFilter {
 
     @Override
-    public FilterReply verifyRecipient(RecipientContext recipientContext)
+    public RecipientVerificationResult verifyRecipient(
+            MailTransaction transaction, RecipientContext recipientContext)
             throws RejectException {
         if (recipientContext.recipient.isGlobalPostmaster())
-            return FilterReply.ACCEPT;
+            return RecipientVerificationResult.ACCEPT;
         else
-            return FilterReply.NEUTRAL;
+            return RecipientVerificationResult.NEUTRAL;
     }
 }

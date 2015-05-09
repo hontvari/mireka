@@ -9,6 +9,10 @@ import mireka.filter.MailTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The ConnectedFromAuthorizedIpAddress checks if the client's IP address is in
+ * the configured set of IP addresses and ranges.
+ */
 public class ConnectedFromAuthorizedIpAddress implements
         MailTransactionSpecification {
     private final Logger logger = LoggerFactory

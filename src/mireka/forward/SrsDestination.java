@@ -1,6 +1,5 @@
 package mireka.forward;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,7 +97,7 @@ public class SrsDestination implements SessionDestination {
         }
 
         @Override
-        public void data(Mail mail) throws RejectExceptionExt, IOException {
+        public void data(Mail mail) throws RejectExceptionExt {
             try {
                 if (!mail.from.isNull()) {
                     mail.from = new NullReversePath();

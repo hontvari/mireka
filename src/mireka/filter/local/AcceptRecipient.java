@@ -1,22 +1,29 @@
 package mireka.filter.local;
 
-import mireka.filter.FilterReply;
+import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
-import mireka.filter.StatelessFilterType;
+import mireka.filter.RecipientVerificationResult;
+import mireka.filter.StatelessFilter;
 import mireka.filter.local.table.RecipientSpecification;
 
 import org.subethamail.smtp.RejectException;
 
-public class AcceptRecipient extends StatelessFilterType {
+/**
+ * The AcceptRecipient filter accepts a recipient if it matches the configured
+ * {@link RecipientSpecification}. If it does not match then if does not decide,
+ * that is it does not reject the recipient.
+ */
+public class AcceptRecipient extends StatelessFilter {
     private RecipientSpecification recipientSpecification;
 
     @Override
-    public FilterReply verifyRecipient(RecipientContext recipientContext)
+    public RecipientVerificationResult verifyRecipient(
+            MailTransaction transaction, RecipientContext recipientContext)
             throws RejectException {
         if (recipientSpecification.isSatisfiedBy(recipientContext.recipient))
-            return FilterReply.ACCEPT;
+            return RecipientVerificationResult.ACCEPT;
         else
-            return FilterReply.NEUTRAL;
+            return RecipientVerificationResult.NEUTRAL;
     }
 
     /**

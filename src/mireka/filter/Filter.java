@@ -1,23 +1,27 @@
 package mireka.filter;
 
 /**
+ * A Filter listens to an SMTP mail transaction (from the MAIL command to the
+ * DATA command), and it may verify and process the mail envelope and the mail
+ * data, including performing the final delivery.
  * 
- * Implementing classes are active parts of a filter chain. Their methods
- * explicitly call the corresponding method of the next filter. In this way they
- * are able to get information about the results of methods of the following
- * filters. This design is similar to Servlet Filters.
+ * A Filter itself is just a configuration object and a factory of a
+ * FilterSession descendant class. The latter object does the real work.
  * 
- * @see <a
- *      href="http://java.sun.com/products/servlet/2.3/javadoc/javax/servlet/Filter.html">ServletFilter
- *      in the Servlet API</a>
+ * Most filters are interested in only one point of the mail transaction. These
+ * filters should extend the {@link StatelessFilter} class. This result in a
+ * slightly more compact code.
  * 
+ * Filters which interact with the mail transaction in a more complex way should
+ * directly implement this interface and use a custom <code>FilterSession</code>
+ * descendant class.
  */
-public interface Filter extends FilterBase {
+public interface Filter {
     /**
-     * an implementation must store the supplied view to the next filter in the
-     * chain. All methods of the implementing class which has a corresponding
-     * method in {@link FilterChain} must call the latter method.
+     * Returns a new <code>FilterSession</code> descendant object which will
+     * follow a specific mail transaction. The initialization of the object
+     * (calling {@link FilterSession#setNextLink(FilterSession)} and so on) is
+     * not the responsibility of this class.
      */
-    void setChain(FilterChain chain);
-
+    FilterSession createSession();
 }

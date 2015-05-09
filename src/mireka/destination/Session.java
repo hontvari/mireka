@@ -3,7 +3,7 @@ package mireka.destination;
 import java.io.IOException;
 
 import mireka.address.ReversePath;
-import mireka.filter.FilterBase;
+import mireka.filter.FilterSession;
 import mireka.filter.RecipientContext;
 import mireka.smtp.RejectExceptionExt;
 import mireka.transmission.Mail;
@@ -28,7 +28,7 @@ public interface Session {
 
     /**
      * Processes an accepted recipient. It is only called if one of the filters
-     * accepted the recipient in {@link FilterBase#verifyRecipient}.
+     * accepted the recipient in {@link FilterSession#verifyRecipient}.
      */
     void recipient(RecipientContext recipientContext) throws RejectExceptionExt;
 
@@ -42,7 +42,7 @@ public interface Session {
      *             if an error occurred while reading from the supplied mail
      *             data.
      */
-    void data(Mail mail) throws RejectExceptionExt, IOException;
+    void data(Mail mail) throws RejectExceptionExt;
 
     /**
      * Closes this session. It is always called, even if some other function

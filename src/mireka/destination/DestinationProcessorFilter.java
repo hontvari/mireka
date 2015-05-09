@@ -1,58 +1,45 @@
 package mireka.destination;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import mireka.address.ReversePath;
-import mireka.filter.AbstractDataRecipientFilter;
-import mireka.filter.DataRecipientFilterAdapter;
 import mireka.filter.Filter;
-import mireka.filter.FilterType;
-import mireka.filter.MailTransaction;
+import mireka.filter.FilterSession;
 import mireka.filter.RecipientContext;
-import mireka.maildata.Maildata;
 import mireka.smtp.RejectExceptionExt;
 import mireka.transmission.Mail;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.subethamail.smtp.TooMuchDataException;
 
 /**
  * DestinationProcessorFilter groups recipients by their destinations and calls
  * the {@link MailDestination} or {@link SessionDestination} objects with the
  * recipients to which they are assigned.
  */
-public class DestinationProcessorFilter implements FilterType {
+public class DestinationProcessorFilter implements Filter {
 
     @Override
-    public Filter createInstance(MailTransaction mailTransaction) {
-        FilterImpl filterInstance = new FilterImpl(mailTransaction);
-        return new DataRecipientFilterAdapter(filterInstance, mailTransaction);
+    public FilterSession createSession() {
+        return new FilterImpl();
     }
 
-    private class FilterImpl extends AbstractDataRecipientFilter {
+    private class FilterImpl extends FilterSession {
         private final Logger logger = LoggerFactory.getLogger(FilterImpl.class);
         private final Map<ResponsibleDestination, DestinationState> destinations =
                 new LinkedHashMap<ResponsibleDestination, DestinationState>();
 
         private Mail mail = new Mail();
 
-        protected FilterImpl(MailTransaction mailTransaction) {
-            super(mailTransaction);
-        }
-
         @Override
-        public void from(ReversePath from) {
-            mail.from = from;
-            mail.receivedFromMtaAddress =
-                    mailTransaction.getRemoteInetAddress();
+        public void from() {
+            mail.from = transaction.reversePath;
+            mail.receivedFromMtaAddress = transaction.getRemoteInetAddress();
             mail.receivedFromMtaName =
-                    mailTransaction.getMessageContext().getHelo();
+                    transaction.getMessageContext().getHelo();
         }
 
         @Override
@@ -92,9 +79,8 @@ public class DestinationProcessorFilter implements FilterType {
         }
 
         @Override
-        public void data(Maildata data) throws TooMuchDataException,
-                RejectExceptionExt, IOException {
-            mail.maildata = data;
+        public void data() throws RejectExceptionExt {
+            mail.maildata = transaction.data;
             mail.arrivalDate = new Date();
             mail.scheduleDate = mail.arrivalDate;
             for (Map.Entry<ResponsibleDestination, DestinationState> entry : destinations
@@ -131,8 +117,7 @@ public class DestinationProcessorFilter implements FilterType {
             abstract void recipient(RecipientContext recipientContext)
                     throws RejectExceptionExt;
 
-            abstract void data(Mail mail) throws RejectExceptionExt,
-                    IOException;
+            abstract void data(Mail mail) throws RejectExceptionExt;
 
             /**
              * Safely closes the session.
@@ -187,7 +172,7 @@ public class DestinationProcessorFilter implements FilterType {
             }
 
             @Override
-            void data(Mail mail) throws RejectExceptionExt, IOException {
+            void data(Mail mail) throws RejectExceptionExt {
                 logger.debug("Sending data for {} recipients to {}",
                         recipientContexts.size(), destination);
                 session.data(mail);

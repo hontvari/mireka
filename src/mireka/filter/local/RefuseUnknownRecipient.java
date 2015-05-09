@@ -1,9 +1,10 @@
 package mireka.filter.local;
 
 import mireka.destination.UnknownRecipientDestination;
-import mireka.filter.FilterReply;
+import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
-import mireka.filter.StatelessFilterType;
+import mireka.filter.RecipientVerificationResult;
+import mireka.filter.StatelessFilter;
 import mireka.smtp.RejectExceptionExt;
 import mireka.smtp.UnknownUserException;
 
@@ -15,13 +16,14 @@ import mireka.smtp.UnknownUserException;
  * 
  * @see LookupDestinationFilter
  */
-public class RefuseUnknownRecipient extends StatelessFilterType {
+public class RefuseUnknownRecipient extends StatelessFilter {
 
     @Override
-    public FilterReply verifyRecipient(RecipientContext recipientContext)
+    public RecipientVerificationResult verifyRecipient(
+            MailTransaction transaction, RecipientContext recipientContext)
             throws RejectExceptionExt {
         if (isKnown(recipientContext))
-            return FilterReply.NEUTRAL;
+            return RecipientVerificationResult.NEUTRAL;
         throw new UnknownUserException(recipientContext.recipient);
     }
 

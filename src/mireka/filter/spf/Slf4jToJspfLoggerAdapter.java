@@ -3,6 +3,10 @@ package mireka.filter.spf;
 import org.apache.james.jspf.core.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Slf4jToJspfLoggerAdapter adapts the internal Logger interface of Jspf
+ * library to the SLF4J logging framework, so logs go to the SLF4J loggers.
+ */
 public class Slf4jToJspfLoggerAdapter implements Logger {
     private final org.slf4j.Logger logger;
 

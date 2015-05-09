@@ -6,10 +6,10 @@ import java.io.IOException;
 
 import mireka.ExampleMaildataFile;
 import mireka.destination.DestinationProcessorFilter;
+import mireka.filter.FilterChain;
 import mireka.filter.local.LookupDestinationFilter;
 import mireka.filter.local.table.AnyRecipient;
 import mireka.filter.local.table.RecipientSpecificationDestinationPair;
-import mireka.filterchain.Filters;
 import mireka.smtp.client.BackendServer;
 import mireka.smtp.client.ClientFactory;
 import mireka.smtp.server.MessageHandlerFactoryImpl;
@@ -66,7 +66,7 @@ public class RelayFunctionalTest {
         DestinationProcessorFilter destinationProcessorFilter =
                 new DestinationProcessorFilter();
 
-        Filters filters = new Filters();
+        FilterChain filters = new FilterChain();
         filters.addFilter(lookupDestinationFilter);
         filters.addFilter(destinationProcessorFilter);
 

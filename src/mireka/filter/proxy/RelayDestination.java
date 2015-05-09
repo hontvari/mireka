@@ -7,6 +7,7 @@ import mireka.address.ReversePath;
 import mireka.destination.Session;
 import mireka.destination.SessionDestination;
 import mireka.filter.RecipientContext;
+import mireka.smtp.EnhancedStatus;
 import mireka.smtp.RejectExceptionExt;
 import mireka.smtp.client.BackendServer;
 import mireka.transmission.Mail;
@@ -94,21 +95,23 @@ public class RelayDestination implements SessionDestination {
         }
 
         /**
-         * Relays the data to the backend server.
-         * <p>
-         * Note: there are two types of IOException here. One is related to the
-         * communication with the backend server, the second is related to the
-         * mail data received in the parameter. This implementation can throw an
-         * IOException in both cases. It would be more clear, if the
-         * communication failure with the backend would be indicated by a
-         * separate exception.
+         * Relays maildata to the backend server.
          */
         @Override
-        public void data(Mail mail) throws RejectExceptionExt, IOException {
+        public void data(Mail mail) throws RejectExceptionExt {
             if (!client.hasAcceptedRecipient())
                 return;
             try (InputStream dataStream = mail.maildata.getInputStream()) {
-                client.data(dataStream);
+                try {
+                    client.data(dataStream);
+                } catch (IOException e) {
+                    logger.error("Sending data to backend failed", e);
+                    throw new RejectExceptionExt(EnhancedStatus.BAD_CONNECTION);
+                }
+            } catch (IOException e) {
+                logger.error("Cannot read maildata output", e);
+                // Some local reason. Most likely disk full.
+                throw new RejectExceptionExt(EnhancedStatus.MAIL_SYSTEM_FULL);
             }
         }
 

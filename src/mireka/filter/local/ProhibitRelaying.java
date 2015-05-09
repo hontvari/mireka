@@ -7,9 +7,10 @@ import mireka.address.GlobalPostmaster;
 import mireka.address.Recipient;
 import mireka.address.RemotePart;
 import mireka.address.RemotePartContainingRecipient;
-import mireka.filter.FilterReply;
+import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
-import mireka.filter.StatelessFilterType;
+import mireka.filter.RecipientVerificationResult;
+import mireka.filter.StatelessFilter;
 import mireka.filter.local.table.RemotePartSpecification;
 
 import org.subethamail.smtp.RejectException;
@@ -19,28 +20,29 @@ import org.subethamail.smtp.RejectException;
  * domain (or address literal). It does not rejects the special, global
  * postmaster address.
  */
-public class ProhibitRelaying extends StatelessFilterType {
+public class ProhibitRelaying extends StatelessFilter {
     private List<RemotePartSpecification> localDomainSpecifications =
             new ArrayList<RemotePartSpecification>();
 
     @Override
-    public FilterReply verifyRecipient(RecipientContext recipientContext)
+    public RecipientVerificationResult verifyRecipient(
+            MailTransaction transaction, RecipientContext recipientContext)
             throws RejectException {
         Recipient recipient = recipientContext.recipient;
         if (recipient instanceof GlobalPostmaster)
-            return FilterReply.NEUTRAL;
+            return RecipientVerificationResult.NEUTRAL;
         else if (recipient instanceof RemotePartContainingRecipient)
             return verifyRemotePartContainingRecipient((RemotePartContainingRecipient) recipient);
         else
             throw new IllegalArgumentException();
     }
 
-    private FilterReply verifyRemotePartContainingRecipient(
+    private RecipientVerificationResult verifyRemotePartContainingRecipient(
             RemotePartContainingRecipient recipient) throws RejectException {
         RemotePart remotePart = recipient.getMailbox().getRemotePart();
         for (RemotePartSpecification remotePartSpecification : localDomainSpecifications) {
             if (remotePartSpecification.isSatisfiedBy(remotePart))
-                return FilterReply.NEUTRAL;
+                return RecipientVerificationResult.NEUTRAL;
         }
         throw new RejectException(550,
                 "Relaying prohibited, user is not local (" + recipient + ")");

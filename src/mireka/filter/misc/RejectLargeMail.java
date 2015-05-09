@@ -3,21 +3,18 @@ package mireka.filter.misc;
 import java.io.IOException;
 import java.io.InputStream;
 
-import mireka.filter.AbstractFilter;
-import mireka.filter.Filter;
-import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
-import mireka.smtp.RejectExceptionExt;
+import mireka.filter.StatelessFilter;
 
 import org.subethamail.smtp.TooMuchDataException;
 
-public class RejectLargeMail implements FilterType {
+/**
+ * This filter rejects the mail data if it is larger than the configured limit.
+ * It installs a wrapper around the mail data stream, which throws an exception
+ * if the stream would return more bytes than the configured limit.
+ */
+public class RejectLargeMail extends StatelessFilter {
     private int maxAllowedSize = 25000000;
-
-    @Override
-    public Filter createInstance(MailTransaction mailTransaction) {
-        return new FilterImpl(mailTransaction);
-    }
 
     /**
      * @x.category GETSET
@@ -33,18 +30,11 @@ public class RejectLargeMail implements FilterType {
         this.maxAllowedSize = maxAllowedSize;
     }
 
-    private class FilterImpl extends AbstractFilter {
-
-        public FilterImpl(MailTransaction mailTransaction) {
-            super(mailTransaction);
-        }
-
-        @Override
-        public void dataStream(InputStream in) throws RejectExceptionExt,
-                TooMuchDataException, IOException {
-            chain.dataStream(new LengthLimitingInputStream(in, maxAllowedSize));
-        }
-
+    @Override
+    public void dataStream(MailTransaction transaction) {
+        transaction.dataStream =
+                new LengthLimitingInputStream(transaction.dataStream,
+                        maxAllowedSize);
     }
 
     private final class LengthLimitingInputStream extends

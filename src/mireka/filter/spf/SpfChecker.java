@@ -1,14 +1,17 @@
 package mireka.filter.spf;
 
+import mireka.filter.MailTransaction;
+
 import org.apache.james.jspf.executor.SPFResult;
 import org.apache.james.jspf.impl.DefaultSPF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import mireka.filter.MailTransaction;
-
+/**
+ * SpfChecker executes an SPF check and caches the result in the
+ * {@link MailTransaction#spfResult} object.
+ */
 public class SpfChecker {
-    private final static String SPF_RESULT_NAME = "mireka.spfResult";
     private final Logger logger = LoggerFactory.getLogger(SpfChecker.class);
     private final MailTransaction mailTransaction;
 
@@ -16,12 +19,16 @@ public class SpfChecker {
         this.mailTransaction = mailTransaction;
     }
 
+    /**
+     * Returns the result of the SPF check, if it is already cached then returns
+     * the result from the cache, otherwise it executes the SPF check, including
+     * the necessary DNS queries.
+     */
     public SPFResult getResult() {
-        SPFResult result =
-                (SPFResult) mailTransaction.getAttribute(SPF_RESULT_NAME);
+        SPFResult result = mailTransaction.spfResult;
         if (result == null) {
             result = check();
-            mailTransaction.setAttribute(SPF_RESULT_NAME, result);
+            mailTransaction.spfResult = result;
         }
         return result;
     }
@@ -30,9 +37,7 @@ public class SpfChecker {
         DefaultSPF spf = new DefaultSPF(new Slf4jToJspfLoggerAdapter());
         spf.setUseBestGuess(false);
         // null reverse path should correspond to empty string
-        String fromNonNull =
-                mailTransaction.getFrom() == null ? "" : mailTransaction
-                        .getFrom();
+        String fromNonNull = mailTransaction.reversePath.getSmtpText();
         String helo = mailTransaction.getMessageContext().getHelo();
         String heloNonNull =
                 helo == null ? "["

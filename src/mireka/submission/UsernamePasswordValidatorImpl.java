@@ -9,7 +9,14 @@ import org.subethamail.smtp.auth.LoginFailedException;
 import org.subethamail.smtp.auth.UsernamePasswordValidator;
 
 /**
+ * UsernamePasswordValidatorImpl checks if a username-password combination
+ * matches the configured LoginSpecification, basically it is an adapter, which
+ * adapts a Mireka LoginSpecification to the SubEthaSMTP
+ * UsernamePasswordValidator.
+ * 
  * TODO: prevent brute-force attack on passwords
+ * 
+ * @see org.subethamail.smtp.auth.UsernamePasswordValidator
  */
 public class UsernamePasswordValidatorImpl implements UsernamePasswordValidator {
     private final Logger logger = LoggerFactory

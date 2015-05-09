@@ -39,8 +39,14 @@ public class EnhancedStatus implements MailSystemStatus {
             new EnhancedStatus(554, "5.3.0", "Internal error");
     public static final EnhancedStatus BAD_MESSAGE_BODY = new EnhancedStatus(
             554, "5.6.0", "Message body is invalid");
-    public static final EnhancedStatus INCORRECT_CONFIGURATION = 
+    public static final EnhancedStatus INCORRECT_CONFIGURATION =
             new EnhancedStatus(554, "5.3.5", "System incorrectly configured");
+    public static final EnhancedStatus BAD_CONNECTION = new EnhancedStatus(421,
+            "4.4.2", "Bad connection");
+    public static final EnhancedStatus MESSAGE_TOO_BIG = new EnhancedStatus(
+            552, "5.3.4", "Message too big for system");
+    public static final EnhancedStatus AUTHENTICATION_REQUIRED =
+            new EnhancedStatus(530, "5.7.0", "Authentication required");
     private final int smtpReplyCode;
     private final String enhancedStatusCode;
     private final String message;

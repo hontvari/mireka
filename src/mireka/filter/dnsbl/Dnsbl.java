@@ -14,6 +14,10 @@ import org.xbill.DNS.TXTRecord;
 import org.xbill.DNS.TextParseException;
 import org.xbill.DNS.Type;
 
+/**
+ * Dnsbl represents a single domain based blackhole list. It can query the list
+ * if an IP address is listed and if it is, the reason of the listing.
+ */
 public class Dnsbl {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final String EOL = System.getProperty("line.separator");

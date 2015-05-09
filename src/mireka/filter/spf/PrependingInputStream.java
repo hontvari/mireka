@@ -4,6 +4,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * This stream wraps another stream and when reading starts from the stream, it
+ * first returns the data to be prepended from a specified byte array, and only
+ * after the content of the byte array is completely read it starts returning
+ * the content of the wrapped stream.
+ */
 public class PrependingInputStream extends InputStream {
     private final ByteArrayInputStream header;
     private final InputStream in;

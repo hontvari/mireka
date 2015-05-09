@@ -1,18 +1,24 @@
 package mireka.filter.local;
 
-import mireka.filter.FilterReply;
+import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
-import mireka.filter.StatelessFilterType;
+import mireka.filter.RecipientVerificationResult;
+import mireka.filter.StatelessFilter;
 
 import org.subethamail.smtp.RejectException;
 
-public class AcceptDomainPostmaster extends StatelessFilterType {
+/**
+ * The AcceptDomainPostmaster filters accepts a recipient if it is a full
+ * postmaster address with a domain. It does not check if the domain is local.
+ */
+public class AcceptDomainPostmaster extends StatelessFilter {
 
     @Override
-    public FilterReply verifyRecipient(RecipientContext recipientContext)
+    public RecipientVerificationResult verifyRecipient(
+            MailTransaction transaction, RecipientContext recipientContext)
             throws RejectException {
         if (recipientContext.recipient.isDomainPostmaster())
-            return FilterReply.ACCEPT;
-        return FilterReply.NEUTRAL;
+            return RecipientVerificationResult.ACCEPT;
+        return RecipientVerificationResult.NEUTRAL;
     }
 }

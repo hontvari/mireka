@@ -1,24 +1,22 @@
 package mireka.filter.spf;
 
-import mireka.filter.AbstractFilter;
-import mireka.filter.Filter;
-import mireka.filter.FilterReply;
-import mireka.filter.FilterType;
 import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
+import mireka.filter.RecipientVerificationResult;
+import mireka.filter.StatelessFilter;
 import mireka.smtp.RejectExceptionExt;
 
 import org.apache.james.jspf.core.exceptions.SPFErrorConstants;
 import org.apache.james.jspf.executor.SPFResult;
 import org.subethamail.smtp.RejectException;
 
-public class RejectOnFailedSpfCheck implements FilterType {
+/**
+ * The RejectOnFailedSpfCheck filter rejects any recipient if the SPF check
+ * indicates that the client is not authorized to send mail in the name of the
+ * publishing domain and the domain publishes a rejection policy for such mails.
+ */
+public class RejectOnFailedSpfCheck extends StatelessFilter {
     private boolean rejectOnPermanentError = false;
-
-    @Override
-    public Filter createInstance(MailTransaction mailTransaction) {
-        return new FilterImpl(mailTransaction, new SpfChecker(mailTransaction));
-    }
 
     /**
      * @x.category GETSET
@@ -34,36 +32,28 @@ public class RejectOnFailedSpfCheck implements FilterType {
         this.rejectOnPermanentError = rejectOnPermanentError;
     }
 
-    private class FilterImpl extends AbstractFilter {
-        private final SpfChecker spfChecker;
+    @Override
+    public RecipientVerificationResult verifyRecipient(
+            MailTransaction transaction, RecipientContext recipientContext)
+            throws RejectExceptionExt {
+        SPFResult spfResult = new SpfChecker(transaction).getResult();
+        String spfResultCode = spfResult.getResult();
 
-        public FilterImpl(MailTransaction mailTransaction, SpfChecker spfChecker) {
-            super(mailTransaction);
-            this.spfChecker = spfChecker;
-        }
-
-        @Override
-        public FilterReply verifyRecipient(RecipientContext recipientContext)
-                throws RejectExceptionExt {
-            SPFResult spfResult = spfChecker.getResult();
-            String spfResultCode = spfResult.getResult();
-
-            if (spfResultCode.equals(SPFErrorConstants.FAIL_CONV)) {
-                String statusText;
-                if (spfResult.getExplanation().isEmpty())
-                    statusText = "Blocked by SPF";
-                else
-                    statusText = "Blocked - see: " + spfResult.getExplanation();
-                throw new RejectException(550, statusText);
-            } else if (spfResult.equals(SPFErrorConstants.TEMP_ERROR_CONV)) {
-                throw new RejectException(451,
-                        "Temporarily rejected: Problem on SPF lookup");
-            } else if (rejectOnPermanentError
-                    && spfResultCode.equals(SPFErrorConstants.PERM_ERROR_CONV)) {
-                throw new RejectException(550, "Blocked - invalid SPF record");
-            }
-
-            return chain.verifyRecipient(recipientContext);
+        if (spfResultCode.equals(SPFErrorConstants.FAIL_CONV)) {
+            String statusText;
+            if (spfResult.getExplanation().isEmpty())
+                statusText = "Blocked by SPF";
+            else
+                statusText = "Blocked - see: " + spfResult.getExplanation();
+            throw new RejectException(550, statusText);
+        } else if (spfResult.equals(SPFErrorConstants.TEMP_ERROR_CONV)) {
+            throw new RejectException(451,
+                    "Temporarily rejected: Problem on SPF lookup");
+        } else if (rejectOnPermanentError
+                && spfResultCode.equals(SPFErrorConstants.PERM_ERROR_CONV)) {
+            throw new RejectException(550, "Blocked - invalid SPF record");
+        } else {
+            return RecipientVerificationResult.NEUTRAL;
         }
     }
 }

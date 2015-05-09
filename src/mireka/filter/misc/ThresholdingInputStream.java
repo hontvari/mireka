@@ -1,9 +1,19 @@
+/*
+ * The original version of this class comes from the SubEthaSMTP project, 
+ * original author was  Jeff Schnitzer. 
+ */
 package mireka.filter.misc;
 
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * ThresholdingInputStream wraps another input stream and takes notice when a
+ * threshold (number of bytes) is about to be read. This can be used to limit
+ * the length of input data.
+ *
+ */
 public abstract class ThresholdingInputStream extends FilterInputStream {
 
     /** When to trigger */
