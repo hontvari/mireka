@@ -9,7 +9,7 @@ package mireka.filter;
  * FilterSession descendant class. The latter object does the real work.
  * 
  * Most filters are interested in only one point of the mail transaction. These
- * filters should extend the {@link StatelessFilter} class. This result in a
+ * filters should extend the {@link StatelessFilter} class. This results in a
  * slightly more compact code.
  * 
  * Filters which interact with the mail transaction in a more complex way should

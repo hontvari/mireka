@@ -104,7 +104,7 @@ public class DestinationProcessorFilter implements Filter {
         }
 
         @Override
-        public void done() {
+        public void close() {
             for (DestinationState destinationState : destinations.values()) {
                 destinationState.done();
             }

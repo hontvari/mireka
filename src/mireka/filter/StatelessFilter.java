@@ -150,13 +150,13 @@ public abstract class StatelessFilter implements Filter {
      * It is called after the mail transaction is completed or aborted; it may
      * clean up the resources it may stored in the transaction object.
      * 
-     * It corresponds to the {@link FilterSession#done()} function of stateful
+     * It corresponds to the {@link FilterSession#close()} function of stateful
      * filters, see that for more information.
      * 
      * @param transaction
      *            The mail transaction which is in progress.
      * 
-     * @see FilterSession#done()
+     * @see FilterSession#close()
      */
     protected void done(MailTransaction transaction) {
         // do nothing
@@ -211,9 +211,9 @@ public abstract class StatelessFilter implements Filter {
         }
 
         @Override
-        public void done() {
+        public void close() {
             StatelessFilter.this.done(transaction);
-            super.done();
+            super.close();
         }
 
     }

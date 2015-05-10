@@ -6,19 +6,30 @@ import mireka.smtp.RejectExceptionExt;
 import mireka.smtp.server.FilterChainMessageHandler;
 
 /**
- * A filter processes mails, its functions are called in the different phases of
- * the SMTP mail transaction. A mail transaction starts with the MAIL FROM
- * command and ends with QUIT or with the start of another mail transaction. It
- * can be aborted after any command.
+ * A FilterSession is created for a single mail transaction, it does the work of
+ * the filter on that mail transaction. A mail transaction starts with the MAIL
+ * FROM command and ends with QUIT or with the start of another mail
+ * transaction. It can be aborted after any command. The functions of this
+ * object are called in the different phases of the transaction:
  * 
- * Implementing classes are active parts of a filter chain. Their methods must
- * explicitly call the corresponding method of the next filter. In this way they
- * are able to get information about the results of methods of the following
- * filters. This design is similar to Servlet Filters.
+ * <pre>
+ * 1. from
+ * 2. verifyRecipient
+ * 3. recipient
+ * 4. dataStream
+ * 5. data
+ * </pre>
  * 
- * @see <a
- *      href="http://java.sun.com/products/servlet/2.3/javadoc/javax/servlet/Filter.html">ServletFilter
- *      in the Servlet API</a>
+ * In addition to the above event functions, <code>begin</code> is always called
+ * at the start of the transaction (before <code>from</code>),
+ * <code>close</code> is called at the end of the transaction, whether it was
+ * completed or aborted.
+ * 
+ * Implementing classes are active parts of a filter chain. Their event methods
+ * must explicitly call the corresponding method of the next filter (but not for
+ * for <code>begin</code> and <code>close</code>). In this way they are able to
+ * get information about the results of methods of the following filters. This
+ * design is similar to Servlet Filters.
  */
 public abstract class FilterSession {
     /**
@@ -199,7 +210,7 @@ public abstract class FilterSession {
      * 
      * This implementation does nothing.
      */
-    public void done() {
+    public void close() {
         // nothing to do
     }
 

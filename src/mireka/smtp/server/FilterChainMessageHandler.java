@@ -190,7 +190,7 @@ public class FilterChainMessageHandler implements MessageHandler {
     public void done() {
         for (FilterSession filter : sessions) {
             try {
-                filter.done();
+                filter.close();
             } catch (RuntimeException e) {
                 logger.error("Exception in done method of filter. "
                         + "done method of other filters will still run.", e);
