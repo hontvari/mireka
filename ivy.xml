@@ -13,6 +13,11 @@
 
 	<dependencies>
 
+		<!-- @PreDestroy and @PostConstruct annotations -->
+		<dependency org="jakarta.annotation" name="jakarta.annotation-api" rev="1.3.5" 
+			conf="compile->master;runtime->default;sources">
+		</dependency>
+
 		<!-- concurrency annotations -->
 		<dependency org="com.google.code.findbugs" name="jsr305" rev="2.0.0"
 			conf="compile->master;runtime->default;sources">

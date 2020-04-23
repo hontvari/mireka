@@ -1,6 +1,6 @@
-build/
-lib-doc/
-requirements
-temp/
-todo
-user.properties
+/build/
+/lib-doc/
+/requirements
+/temp/
+/todo
+/user.properties

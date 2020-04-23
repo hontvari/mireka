@@ -13,8 +13,6 @@
 	<property name="build.debug" value="on" />
 	<property name="build.deprecation" value="on" />
 
-	<property name="ant.build.javac.target" value="1.7" />
-	<property name="ant.build.javac.source" value="1.7" />
 	<property name="ant.build.javac.encoding" value="UTF-8" />
 
 	<property name="build.dir" location="build" />
@@ -49,7 +47,7 @@
 
 	<taskdef resource="org/apache/ivy/ant/antlib.xml"
 	         uri="antlib:org.apache.ivy.ant"
-	         classpath="lib/build/ivy-2.2.0.jar">
+	         classpath="lib/build/ivy-2.5.0.jar">
 	</taskdef>
 
 	<taskdef name="deb"
@@ -88,7 +86,8 @@
 		       destdir="${build.classes.dir}"
 		       debug="${build.debug}"
 		       deprecation="${build.deprecation}"
-		       includeantruntime="false">
+		       includeantruntime="false"
+		       release="11" >
 			<classpath refid="compile.classpath" />
 		</javac>
 	</target>
@@ -122,7 +121,8 @@
 		<javac srcdir="${test.dir}"
 		       debug="on"
 		       destdir="${build.dir}/test"
-		       includeantruntime="false">
+		       includeantruntime="false"
+		       release="11" >
 			<classpath refid="test.compile.classpath" />
 		</javac>
 		<copy toDir="${build.dir}/test">
