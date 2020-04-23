@@ -1,0 +1,12 @@
+Package: mireka
+Version: 4.3.0
+Architecture: all
+Section: mail
+Depends: adduser, default-jdk-headless (>= 2:1.11) 
+Maintainer: HONTVÁRI Levente <hontvari@flyordie.com>
+Homepage: https://mireka.org/
+Vcs-Git: https://github.com/hontvari/mireka.git
+Description: Mail server and SMTP proxy
+ Mireka is a mail server with SMTP, Message Submission and POP3 services. It is
+ also an SMTP proxy.
+

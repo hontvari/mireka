@@ -1,0 +1,16 @@
+# /etc/systemd/system/mireka.service
+[Unit]
+Description=Mireka mail server and SMTP proxy
+
+[Service]
+User=mireka
+WorkingDirectory=/var/lib/mireka
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+# Uncomment the following line to enable JMX, but read the documentation before doing this:
+#Environment="JMX_OPTIONS=-Dcom.sun.management.jmxremote.port=4452 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
+ExecStart=java $JMX_OPTIONS -cp "classes:lib/*:conf" -Dlogback.configurationFile=conf/logback.xml -Dmireka.home=/var/lib/mireka mireka.startup.Start
+# Java exit code is 143, not 0, after SIGTERM
+SuccessExitStatus=0 143
+
+[Install]
+WantedBy=multi-user.target

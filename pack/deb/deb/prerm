@@ -1,0 +1,4 @@
+#!/bin/sh
+set -e
+
+systemctl --now disable mireka || true

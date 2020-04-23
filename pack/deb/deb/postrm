@@ -3,12 +3,10 @@
 case "$1" in
     remove)
         rmdir --ignore-fail-on-non-empty --parents /usr/share/mireka/classes || true
-    ;;    
+    ;;
 
     purge)
-        rm -rf /var/lib/mireka /usr/share/mireka /var/log/mireka /etc/mireka  
-        rm -f /etc/authbind/byuid/$(id -u mireka) || true
-        rm -f /etc/authbind/byuid/!$(id -u mireka) || true
+        rm -rf /var/lib/mireka /usr/share/mireka /var/log/mireka /etc/mireka
         deluser --system mireka || true
     ;;
 

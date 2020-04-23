@@ -315,72 +315,9 @@
          ================================= -->
 	<target name="deb"
 	        depends="dist"
-	        description="Creates an Ubuntu software package">
-		<local name="unpacked" />
-		<property name="unpacked" location="build/dist/ubuntu/unpacked" />
+	        description="Creates a deb software package">
 		
-		<!-- /etc/init -->
-		<mkdir dir="${unpacked}" />
-		<fixcrlf srcdir="package/ubuntu"
-		         destdir="${unpacked}"
-		         encoding="UTF-8"
-		         eol="unix" />
-		<!-- /etc/${name} -->
-		<mkdir dir="${unpacked}/etc/${name}" />
-		<fixcrlf srcdir="${build.dist.dir}/conf"
-		         destdir="${unpacked}/etc/${name}"
-		         encoding="UTF-8"
-		         eol="unix" />
-		<!-- /usr/share/${name}/lib -->
-		<mkdir dir="${unpacked}/usr/share/${name}/lib" />
-		<fixcrlf srcdir="${build.dist.dir}/lib"
-		         includes="*.js"
-		         destdir="${unpacked}/usr/share/${name}/lib"
-		         encoding="UTF-8"
-		         eol="unix" />
-		<copy todir="${unpacked}/usr/share/${name}/lib">
-			<fileset dir="${build.dist.dir}/lib" includes="*.jar"/>
-		</copy>
-		<!-- /usr/share/doc/${name} -->
-		<mkdir dir="${unpacked}/usr/share/doc/${name}" />
-		<fixcrlf file="LICENSE"
-		         destdir="${unpacked}/usr/share/doc/${name}"
-		         encoding="UTF-8"
-		         eol="unix" />
-		<fixcrlf srcdir="${build.dist.dir}/doc"
-		         includes="**/*.html,**/*.css"
-		         destdir="${unpacked}/usr/share/doc/${name}"
-		         encoding="UTF-8"
-		         eol="unix" />
-		<copy todir="${unpacked}/usr/share/doc/${name}">
-			<fileset dir="${build.dist.dir}/doc" excludes="**/*.html,**/*.css" />
-		</copy>
-
-		<deb todir="build/dist/ubuntu"
-		     package="${name}"
-		     debFilenameProperty="debFilename"
-		     section="mail"
-		     architecture="all"
-		     depends="adduser, authbind, java7-runtime-headless | openjdk-7-jre-headless, upstart-job"
-		     postinst="${unpacked}/control/postinst"
-		     prerm="${unpacked}/control/prerm"
-		     postrm="${unpacked}/control/postrm">
-
-			<version upstream="${build.version}" />
-			<maintainer name="HONTVARI Levente"
-			            email="hontvari@flyordie.com" />
-			<description synopsis="Mail server and SMTP proxy">
-				Mireka is a mail server with SMTP, Message Submission and POP3 services. It is also an SMTP proxy.
-			</description>
-			<!-- everything except control and configuration files  -->
-			<tarfileset dir="${unpacked}"
-			            excludes="control/**,etc/${name}/**,etc/init/${name}.conf"
-			            prefix="/" />
-			<!-- /etc/${name} -->
-			<conffiles dir="${unpacked}"
-			           includes="etc/${name}/**,etc/init/${name}.conf"
-			           prefix="/" />
-		</deb>
+		<exec executable="./build-deb" />
 	</target>
 
 	<!-- ================================= 

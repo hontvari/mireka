@@ -16,7 +16,7 @@ mkdir --parents \
 	/var/lib/mireka/queues/dsn \
 	/var/lib/mireka/queues/retry \
 	/var/lib/mireka/queues/submitted
-	
+
 ln -sfn /usr/share/mireka/classes	/var/lib/mireka/classes
 ln -sfn /etc/mireka			/var/lib/mireka/conf
 ln -sfn /usr/share/doc/mireka		/var/lib/mireka/doc
@@ -30,6 +30,5 @@ chmod 750 /var/lib/mireka/maildrops /var/lib/mireka/postmaster /var/lib/mireka/q
 chown root:mireka /etc/mireka/global-users.js
 chmod 640 /etc/mireka/global-users.js
 
-echo "0.0.0.0/0:25,25\n0.0.0.0/0:110,110\n0.0.0.0/0:587,587" | tee /etc/authbind/byuid/$(id -u mireka) > /etc/authbind/byuid/!$(id -u mireka) 
-
-start mireka || true
+systemctl enable mireka
+systemctl start mireka || true
