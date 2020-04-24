@@ -28,7 +28,7 @@ cp -a $src/doc/* $dir/usr/share/doc/${pack}
 fromdos -p $dir/usr/share/doc/${pack}/copyright
 find $dir/usr/share/doc/${pack} -name '*.html' -o -name '*.css' | xargs fromdos -p
 
-sed -i -E "s/(^Version: )[0-9]+$/\1$version/" $dir/DEBIAN/control
+sed -i -E "s/(^Version: ).+/\1$version/" $dir/DEBIAN/control
 
 chmod -R u=rwX,go=rX $dir
 chmod 755 $dir/DEBIAN/{postinst,postrm,prerm}
