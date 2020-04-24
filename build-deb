@@ -29,6 +29,9 @@ fromdos -p $dir/usr/share/doc/${pack}/copyright
 find $dir/usr/share/doc/${pack} -name '*.html' -o -name '*.css' | xargs fromdos -p
 
 sed -i -E "s/(^Version: ).+/\1$version/" $dir/DEBIAN/control
+git_commit=`git rev-parse HEAD`
+sed -i -E "/^Vcs-Commit:/ s/XXX/$git_commit/" $dir/DEBIAN/control
+
 
 chmod -R u=rwX,go=rX $dir
 chmod 755 $dir/DEBIAN/{postinst,postrm,prerm}
