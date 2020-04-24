@@ -23,9 +23,13 @@ ln -sfn /usr/share/doc/mireka		/var/lib/mireka/doc
 ln -sfn /usr/share/mireka/lib		/var/lib/mireka/lib
 ln -sfn /var/log/mireka			/var/lib/mireka/log
 
-chown -R mireka:adm /var/log/mireka
+chown mireka:adm /var/log/mireka
 chmod 2750 /var/log/mireka
-chown -R mireka:mireka /var/lib/mireka/maildrops /var/lib/mireka/postmaster /var/lib/mireka/queues
+chown mireka:mireka \
+	/var/lib/mireka/maildrops \
+	/var/lib/mireka/postmaster \
+	/var/lib/mireka/queues \
+	/var/lib/mireka/queues/*
 chmod 750 /var/lib/mireka/maildrops /var/lib/mireka/postmaster /var/lib/mireka/queues
 chown root:mireka /etc/mireka/global-users.js
 chmod 640 /etc/mireka/global-users.js
