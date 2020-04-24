@@ -50,10 +50,6 @@
 	         classpath="lib/build/ivy-2.5.0.jar">
 	</taskdef>
 
-	<taskdef name="deb"
-	         classname="com.googlecode.ant_deb_task.Deb"
-	         classpath="lib/build/ant-deb-patched.jar" />
-
 	<target name="init">
 		<!--		
 <svn><info path="${basedir}" revisionProperty="revisionVersion" /></svn>
