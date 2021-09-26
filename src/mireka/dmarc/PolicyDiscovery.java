@@ -3,10 +3,8 @@ package mireka.dmarc;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-
 import mireka.maildata.DotAtomDomainPart;
 import mireka.util.CharsetUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xbill.DNS.Lookup;
@@ -16,7 +14,11 @@ import org.xbill.DNS.TXTRecord;
 import org.xbill.DNS.TextParseException;
 import org.xbill.DNS.Type;
 
+/**
+ * PolicyDiscovery queries the DNS for the policy record and parses it.
+ */
 public class PolicyDiscovery {
+
     private final Logger logger = LoggerFactory
             .getLogger(PolicyDiscovery.class);
     private Name fromDomainName;

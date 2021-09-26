@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.SendException;
 import mireka.smtp.address.Recipient;
@@ -16,7 +15,6 @@ import mireka.transmission.immediate.RecipientRejection;
 import mireka.transmission.immediate.RecipientsWereRejectedException;
 import mireka.transmission.immediate.RemoteMtaErrorResponseException;
 import mireka.transmission.queuing.LogIdFactory;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.subethamail.smtp.client.SMTPException;
