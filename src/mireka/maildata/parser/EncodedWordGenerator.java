@@ -6,9 +6,8 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
-
-import javax.xml.bind.DatatypeConverter;
 
 /**
  * EncodedWordGenerator generates one or more encoded-word strings from a
@@ -259,9 +258,7 @@ public class EncodedWordGenerator {
                         break;
                     }
                 }
-                String result =
-                        DatatypeConverter.printBase64Binary(buffer
-                                .toByteArray());
+                String result = Base64.getEncoder().encodeToString(buffer.toByteArray());
                 return result;
             } catch (IOException e) {
                 throw new RuntimeException("Assertion failed", e);

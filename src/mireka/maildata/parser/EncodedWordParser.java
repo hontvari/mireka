@@ -7,8 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
-
-import javax.xml.bind.DatatypeConverter;
+import java.util.Base64;
 
 import mireka.util.CharsetUtil;
 
@@ -132,7 +131,7 @@ public class EncodedWordParser {
     private String decodeBEncodedText(String charset, String encodedText)
             throws ParseException {
         try {
-            byte[] bytes = DatatypeConverter.parseBase64Binary(encodedText);
+            byte[] bytes = Base64.getDecoder().decode(encodedText);
             return new String(bytes, charset);
         } catch (IllegalArgumentException | UnsupportedEncodingException e) {
             throw new ParseException(e.getMessage(), 0);
