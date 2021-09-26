@@ -1,0 +1,40 @@
+#!/bin/bash
+# The ant deb target runs this script
+set -e
+
+pack=${PWD##*/}
+dir=/tmp/$pack
+rm -rf $dir
+mkdir $dir
+
+version=`grep build.version user.properties | cut -d= -f 2`
+src=build/mireka-$version
+
+cp -a pack/deb/* $dir
+mv $dir/deb $dir/DEBIAN
+find $dir -type f | xargs fromdos -p
+
+mkdir -p $dir/etc/$pack
+cp -a $src/conf/* $dir/etc/$pack
+find $dir/etc/$pack -type f | xargs fromdos -p
+
+mkdir -p $dir/usr/share/${pack}/lib
+cp -a $src/lib $dir/usr/share/${pack}
+fromdos -p $dir/usr/share/${pack}/lib/*.js
+
+mkdir -p $dir/usr/share/doc/${pack}
+cp -a LICENSE $dir/usr/share/doc/${pack}/copyright
+cp -a $src/doc/* $dir/usr/share/doc/${pack}
+fromdos -p $dir/usr/share/doc/${pack}/copyright
+find $dir/usr/share/doc/${pack} -name '*.html' -o -name '*.css' | xargs fromdos -p
+
+sed -i -E "s/(^Version: ).+/\1$version/" $dir/DEBIAN/control
+git_commit=`git rev-parse HEAD`
+sed -i -E "/^Vcs-Commit:/ s/XXX/$git_commit/" $dir/DEBIAN/control
+
+
+chmod -R u=rwX,go=rX $dir
+chmod 755 $dir/DEBIAN/{postinst,postrm,prerm}
+dpkg-deb --build -v --root-owner-group $dir /tmp/$pack.deb
+lintian /tmp/$pack.deb || true
+cp -a /tmp/$pack.deb build/${pack}_$version.deb

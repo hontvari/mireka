@@ -1,5 +1,0 @@
-#!/bin/sh
-set -e
-if [ -e "/etc/init/mireka.conf" ]; then
-	stop mireka || true
-fi

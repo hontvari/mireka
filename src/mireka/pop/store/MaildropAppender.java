@@ -5,7 +5,7 @@ import java.io.OutputStream;
 import mireka.transmission.LocalMailSystemException;
 
 /**
- * A <tt>MaildropAppender</tt> is used to add a new mail to a maildrop. It works
+ * A @{code MaildropAppender} is used to add a new mail to a maildrop. It works
  * even if the maildrop is currently locked.
  */
 public interface MaildropAppender {
