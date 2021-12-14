@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  * Header section related functions in this class represents the high level,
  * semantic content of the header section compared to the lower level header
  * fields. For example it can return or set the complete lists of authors. This
- * is in contrast to the {@link HeaderSection}, returned by {@link #header()}
+ * is in contrast to the {@link HeaderSection}, returned by {@link #headers()}
  * which deals with individual header fields.
  * 
  * @see <a href="https://tools.ietf.org/html/rfc5322">RFC 5322 - Internet

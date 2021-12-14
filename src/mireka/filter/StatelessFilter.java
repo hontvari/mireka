@@ -94,7 +94,7 @@ public abstract class StatelessFilter implements Filter {
      * @throws RejectExceptionExt
      *             if the RCPT TO statement must be rejected for example because
      *             the proxy backend rejected. This should be rare, because the
-     *             {@link #verifyRecipient(RecipientContext)} operation already
+     *             {@link #verifyRecipient} operation already
      *             checked the recipient.
      * 
      * @see FilterSession#recipient(RecipientContext)

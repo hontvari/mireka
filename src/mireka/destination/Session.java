@@ -37,10 +37,6 @@ public interface Session {
      * after the SMTP DATA command has been received. It is not called if this
      * object rejected all recipients, or if other destination (assigned to
      * another destination) has already rejected the mail data.
-     * 
-     * @throws IOException
-     *             if an error occurred while reading from the supplied mail
-     *             data.
      */
     void data(Mail mail) throws RejectExceptionExt;
 

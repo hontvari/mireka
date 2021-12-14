@@ -19,7 +19,7 @@ import org.subethamail.smtp.util.TextUtils;
  *      Extensions for Non-ASCII Text</a>
  * @see <a href="https://tools.ietf.org/html/rfc2231">RFC 2231 - MIME Parameter
  *      Value and Encoded Word Extensions: Character Sets, Languages, and
- *      Continuations
+ *      Continuations</a>
  */
 public class EncodedWordParser {
     private Token currentToken;

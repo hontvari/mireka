@@ -106,8 +106,6 @@ public class Folder {
 
     /**
      * Marks the end of the logical construct.
-     * 
-     * @return
      */
     public Folder end() {
         currentLevel--;

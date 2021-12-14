@@ -69,7 +69,7 @@ public class HeaderSection {
      * returns the first one.
      * 
      * The returned object can be modified, but it has to be reinserted into
-     * this object by calling {@link #updateOrAppend}, otherwise the change will
+     * this object by calling {@link #put}, otherwise the change will
      * be lost when the header section is written out.
      */
     public <T extends HeaderField> T get(FieldDef<T> fieldDef)
@@ -90,7 +90,7 @@ public class HeaderSection {
      * If there are no occurrences of the field then it returns an empty list.
      * 
      * A returned field can be modified, but it has to be reinserted into this
-     * object by calling {@link #updateOrAppend}, otherwise the change will be
+     * object by calling {@link #remove} and e.g. {@link #append}, otherwise the change will be
      * lost when the header section is written out.
      */
     public <T extends HeaderField> List<T> getAll(FieldDef<T> fieldDef)
