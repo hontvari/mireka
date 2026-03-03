@@ -1,7 +1,7 @@
 package mireka.filter;
 
 import mireka.destination.UnknownRecipientDestination;
-import mireka.maildata.io.MaildataFileReadException;
+import mireka.maildata.io.MaildataReadException;
 import mireka.smtp.RejectExceptionExt;
 import mireka.smtp.server.FilterChainMessageHandler;
 
@@ -187,7 +187,7 @@ public abstract class FilterSession {
      * @throws RejectExceptionExt
      *             if the mail data must be rejected. For example if the mail
      *             data contains links to a known SPAM site.
-     * @throws MaildataFileReadException
+     * @throws MaildataReadException
      *             if an IO error happens while reading of the mail data. The
      *             mail data at this phase of the mail transaction is already
      *             saved into local temporary storage and the data is coming
@@ -200,7 +200,7 @@ public abstract class FilterSession {
      * 
      * @see MailTransaction#data
      */
-    public void data() throws RejectExceptionExt, MaildataFileReadException {
+    public void data() throws RejectExceptionExt, MaildataReadException {
         nextLink.data();
     }
 

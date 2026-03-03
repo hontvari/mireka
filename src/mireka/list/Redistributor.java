@@ -1,6 +1,6 @@
 package mireka.list;
 
-import static mireka.maildata.FieldDef.*;
+import static mireka.maildata.parser.Kind.*;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -8,29 +8,29 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import mireka.ConfigurationException;
 import mireka.dmarc.PolicyDiscovery;
 import mireka.dmarc.PolicyRecord;
 import mireka.dmarc.PolicyRecord.Request;
 import mireka.dmarc.RecoverableDmarcException;
-import mireka.maildata.AddrSpec;
-import mireka.maildata.Address;
-import mireka.maildata.DomainPart;
-import mireka.maildata.DotAtomDomainPart;
-import mireka.maildata.LiteralDomainPart;
-import mireka.maildata.Mailbox;
 import mireka.maildata.Maildata;
-import mireka.maildata.MediaType;
 import mireka.maildata.field.UnstructuredField;
+import mireka.maildata.type.AddrSpec;
+import mireka.maildata.type.Address;
+import mireka.maildata.type.DomainPart;
+import mireka.maildata.type.DotAtomDomainPart;
+import mireka.maildata.type.LiteralDomainPart;
+import mireka.maildata.type.Mailbox;
+import mireka.maildata.type.SubMediaType;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.RejectExceptionExt;
 import mireka.smtp.address.ReversePath;
 import mireka.transmission.LocalMailSystemException;
 import mireka.transmission.Mail;
 import mireka.util.AssertionException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 class Redistributor {
     private final Logger logger = LoggerFactory.getLogger(Redistributor.class);
@@ -94,8 +94,7 @@ class Redistributor {
         if (list.isAttachmentsAllowed())
             return;
 
-        if (source.maildata.getMediaType().equalTypeIdentifiers(
-                MediaType.MULTIPART_MIXED))
+        if (source.maildata.simple.getMediaType().type == SubMediaType.MultipartMixed)
             throw new RejectExceptionExt(new EnhancedStatus(550, "5.7.0",
                     "Attachments are not allowed on this mailing list"));
     }
@@ -131,9 +130,9 @@ class Redistributor {
     private void setupSubject() {
         if (list.getSubjectPrefix() == null)
             return;
-        String subj = newMaildata.getSubject();
+        String subj = newMaildata.simple.getSubject();
         subj = normalizeSubject(subj, list.getSubjectPrefix());
-        newMaildata.setSubject(subj);
+        newMaildata.simple.setSubject(subj);
     }
 
     /**
@@ -220,17 +219,14 @@ class Redistributor {
             Mailbox mailbox = new Mailbox();
             mailbox.displayName = list.getShortListName();
             mailbox.addrSpec = getListAddrSpec();
-            newMaildata.setReplyToAddresses(Collections
+            newMaildata.simple.setReplyToAddresses(Collections
                     .<Address> singletonList(mailbox));
         }
     }
 
     private void setupListFields() {
-        newMaildata.headers().put(
-                new UnstructuredField(LIST_ID, " <" + list.getListId() + ">"));
-        newMaildata.headers()
-                .put(new UnstructuredField(LIST_POST, " <" + list.getAddress()
-                        + ">"));
+        newMaildata.headers().put(new UnstructuredField(LIST_ID, " <" + list.getListId() + ">"));
+        newMaildata.headers().put(new UnstructuredField(LIST_POST, " <" + list.getAddress() + ">"));
         newMaildata.headers().remove(LIST_HELP);
         newMaildata.headers().remove(LIST_SUBSCRIBE);
         newMaildata.headers().remove(LIST_UNSUBSCRIBE);
@@ -247,7 +243,7 @@ class Redistributor {
      */
     private void mangleAddressesForDmarc() throws RejectExceptionExt,
             ParseException {
-        List<Address> fromAddresses = newMaildata.getFromAddresses();
+        List<Address> fromAddresses = newMaildata.simple.getFromAddresses();
         List<Mailbox> mangledMailboxes = new ArrayList<>();
 
         for (int i = 0; i < fromAddresses.size(); i++) {
@@ -258,8 +254,8 @@ class Redistributor {
                     mangledMailboxes.add(m);
                     fromAddresses.set(i, mangleMailbox(m));
                 }
-            } else if (a instanceof mireka.maildata.Group) {
-                mireka.maildata.Group g = (mireka.maildata.Group) a;
+            } else if (a instanceof mireka.maildata.type.Group) {
+                mireka.maildata.type.Group g = (mireka.maildata.type.Group) a;
                 List<Mailbox> groupAddresses = g.mailboxList;
                 for (int j = 0; j < groupAddresses.size(); j++) {
                     Mailbox m = groupAddresses.get(j);
@@ -272,13 +268,13 @@ class Redistributor {
                 throw new AssertionException();
             }
         }
-        newMaildata.setFromAddresses(fromAddresses);
+        newMaildata.simple.setFromAddresses(fromAddresses);
 
         if (list.isReplyToList()) {
-            List<Address> ccAddresses = newMaildata.getCcAddresses();
+            List<Address> ccAddresses = newMaildata.simple.getCcAddresses();
             ccAddresses.addAll(mangledMailboxes);
         } else {
-            List<Address> replyToAddresses = newMaildata.getReplyToAddresses();
+            List<Address> replyToAddresses = newMaildata.simple.getReplyToAddresses();
             replyToAddresses.addAll(mangledMailboxes);
         }
     }
@@ -305,7 +301,7 @@ class Redistributor {
         if (m.displayName != null) {
             displayName.append(m.displayName);
         } else {
-            displayName.append(m.addrSpec.localPart);
+            displayName.append(m.addrSpec.localPart.value);
         }
         displayName.append(" via ").append(list.getShortListName());
         Mailbox result = new Mailbox();

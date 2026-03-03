@@ -23,6 +23,8 @@ importPackage(Packages.mireka.filter.proxy);
 importPackage(Packages.mireka.filter.spf);
 importPackage(Packages.mireka.filterchain);
 importPackage(Packages.mireka.forward);
+importPackage(Packages.mireka.imap.server);
+importPackage(Packages.mireka.imap.store);
 importPackage(Packages.mireka.list);
 importPackage(Packages.mireka.login);
 importPackage(Packages.mireka.pop);
@@ -259,16 +261,14 @@ function massProxy(backendServer, recipientSpecifications) {
 }
 
 /*
- Convenience function which creeates a global user account. Usernames specified 
- here will be valid recipients when they are combined with any of the local domain 
- names.  
+ Convenience function which creates a user account.
 */ 
-function globalUser(username, password) {
-	return setup(GlobalUser, {
-		username: username,
-		password: password
-		
-	});
+function user(username, password, options) {
+	if (options === undefined)
+		options = {};
+	options.username = username;
+	options.password = password;
+	return setup(User, options);
 }
 
 

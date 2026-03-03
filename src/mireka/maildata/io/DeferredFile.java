@@ -98,6 +98,11 @@ public class DeferredFile implements Closeable {
     int transitionSize = 0x10000;
 
     /**
+     * the count of bytes written to the file
+     */
+    private long length = 0;
+
+    /**
      * Returns the output stream which should be used to fill this file. This
      * must be called exactly one time before the first call to
      * {@link #getInputStream()}. The returned stream must be closed before
@@ -139,6 +144,12 @@ public class DeferredFile implements Closeable {
             inputStream = new BufferedInputStream(new FileInputStream(outFile));
         }
         return new CloseRegisteringInputStream(inputStream);
+    }
+
+    public long length() {
+        if (!filled)
+            throw new IllegalStateException();
+        return length;
     }
 
     /**
@@ -198,6 +209,25 @@ public class DeferredFile implements Closeable {
             byteArrayOutputStream.writeTo(outFileStream);
             byteArrayOutputStream = null;
             this.output = new BufferedOutputStream(outFileStream);
+        }
+
+        @Override
+        public void write(byte[] b, int off, int len) throws IOException {
+            super.write(b, off, len);
+            length += len;
+        }
+
+        @Override
+        public void write(byte[] b) throws IOException {
+            super.write(b);
+            length += b.length;
+        }
+
+        @Override
+        public void write(int b) throws IOException {
+            // TODO Auto-generated method stub
+            super.write(b);
+            length++;
         }
 
         /*

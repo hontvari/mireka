@@ -3,31 +3,49 @@ package mireka.maildata.parser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.DayOfWeek;
+import java.time.Month;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
-import mireka.maildata.AddrSpec;
-import mireka.maildata.Address;
-import mireka.maildata.DomainPart;
-import mireka.maildata.DotAtomDomainPart;
-import mireka.maildata.Group;
-import mireka.maildata.LiteralDomainPart;
-import mireka.maildata.Mailbox;
 import mireka.maildata.field.AddressListField;
 import mireka.maildata.field.ContentType;
+import mireka.maildata.field.DateField;
+import mireka.maildata.field.MessageIdField;
 import mireka.maildata.field.MimeVersion;
 import mireka.maildata.field.UnstructuredField;
 import mireka.maildata.parser.EncodedWordGenerator.Placement;
+import mireka.maildata.type.AddrSpec;
+import mireka.maildata.type.Address;
+import mireka.maildata.type.DomainPart;
+import mireka.maildata.type.DotAtomDomainPart;
+import mireka.maildata.type.Group;
+import mireka.maildata.type.LiteralDomainPart;
+import mireka.maildata.type.LocalPart;
+import mireka.maildata.type.Mailbox;
 import mireka.util.CharsetUtil;
 
 public class FieldGenerator {
-    private Folder folder = new Folder();
+    public final Folder folder = new Folder();
 
+    /**
+     * Returns the formatted, but not folded result as String, useful for generating a single
+     * elementary syntactic element of header fields, like an email address, and it is also useful
+     * for debugging.
+     * 
+     * @return the generated string, without folding and without ending CRLF.
+     */
+    @Override
+    public String toString() {
+        return folder.toSingleLineString();
+    }
     public String writeUnstructuredHeader(UnstructuredField field) {
-        if (field.body == null)
-            throw new NullPointerException();
+        String fullBody = Objects.requireNonNullElse(field.bodyFull, field.body);
 
         folder.t(field.name).t(":");
-        writeUnstructuredBody(field.body);
+        writeUnstructuredBody(fullBody);
         return folder.toString();
 
     }
@@ -82,7 +100,7 @@ public class FieldGenerator {
         folder.end();
     }
 
-    private void writeAddrSpec(AddrSpec addrSpec) {
+    public void writeAddrSpec(AddrSpec addrSpec) {
         folder.begin();
         writeLocalPart(addrSpec.localPart);
         folder.t("@");
@@ -90,15 +108,15 @@ public class FieldGenerator {
         folder.end();
     }
 
-    private void writeLocalPart(String localPart) {
-        if (isDotAtom(localPart)) {
-            folder.t(localPart);
+    public void writeLocalPart(LocalPart localPart) {
+        if (isDotAtom(localPart.value)) {
+            folder.t(localPart.value);
         } else {
-            writeQuotedString(localPart);
+            writeQuotedString(localPart.value);
         }
     }
 
-    private void writeDomain(DomainPart domainPart) {
+    public void writeDomain(DomainPart domainPart) {
         if (domainPart instanceof DotAtomDomainPart) {
             folder.t(((DotAtomDomainPart) domainPart).domain);
         } else if (domainPart instanceof LiteralDomainPart) {
@@ -281,6 +299,110 @@ public class FieldGenerator {
 
     public String writeContentType(ContentType contentType) {
         throw new RuntimeException("Not implemented");
+    }
+
+    public void writeDateHeader(DateField f) {
+        folder.t(f.name).t(':').fsp(' ');
+        writeDateTime(f.date);
+    }
+
+    private void writeDateTime(ZonedDateTime date) {
+        folder.begin();
+        // day-of-week
+        folder.begin(); writeDayOfWeek(date.getDayOfWeek()); folder.t(',').end().fsp(' ');
+        // date
+        folder.begin().t(Integer.toString(date.getDayOfMonth())).fsp(' ');
+        writeMonth(date.getMonth());
+        folder.fsp(' ').t(Integer.toString(date.getYear())).end().fsp(' ');
+        // time
+        folder.begin();
+        // time/time-of-day
+        folder.t(String.format("%02d", date.getHour())).t(':')
+                .t(String.format("%02d", date.getMinute())).t(':')
+                .t(String.format("%02d", date.getSecond())).fsp(' ');
+        // time/zone
+        folder.t(DateTimeFormatter.ofPattern("xx").format(date.getOffset()));
+        folder.end(); // end time
+        folder.end();
+    }
+
+    private void writeDayOfWeek(DayOfWeek d) {
+        String name;
+        switch (d) {
+        case MONDAY:
+            name = "Mon";
+            break;
+        case TUESDAY:
+            name = "Tue";
+            break;
+        case WEDNESDAY:
+            name = "Wed";
+            break;
+        case THURSDAY:
+            name = "Thu";
+            break;
+        case FRIDAY:
+            name = "Fri";
+            break;
+        case SATURDAY:
+            name = "Sat";
+            break;
+        case SUNDAY:
+            name = "Sun";
+            break;
+        default:
+            throw new AssertionError();
+        }
+        folder.t(name);
+    }
+
+    private void writeMonth(Month month) {
+        String name;
+        switch (month) {
+        case JANUARY:
+            name = "Jan";
+            break;
+        case FEBRUARY:
+            name = "Feb";
+            break;
+        case MARCH:
+            name = "Mar";
+            break;
+        case APRIL:
+            name = "Apr";
+            break;
+        case MAY:
+            name = "May";
+            break;
+        case JUNE:
+            name = "Jun";
+            break;
+        case JULY:
+            name = "Jul";
+            break;
+        case AUGUST:
+            name = "Aug";
+            break;
+        case SEPTEMBER:
+            name = "Sep";
+            break;
+        case OCTOBER:
+            name = "Oct";
+            break;
+        case NOVEMBER:
+            name = "Nov";
+            break;
+        case DECEMBER:
+            name = "Dec";
+            break;
+        default:
+            throw new AssertionError();
+        }
+        folder.t(name);
+    }
+
+    public void writeMessageIdHeader(MessageIdField f) {
+        folder.t(f.name).t(':').fsp(' ').t('<').t(f.msgId).t('>');
     }
 
     private class Scanner {

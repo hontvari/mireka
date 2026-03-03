@@ -28,17 +28,14 @@ class MailEnvelopePersister {
 
     public Mail readFromProperties(DataProperties props) {
         Mail mail = new Mail();
-        mail.from =
-                new MailAddressFactory().createReversePathAlreadyVerified(props
-                        .getString("from"));
+        mail.from = MailAddressFactory.createReversePathAlreadyVerified(props.getString("from"));
         mail.recipients =
                 props.getList("recipients",
                         new StringToElementConverter<Recipient>() {
 
                             @Override
                             public Recipient toElement(String s) {
-                                return new MailAddressFactory()
-                                        .createRecipientAlreadyVerified(s);
+                                return MailAddressFactory.createRecipientAlreadyVerified(s);
                             }
 
                         });

@@ -1,10 +1,11 @@
 package mireka.dmarc;
 
 import static org.junit.Assert.*;
-import mireka.maildata.DotAtomDomainPart;
 
 import org.junit.Ignore;
 import org.junit.Test;
+
+import mireka.maildata.type.DotAtomDomainPart;
 
 @Ignore("intergration test / external changes possible")
 public class PolicyDiscoveryTest {

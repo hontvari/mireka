@@ -9,7 +9,7 @@
 */
 /*
 setup(PopMailImporter, {
-	users: globalUsers,
+	users: users,
 	maildropRepository: maildropRepository,
 	remoteHost: "localhost",
 	remotePort: 110,
@@ -20,10 +20,9 @@ setup(PopMailImporter, {
 	Configure server name, bind address, etc. here.
 */
 setup(PopServer, {
-	loginSpecification: setup(GlobalUsersLoginSpecification, {
-		users: globalUsers
+	loginSpecification: setup(UserListLoginSpecification, {
+		users: users
 	}),
-	principalMaildropTable: setup(GlobalUsersPrincipalMaildropTable),
 	maildropRepository: maildropRepository,
 
 	// Uncomment to specify TLS configuration specific to this service.

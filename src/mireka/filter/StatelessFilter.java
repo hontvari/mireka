@@ -1,6 +1,6 @@
 package mireka.filter;
 
-import mireka.maildata.io.MaildataFileReadException;
+import mireka.maildata.io.MaildataReadException;
 import mireka.smtp.RejectExceptionExt;
 import mireka.util.AssertionException;
 
@@ -133,7 +133,7 @@ public abstract class StatelessFilter implements Filter {
      * @throws RejectExceptionExt
      *             if the mail data must be rejected, for example the content is
      *             SPAM.
-     * @throws MaildataFileReadException
+     * @throws MaildataReadException
      *             if there was an IOExcepton while the mail data stream was
      *             read. This is a RuntimeException, but the higher level code
      *             understands that it indicates a local system error and not a
@@ -142,7 +142,7 @@ public abstract class StatelessFilter implements Filter {
      * @see FilterSession#data()
      */
     protected void data(MailTransaction transaction) throws RejectExceptionExt,
-            MaildataFileReadException {
+            MaildataReadException {
         // do nothing
     }
 
@@ -205,7 +205,7 @@ public abstract class StatelessFilter implements Filter {
         }
 
         @Override
-        public void data() throws RejectExceptionExt, MaildataFileReadException {
+        public void data() throws RejectExceptionExt, MaildataReadException {
             StatelessFilter.this.data(transaction);
             super.data();
         }

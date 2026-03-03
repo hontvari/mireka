@@ -4,7 +4,7 @@ import static mireka.pop.SessionState.*;
 
 import java.io.IOException;
 
-import mireka.login.Principal;
+import mireka.login.User;
 import mireka.pop.Command;
 import mireka.pop.CommandParser;
 import mireka.pop.Pop3Exception;
@@ -22,6 +22,7 @@ public abstract class AbstractLoginCommand implements Command {
 
     protected final Session session;
 
+    @Override
     public abstract void execute(CommandParser commandParser)
             throws IOException, Pop3Exception;
 
@@ -29,14 +30,11 @@ public abstract class AbstractLoginCommand implements Command {
         this.session = session;
     }
 
-    protected void startTransaction(Principal userPrincipal)
+    protected void startTransaction(User user)
             throws MaildropPopException, IOException {
-        String maildropName =
-                session.getServer().getPrincipalMaildropTable()
-                        .lookupMaildropName(userPrincipal);
         Maildrop maildrop =
                 session.getServer().getMaildropRepository()
-                        .borrowMaildrop(maildropName);
+                        .borrowMaildrop(user);
         try {
             maildrop.beginTransaction();
         } catch (MaildropLockedException e) {

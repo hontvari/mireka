@@ -1,9 +1,14 @@
 package mireka.transmission.queuing;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.subethamail.smtp.client.SMTPClient.Response;
+import org.subethamail.smtp.client.SMTPException;
 
 import mireka.ExampleAddress;
 import mireka.ExampleMail;
@@ -21,11 +26,6 @@ import mireka.transmission.immediate.RemoteMtaErrorResponseException;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.Verifications;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.subethamail.smtp.client.SMTPClient.Response;
-import org.subethamail.smtp.client.SMTPException;
 
 public class RetryPolicyTest {
     @Mocked
@@ -62,7 +62,7 @@ public class RetryPolicyTest {
 
         new Verifications() {
             {
-                onInstance(dsnTransmitter).transmit((Mail) any);
+                dsnTransmitter.transmit((Mail) any);
             }
         };
     }
@@ -74,7 +74,7 @@ public class RetryPolicyTest {
 
         new Verifications() {
             {
-                onInstance(retryTransmitter).transmit((Mail) any);
+                retryTransmitter.transmit((Mail) any);
             }
         };
     }
@@ -85,8 +85,8 @@ public class RetryPolicyTest {
 
         new Expectations() {
             {
-                onInstance(dsnTransmitter).transmit((Mail) any);
-                onInstance(retryTransmitter).transmit((Mail) any);
+                dsnTransmitter.transmit((Mail) any);
+                retryTransmitter.transmit((Mail) any);
             }
         };
 
@@ -99,7 +99,7 @@ public class RetryPolicyTest {
 
         new Expectations() {
             {
-                onInstance(retryTransmitter).transmit((Mail) any);
+                retryTransmitter.transmit((Mail) any);
             }
         };
 
@@ -113,7 +113,7 @@ public class RetryPolicyTest {
 
         new Verifications() {
             {
-                onInstance(dsnTransmitter).transmit((Mail) any);
+                dsnTransmitter.transmit((Mail) any);
             }
         };
     }
@@ -126,7 +126,7 @@ public class RetryPolicyTest {
 
         new Verifications() {
             {
-                onInstance(dsnTransmitter).transmit((Mail) any);
+                dsnTransmitter.transmit((Mail) any);
                 times = 0;
             }
         };
@@ -147,8 +147,8 @@ public class RetryPolicyTest {
 
         new Verifications() {
             {
-                onInstance(dsnTransmitter).transmit((Mail) any);
-                onInstance(retryTransmitter).transmit((Mail) any);
+                dsnTransmitter.transmit((Mail) any);
+                retryTransmitter.transmit((Mail) any);
             }
         };
     }
@@ -161,12 +161,12 @@ public class RetryPolicyTest {
         new Verifications() {
             {
                 Mail m;
-                onInstance(retryTransmitter).transmit(m = withCapture());
+                retryTransmitter.transmit(m = withCapture());
 
                 assertEquals(0, m.deliveryAttempts);
                 assertEquals(1, m.postpones);
                 double actualDelay =
-                        (m.scheduleDate.getTime() - System.currentTimeMillis()) / 1000;
+                        (m.scheduleDate.toEpochMilli() - System.currentTimeMillis()) / 1000;
                 assertEquals(postponeException.getRecommendedDelay(),
                         actualDelay, 10);
             }
@@ -183,7 +183,7 @@ public class RetryPolicyTest {
         new Verifications() {
             {
                 Mail m;
-                onInstance(retryTransmitter).transmit(m = withCapture());
+                retryTransmitter.transmit(m = withCapture());
                 assertEquals(1, m.deliveryAttempts);
                 assertEquals(0, m.postpones);
             }

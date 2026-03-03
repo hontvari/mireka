@@ -1,14 +1,14 @@
 package mireka.transmission.immediate;
 
-import static mireka.ExampleAddress.*;
-import static org.junit.Assert.*;
+import static mireka.ExampleAddress.IP1;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Map;
 
-import mireka.transmission.immediate.host.OutgoingConnectionsRegistry;
-import mockit.Deencapsulation;
-
 import org.junit.Test;
+
+import mireka.Deencapsulation;
+import mireka.transmission.immediate.host.OutgoingConnectionsRegistry;
 
 public class OutgoingConnectionsRegistryTest {
     private OutgoingConnectionsRegistry registry =
@@ -19,7 +19,7 @@ public class OutgoingConnectionsRegistryTest {
         registry.setMaxConnectionsToHost(1);
         registry.openConnection(IP1);
         registry.releaseConnection(IP1);
-        assertTrue(Deencapsulation.getField(registry, Map.class).isEmpty());
+        assertTrue(Deencapsulation.getField(registry, "connections", Map.class).isEmpty());
     }
 
     @Test(expected = PostponeException.class)
@@ -48,7 +48,7 @@ public class OutgoingConnectionsRegistryTest {
         registry.openConnection(IP1);
         registry.releaseConnection(IP1);
         registry.releaseConnection(IP1);
-        assertTrue(Deencapsulation.getField(registry, Map.class).isEmpty());
+        assertTrue(Deencapsulation.getField(registry, "connections", Map.class).isEmpty());
     }
 
     @Test(expected = RuntimeException.class)

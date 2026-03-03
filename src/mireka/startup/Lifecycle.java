@@ -32,6 +32,7 @@ public class Lifecycle {
      *            the object which may have a lifecycle annotation
      */
     public static synchronized void addManagedObject(Object object) {
+        logger.trace("Configuration object was created: {}", object);
         if (object == null)
             throw new NullPointerException("Managed object must not be null");
         if (alreadyRegisteredStartup(object))

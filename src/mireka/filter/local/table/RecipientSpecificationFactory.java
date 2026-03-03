@@ -15,19 +15,6 @@ import mireka.smtp.address.parser.ast.SystemPostmasterRecipientAST;
  * {@link RecipientSpecification} instance.
  */
 public class RecipientSpecificationFactory {
-    private final MailAddressFactory mailAddressFactory;
-
-    public RecipientSpecificationFactory() {
-        this(new MailAddressFactory());
-    }
-
-    /**
-     * This constructor is useful for unit testing.
-     */
-    RecipientSpecificationFactory(MailAddressFactory mailAddressFactory) {
-        this.mailAddressFactory = mailAddressFactory;
-    }
-
     /**
      * Given a mailbox address supplied as a string, it creates a corresponding
      * {@link RecipientSpecification}, either a specification which requires a
@@ -54,9 +41,8 @@ public class RecipientSpecificationFactory {
             DomainPostmasterSpecification domainPostmaster =
                     new DomainPostmasterSpecification();
 
-            RemotePart remotePart =
-                    mailAddressFactory
-                            .createRemotePartFromAST(domainPostmasterRecipientAST.mailboxAST.remotePartAST);
+            RemotePart remotePart = MailAddressFactory
+                    .createRemotePartFromAST(domainPostmasterRecipientAST.mailboxAST.remotePartAST);
             domainPostmaster.setRemotePart(remotePart);
             return domainPostmaster;
 
@@ -66,9 +52,8 @@ public class RecipientSpecificationFactory {
             LocalPartSpecification localPart =
                     new CaseInsensitiveLocalPartSpecification(
                             mailboxRecipientAST.pathAST.mailboxAST.localPartAST.spelling);
-            RemotePart remotePart =
-                    mailAddressFactory
-                            .createRemotePartFromAST(mailboxRecipientAST.pathAST.mailboxAST.remotePartAST);
+            RemotePart remotePart = MailAddressFactory
+                    .createRemotePartFromAST(mailboxRecipientAST.pathAST.mailboxAST.remotePartAST);
             return new LocalRemoteCombinedRecipientSpecification(localPart,
                     remotePart);
         } else {

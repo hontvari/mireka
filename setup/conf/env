@@ -1,0 +1,2 @@
+# the value of this varible will be passed to the java command line
+ENV_OPTIONS=

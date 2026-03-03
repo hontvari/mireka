@@ -15,4 +15,9 @@ public class HeaderFieldText {
      *      Long Header Fields</a>
      */
     public String unfoldedSpelling;
+
+    @Override
+    public String toString() {
+        return originalSpelling;
+    }
 }

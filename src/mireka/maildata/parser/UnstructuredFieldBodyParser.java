@@ -5,11 +5,10 @@ import static mireka.maildata.parser.UnstructuredFieldBodyParser.TokenKind.*;
 import java.io.ByteArrayInputStream;
 import java.text.ParseException;
 
-import mireka.maildata.field.UnstructuredField;
-import mireka.util.CharsetUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import mireka.util.CharsetUtil;
 
 public class UnstructuredFieldBodyParser {
     private final Logger logger = LoggerFactory
@@ -23,15 +22,7 @@ public class UnstructuredFieldBodyParser {
         currentToken = scanner.scan();
     }
 
-    public UnstructuredField parse() {
-        String body = parseBody();
-
-        UnstructuredField result = new UnstructuredField();
-        result.body = body.toString();
-        return result;
-    }
-
-    private String parseBody() {
+    public String parse() {
         StringBuilder body = new StringBuilder();
 
         while (currentToken.kind == LWSP || currentToken.kind == WORD) {

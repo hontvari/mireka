@@ -1,25 +1,33 @@
 package mireka.maildata;
 
-import static mireka.maildata.FieldDef.*;
-import static org.junit.Assert.*;
+import static mireka.maildata.parser.Kind.*;
+import static org.junit.Assert.assertEquals;
 
 import java.text.ParseException;
 import java.util.List;
 
-import mireka.maildata.field.From;
-import mireka.maildata.field.UnstructuredField;
-import mockit.Deencapsulation;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import mireka.Deencapsulation;
+import mireka.maildata.HeaderSection.Entry;
+import mireka.maildata.field.AddressListField;
+import mireka.maildata.field.UnstructuredField;
+import mireka.maildata.type.AddrSpec;
+import mireka.maildata.type.Mailbox;
 
 public class HeaderSectionTest {
 
     private HeaderFieldText from1Text;
     private HeaderFieldText from2Text;
     private HeaderFieldText subjectText;
-    private From from3Header;
+    private AddressListField from3Header;
 
+    List<HeaderSection.Entry> fields;
+
+    HeaderSection headerSection = new HeaderSection();
+
+    @SuppressWarnings("unchecked")
     @Before
     public void setUp() throws ParseException {
         from1Text = new HeaderFieldText();
@@ -39,32 +47,31 @@ public class HeaderSectionTest {
         mailboxAddress.addrSpec =
                 AddrSpec.fromString("placeholder@example.com");
 
-        from3Header = new From();
-        from3Header.setName("From");
+        from3Header = new AddressListField(FROM);
         from3Header.addressList.add(mailboxAddress);
 
+        fields = (List<Entry>) Deencapsulation.getField(headerSection, "fields");
     }
 
     @Test
     public void testGet() throws ParseException {
-        HeaderSection headerSection = new HeaderSection();
         headerSection.addExtracted(from1Text);
         headerSection.addExtracted(from2Text);
         headerSection.addExtracted(subjectText);
 
-        UnstructuredField f = headerSection.get(SUBJECT);
+        UnstructuredField f = headerSection.get(SUBJECT, UnstructuredField.class);
 
-        assertEquals(" Interesting email", f.body);
+        assertEquals("Interesting email", f.body);
+        assertEquals(" Interesting email", f.bodyFull);
     }
 
     @Test
     public void testGetAll() throws ParseException {
-        HeaderSection headerSection = new HeaderSection();
         headerSection.addExtracted(from1Text);
         headerSection.addExtracted(from2Text);
         headerSection.addExtracted(subjectText);
 
-        List<From> all = headerSection.getAll(FROM);
+        List<AddressListField> all = headerSection.getAll(FROM, AddressListField.class);
         assertEquals(2, all.size());
         assertEquals("John Doe",
                 ((Mailbox) all.get(0).addressList.get(0)).displayName);
@@ -74,30 +81,24 @@ public class HeaderSectionTest {
 
     @Test
     public void testAddExtractedPut() {
-        HeaderSection headerSection = new HeaderSection();
         headerSection.addExtracted(from1Text);
         headerSection.addExtracted(from2Text);
         headerSection.addExtracted(subjectText);
 
         headerSection.put(from3Header);
 
-        List<HeaderSection.Entry> fields =
-                Deencapsulation.getField(headerSection, "fields");
         assertEquals(2, fields.size());
-        assertEquals("from", fields.get(0).lowerCaseName);
-        assertEquals("subject", fields.get(1).lowerCaseName);
+        assertEquals(FROM, fields.get(0).kind);
+        assertEquals(SUBJECT, fields.get(1).kind);
     }
 
     @Test
     public void testRemove() {
-        HeaderSection headerSection = new HeaderSection();
         headerSection.addExtracted(from1Text);
         headerSection.addExtracted(from2Text);
         headerSection.addExtracted(subjectText);
 
         headerSection.remove(FROM);
-        List<HeaderSection.Entry> fields =
-                Deencapsulation.getField(headerSection, "fields");
         assertEquals(1, fields.size());
     }
 }

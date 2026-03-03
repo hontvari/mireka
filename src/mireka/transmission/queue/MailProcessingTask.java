@@ -1,11 +1,13 @@
 package mireka.transmission.queue;
 
-import mireka.transmission.LocalMailSystemException;
-import mireka.transmission.Mail;
+import java.time.Clock;
+import java.time.ZonedDateTime;
 
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import mireka.transmission.LocalMailSystemException;
+import mireka.transmission.Mail;
 
 class MailProcessingTask implements Runnable {
     private final Logger logger = LoggerFactory
@@ -14,7 +16,8 @@ class MailProcessingTask implements Runnable {
     private final MailName mailName;
     private final FileDirStore dir;
     private final MailProcessorFactory mailProcessorFactory;
-    private DateTime dateOfFirstFailedAttempt = null;
+    private Clock clock = Clock.systemDefaultZone();
+    private ZonedDateTime dateOfFirstFailedAttempt = null;
 
     public MailProcessingTask(ScheduleFileDirQueue parentQueue,
             FileDirStore store, MailProcessorFactory mailProcessorFactory,
@@ -64,7 +67,7 @@ class MailProcessingTask implements Runnable {
 
     private void handleTemporaryException(LocalMailSystemException e) {
         if (dateOfFirstFailedAttempt == null)
-            dateOfFirstFailedAttempt = new DateTime();
+            dateOfFirstFailedAttempt = ZonedDateTime.now(clock);
         if (taskHasBeenFailingForTooMuchTime()) {
             logger.error("A transient local failure prevented processing "
                     + "the mail. Processing of this mail is "
@@ -94,8 +97,8 @@ class MailProcessingTask implements Runnable {
     }
 
     private boolean taskHasBeenFailingForTooMuchTime() {
-        DateTime deadline = dateOfFirstFailedAttempt.plusDays(1);
-        return deadline.isBeforeNow();
+        ZonedDateTime deadline = dateOfFirstFailedAttempt.plusDays(1);
+        return deadline.isBefore(ZonedDateTime.now(clock));
     }
 
     private void handlePermanentException(LocalMailSystemException e) {

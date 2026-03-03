@@ -7,22 +7,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import mockit.Deencapsulation;
-
 import org.junit.Test;
+
+import mireka.Deencapsulation;
 
 public class DeferredFileTest {
 
+    DeferredFile file = new DeferredFile();
+
     @Test
     public final void testMemory() throws IOException {
-        DeferredFile file = new DeferredFile();
         file.transitionSize = 5;
 
         OutputStream out = file.getOutputStream();
         out.write('Z');
         out.close();
 
-        assertNull(Deencapsulation.getField(file, File.class));
+        assertNull(Deencapsulation.getField(file, "outFile"));
         InputStream in = file.getInputStream();
         assertEquals('Z', in.read());
         assertEquals(-1, in.read());
@@ -32,7 +33,6 @@ public class DeferredFileTest {
 
     @Test
     public final void testDisk() throws IOException {
-        DeferredFile file = new DeferredFile();
         file.transitionSize = 5;
 
         OutputStream out = file.getOutputStream();
@@ -44,9 +44,9 @@ public class DeferredFileTest {
         out.write('o');
         out.close();
 
-        File f = Deencapsulation.getField(file, File.class);
-        assertNotNull(f);
-        assertTrue(f.exists());
+        File outFile = (File) Deencapsulation.getField(file, "outFile");
+        assertNotNull(outFile);
+        assertTrue(outFile.exists());
 
         InputStream in = file.getInputStream();
         assertEquals('Z', in.read());
@@ -59,6 +59,6 @@ public class DeferredFileTest {
         in.close();
 
         file.close();
-        assertFalse(f.exists());
+        assertFalse(outFile.exists());
     }
 }

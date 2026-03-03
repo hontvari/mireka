@@ -4,7 +4,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import mireka.destination.MailDestination;
+import mireka.login.User;
 import mireka.pop.store.Maildrop;
 import mireka.pop.store.MaildropAppender;
 import mireka.pop.store.MaildropRepository;
@@ -13,9 +19,6 @@ import mireka.smtp.RejectExceptionExt;
 import mireka.transmission.LocalMailSystemException;
 import mireka.transmission.Mail;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * MaildropDestination puts the mail into the specified POP3 maildrop.
  */
@@ -23,11 +26,11 @@ public class MaildropDestination implements MailDestination {
     private final Logger logger = LoggerFactory
             .getLogger(MaildropDestination.class);
     private MaildropRepository maildropRepository;
-    private String maildropName;
+    private User user;
 
     @Override
     public void data(Mail mail) throws RejectExceptionExt {
-        Maildrop maildrop = maildropRepository.borrowMaildrop(maildropName);
+        Maildrop maildrop = maildropRepository.borrowMaildrop(user);
         try {
 
             MaildropAppender appender;
@@ -83,34 +86,21 @@ public class MaildropDestination implements MailDestination {
     /**
      * @x.category GETSET
      */
-    public void setMaildropName(String maildropName) {
-        this.maildropName = maildropName;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     /**
      * @x.category GETSET
      */
-    public String getMaildropName() {
-        return maildropName;
-    }
-
-    /**
-     * @x.category GETSET
-     */
+    @Inject
     public void setMaildropRepository(MaildropRepository maildropRepository) {
         this.maildropRepository = maildropRepository;
     }
 
-    /**
-     * @x.category GETSET
-     */
-    public MaildropRepository getMaildropRepository() {
-        return maildropRepository;
-    }
-
     @Override
     public String toString() {
-        return "MaildropDestination [maildropName=" + maildropName + "]";
+        return "MaildropDestination [user=" + user + "]";
     }
 
 }

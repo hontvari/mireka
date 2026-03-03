@@ -9,13 +9,13 @@ public abstract class AbstractToken {
     public ParseException syntaxException(Object expected) {
         return new ParseException("Syntax error. Expected: "
                 + expected.toString() + ", received: " + toString()
-                + " at character position " + position + ".", (int) position);
+                + " at character position " + position + ".", position);
     }
 
     public ParseException unexpectedHereSyntaxException(String where) {
         return new ParseException("Syntax error. Unexpected token: '"
                 + toString() + "', at the position: '" + where
-                + "' at character position " + position + ".", (int) position);
+                + "' at character position " + position + ".", position);
     }
 
     @Override
@@ -33,10 +33,10 @@ public abstract class AbstractToken {
     protected abstract String getKindAsString();
 
     private static String toVisibleChar(char ch) {
-        if (ch == 127 || ch < 32)
+        if (ch >= 127 || ch < 32)
             return toUnicodeEscape(ch);
         else
-            return "'" + (char) ch + "'";
+            return Character.toString(ch);
     }
 
     private static String toUnicodeEscape(int ch) {

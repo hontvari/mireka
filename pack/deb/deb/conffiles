@@ -1,6 +1,8 @@
 /etc/mireka/circular.js
 /etc/mireka/domains.js
+/etc/mireka/env
 /etc/mireka/global-users.js
+/etc/mireka/imap.js
 /etc/mireka/local-recipients.js
 /etc/mireka/logback.xml
 /etc/mireka/mireka.js

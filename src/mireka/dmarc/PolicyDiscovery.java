@@ -3,7 +3,8 @@ package mireka.dmarc;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import mireka.maildata.DotAtomDomainPart;
+
+import mireka.maildata.type.DotAtomDomainPart;
 import mireka.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

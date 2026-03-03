@@ -1,14 +1,14 @@
 package mireka.transmission.queue;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 
-import mireka.transmission.Mail;
-
 import org.slf4j.LoggerFactory;
+
+import mireka.transmission.Mail;
 
 /**
  * This mail queue, working with a mail store, passes the mails to a mail
@@ -79,7 +79,7 @@ public class ScheduleFileDirQueue {
      */
     public void add(Mail srcMail) throws QueueStorageException {
         if (srcMail.scheduleDate == null)
-            srcMail.scheduleDate = new Date();
+            srcMail.scheduleDate = Instant.now();
         MailName mailName = store.save(srcMail);
         scheduleMailName(mailName);
         logger.debug("Mail was sceduled for processing: {}, {}", mailName,

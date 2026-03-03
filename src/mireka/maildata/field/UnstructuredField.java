@@ -2,9 +2,9 @@ package mireka.maildata.field;
 
 import java.io.IOException;
 
-import mireka.maildata.FieldDef;
 import mireka.maildata.HeaderField;
 import mireka.maildata.parser.FieldGenerator;
+import mireka.maildata.parser.Kind;
 
 /**
  * @see <a href="https://tools.ietf.org/html/rfc5322#section-2.2.1">RFC 5322</a>
@@ -12,16 +12,18 @@ import mireka.maildata.parser.FieldGenerator;
  */
 public class UnstructuredField extends HeaderField {
     /**
-     * Unfolded single line, without CRLF, it may contain non-ASCII characters.
+     * This constuctor should be used when parsing an unstructured field of a mail.
      */
-    public String body;
-
-    public UnstructuredField() {
+    public UnstructuredField(Kind kind) {
+        super(kind);
     }
 
-    public UnstructuredField(FieldDef<?> fieldDef, String body) {
-        super(fieldDef);
-        this.body = body;
+    /**
+     * This constructor can be used to create a new generated field.
+     */
+    public UnstructuredField(Kind kind, String body) {
+        super(kind);
+        this.setBody(body);
     }
 
     @Override

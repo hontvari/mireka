@@ -49,8 +49,7 @@ public class AliasMapper implements RecipientDestinationMapper {
     public void setCanonical(String mailbox) {
         destination = new AliasDestination();
         try {
-            destination.setRecipient(new MailAddressFactory()
-                    .createRecipient(mailbox));
+            destination.setRecipient(MailAddressFactory.createRecipient(mailbox));
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }

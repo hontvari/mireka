@@ -5,6 +5,7 @@ import static mireka.maildata.parser.FieldHeaderParser.TokenKind.*;
 import java.io.ByteArrayInputStream;
 import java.text.ParseException;
 
+import mireka.imap.CiString;
 import mireka.util.CharsetUtil;
 
 /**
@@ -21,11 +22,8 @@ public class FieldHeaderParser {
     }
 
     public FieldMap parse() throws ParseException {
-
-        String name = parseNamePart();
-
         FieldMap result = new FieldMap();
-        result.name = name;
+        result.name = parseNamePart();
         result.indexOfBody = scanner.position;
         return result;
     }
@@ -34,13 +32,13 @@ public class FieldHeaderParser {
      * Returns the name of the field. The last scanned token is the COLON, which
      * follows the field name (and the optional WSP characters).
      */
-    private String parseNamePart() throws ParseException {
+    private CiString parseNamePart() throws ParseException {
         String name = currentToken.spelling;
         accept(NAME);
         if (currentToken.kind == LWSP)
             acceptIt();
         acceptButDontScanNextToken(COLON);
-        return name;
+        return new CiString(name);
     }
 
     private void acceptIt() {
@@ -158,7 +156,7 @@ public class FieldHeaderParser {
     }
 
     public static class FieldMap {
-        public String name;
+        public CiString name;
         public int indexOfBody;
     }
 

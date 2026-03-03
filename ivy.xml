@@ -45,17 +45,17 @@
 		</dependency>
 
 		<!-- logging API -->
-		<dependency org="org.slf4j" name="slf4j-api" rev="1.6.4"
+		<dependency org="org.slf4j" name="slf4j-api" rev="1.7.36"
 			conf="compile->master;runtime->default;sources" />
 
 		<!-- implements commons.logging api and redirects to slf4j -->
-		<dependency org="org.slf4j" name="jcl-over-slf4j" rev="1.6.4"
+		<dependency org="org.slf4j" name="jcl-over-slf4j" rev="1.7.36"
 			conf="runtime->default" />
 
-		<dependency org="ch.qos.logback" name="logback-classic" rev="1.0.1"
+		<dependency org="ch.qos.logback" name="logback-classic" rev="1.2.11"
 			conf="runtime->default" />
 
-		<dependency org="ch.qos.logback" name="logback-core" rev="1.0.1"
+		<dependency org="ch.qos.logback" name="logback-core" rev="1.2.11"
 			conf="runtime->default" />
 
 		<!-- Logback uses it if the log configuration contains filters with complex Java 
@@ -83,21 +83,25 @@
 			conf="runtime->default" />
 
 		<!-- JMockit testing toolkit -->
-		<dependency org="org.jmockit" name="jmockit" rev="1.17"
+		<dependency org="org.jmockit" name="jmockit" rev="1.49"
 			conf="compile->master;build->default;sources" />
 
 		<!-- JMockit testing toolkit / coverage report -->
-		<dependency org="org.jmockit" name="jmockit-coverage" rev="1.17"
+		<dependency org="org.jmockit" name="jmockit-coverage" rev="1.23"
 			conf="build->default" />
 
 		<!-- JUnit testing framework -->
-		<dependency org="junit" name="junit" rev="4.12"
+		<dependency org="junit" name="junit" rev="4.13.2"
 			conf="compile->master;build->default;sources" />
 			
 		<!-- Hamcrest matcher library for tests. It is also a JUnit dependency 
 			with tight coupling, version must match! -->
 		<dependency org="org.hamcrest" name="hamcrest-core" rev="1.3"
 			conf="compile->master;build->default;sources" />
+			
+		<!--  H2 Database, used for IMAP store -->
+		<dependency org="com.h2database" name="h2" rev="2.0.204"
+			conf="compile->master;runtime->default;sources" />
 			
 		<!-- ======================================================= -->
 		<!-- retrieve some transitive dependency sources -->

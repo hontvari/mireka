@@ -1,8 +1,8 @@
 package mireka.transmission;
 
 import java.net.InetAddress;
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -15,8 +15,11 @@ import mireka.smtp.address.ReversePath;
 /**
  * An SMTP mail object, which contains both an envelope and content.
  * 
- * @see <a href="http://tools.ietf.org/html/rfc5321#section-2.3.1">RFC 5321
- *      Simple Mail Transfer Protocol</a>
+ * To generate a new mail set {@link #from}, {@link #recipients}, {@link #arrivalDate},
+ * {@link #maildata}.
+ * 
+ * @see <a href="http://tools.ietf.org/html/rfc5321#section-2.3.1">RFC 5321 Simple Mail Transfer
+ * Protocol</a>
  */
 public class Mail {
     @Nonnull
@@ -32,7 +35,7 @@ public class Mail {
      *      2.2.5 The Arrival-Date DSN field</a>
      */
     @Nonnull
-    public Date arrivalDate;
+    public Instant arrivalDate;
     /**
      * HELO or EHLO name, null if not received
      */
@@ -47,7 +50,10 @@ public class Mail {
     /**
      * The desired date of sending this mail. Null means immediately.
      */
-    public Date scheduleDate;
+    public Instant scheduleDate;
+
+    public boolean noDsn;
+
     /**
      * Count of failed attempts until now.
      */
@@ -77,6 +83,7 @@ public class Mail {
         result.receivedFromMtaName = receivedFromMtaName;
         result.receivedFromMtaAddress = receivedFromMtaAddress;
         result.scheduleDate = scheduleDate;
+        result.noDsn = noDsn;
         result.deliveryAttempts = deliveryAttempts;
         result.postpones = postpones;
         return result;

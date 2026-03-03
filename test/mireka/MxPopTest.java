@@ -1,9 +1,10 @@
 package mireka;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.Properties;
 
 import javax.mail.Flags;
@@ -15,30 +16,29 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.URLName;
 
-import mireka.destination.DestinationProcessorFilter;
-import mireka.filter.FilterChain;
-import mireka.filter.local.LookupDestinationFilter;
-import mireka.login.GlobalUser;
-import mireka.login.GlobalUsers;
-import mireka.login.GlobalUsersLoginSpecification;
-import mireka.login.GlobalUsersMaildropDestinationMapper;
-import mireka.login.GlobalUsersPrincipalMaildropTable;
-import mireka.pop.PopServer;
-import mireka.pop.store.MaildropRepository;
-import mireka.smtp.server.MessageHandlerFactoryImpl;
-import mireka.smtp.server.SMTPServer;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.subethamail.smtp.client.SMTPException;
 import org.subethamail.smtp.client.SmartClient;
 
+import mireka.destination.DestinationProcessorFilter;
+import mireka.filter.FilterChain;
+import mireka.filter.local.LookupDestinationFilter;
+import mireka.login.GlobalUsersMaildropDestinationMapper;
+import mireka.login.UserConfig;
+import mireka.login.UserListLoginSpecification;
+import mireka.login.UserRepo;
+import mireka.pop.PopServer;
+import mireka.pop.store.MaildropRepository;
+import mireka.smtp.server.MessageHandlerFactoryImpl;
+import mireka.smtp.server.SMTPServer;
+
 public class MxPopTest extends TempDirectory {
 
     private static final int PORT_SMTP = 8025;
     private static final int PORT_POP = 8026;
-    private GlobalUsers users;
+    private UserRepo users;
     private MaildropRepository maildropRepository;
     private PopServer popServer;
     private SMTPServer smtpServer;
@@ -97,11 +97,11 @@ public class MxPopTest extends TempDirectory {
     }
 
     private void initCommonConfiguration() {
-        users = new GlobalUsers();
-        GlobalUser user = new GlobalUser();
+        users = new UserRepo();
+        UserConfig user = new UserConfig();
         user.setUsername("john");
-        user.setPassword("secret");
-        users.addUser(user);
+        user.password = "secret";
+        users.setUsers(List.of(user));
 
         maildropRepository = new MaildropRepository();
         maildropRepository.setDir(directory.getPath());
@@ -132,17 +132,13 @@ public class MxPopTest extends TempDirectory {
     }
 
     private PopServer createPopServer() {
-        GlobalUsersLoginSpecification loginSpecification =
-                new GlobalUsersLoginSpecification();
+        UserListLoginSpecification loginSpecification =
+                new UserListLoginSpecification();
         loginSpecification.setUsers(users);
-
-        GlobalUsersPrincipalMaildropTable principalMaildropTable =
-                new GlobalUsersPrincipalMaildropTable();
 
         PopServer popServer = new PopServer();
         popServer.setMaildropRepository(maildropRepository);
         popServer.setLoginSpecification(loginSpecification);
-        popServer.setPrincipalMaildropTable(principalMaildropTable);
         popServer.setPort(PORT_POP);
         return popServer;
     }

@@ -6,6 +6,10 @@ import static org.junit.Assert.*;
 import java.net.InetAddress;
 import java.util.Arrays;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.xbill.DNS.Name;
+
 import mireka.ExampleMail;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.SendException;
@@ -24,13 +28,8 @@ import mireka.transmission.immediate.host.MailToHostTransmitter;
 import mockit.Expectations;
 import mockit.Injectable;
 import mockit.Mocked;
-import mockit.NonStrictExpectations;
 import mockit.Tested;
 import mockit.Verifications;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.xbill.DNS.Name;
 
 public class DirectImmediateSenderTest {
 
@@ -79,10 +78,11 @@ public class DirectImmediateSenderTest {
         janeJoeMail.recipients =
                 Arrays.asList(JANE_AS_RECIPIENT, JOHN_AS_RECIPIENT);
 
-        new NonStrictExpectations() {
+        new Expectations() {
             {
                 clientFactory.create();
                 result = client;
+                minTimes = 0;
             }
         };
     }
@@ -185,7 +185,7 @@ public class DirectImmediateSenderTest {
     }
 
     private void twoMxDnsExpectation() throws SendException {
-        new NonStrictExpectations() {
+        new Expectations() {
             {
                 mxLookup.queryMxTargets((Domain) any);
                 result =

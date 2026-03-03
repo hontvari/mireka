@@ -1,18 +1,20 @@
 package mireka.transmission.queue;
 
+import static java.time.Duration.ofDays;
+
+import java.time.Clock;
 import java.util.Date;
 
+import org.junit.Before;
+import org.junit.Test;
+
+import mireka.Deencapsulation;
 import mireka.smtp.EnhancedStatus;
 import mireka.transmission.LocalMailSystemException;
 import mireka.transmission.Mail;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.Verifications;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeUtils;
-import org.junit.Before;
-import org.junit.Test;
 
 public class MailProcessingTaskTest {
 
@@ -88,10 +90,8 @@ public class MailProcessingTaskTest {
         };
 
         task.run(); // first attempt
-        long twoDaysLater = new DateTime().plusDays(2).getMillis();
-        DateTimeUtils.setCurrentMillisFixed(twoDaysLater);
+        Deencapsulation.setField(task, "clock", Clock.offset(Clock.systemDefaultZone(), ofDays(2)));
         task.run(); // second attempt, now it is too late for another attempt
-        DateTimeUtils.setCurrentMillisSystem();
 
         new Verifications() {
             {

@@ -1,12 +1,12 @@
 package mireka.maildata.field;
 
-import static mireka.maildata.FieldDef.*;
+import static mireka.maildata.parser.Kind.CONTENT_TYPE;
 
 import java.io.IOException;
 
 import mireka.maildata.HeaderField;
-import mireka.maildata.MediaType;
 import mireka.maildata.parser.FieldGenerator;
+import mireka.maildata.type.MediaType;
 
 public class ContentType extends HeaderField {
 

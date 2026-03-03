@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.annotation.concurrent.GuardedBy;
 
+import mireka.login.User;
+
 /**
  * MaildropRepository represents a collection of maildrops within the same file
  * system directory, it maintains a list of the currently used maildrops in
@@ -20,8 +22,8 @@ public class MaildropRepository {
     private Map<String, MaildropSlot> openMaildrops =
             new HashMap<String, MaildropSlot>();
 
-    public synchronized Maildrop borrowMaildrop(String maildropName) {
-        Maildrop maildrop = getOrCreateMaildrop(maildropName);
+    public synchronized Maildrop borrowMaildrop(User user) {
+        Maildrop maildrop = getOrCreateMaildrop(user.name());
         return maildrop;
     }
 

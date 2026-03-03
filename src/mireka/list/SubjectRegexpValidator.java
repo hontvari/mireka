@@ -2,11 +2,11 @@ package mireka.list;
 
 import java.util.regex.Pattern;
 
-import mireka.smtp.RejectExceptionExt;
-import mireka.transmission.Mail;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import mireka.smtp.RejectExceptionExt;
+import mireka.transmission.Mail;
 
 /**
  * SubjectRegexpValidator accepts a mail if its subject matches the specified
@@ -19,7 +19,7 @@ public class SubjectRegexpValidator implements MailValidator {
 
     @Override
     public boolean shouldBeAccepted(Mail mail) throws RejectExceptionExt {
-        String subject = mail.maildata.getSubject();
+        String subject = mail.maildata.simple.getSubject();
 
         if (subject == null)
             subject = "";

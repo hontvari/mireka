@@ -21,6 +21,8 @@ import mireka.smtp.address.parser.ast.SystemPostmasterRecipientAST;
  * MailAddressFactory creates mail address related objects from strings.
  */
 public class MailAddressFactory {
+    private MailAddressFactory() {
+    }
     /**
      * Parses the specified string and creates a {@link Recipient} instance.
      * 
@@ -28,7 +30,7 @@ public class MailAddressFactory {
      *            the recipient parameter of the RCPT SMTP command, without the
      *            enclosing angle bracket.
      */
-    public Recipient createRecipient(String recipientString)
+    public static Recipient createRecipient(String recipientString)
             throws ParseException {
         String recipientStringWithAngleBracket = "<" + recipientString + ">";
         RecipientAST recipientAST =
@@ -53,14 +55,14 @@ public class MailAddressFactory {
         }
     }
 
-    private Mailbox createMailbox(MailboxAST mailboxAST) {
+    private static Mailbox createMailbox(MailboxAST mailboxAST) {
         LocalPart localPart = new LocalPart(mailboxAST.localPartAST.spelling);
         RemotePart remotePart =
                 createRemotePartFromAST(mailboxAST.remotePartAST);
         return new Mailbox(mailboxAST.spelling, localPart, remotePart);
     }
 
-    public RemotePart createRemotePartFromAST(RemotePartAST remotePartAST) {
+    public static RemotePart createRemotePartFromAST(RemotePartAST remotePartAST) {
         RemotePart remotePart;
         if (remotePartAST instanceof DomainRemotePartAST) {
             DomainRemotePartAST domainRemotePartAST =
@@ -79,7 +81,7 @@ public class MailAddressFactory {
         return remotePart;
     }
 
-    public Recipient createRecipientAlreadyVerified(String recipientString) {
+    public static Recipient createRecipientAlreadyVerified(String recipientString) {
         try {
             return createRecipient(recipientString);
         } catch (ParseException e) {
@@ -93,7 +95,7 @@ public class MailAddressFactory {
      * implemented, internationalized domain names must be specified in ASCII
      * compatible text.
      */
-    public RemotePart createRemotePartFromDisplayableText(String displayableText) {
+    public static RemotePart createRemotePartFromDisplayableText(String displayableText) {
         RemotePartAST remotePartAST;
         try {
             remotePartAST = new RemotePartParser(displayableText).parse();
@@ -103,7 +105,7 @@ public class MailAddressFactory {
         return createRemotePartFromAST(remotePartAST);
     }
 
-    public ReversePath createReversePath(String reversePathString)
+    public static ReversePath createReversePath(String reversePathString)
             throws ParseException {
         String reversePathStringWithAngleBracket =
                 "<" + reversePathString + ">";
@@ -123,7 +125,7 @@ public class MailAddressFactory {
         }
     }
 
-    public ReversePath createReversePathAlreadyVerified(String reversePathString) {
+    public static ReversePath createReversePathAlreadyVerified(String reversePathString) {
         try {
             return createReversePath(reversePathString);
         } catch (ParseException e) {
@@ -131,7 +133,7 @@ public class MailAddressFactory {
         }
     }
 
-    public Recipient reversePath2Recipient(ReversePath reversePath) {
+    public static Recipient reversePath2Recipient(ReversePath reversePath) {
         if (reversePath.isNull())
             throw new IllegalArgumentException("Reverse path is null");
         RealReversePath realReversePath = (RealReversePath) reversePath;

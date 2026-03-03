@@ -1,6 +1,6 @@
 package mireka.smtp;
 
-import java.util.Date;
+import java.time.Instant;
 
 
 /**
@@ -12,7 +12,7 @@ public class SendException extends Exception {
     private static final long serialVersionUID = 379604390803596371L;
 
     private final EnhancedStatus errorStatus;
-    public final Date failureDate = new Date();
+    public final Instant failureDate = Instant.now();
     /**
      * It must be set by the function which logs this exception by calling
      * {@link #initLogId}.

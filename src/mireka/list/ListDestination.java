@@ -131,7 +131,7 @@ public class ListDestination implements MailDestination {
      */
     public void setAddress(String address) {
         try {
-            this.address = new MailAddressFactory().createRecipient(address);
+            this.address = MailAddressFactory.createRecipient(address);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -240,9 +240,7 @@ public class ListDestination implements MailDestination {
      * @x.category GETSET
      */
     public void setReversePath(String reversePath) {
-        this.reversePath =
-                new MailAddressFactory()
-                        .createReversePathAlreadyVerified(reversePath);
+        this.reversePath = MailAddressFactory.createReversePathAlreadyVerified(reversePath);
     }
 
     /**

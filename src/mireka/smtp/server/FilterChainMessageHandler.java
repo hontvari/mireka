@@ -7,6 +7,13 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.subethamail.smtp.MessageContext;
+import org.subethamail.smtp.MessageHandler;
+import org.subethamail.smtp.RejectException;
+import org.subethamail.smtp.TooMuchDataException;
+
 import mireka.ConfigurationException;
 import mireka.destination.UnknownRecipientDestination;
 import mireka.filter.Filter;
@@ -15,7 +22,7 @@ import mireka.filter.MailTransaction;
 import mireka.filter.RecipientContext;
 import mireka.filter.RecipientVerificationResult;
 import mireka.maildata.Maildata;
-import mireka.maildata.io.MaildataFileReadException;
+import mireka.maildata.io.MaildataReadException;
 import mireka.maildata.io.TmpMaildataFile;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.RejectExceptionExt;
@@ -24,13 +31,6 @@ import mireka.smtp.address.MailAddressFactory;
 import mireka.smtp.address.Recipient;
 import mireka.smtp.address.ReversePath;
 import mireka.util.StreamCopier;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.subethamail.smtp.MessageContext;
-import org.subethamail.smtp.MessageHandler;
-import org.subethamail.smtp.RejectException;
-import org.subethamail.smtp.TooMuchDataException;
 
 /**
  * FilterChainMessageHandler is a <code>MessageHandler</code> which passes all
@@ -88,7 +88,7 @@ public class FilterChainMessageHandler implements MessageHandler {
     private ReversePath convertToReversePath(String reversePath)
             throws RejectException {
         try {
-            return new MailAddressFactory().createReversePath(reversePath);
+            return MailAddressFactory.createReversePath(reversePath);
         } catch (ParseException e) {
             logger.debug("Syntax error in reverse path " + reversePath, e);
             throw new RejectException(553, "Syntax error in reverse path "
@@ -120,7 +120,7 @@ public class FilterChainMessageHandler implements MessageHandler {
     private Recipient convertToRecipient(String recipient)
             throws RejectException {
         try {
-            return new MailAddressFactory().createRecipient(recipient);
+            return MailAddressFactory.createRecipient(recipient);
         } catch (ParseException e) {
             logger.debug("Syntax error in recipient " + recipient, e);
             throw new RejectException(553, "Syntax error in mailbox name "
@@ -145,7 +145,7 @@ public class FilterChainMessageHandler implements MessageHandler {
                 transaction.data = maildata;
                 head.data();
                 checkResponsibilityHasBeenTakenForAllRecipients();
-            } catch (MaildataFileReadException e) {
+            } catch (MaildataReadException e) {
                 // this hides the real checked exception, rethrow the real one
                 throw e.ioExceptionCause;
             }

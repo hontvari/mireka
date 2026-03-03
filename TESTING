@@ -1,0 +1,6 @@
+
+swaks --to john@example.com --server localhost:1202
+for i in {1..20}; do swaks --to john@example.com --server localhost:1202; done
+
+
+xdg-open http://localhost:8082

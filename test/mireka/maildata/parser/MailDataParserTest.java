@@ -1,17 +1,18 @@
 package mireka.maildata.parser;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import mireka.ByteArrayMaildataFile;
+import org.junit.Test;
+
+import mireka.ByteArrayMaildataSource;
 import mireka.maildata.HeaderFieldText;
 import mireka.maildata.HeaderSection;
+import mireka.maildata.MailMap;
 import mockit.Mocked;
 import mockit.Verifications;
-
-import org.junit.Test;
 
 public class MailDataParserTest {
     @Test
@@ -27,10 +28,10 @@ public class MailDataParserTest {
         // @formatter:on
 
         @SuppressWarnings("resource")
-        ByteArrayMaildataFile maildataFile = new ByteArrayMaildataFile(mail);
+        ByteArrayMaildataSource maildataFile = new ByteArrayMaildataSource(mail);
 
-        MaildataParser.MaildataMap maildataMap =
-                new MaildataParser(maildataFile.getInputStream()).parse();
+        MailMap map = new MailMap();
+        new MaildataParser(maildataFile.getInputStream()).parse(map);
 
         new Verifications() {
             {
@@ -47,7 +48,7 @@ public class MailDataParserTest {
             }
         };
 
-        assertEquals(18, maildataMap.bodyPosition);
+        assertEquals(18, map.bodyRange.start);
 
     }
 }

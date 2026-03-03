@@ -1,10 +1,11 @@
 package mireka.filter.misc;
 
-import static mireka.maildata.FieldDef.*;
-import mireka.filter.MailTransaction;
-import mireka.filter.StatelessFilter;
+import static mireka.maildata.parser.Kind.RECEIVED;
 
 import org.subethamail.smtp.RejectException;
+
+import mireka.filter.MailTransaction;
+import mireka.filter.StatelessFilter;
 
 /**
  * The StopLoop filter rejects a mail if it contains more than the configured

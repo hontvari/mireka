@@ -2,9 +2,10 @@ package mireka.transmission.queue.dataprop;
 
 import java.net.InetAddress;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -23,24 +24,24 @@ public class DataProperties extends Properties {
         return getProperty(key);
     }
 
-    public void setDate(String key, Date value) {
+    public void setDate(String key, Instant value) {
         if (value == null)
             return;
-        SimpleDateFormat format =
-                new SimpleDateFormat(ISO_DATE_FORMAT, Locale.US);
+        DateTimeFormatter format = DateTimeFormatter.ofPattern(ISO_DATE_FORMAT, Locale.US);
         String s = format.format(value);
         setProperty(key, s);
     }
 
-    public Date getDate(String key) {
+    public Instant getDate(String key) {
         String s = getProperty(key);
         if (s == null)
             return null;
-        SimpleDateFormat format =
-                new SimpleDateFormat(ISO_DATE_FORMAT, Locale.US);
+        // SimpleDateFormat format =
+        // new SimpleDateFormat(ISO_DATE_FORMAT, Locale.US);
+        DateTimeFormatter format = DateTimeFormatter.ofPattern(ISO_DATE_FORMAT, Locale.US);
         try {
-            return format.parse(s);
-        } catch (ParseException e) {
+            return format.parse(s, Instant::from);
+        } catch (DateTimeParseException e) {
             throw new RuntimeException("Invalid date property", e);
         }
     }

@@ -3,9 +3,16 @@ package mireka.forward;
 import static org.junit.Assert.*;
 
 import java.security.Key;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneOffset;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.commons.codec.binary.Hex;
+import org.junit.Before;
+import org.junit.Test;
 
 import mireka.filter.local.table.InlineDomainRegistry;
 import mireka.smtp.address.DomainPart;
@@ -14,15 +21,9 @@ import mireka.smtp.address.Recipient;
 import mireka.smtp.address.RemotePartContainingRecipient;
 import mireka.smtp.address.ReversePath;
 
-import org.apache.commons.codec.binary.Hex;
-import org.joda.time.DateTimeUtils;
-import org.joda.time.Instant;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 public class SrsTest {
     final InlineDomainRegistry localDomains = new InlineDomainRegistry();
+    private Clock fixed;
 
     public SrsTest() {
         localDomains.addDomain("example.com");
@@ -31,18 +32,13 @@ public class SrsTest {
 
     @Before
     public void setup() {
-        DateTimeUtils.setCurrentMillisFixed(new Instant("2011-07-21T12:00Z")
-                .getMillis());
-    }
-
-    @After
-    public void tearDown() {
-        DateTimeUtils.setCurrentMillisSystem();
+        fixed = Clock.fixed(Instant.parse("2011-07-21T12:00:00Z"), ZoneOffset.UTC);
     }
 
     @Test
     public void testTimestamp() {
         Srs srs = new Srs();
+        srs.clock = fixed;
         srs.setMaximumAge(10);
 
         assertTrue(srs.isValidTimeslot(0, 0));
@@ -66,16 +62,15 @@ public class SrsTest {
     @Test
     public final void testNormalReversePath() {
         Srs srs = new Srs();
+        srs.clock = fixed;
         srs.setDefaultRemotePart(new DomainPart("example.net"));
         srs.setLocalDomains(localDomains);
         srs.setSecretKey("19AF");
 
-        ReversePath originalReversePath =
-                new MailAddressFactory()
-                        .createReversePathAlreadyVerified("john@third-party.example.org");
-        Recipient originalRecipient =
-                new MailAddressFactory()
-                        .createRecipientAlreadyVerified("jane@example.com");
+        ReversePath originalReversePath = MailAddressFactory
+                .createReversePathAlreadyVerified("john@third-party.example.org");
+        Recipient originalRecipient = MailAddressFactory
+                .createRecipientAlreadyVerified("jane@example.com");
 
         ReversePath newReversePath =
                 srs.forward(originalReversePath, originalRecipient);
@@ -91,11 +86,9 @@ public class SrsTest {
         srs.setLocalDomains(localDomains);
         srs.setSecretKey("19AF");
 
-        ReversePath originalReversePath =
-                new MailAddressFactory()
+        ReversePath originalReversePath = MailAddressFactory
                         .createReversePathAlreadyVerified("SRS0=uwWh=2I=source.example.com=john@forwarder.example.com");
-        Recipient originalRecipient =
-                new MailAddressFactory()
+        Recipient originalRecipient = MailAddressFactory
                         .createRecipientAlreadyVerified("jane@we.example.net");
 
         ReversePath newReversePath =
@@ -113,11 +106,9 @@ public class SrsTest {
         srs.setLocalDomains(localDomains);
         srs.setSecretKey("19AF");
 
-        ReversePath originalReversePath =
-                new MailAddressFactory()
+        ReversePath originalReversePath = MailAddressFactory
                         .createReversePathAlreadyVerified("SRS1=AAAA=forwarder.example.com==uwWh=2I=source.example.com=john@bouncer.example.net");
-        Recipient originalRecipient =
-                new MailAddressFactory()
+        Recipient originalRecipient = MailAddressFactory
                         .createRecipientAlreadyVerified("jane@we.example.net");
 
         ReversePath newReversePath =
@@ -146,6 +137,7 @@ public class SrsTest {
         // the date which is included in the setup function.
 
         Srs srs = new Srs();
+        srs.clock = fixed;
         srs.setDefaultRemotePart(new DomainPart("hostb.com"));
         srs.setLocalDomains(localDomains);
         srs.setSecretKeyString("secret");
@@ -169,11 +161,9 @@ public class SrsTest {
 
     private String forward(Srs srs, String originalReversePath,
             String originalRecipient) {
-        ReversePath originalReversePathObject =
-                new MailAddressFactory()
+        ReversePath originalReversePathObject = MailAddressFactory
                         .createReversePathAlreadyVerified(originalReversePath);
-        Recipient originalRecipientObject =
-                new MailAddressFactory()
+        Recipient originalRecipientObject = MailAddressFactory
                         .createRecipientAlreadyVerified(originalRecipient);
 
         ReversePath newReversePath =
@@ -183,9 +173,7 @@ public class SrsTest {
 
     private String reverse(Srs srs, String srsRecipient)
             throws InvalidSrsException {
-        Recipient recipient =
-                new MailAddressFactory()
-                        .createRecipientAlreadyVerified(srsRecipient);
+        Recipient recipient = MailAddressFactory.createRecipientAlreadyVerified(srsRecipient);
         Recipient newRecipient = srs.reverse(recipient);
         return ((RemotePartContainingRecipient) newRecipient).getMailbox()
                 .getSmtpText();

@@ -15,7 +15,8 @@ mkdir --parents \
 	/var/lib/mireka/postmaster \
 	/var/lib/mireka/queues/dsn \
 	/var/lib/mireka/queues/retry \
-	/var/lib/mireka/queues/submitted
+	/var/lib/mireka/queues/submitted \
+	/var/lib/mireka/h2repo \
 
 ln -sfn /usr/share/mireka/classes	/var/lib/mireka/classes
 ln -sfn /etc/mireka			/var/lib/mireka/conf
@@ -29,8 +30,13 @@ chown mireka:mireka \
 	/var/lib/mireka/maildrops \
 	/var/lib/mireka/postmaster \
 	/var/lib/mireka/queues \
-	/var/lib/mireka/queues/*
-chmod 750 /var/lib/mireka/maildrops /var/lib/mireka/postmaster /var/lib/mireka/queues
+	/var/lib/mireka/queues/* \
+	/var/lib/mireka/h2repo
+chmod 750 \
+	/var/lib/mireka/maildrops \
+	/var/lib/mireka/postmaster \
+	/var/lib/mireka/queues \
+	/var/lib/mireka/h2repo
 chown root:mireka /etc/mireka/global-users.js
 chmod 640 /etc/mireka/global-users.js
 

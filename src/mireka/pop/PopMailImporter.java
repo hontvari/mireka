@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -13,15 +14,17 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.URLName;
 
-import mireka.login.GlobalUser;
-import mireka.login.GlobalUsers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import mireka.imap.Settings;
+import mireka.imap.SettingsRepo;
+import mireka.login.Userlist;
+import mireka.login.User;
 import mireka.pop.store.Maildrop;
 import mireka.pop.store.MaildropAppender;
 import mireka.pop.store.MaildropRepository;
 import mireka.transmission.LocalMailSystemException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Import mails from remote POP3 servers to the local POP3 maildrops at system
@@ -30,7 +33,10 @@ import org.slf4j.LoggerFactory;
 public class PopMailImporter {
     private final Logger logger = LoggerFactory
             .getLogger(PopMailImporter.class);
-    private GlobalUsers users;
+    @Inject
+    private Userlist users;
+    @Inject
+    public SettingsRepo settingsRepo;
     private MaildropRepository maildropRepository;
     private String remoteHost = "localhost";
     private int remotePort = 110;
@@ -40,11 +46,11 @@ public class PopMailImporter {
     @PostConstruct
     public void doImport() {
         logger.info("Importing mail from remote POP3 maildrops");
-        for (GlobalUser user : users) {
+        for (User user : users) {
             try {
                 importMails(user);
             } catch (MessagingException e) {
-                logger.error("Importing mails for " + user.getUsernameObject()
+                logger.error("Importing mails for " + user
                         + " failed", e);
             }
         }
@@ -54,13 +60,14 @@ public class PopMailImporter {
                 + " users who had at least one mail.");
     }
 
-    private void importMails(GlobalUser user) throws MessagingException {
-        logger.debug("Importing mail for " + user.getUsernameObject());
+    private void importMails(User user) throws MessagingException {
+        logger.debug("Importing mail for " + user);
+        Settings u = settingsRepo.get(user);
         Properties properties = new Properties();
         Session session = Session.getInstance(properties);
         Store store =
                 session.getStore(new URLName("pop3://"
-                        + user.getUsernameObject() + ":" + user.getPassword()
+                        + u.name() + ":" + u.password()
                         + "@" + remoteHost + ":" + +remotePort + "/INBOX"));
         store.connect();
         Folder folder = store.getFolder("INBOX");
@@ -69,14 +76,13 @@ public class PopMailImporter {
         int cSuccessfulMails = 0;
         // user name currently equals with the maildrop name, but this is
         // not necessarily true in general.
-        String maildropName = user.getUsernameObject().toString();
         for (Message message : messages) {
             try {
-                importMail(maildropName, message);
+                importMail(user, message);
                 message.setFlag(Flags.Flag.DELETED, true);
                 cSuccessfulMails++;
             } catch (Exception e) {
-                logger.error("Importing a mail for " + user.getUsernameObject()
+                logger.error("Importing a mail for " + user
                         + " failed", e);
             }
         }
@@ -86,12 +92,12 @@ public class PopMailImporter {
         if (cSuccessfulMails > 0)
             totalUsersWithAtLeastOneMail++;
         logger.debug(cSuccessfulMails + " mails were imported for "
-                + user.getUsernameObject());
+                + user);
     }
 
-    private void importMail(String maildropName, Message message)
+    private void importMail(User user, Message message)
             throws LocalMailSystemException, IOException, MessagingException {
-        Maildrop maildrop = maildropRepository.borrowMaildrop(maildropName);
+        Maildrop maildrop = maildropRepository.borrowMaildrop(user);
         try {
             MaildropAppender appender = maildrop.allocateAppender();
             try {
@@ -108,20 +114,6 @@ public class PopMailImporter {
         } finally {
             maildropRepository.releaseMaildrop(maildrop);
         }
-    }
-
-    /**
-     * @x.category GETSET
-     */
-    public GlobalUsers getUsers() {
-        return users;
-    }
-
-    /**
-     * @x.category GETSET
-     */
-    public void setUsers(GlobalUsers users) {
-        this.users = users;
     }
 
     /**

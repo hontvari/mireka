@@ -27,7 +27,7 @@ public class Member {
      */
     public void setAddress(String mailbox) {
         try {
-            this.recipient = new MailAddressFactory().createRecipient(mailbox);
+            this.recipient = MailAddressFactory.createRecipient(mailbox);
         } catch (ParseException e) {
             throw new RuntimeException("Invalid configuration", e);
         }

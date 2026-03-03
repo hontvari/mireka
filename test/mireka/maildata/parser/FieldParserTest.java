@@ -1,33 +1,41 @@
 package mireka.maildata.parser;
 
-import static org.junit.Assert.*;
+import static mireka.maildata.parser.Kind.*;
+import static org.junit.Assert.assertEquals;
 
 import java.text.ParseException;
 
-import mireka.maildata.HeaderField;
-import mireka.maildata.field.From;
-import mireka.maildata.field.UnstructuredField;
-import mireka.maildata.parser.FieldParser;
-
 import org.junit.Test;
 
+import mireka.maildata.HeaderField;
+import mireka.maildata.HeaderFieldText;
+import mireka.maildata.field.AddressListField;
+import mireka.maildata.field.UnstructuredField;
+
 public class FieldParserTest {
+    private HeaderFieldText src(String s) {
+        HeaderFieldText text = new HeaderFieldText();
+        text.originalSpelling = s;
+        text.unfoldedSpelling = s;
+        return text;
+    }
 
     @Test
     public void testSubject() throws ParseException {
-        HeaderField field = FieldParser.parse("Subject: Hello world!");
+        HeaderField field = FieldParser.parse(src("subject: Hello world!"));
 
         assertEquals(UnstructuredField.class, field.getClass());
-        assertEquals("Subject", field.name);
-        assertEquals("subject", field.lowerCaseName);
+        assertEquals("subject", field.name);
+        assertEquals(SUBJECT, field.kind);
         assertEquals(" Hello world!", ((UnstructuredField) field).body);
     }
 
     @Test
     public void testFrom() throws ParseException {
-        HeaderField field = FieldParser.parse("From: john@example.com");
+        HeaderField field = FieldParser.parse(src("From: john@example.com"));
 
-        assertEquals(From.class, field.getClass());
+        assertEquals(AddressListField.class, field.getClass());
+        assertEquals(FROM, field.kind);
     }
 
 }

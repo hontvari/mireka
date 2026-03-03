@@ -20,8 +20,7 @@ public class AliasDestination implements Destination {
      */
     public void setRecipient(String recipient) {
         try {
-            this.recipient =
-                    new MailAddressFactory().createRecipient(recipient);
+            this.recipient = MailAddressFactory.createRecipient(recipient);
         } catch (ParseException e) {
             throw new ConfigurationException();
         }

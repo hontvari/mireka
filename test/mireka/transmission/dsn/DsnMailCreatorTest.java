@@ -1,7 +1,7 @@
 package mireka.transmission.dsn;
 
 import static mireka.ExampleAddress.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -10,9 +10,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
+import java.time.Instant;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
+
+import org.apache.james.mime4j.dom.Message;
+import org.apache.james.mime4j.message.DefaultMessageBuilder;
+import org.junit.Test;
+import org.subethamail.smtp.client.SMTPClient.Response;
 
 import mireka.ExampleMail;
 import mireka.maildata.Maildata;
@@ -21,11 +26,6 @@ import mireka.smtp.address.MailAddressFactory;
 import mireka.smtp.client.MtaAddress;
 import mireka.transmission.Mail;
 import mireka.transmission.immediate.Rfc821Status;
-
-import org.apache.james.mime4j.dom.Message;
-import org.apache.james.mime4j.message.DefaultMessageBuilder;
-import org.junit.Test;
-import org.subethamail.smtp.client.SMTPClient.Response;
 
 public class DsnMailCreatorTest {
 
@@ -59,8 +59,7 @@ public class DsnMailCreatorTest {
     static List<RecipientProblemReport> createRecipientFailure()
             throws ParseException {
         PermanentFailureReport f = new PermanentFailureReport();
-        f.recipient =
-                new MailAddressFactory().createRecipient("jane@example.com");
+        f.recipient = MailAddressFactory.createRecipient("jane@example.com");
         // f.status =
         // new EnhancedStatus(550, "5.2.1",
         // "Mailbox disabled, not accepting messages");
@@ -70,7 +69,7 @@ public class DsnMailCreatorTest {
                 new Rfc821Status(new Response(550,
                         "Requested action not taken: mailbox unavailable"));
         f.remoteMta = new MtaAddress(HOST3_EXAMPLE_COM, IP3);
-        f.failureDate = new Date();
+        f.failureDate = Instant.now();
         f.logId = "NO_1_ENTRY";
         return Collections.singletonList((RecipientProblemReport) f);
     }

@@ -4,22 +4,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import mireka.maildata.Address;
 import mireka.maildata.HeaderField;
 import mireka.maildata.parser.FieldGenerator;
+import mireka.maildata.parser.Kind;
+import mireka.maildata.type.Address;
 
 /**
- * AddressListField represents header fields which consists of an address-field
- * nonterminal, which means a list of mailboxes and groups.
+ * AddressListField represents header fields which consists of an address-field nonterminal, which
+ * means a list of mailboxes and groups, for example From and To fields.
  */
-public abstract class AddressListField extends HeaderField {
+public class AddressListField extends HeaderField {
 
-    public AddressListField() {
-        super();
-    }
-
-    public AddressListField(String name) {
-        super(name);
+    public AddressListField(Kind kind) {
+        super(kind);
     }
 
     public List<Address> addressList = new ArrayList<>();

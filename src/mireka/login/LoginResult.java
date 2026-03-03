@@ -2,7 +2,7 @@ package mireka.login;
 
 /**
  * This class represents the result of an authentication attempt, it gives both
- * the decision, and if the attempt is successful, the {@link Principal}
+ * the decision, and if the attempt is successful, the {@link User}
  * authenticated.
  */
 public class LoginResult {
@@ -10,9 +10,9 @@ public class LoginResult {
     /**
      * Represents the canonical name of the logged in user
      */
-    public final Principal principal;
+    public final User principal;
 
-    public LoginResult(LoginDecision decision, Principal principal) {
+    public LoginResult(LoginDecision decision, User principal) {
         this.decision = decision;
         this.principal = principal;
     }

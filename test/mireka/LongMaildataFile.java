@@ -3,11 +3,24 @@ package mireka;
 import java.io.IOException;
 import java.io.InputStream;
 
-import mireka.maildata.io.MaildataFile;
-import mireka.maildata.io.MaildataFileInputStream;
-import mireka.maildata.io.MaildataFileReadException;
+import mireka.maildata.io.MaildataInputStream;
+import mireka.maildata.io.MaildataReadException;
+import mireka.maildata.io.MaildataSource;
+import mireka.maildata.io.Range;
+import mireka.maildata.io.Subsource;
 
-public class LongMaildataFile implements MaildataFile {
+public class LongMaildataFile implements MaildataSource {
+    private static final int GENERATED_LENGTH = 500 * 1000 * 1000;
+    private byte[] heading;
+
+    public LongMaildataFile() {
+        this.heading = ResourceLoader.loadResource(getClass(), "emptyMail.eml");
+    }
+
+    @Override
+    public long length() throws MaildataReadException {
+        return heading.length + GENERATED_LENGTH;
+    }
 
     @Override
     public void close() {
@@ -15,10 +28,14 @@ public class LongMaildataFile implements MaildataFile {
     }
 
     @Override
-    public MaildataFileInputStream getInputStream()
-            throws MaildataFileReadException {
-        return new MaildataFileInputStream(new InputStreamGenerator(
-                ResourceLoader.loadResource(getClass(), "emptyMail.eml")));
+    public MaildataInputStream getInputStream(Range range) throws MaildataReadException {
+        try {
+            InputStreamGenerator in = new InputStreamGenerator(heading);
+            in.skip(range.start);
+            return new MaildataInputStream(new Subsource(this, range), in);
+        } catch (IOException e) {
+            throw new MaildataReadException(e);
+        }
     }
 
     private static class InputStreamGenerator extends InputStream {
@@ -49,7 +66,7 @@ public class LongMaildataFile implements MaildataFile {
                     result = '\n';
                 else
                     result = 'X';
-                if (i == 500 * 1000 * 1000) {
+                if (i == GENERATED_LENGTH) {
                     part = Part.Eof;
                     i = 0;
                 }
@@ -66,5 +83,4 @@ public class LongMaildataFile implements MaildataFile {
         }
 
     }
-
 }

@@ -1,19 +1,19 @@
 package mireka.destination;
 
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import mireka.filter.Filter;
 import mireka.filter.FilterSession;
 import mireka.filter.RecipientContext;
 import mireka.smtp.RejectExceptionExt;
 import mireka.transmission.Mail;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * DestinationProcessorFilter groups recipients by their destinations and calls
@@ -81,7 +81,7 @@ public class DestinationProcessorFilter implements Filter {
         @Override
         public void data() throws RejectExceptionExt {
             mail.maildata = transaction.data;
-            mail.arrivalDate = new Date();
+            mail.arrivalDate = Instant.now();
             mail.scheduleDate = mail.arrivalDate;
             for (Map.Entry<ResponsibleDestination, DestinationState> entry : destinations
                     .entrySet()) {

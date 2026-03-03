@@ -3,10 +3,14 @@ package mireka.filter;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.james.jspf.executor.SPFResult;
+import org.subethamail.smtp.MessageContext;
 
 import mireka.destination.Destination;
 import mireka.filter.spf.SpfChecker;
@@ -14,9 +18,6 @@ import mireka.maildata.Maildata;
 import mireka.smtp.address.Recipient;
 import mireka.smtp.address.ReversePath;
 import mireka.smtp.server.SmtpDataReadException;
-
-import org.apache.james.jspf.executor.SPFResult;
-import org.subethamail.smtp.MessageContext;
 
 /**
  * MailTransaction gathers data during an SMTP mail transaction, from the MAIL
@@ -31,6 +32,12 @@ public class MailTransaction {
      * information about this mail transaction.
      */
     public final MessageContext messageContext;
+
+    /**
+     * The date on which this transaction has been started. The mail transaction is started during
+     * the processing of the SMTP MAIL FROM command.
+     */
+    public final OffsetDateTime date;
 
     /**
      * The reverse-path supplied in the SMTP MAIL FROM command. Null if the
@@ -115,6 +122,7 @@ public class MailTransaction {
 
     public MailTransaction(MessageContext messageContext) {
         this.messageContext = messageContext;
+        this.date = OffsetDateTime.now();
     }
 
     /**

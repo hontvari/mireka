@@ -1,8 +1,7 @@
 package mireka.util;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 import javax.annotation.concurrent.Immutable;
@@ -13,10 +12,9 @@ import javax.annotation.concurrent.Immutable;
  */
 @Immutable
 public class DateTimeRfc822Formatter {
-    public String format(Date date) {
-        DateFormat dateFormat =
-                new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z (z)",
-                        Locale.US);
+    public String format(Instant date) {
+        DateTimeFormatter dateFormat = DateTimeFormatter
+                .ofPattern("EEE, dd MMM yyyy HH:mm:ss Z (z)", Locale.US);
         return dateFormat.format(date);
     }
 }

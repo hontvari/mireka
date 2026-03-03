@@ -2,7 +2,7 @@ package mireka;
 
 import static mireka.ExampleAddress.*;
 
-import java.util.Date;
+import java.time.Instant;
 
 import mireka.maildata.Maildata;
 import mireka.transmission.Mail;
@@ -13,7 +13,7 @@ public class ExampleMail {
      */
     public static Mail simple() {
         Mail result = new Mail();
-        result.arrivalDate = new Date();
+        result.arrivalDate = Instant.now();
         result.from = JOHN_AS_REVERSE_PATH;
         result.receivedFromMtaAddress = IP1;
         result.receivedFromMtaName = IP1.getHostName();

@@ -4,24 +4,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.concurrent.ThreadSafe;
-
-import mireka.maildata.Maildata;
-import mireka.maildata.io.TmpMaildataFile;
-import mireka.smtp.EnhancedStatus;
-import mireka.smtp.MailSystemStatus;
-import mireka.smtp.address.MailAddressFactory;
-import mireka.smtp.address.NullReversePath;
-import mireka.smtp.address.Recipient;
-import mireka.smtp.address.ReversePath;
-import mireka.transmission.LocalMailSystemException;
-import mireka.transmission.Mail;
-import mireka.util.DateTimeRfc822Formatter;
-import mireka.util.MultilineParser;
 
 import org.apache.james.mime4j.codec.EncoderUtil;
 import org.apache.james.mime4j.dom.BinaryBody;
@@ -37,6 +25,19 @@ import org.apache.james.mime4j.message.DefaultMessageWriter;
 import org.apache.james.mime4j.message.MessageImpl;
 import org.apache.james.mime4j.message.MultipartImpl;
 import org.apache.james.mime4j.util.MimeUtil;
+
+import mireka.maildata.Maildata;
+import mireka.maildata.io.TmpMaildataFile;
+import mireka.smtp.EnhancedStatus;
+import mireka.smtp.MailSystemStatus;
+import mireka.smtp.address.MailAddressFactory;
+import mireka.smtp.address.NullReversePath;
+import mireka.smtp.address.Recipient;
+import mireka.smtp.address.ReversePath;
+import mireka.transmission.LocalMailSystemException;
+import mireka.transmission.Mail;
+import mireka.util.DateTimeRfc822Formatter;
+import mireka.util.MultilineParser;
 
 /**
  * DsnMailCreator constructs a DSN message. It does not collect any status
@@ -106,13 +107,11 @@ public class DsnMailCreator {
         }
 
         private void setupEnvelope() {
-            resultMail.arrivalDate = new Date();
+            resultMail.arrivalDate = Instant.now();
             resultMail.scheduleDate = resultMail.arrivalDate;
             resultMail.from = new NullReversePath();
             Recipient recipient;
-            recipient =
-                    new MailAddressFactory()
-                            .reversePath2Recipient(originalMail.from);
+            recipient = MailAddressFactory.reversePath2Recipient(originalMail.from);
             resultMail.recipients.add(recipient);
         }
 
@@ -306,7 +305,7 @@ public class DsnMailCreator {
             buffer.append(foldedField).append("\r\n");
         }
 
-        public void add(String name, Date date) {
+        public void add(String name, Instant date) {
             String value = new DateTimeRfc822Formatter().format(date);
             add(name, value);
         }

@@ -6,6 +6,11 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.subethamail.smtp.client.SMTPClient;
+import org.subethamail.smtp.client.SMTPException;
+
 import mireka.ExampleMail;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.SendException;
@@ -18,14 +23,8 @@ import mireka.transmission.queuing.LogIdFactory;
 import mockit.Expectations;
 import mockit.Injectable;
 import mockit.Mocked;
-import mockit.NonStrictExpectations;
 import mockit.Tested;
 import mockit.Verifications;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.subethamail.smtp.client.SMTPClient;
-import org.subethamail.smtp.client.SMTPException;
 
 public class MailToHostTransmitterTest {
     @Tested
@@ -55,7 +54,7 @@ public class MailToHostTransmitterTest {
 
     @Before
     public void beforeTest() {
-        new NonStrictExpectations() {{
+        new Expectations() {{
             client.getMtaAddress();
             result = new MtaAddress(HOST1_EXAMPLE_COM, IP1);
         }};
@@ -82,7 +81,7 @@ public class MailToHostTransmitterTest {
     @Test
     public void testSendAllAddressRejected() throws IllegalArgumentException,
             SendException, SMTPException, IOException, PostponeException {
-        new NonStrictExpectations() {
+        new Expectations() {
             {
                 client.to(anyString);
                 result = SMTP_EXCEPTION;
@@ -111,7 +110,7 @@ public class MailToHostTransmitterTest {
             throws IllegalArgumentException, SendException, SMTPException,
             IOException, PostponeException {
 
-        new NonStrictExpectations() {
+        new Expectations() {
             {
                 client.to(anyString);
                 result = SMTP_EXCEPTION;
@@ -139,7 +138,7 @@ public class MailToHostTransmitterTest {
     @Test
     public void testSendIoExceptionIsTransient() throws SMTPException,
             IOException, RecipientsWereRejectedException, PostponeException {
-        new NonStrictExpectations() {
+        new Expectations() {
             {
                 client.to(anyString);
                 result = new IOException();
@@ -158,7 +157,7 @@ public class MailToHostTransmitterTest {
     @Test(expected = RemoteMtaErrorResponseException.class)
     public void testSendSmtpErrorResponse() throws SMTPException, IOException,
             RecipientsWereRejectedException, SendException, PostponeException {
-        new NonStrictExpectations() {
+        new Expectations() {
             {
                 client.dataEnd();
                 result = SMTP_EXCEPTION;

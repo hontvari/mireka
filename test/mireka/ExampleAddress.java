@@ -4,14 +4,14 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.ParseException;
 
+import org.xbill.DNS.Name;
+import org.xbill.DNS.TextParseException;
+
 import mireka.smtp.address.Domain;
 import mireka.smtp.address.GlobalPostmaster;
 import mireka.smtp.address.MailAddressFactory;
 import mireka.smtp.address.Recipient;
 import mireka.smtp.address.ReversePath;
-
-import org.xbill.DNS.Name;
-import org.xbill.DNS.TextParseException;
 
 public class ExampleAddress {
     /**
@@ -79,18 +79,14 @@ public class ExampleAddress {
                     InetAddress.getByAddress(HOST6_EXAMPLE_COM, new byte[] {
                             0x20, 0x01, 0x0D, (byte) 0xB8, 0, 0, 0, 0, 0, 0, 0,
                             0, 0, 0, 0, 0 });
-            JANE_AS_RECIPIENT = new MailAddressFactory().createRecipient(JANE);
-            JOHN_AS_RECIPIENT = new MailAddressFactory().createRecipient(JOHN);
-            NANCY_NET_AS_RECIPIENT =
-                    new MailAddressFactory().createRecipient(NANCY_NET);
-            JANE_AS_REVERSE_PATH =
-                    new MailAddressFactory().createReversePath(JANE);
-            JOHN_AS_REVERSE_PATH =
-                    new MailAddressFactory().createReversePath(JOHN);
-            ADA_ADDRESS_LITERAL_AS_RECIPIENT =
-                    new MailAddressFactory().createRecipient(ADA_ADDRESS);
-            ALBERT_ADDRESS_LITERAL_AS_RECIPIENT =
-                    new MailAddressFactory().createRecipient(ALBERT_ADDRESS);
+            JANE_AS_RECIPIENT = MailAddressFactory.createRecipient(JANE);
+            JOHN_AS_RECIPIENT = MailAddressFactory.createRecipient(JOHN);
+            NANCY_NET_AS_RECIPIENT = MailAddressFactory.createRecipient(NANCY_NET);
+            JANE_AS_REVERSE_PATH = MailAddressFactory.createReversePath(JANE);
+            JOHN_AS_REVERSE_PATH = MailAddressFactory.createReversePath(JOHN);
+            ADA_ADDRESS_LITERAL_AS_RECIPIENT = MailAddressFactory.createRecipient(ADA_ADDRESS);
+            ALBERT_ADDRESS_LITERAL_AS_RECIPIENT = MailAddressFactory
+                    .createRecipient(ALBERT_ADDRESS);
             EXAMPLE_COM_NAME = new Name(EXAMPLE_COM_ABSOLUTE);
             HOST1_EXAMPLE_COM_NAME = new Name(HOST1_EXAMPLE_COM + ".");
             HOST2_EXAMPLE_COM_NAME = new Name(HOST2_EXAMPLE_COM + ".");

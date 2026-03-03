@@ -9,11 +9,11 @@ import java.net.UnknownHostException;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import mireka.login.LoginSpecification;
-import mireka.pop.store.MaildropRepository;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import mireka.login.LoginSpecification;
+import mireka.pop.store.MaildropRepository;
 
 /**
  * PopServer contains configuration information and lifecycle management for the
@@ -46,8 +46,6 @@ public class PopServer {
     private ServerThread serverThread;
 
     private LoginSpecification loginSpecification;
-
-    private PrincipalMaildropTable principalMaildropTable;
 
     private MaildropRepository maildropRepository;
 
@@ -192,21 +190,6 @@ public class PopServer {
      */
     public void setMaildropRepository(MaildropRepository maildropRepository) {
         this.maildropRepository = maildropRepository;
-    }
-
-    /**
-     * @x.category GETSET
-     */
-    public PrincipalMaildropTable getPrincipalMaildropTable() {
-        return principalMaildropTable;
-    }
-
-    /**
-     * @x.category GETSET
-     */
-    public void setPrincipalMaildropTable(
-            PrincipalMaildropTable principalMaildropTable) {
-        this.principalMaildropTable = principalMaildropTable;
     }
 
     /**

@@ -1,6 +1,6 @@
 package mireka.transmission.dsn;
 
-import java.util.Date;
+import java.time.Instant;
 
 import javax.annotation.Nullable;
 
@@ -31,7 +31,7 @@ public abstract class RecipientProblemReport {
     public MailSystemStatus remoteMtaDiagnosticStatus;
     @Nullable
     public MtaAddress remoteMta;
-    public Date failureDate;
+    public Instant failureDate;
     public String logId;
 
     /**

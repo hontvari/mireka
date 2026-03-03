@@ -90,8 +90,8 @@ submissionFilters = setup(Filters, {
 	Authentication
 */
 usernamePasswordValidator = setup(UsernamePasswordValidatorImpl, {
-	loginSpecification: setup(GlobalUsersLoginSpecification, {
-		users: globalUsers
+	loginSpecification: setup(UserListLoginSpecification, {
+		users: users
 	})
 });
 

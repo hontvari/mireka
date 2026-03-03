@@ -10,6 +10,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import mireka.ConfigurationException;
 import mireka.smtp.EnhancedStatus;
 import mireka.smtp.RejectExceptionExt;
@@ -19,9 +22,6 @@ import mireka.transmission.LocalMailSystemException;
 import mireka.transmission.Mail;
 import mireka.transmission.Transmitter;
 import mireka.util.MimeMessageConverter;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Transforms the mail sent to the recipient and forwards the result. Note: this
@@ -70,8 +70,7 @@ public class TransformDestination implements MailDestination {
         Mail mail = new Mail();
         mail.from = reversePath;
         try {
-            mail.recipients.add(new MailAddressFactory()
-                    .createRecipient(recipient));
+            mail.recipients.add(MailAddressFactory.createRecipient(recipient));
         } catch (ParseException e) {
             throw new ConfigurationException(e);
         }
@@ -138,9 +137,7 @@ public class TransformDestination implements MailDestination {
      * @x.category GETSET
      */
     public void setReversePath(String reversePath) {
-        this.reversePath =
-                new MailAddressFactory()
-                        .createReversePathAlreadyVerified(reversePath);
+        this.reversePath = MailAddressFactory.createReversePathAlreadyVerified(reversePath);
     }
 
     /**

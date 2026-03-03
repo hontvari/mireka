@@ -50,17 +50,24 @@ backendServer = setup(BackendServer, {
 	account. Maildrops are used to store incoming mails (via SMTP) 
 	and to transfer mails to the user (via POP3). 
 */
-maildropRepository = setup(MaildropRepository, {
+maildropRepository = setupDefault(MaildropRepository, {
 	dir: "maildrops"
+});
+
+/*
+	Default IMAP mail repository
+*/
+imapRepository = setupDefault(Packages.mireka.imap.store.H2Repository, {
+	url: "jdbc:h2:file:./h2repo/imap"
 });
 
 include("conf/domains.js");
 
 /* 
-	comment out if none of the submission and POP3 services are 
+	comment out if none of the submission, POP3, IMAP services are 
 	active
 */
-include("conf/global-users.js");
+include("conf/users.js");
 
 /*
 	Sender Rewriting Scheme (SRS) configuration. SRS is used to 
@@ -94,6 +101,11 @@ localRecipientsTable = setup(LocalRecipientTable, {
 	comment out to disable the POP3 server (port 110)
 */
 include("conf/pop.js");
+
+/*
+	comment out to disable the IMAP server (port 993)
+*/
+include("conf/imap.js");
 
 /*
 	comment out to disable the RFC 4409 message submission service (port 587)

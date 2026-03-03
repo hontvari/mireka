@@ -7,40 +7,46 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import mireka.maildata.AddrSpec;
-import mireka.maildata.Address;
-import mireka.maildata.DomainPart;
-import mireka.maildata.DotAtomDomainPart;
-import mireka.maildata.Group;
-import mireka.maildata.LiteralDomainPart;
-import mireka.maildata.Mailbox;
-import mireka.maildata.MediaParameter;
-import mireka.maildata.MediaType;
-import mireka.maildata.field.AddressListField;
-import mireka.maildata.field.ContentType;
-import mireka.maildata.field.MimeVersion;
-import mireka.smtp.address.parser.base.CharUtil;
-import mireka.util.CharsetUtil;
-
-import org.apache.james.mime4j.dom.FieldParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import mireka.maildata.field.AddressListField;
+import mireka.maildata.field.ContentType;
+import mireka.maildata.field.MimeVersion;
+import mireka.maildata.type.AddrSpec;
+import mireka.maildata.type.Address;
+import mireka.maildata.type.DomainPart;
+import mireka.maildata.type.DotAtomDomainPart;
+import mireka.maildata.type.Group;
+import mireka.maildata.type.LiteralDomainPart;
+import mireka.maildata.type.LocalPart;
+import mireka.maildata.type.Mailbox;
+import mireka.maildata.type.MediaParameter;
+import mireka.maildata.type.MediaType;
+import mireka.smtp.address.parser.base.CharUtil;
+import mireka.util.CharsetUtil;
+
 public class StructuredFieldBodyParser {
-    private final Logger logger = LoggerFactory.getLogger(FieldParser.class);
+    private final Logger logger = LoggerFactory.getLogger(StructuredFieldBodyParser.class);
 
     private Token currentToken;
     /**
-     * The lexical analyzer, but because the lexical analyzer has a few
-     * specialized scanner subclasses too, for a scan operation the
-     * {@link #scanner} is used, not this object.
+     * The lexical analyzer, but because the lexical analyzer has a few specialized scanner
+     * subclasses too, for a scan operation the {@link #scanner} is used, not this object.
      */
     private FieldScanner fieldScanner;
     /**
-     * Active scanner, either fieldScanner itself or one of its specialized
-     * scanner subclass.
+     * Active scanner, either fieldScanner itself or one of its specialized scanner subclass.
      */
     private Scanner scanner;
+    /**
+     * This can be used by the parser to store the spelling of higher level syntax trees.
+     */
+    private final SpellingBuffer spelling = new SpellingBuffer();
+    /**
+     * True if the parser is in peek mode
+     */
+    private boolean isPeeking;
 
     public StructuredFieldBodyParser(String body) {
         this.scanner = this.fieldScanner = new FieldScanner(body);
@@ -48,11 +54,36 @@ public class StructuredFieldBodyParser {
     }
 
     /**
-     * This constructor does not initialize scanning, it is useful if the field
-     * must be parsed using a non-default scanner.
+     * This constructor does not initialize scanning, it is useful if the field must be parsed using
+     * a non-default scanner.
      */
     public StructuredFieldBodyParser() {
         // nothing to do
+    }
+
+    private void acceptIt() {
+        Token accepted = currentToken;
+        if (!isPeeking)
+            spelling.append(currentToken.collapsedWhitespace, currentToken.spelling);
+        currentToken = scanner.scan();
+        logger.trace("Accepted{} {} {}, next {}", (isPeeking ? " peeking" : ""), accepted, spelling,
+                currentToken);
+    }
+
+    private void accept(TokenKind requiredKind) throws ParseException {
+        if (currentToken.kind == requiredKind)
+            acceptIt();
+        else
+            throw currentToken.syntaxException(requiredKind);
+    }
+
+    /**
+     * Checks the current token, but does not scan the next token, this is useful before switching
+     * to a different scanner.
+     */
+    private void acceptButDontScanNextToken(TokenKind requiredKind) throws ParseException {
+        if (currentToken.kind != requiredKind)
+            throw currentToken.syntaxException(requiredKind);
     }
 
     /**
@@ -94,9 +125,9 @@ public class StructuredFieldBodyParser {
     }
 
     /**
-     * Determines which mailbox alternative matches the input. Display-name in
-     * name-addr and local-part are ambiguous and they have different semantics
-     * regarding whitespace, so the decision cannot be easily deferred.
+     * Determines which mailbox alternative matches the input. Display-name in name-addr and
+     * local-part are ambiguous and they have different semantics regarding whitespace, so the
+     * decision cannot be easily deferred.
      * 
      * <pre>
      * mailbox         =   name-addr / addr-spec
@@ -110,12 +141,12 @@ public class StructuredFieldBodyParser {
      * obs-phrase      =   word *(word / "." / CFWS)
      * </pre>
      */
-    private MailboxAlternative lookAheadForMailboxAlternatives()
-            throws ParseException {
+    private MailboxAlternative lookAheadForMailboxAlternatives() throws ParseException {
         MailboxAlternative result;
         Token originalToken = currentToken;
         // Assume that the current scanner is the fieldScanner itself.
         scanner = fieldScanner.getLookaheadScanner();
+        isPeeking = true;
 
         if (currentToken.kind == LESS_THEN) {
             result = MailboxAlternative.NAME_ADDR;
@@ -134,6 +165,7 @@ public class StructuredFieldBodyParser {
         }
 
         scanner = fieldScanner;
+        isPeeking = false;
         currentToken = originalToken;
         return result;
     }
@@ -222,8 +254,7 @@ public class StructuredFieldBodyParser {
             buffer.append(currentToken.semanticContent);
             acceptIt();
         } else {
-            throw currentToken
-                    .syntaxException("ATOM including encoded-words or QUOTED_STRING");
+            throw currentToken.syntaxException("ATOM including encoded-words or QUOTED_STRING");
         }
         return buffer.toString();
     }
@@ -245,8 +276,7 @@ public class StructuredFieldBodyParser {
 
     private boolean starterEncodedWord() {
         return currentToken.kind == ATOM
-                && EncodedWordParser
-                        .isEncodedWord(currentToken.semanticContent);
+                && EncodedWordParser.isEncodedWord(currentToken.semanticContent);
     }
 
     private String parseEncodedWord() {
@@ -255,8 +285,7 @@ public class StructuredFieldBodyParser {
 
         String result;
         try {
-            result =
-                    new EncodedWordParser().parse(currentToken.semanticContent);
+            result = new EncodedWordParser().parse(currentToken.semanticContent);
         } catch (ParseException e) {
             logger.debug("encoded-word cannot be parsed, using it as is. '"
                     + currentToken.semanticContent + "'", e);
@@ -344,6 +373,7 @@ public class StructuredFieldBodyParser {
 
     private DotAtomDomainPart parseObsDomain() throws ParseException {
         StringBuilder result = new StringBuilder();
+        spelling.begin();
 
         result.append(currentToken.semanticContent);
         accept(ATOM);
@@ -354,11 +384,14 @@ public class StructuredFieldBodyParser {
             accept(ATOM);
         }
 
-        return new DotAtomDomainPart(result.toString());
+        DotAtomDomainPart r = new DotAtomDomainPart(result.toString());
+        r.spelling = spelling.end();
+        return r;
     }
 
     private LiteralDomainPart parseDomainLiteral() throws ParseException {
         StringBuilder result = new StringBuilder();
+        spelling.begin();
         acceptButDontScanNextToken(LEFT_S_BRACKET);
 
         // Unnecessary to set the scanner field for a single scan() operation
@@ -368,7 +401,9 @@ public class StructuredFieldBodyParser {
 
         accept(RIGHT_S_BRACKET);
 
-        return new LiteralDomainPart(result.toString());
+        LiteralDomainPart r = new LiteralDomainPart(result.toString());
+        r.spelling = spelling.end();
+        return r;
     }
 
     /**
@@ -378,10 +413,12 @@ public class StructuredFieldBodyParser {
      */
     public AddrSpec parseAddrSpec() throws ParseException {
         AddrSpec result = new AddrSpec();
+        spelling.begin();
 
         result.localPart = parseLocalPart();
         accept(AT);
         result.domain = parseDomain();
+        result.spelling = spelling.end();
 
         return result;
     }
@@ -393,18 +430,22 @@ public class StructuredFieldBodyParser {
      * obs-local-part  =   word *("." word)
      * </pre>
      */
-    private String parseLocalPart() throws ParseException {
-        StringBuilder result = new StringBuilder();
+    private LocalPart parseLocalPart() throws ParseException {
+        StringBuilder value = new StringBuilder();
+        spelling.begin();
 
         Token word = parseWord();
-        result.append(word.semanticContent);
+        value.append(word.semanticContent);
         while (currentToken.kind == PERIOD) {
             acceptIt();
+            value.append('.');
             word = parseWord();
-            result.append(word.semanticContent);
+            value.append(word.semanticContent);
         }
 
-        return result.toString();
+        LocalPart r = new LocalPart(value.toString());
+        r.spelling = spelling.end();
+        return r;
     }
 
     /**
@@ -414,8 +455,7 @@ public class StructuredFieldBodyParser {
      * word = atom / quoted - string
      * </pre>
      * 
-     * @return the token which was the content of the word, either an ATOM or a
-     *         QUOTED_STRING.
+     * @return the token which was the content of the word, either an ATOM or a QUOTED_STRING.
      */
     private Token parseWord() throws ParseException {
         Token wordToken = currentToken;
@@ -430,18 +470,16 @@ public class StructuredFieldBodyParser {
     }
 
     /**
-     * Returns true if the current token "starts" a 'word' non-terminal. It is
-     * worth noting that a word consists of a single token, so the current token
-     * is the sole content of that word.
+     * Returns true if the current token "starts" a 'word' non-terminal. It is worth noting that a
+     * word consists of a single token, so the current token is the sole content of that word.
      */
     private boolean isWord() {
         return currentToken.kind == ATOM || currentToken.kind == QUOTED_STRING;
     }
 
     /**
-     * Parses a To, Cc, Reply-To and other address-list fields and stores the
-     * result into the supplied field object. Since RFC 6854 the From field also
-     * has the same grammar.
+     * Parses a To, Cc, Reply-To and other address-list fields and stores the result into the
+     * supplied field object. Since RFC 6854 the From field also has the same grammar.
      * 
      * For example, grammar of the To field:
      * 
@@ -450,8 +488,7 @@ public class StructuredFieldBodyParser {
      * obs-addr-list   =   *([CFWS] ",") address *("," [address / CFWS])
      * </pre>
      */
-    public void parseAddressListFieldInto(AddressListField field)
-            throws ParseException {
+    public void parseAddressListFieldInto(AddressListField field) throws ParseException {
 
         field.addressList = parseAddressList();
         accept(EOF);
@@ -524,12 +561,12 @@ public class StructuredFieldBodyParser {
      * </pre>
      */
     // @formatter:on 
-    private AddressAlternative lookAheadForAddressAlternatives()
-            throws ParseException {
+    private AddressAlternative lookAheadForAddressAlternatives() throws ParseException {
         AddressAlternative result;
         Token originalToken = currentToken;
         // Assume that the current scanner is the fieldScanner itself.
         scanner = fieldScanner.getLookaheadScanner();
+        isPeeking = true;
 
         if (currentToken.kind == LESS_THEN) {
             // mailbox -> name-addr -> angle-addr
@@ -552,6 +589,7 @@ public class StructuredFieldBodyParser {
         }
 
         scanner = fieldScanner;
+        isPeeking = false;
         currentToken = originalToken;
         return result;
     }
@@ -597,17 +635,6 @@ public class StructuredFieldBodyParser {
         return currentToken.kind == LESS_THEN || isWord();
     }
 
-    private void acceptIt() {
-        currentToken = scanner.scan();
-    }
-
-    private void accept(TokenKind requiredKind) throws ParseException {
-        if (currentToken.kind == requiredKind)
-            acceptIt();
-        else
-            throw currentToken.syntaxException(requiredKind);
-    }
-
     public MimeVersion parseMimeVersion() throws ParseException {
         try {
             MimeVersion result = new MimeVersion();
@@ -629,43 +656,33 @@ public class StructuredFieldBodyParser {
         currentToken = scanner.scan();
 
         ContentType result = new ContentType();
-        result.mediaType = new MediaType();
 
-        result.mediaType.type = currentToken.semanticContent;
+        String topTypeName = currentToken.semanticContent;
         accept(MIME_TOKEN);
         accept(SLASH);
-        result.mediaType.subtype = currentToken.semanticContent;
+        String subtypeName = currentToken.semanticContent;
         accept(MIME_TOKEN);
+        result.mediaType = new MediaType(topTypeName, subtypeName);
 
         while (currentToken.kind == SEMICOLON) {
             acceptIt();
-            MediaParameter parameter = new MediaParameter();
-            parameter.name = currentToken.semanticContent;
+            String name = currentToken.semanticContent;
             accept(MIME_TOKEN);
             accept(EQUALS);
+            String value;
             if (currentToken.kind == MIME_TOKEN) {
-                parameter.value = currentToken.semanticContent;
+                value = currentToken.semanticContent;
                 acceptIt();
             } else if (currentToken.kind == QUOTED_STRING) {
-                parameter.value = currentToken.semanticContent;
+                value = currentToken.semanticContent;
                 acceptIt();
             } else {
                 throw currentToken.syntaxException("Media parameter value");
             }
-            result.mediaType.parameters.add(parameter);
+            result.mediaType.setParameter(new MediaParameter(name, value));
         }
         accept(EOF);
         return result;
-    }
-
-    /**
-     * Checks the current token, but does not scan the next token, this is
-     * useful before switching to a different scanner.
-     */
-    private void acceptButDontScanNextToken(TokenKind requiredKind)
-            throws ParseException {
-        if (currentToken.kind != requiredKind)
-            throw currentToken.syntaxException(requiredKind);
     }
 
     private interface Scanner {
@@ -677,7 +694,7 @@ public class StructuredFieldBodyParser {
         private ByteArrayInputStream in;
 
         private int currentChar;
-        private StringBuilder currentSpelling = new StringBuilder();
+        private final StringBuilder currentSpelling = new StringBuilder();
         private StringBuilder currentSemContent = new StringBuilder();
         /**
          * The index of currentChar in {@link #inputBytes}.
@@ -697,11 +714,9 @@ public class StructuredFieldBodyParser {
         private FieldScanner(FieldScanner original) {
             inputBytes = original.inputBytes;
             position = original.position;
-            in =
-                    new ByteArrayInputStream(inputBytes, position + 1,
-                            inputBytes.length - position - 1);
+            in = new ByteArrayInputStream(inputBytes, position + 1,
+                    inputBytes.length - position - 1);
             currentChar = original.currentChar;
-            currentSpelling = new StringBuilder(original.currentSpelling);
             currentSemContent = new StringBuilder(original.currentSemContent);
         }
 
@@ -710,6 +725,7 @@ public class StructuredFieldBodyParser {
          * 
          * @return A token of type {@link TokenKind#ATOM}...
          */
+        @Override
         public Token scan() {
             try {
                 String collapsedWhiteSpace = "";
@@ -1034,8 +1050,9 @@ public class StructuredFieldBodyParser {
         }
 
         private void takeIt() {
-            if (currentChar != -1)
+            if (currentChar != -1) {
                 currentSpelling.append((char) currentChar);
+            }
             currentChar = in.read();
             position++;
         }
@@ -1046,8 +1063,7 @@ public class StructuredFieldBodyParser {
             takeIt();
         }
 
-        private void take(String terminalName, boolean valid)
-                throws LexicalException {
+        private void take(String terminalName, boolean valid) throws LexicalException {
             if (valid)
                 takeIt();
             else
@@ -1062,8 +1078,8 @@ public class StructuredFieldBodyParser {
         }
 
         /**
-         * Returns a copy of this scanner for lookahead. The new scanner does
-         * not affect the current scanner in any way.
+         * Returns a copy of this scanner for lookahead. The new scanner does not affect the current
+         * scanner in any way.
          */
         public Scanner getLookaheadScanner() {
             return new FieldScanner(this);
@@ -1071,9 +1087,8 @@ public class StructuredFieldBodyParser {
 
         public class DomainLiteralScanner implements Scanner {
             /**
-             * Scans a dtext-string. Note that no dtext-string token is defined
-             * explicitly in RFC5322. It is the inner side of a domain-literal,
-             * within the square brackets.
+             * Scans a dtext-string. Note that no dtext-string token is defined explicitly in
+             * RFC5322. It is the inner side of a domain-literal, within the square brackets.
              * 
              * <pre>
              * dtext-string    =   *([FWS] dtext) [FWS]
@@ -1081,6 +1096,7 @@ public class StructuredFieldBodyParser {
              * obs-dtext       =   obs-NO-WS-CTL / quoted-pair
              * </pre>
              */
+            @Override
             public Token scan() {
                 try {
                     Token token = new Token();
@@ -1145,6 +1161,7 @@ public class StructuredFieldBodyParser {
         // @formatter:on 
         public class MimeTokenScanner implements Scanner {
 
+            @Override
             public Token scan() {
                 try {
                     Token token = new Token();
@@ -1275,9 +1292,8 @@ public class StructuredFieldBodyParser {
         /** end of input **/
         EOF,
         /**
-         * This special token kind is returned if the source text is
-         * syntactically invalid. Using this object instead of throwing an
-         * exception results in a better error message.
+         * This special token kind is returned if the source text is syntactically invalid. Using
+         * this object instead of throwing an exception results in a better error message.
          */
         ERROR,
 
@@ -1306,15 +1322,13 @@ public class StructuredFieldBodyParser {
     private static class Token extends AbstractToken {
         public TokenKind kind;
         /**
-         * It contains either a single space character, if the token was
-         * preceded by one or more white space (FWS, comment, CFWS) elements
-         * used as separators, or an empty string.
+         * It contains either a single space character, if the token was preceded by one or more
+         * white space (FWS, comment, CFWS) elements used as separators, or an empty string.
          */
         public String collapsedWhitespace;
         /**
-         * Spelling of the token without the semantically invisible characters,
-         * e.g. the string within a quoted-string without the external CFWS and
-         * double quotes.
+         * Spelling of the token without the semantically invisible characters, e.g. the string
+         * within a quoted-string without the external CFWS and double quotes.
          */
         public String semanticContent;
 
@@ -1330,16 +1344,16 @@ public class StructuredFieldBodyParser {
     }
 
     /**
-     * Result of an lookahead in a Mailbox nonterminal, where it is difficult to
-     * select from the alternative rules without extra lookahead.
+     * Result of an lookahead in a Mailbox nonterminal, where it is difficult to select from the
+     * alternative rules without extra lookahead.
      */
     private enum MailboxAlternative {
         NAME_ADDR, ADDR_SPEC
     }
 
     /**
-     * Result of an lookahead in an Address nonterminal, where it is difficult
-     * to select from the alternative rules without extra lookahead.
+     * Result of an lookahead in an Address nonterminal, where it is difficult to select from the
+     * alternative rules without extra lookahead.
      */
     private enum AddressAlternative {
         MAILBOX, GROUP

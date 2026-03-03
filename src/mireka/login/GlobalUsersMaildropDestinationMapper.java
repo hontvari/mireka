@@ -1,30 +1,36 @@
 package mireka.login;
 
+import javax.inject.Inject;
+
 import mireka.destination.Destination;
 import mireka.filter.local.table.RecipientDestinationMapper;
+import mireka.imap.Settings;
+import mireka.imap.SettingsRepo;
 import mireka.pop.MaildropDestination;
 import mireka.pop.store.MaildropRepository;
 import mireka.smtp.address.LocalPart;
 import mireka.smtp.address.Recipient;
 
 /**
- * This class assigns a {@link MaildropDestination} to a {@link GlobalUsers}
- * user. The name of the maildrop is the same as the user's name.
+ * This class assigns a {@link MaildropDestination} to a global user, based solely on matching the
+ * local part of the address.
  */
 public class GlobalUsersMaildropDestinationMapper implements
         RecipientDestinationMapper {
 
-    private GlobalUsers users;
+    private Userlist users;
+    @Inject
+    public SettingsRepo settingsRepo;
     private MaildropRepository maildropRepository;
 
     @Override
     public Destination lookup(Recipient recipient) {
         LocalPart recipientLocalPart = recipient.localPart();
-        for (GlobalUser user : users) {
-            if (user.getUsernameObject().matches(recipientLocalPart)) {
+        for (User user : users) {
+            Settings u = settingsRepo.get(user);
+            if (u.ciName().matches(recipientLocalPart)) {
                 MaildropDestination destination = new MaildropDestination();
-                destination
-                        .setMaildropName(user.getUsernameObject().toString());
+                destination.setUser(u.user());
                 destination.setMaildropRepository(maildropRepository);
                 return destination;
             }
@@ -36,7 +42,7 @@ public class GlobalUsersMaildropDestinationMapper implements
     /**
      * GETSET
      */
-    public void setUsers(GlobalUsers users) {
+    public void setUsers(Userlist users) {
         this.users = users;
     }
 

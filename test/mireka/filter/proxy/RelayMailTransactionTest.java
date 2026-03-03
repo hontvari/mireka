@@ -1,5 +1,8 @@
 package mireka.filter.proxy;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import mireka.ExampleAddress;
 import mireka.ExampleMail;
 import mireka.destination.Session;
@@ -10,14 +13,11 @@ import mireka.smtp.client.SmtpClient;
 import mockit.Expectations;
 import mockit.Mocked;
 
-import org.junit.Before;
-import org.junit.Test;
-
 public class RelayMailTransactionTest {
     @Mocked
     private BackendServer backendServer;
 
-    @Mocked(stubOutClassInitialization = false)
+    @Mocked
     private SmtpClient client;
 
     private final RecipientContext recipientContextJane = new RecipientContext(

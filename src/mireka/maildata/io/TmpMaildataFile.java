@@ -1,12 +1,13 @@
 package mireka.maildata.io;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * TmpMaildataFile stores message content in memory if it is short or in a
  * temporary file if it is long.
  */
-public class TmpMaildataFile implements MaildataFile {
+public class TmpMaildataFile implements MaildataSource {
     public final DeferredFile deferredFile;
 
     /**
@@ -36,17 +37,24 @@ public class TmpMaildataFile implements MaildataFile {
     }
 
     @Override
-    public MaildataFileInputStream getInputStream()
-            throws MaildataFileReadException {
+    public MaildataInputStream getInputStream(Range range) throws MaildataReadException {
         try {
-            return new MaildataFileInputStream(deferredFile.getInputStream());
+            InputStream in = deferredFile.getInputStream();
+            in.skip(range.start);
+            return new MaildataInputStream(new Subsource(this, range), in);
         } catch (IOException e) {
-            throw new MaildataFileReadException(e);
+            throw new MaildataReadException(e);
         }
+    }
+
+    @Override
+    public long length() throws MaildataReadException {
+        return deferredFile.length();
     }
 
     @Override
     public void close() {
         deferredFile.close();
     }
+
 }

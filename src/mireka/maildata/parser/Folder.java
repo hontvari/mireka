@@ -123,6 +123,18 @@ public class Folder {
     }
 
     /**
+     * Returns the input without any folding or line ending, this is useful to print a single
+     * elementary piece of header fields, like an email address.
+     */
+    public String toSingleLineString() {
+        StringBuilder buffer = new StringBuilder();
+        for (Token token : list) {
+            buffer.append(token.text);
+        }
+        return buffer.toString();
+    }
+
+    /**
      * Returns the input in folded form as US-ASCII bytes.
      */
     public byte[] toBytes() {

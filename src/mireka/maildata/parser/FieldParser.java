@@ -1,71 +1,49 @@
 package mireka.maildata.parser;
 
-import static mireka.util.CharsetUtil.*;
-
 import java.text.ParseException;
 
 import mireka.maildata.HeaderField;
+import mireka.maildata.HeaderFieldText;
 import mireka.maildata.field.AddressListField;
-import mireka.maildata.field.Cc;
-import mireka.maildata.field.From;
-import mireka.maildata.field.ReplyTo;
-import mireka.maildata.field.ResentCc;
-import mireka.maildata.field.ResentTo;
-import mireka.maildata.field.To;
+import mireka.maildata.field.UnstructuredField;
 import mireka.maildata.parser.FieldHeaderParser.FieldMap;
 
 public class FieldParser {
 
-    public static HeaderField parse(String unfoldedField) throws ParseException {
-        FieldMap map = new FieldHeaderParser(unfoldedField).parse();
-
-        String body = unfoldedField.substring(map.indexOfBody);
-        String lowerCaseName = toAsciiLowerCase(map.name);
+    public static HeaderField parse(HeaderFieldText source) throws ParseException {
+        FieldMap map = new FieldHeaderParser(source.unfoldedSpelling).parse();
+        Kind kind = Kind.forHeaderFieldName(map.name);
+        String body = source.unfoldedSpelling.substring(map.indexOfBody);
         HeaderField result;
 
-        switch (lowerCaseName) {
-        case "from":
-            AddressListField addressListField = new From();
-            new StructuredFieldBodyParser(body)
-                    .parseAddressListFieldInto(addressListField);
+        switch (kind) {
+        case BCC:
+        case CC:
+        case FROM:
+        case REPLY_TO:
+        case RESENT_CC:
+        case RESENT_FROM:
+        case RESENT_TO:
+        case SENDER:
+        case TO:
+            AddressListField addressListField = new AddressListField(kind);
+            new StructuredFieldBodyParser(body).parseAddressListFieldInto(addressListField);
             result = addressListField;
             break;
-        case "reply-to":
-            addressListField = new ReplyTo();
-            new StructuredFieldBodyParser(body)
-                    .parseAddressListFieldInto(addressListField);
-            result = addressListField;
-            break;
-        case "to":
-            result = addressListField = new To();
-            new StructuredFieldBodyParser(body)
-                    .parseAddressListFieldInto(addressListField);
-            break;
-        case "cc":
-            result = addressListField = new Cc();
-            new StructuredFieldBodyParser(body)
-                    .parseAddressListFieldInto(addressListField);
-            break;
-        case "resent-to":
-            result = addressListField = new ResentTo();
-            new StructuredFieldBodyParser(body)
-                    .parseAddressListFieldInto(addressListField);
-            break;
-        case "resent-cc":
-            result = addressListField = new ResentCc();
-            new StructuredFieldBodyParser(body)
-                    .parseAddressListFieldInto(addressListField);
-            break;
-        case "mime-version":
+        case MIME_VERSION:
             result = new StructuredFieldBodyParser(body).parseMimeVersion();
             break;
-        case "content-type":
+        case CONTENT_TYPE:
             result = new StructuredFieldBodyParser().parseContentType(body);
             break;
         default:
-            result = new UnstructuredFieldBodyParser(body).parse();
+            UnstructuredField unstructuredField = new UnstructuredField(kind);
+            result = unstructuredField;
         }
-        result.setName(map.name);
+        result.name = map.name.original;
+        result.source = source;
+        result.bodyFull = new UnstructuredFieldBodyParser(body).parse();
+        result.body = result.bodyFull.trim();
         return result;
     }
 }

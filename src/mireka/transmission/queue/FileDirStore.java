@@ -17,14 +17,14 @@ import java.util.TreeSet;
 
 import javax.annotation.concurrent.GuardedBy;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import mireka.maildata.Maildata;
 import mireka.smtp.EnhancedStatus;
 import mireka.transmission.Mail;
 import mireka.transmission.queue.dataprop.DataProperties;
 import mireka.util.StreamCopier;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * FileDirStore stores scheduled mails in the file system in a single directory.
@@ -180,7 +180,7 @@ public class FileDirStore {
                     EnhancedStatus.TRANSIENT_SYSTEM_NOT_ACCEPTING_NETWORK_MESSAGES);
 
         // find a free sequence number, within the scheduleDate
-        long scheduleDate = srcMail.scheduleDate.getTime();
+        long scheduleDate = srcMail.scheduleDate.toEpochMilli();
         MailName nameForTheNextTimePoint = new MailName(scheduleDate + 1, 0);
         MailName previousMail = mailNames.lower(nameForTheNextTimePoint);
         int sequenceNumber;

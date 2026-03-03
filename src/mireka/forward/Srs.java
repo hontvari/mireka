@@ -3,11 +3,18 @@ package mireka.forward;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.Key;
+import java.time.Clock;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import mireka.ConfigurationException;
 import mireka.filter.local.table.RemotePartSpecification;
@@ -19,13 +26,6 @@ import mireka.smtp.address.Recipient;
 import mireka.smtp.address.RemotePart;
 import mireka.smtp.address.RemotePartContainingRecipient;
 import mireka.smtp.address.ReversePath;
-
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Hex;
-import org.joda.time.DateTimeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The Srs class implements the Sender Rewriting Scheme (SRS), which makes
@@ -47,10 +47,13 @@ public class Srs {
     public static final Pattern SRS0_PREFIX = Pattern.compile("SRS0[=+-]");
     public static final Pattern SRS1_PREFIX = Pattern.compile("SRS1[=+-]");
     /**
-     * Domains which authorizes this server to send mail in their name using the
-     * SPF DNS record. If not set, than it is assumed that this server is
-     * authorized to send mails in the name of all domains for which it accepts
-     * mail.
+     * useful for testing
+     */
+    Clock clock = Clock.systemDefaultZone();
+    /**
+     * Domains which authorizes this server to send mail in their name using the SPF DNS record. If
+     * not set, than it is assumed that this server is authorized to send mails in the name of all
+     * domains for which it accepts mail.
      */
     private RemotePartSpecification localDomains;
     private RemotePart defaultRemotePart;
@@ -201,13 +204,11 @@ public class Srs {
             buffer.append('@');
             buffer.append(rewrittenRemotePart.smtpText());
 
-            return new MailAddressFactory()
-                    .createReversePathAlreadyVerified(buffer.toString());
+            return MailAddressFactory.createReversePathAlreadyVerified(buffer.toString());
         }
 
         private String calculateTimestamp() {
-            int daysSinceEpoch =
-                    (int) (DateTimeUtils.currentTimeMillis() / 1000 / 24 / 60 / 60);
+            int daysSinceEpoch = (int) (clock.millis() / 1000 / 24 / 60 / 60);
             int modulo1 = daysSinceEpoch % (2 << 10);
             int modulo = modulo1;
             return Base32Int.encode10Bits(modulo);
@@ -259,8 +260,7 @@ public class Srs {
             buffer.append('@');
             buffer.append(rewrittenRemotePart.smtpText());
 
-            return new MailAddressFactory()
-                    .createReversePathAlreadyVerified(buffer.toString());
+            return MailAddressFactory.createReversePathAlreadyVerified(buffer.toString());
         }
 
         private ReversePath rewriteSrs1() throws InvalidSrsException {
@@ -279,8 +279,7 @@ public class Srs {
             buffer.append('@');
             buffer.append(rewrittenRemotePart.smtpText());
 
-            return new MailAddressFactory()
-                    .createReversePathAlreadyVerified(buffer.toString());
+            return MailAddressFactory.createReversePathAlreadyVerified(buffer.toString());
         }
     }
 
@@ -319,8 +318,7 @@ public class Srs {
             checkTimestamp(parsed.timestamp);
             String recipientString =
                     parsed.originalLocalPart + '@' + parsed.originalHost;
-            return new MailAddressFactory()
-                    .createRecipientAlreadyVerified(recipientString);
+            return MailAddressFactory.createRecipientAlreadyVerified(recipientString);
         }
 
         private void checkHash(PersedSrs0LocalPart parsed)
@@ -366,7 +364,7 @@ public class Srs {
         }
 
         private int todayTimeslot() {
-            return (int) ((DateTimeUtils.currentTimeMillis() / PRECISION) % TIMESLOTS);
+            return (int) ((clock.millis() / PRECISION) % TIMESLOTS);
         }
 
         private Recipient rewriteSrs1() throws InvalidSrsException {
@@ -376,8 +374,7 @@ public class Srs {
             String recipientString =
                     "SRS0" + parsedLocalPart.compactOriginalLocalPart + '@'
                             + parsedLocalPart.originalHost;
-            return new MailAddressFactory()
-                    .createRecipientAlreadyVerified(recipientString);
+            return MailAddressFactory.createRecipientAlreadyVerified(recipientString);
         }
 
         private void checkHash(PersedSrs1LocalPart parsed)
@@ -481,9 +478,8 @@ public class Srs {
      * @x.category GETSET
      */
     public void setDefaultRemotePart(String defaultRemotePart) {
-        this.defaultRemotePart =
-                new MailAddressFactory()
-                        .createRemotePartFromDisplayableText(defaultRemotePart);
+        this.defaultRemotePart = MailAddressFactory
+                .createRemotePartFromDisplayableText(defaultRemotePart);
     }
 
     /**

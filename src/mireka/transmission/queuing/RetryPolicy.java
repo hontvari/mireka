@@ -1,8 +1,15 @@
 package mireka.transmission.queuing;
 
+import static java.time.Duration.*;
+
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import mireka.smtp.SendException;
 import mireka.smtp.address.Recipient;
@@ -18,24 +25,15 @@ import mireka.transmission.immediate.RecipientRejection;
 import mireka.transmission.immediate.RecipientsWereRejectedException;
 import mireka.transmission.immediate.RemoteMtaErrorResponseException;
 
-import org.joda.time.DateTime;
-import org.joda.time.Instant;
-import org.joda.time.Period;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * RetryPolicy decides what actions are necessary after a transmission attempt
  * failed and executes those actions.
  */
 public class RetryPolicy {
     private final Logger logger = LoggerFactory.getLogger(RetryPolicy.class);
-    private List<Period> retryPeriods = Arrays.asList(Period.minutes(3),
-            Period.minutes(3), Period.minutes(9), Period.minutes(15),
-            Period.minutes(30), Period.hours(2), Period.hours(2),
-            Period.hours(2), Period.hours(2), Period.hours(2), Period.hours(2),
-            Period.hours(2), Period.hours(2), Period.hours(2), Period.hours(2),
-            Period.hours(3));
+    private List<Duration> retryPeriods = Arrays.asList(ofMinutes(3), ofMinutes(3), ofMinutes(9),
+            ofMinutes(15), ofMinutes(30), ofHours(2), ofHours(2), ofHours(2), ofHours(2),
+            ofHours(2), ofHours(2), ofHours(2), ofHours(2), ofHours(2), ofHours(2), ofHours(3));
     /**
      * Elements indicates the count of failed delivery attempts after which a
      * delayed DSN mail must be sent. For example 3 means that a DSN must be
@@ -45,6 +43,11 @@ public class RetryPolicy {
     private DsnMailCreator dsnMailCreator;
     private Transmitter dsnTransmitter;
     private Transmitter retryTransmitter;
+    /**
+     * True if no DSN should be sent to the reverse path. This is the case if for example this mail
+     * is mirrored to a debug server.
+     */
+    private boolean noDsn;
 
     /**
      * Constructs a new empty instance, required attributes must be passed using
@@ -91,10 +94,8 @@ public class RetryPolicy {
             throws LocalMailSystemException {
         mail.postpones++;
         if (mail.postpones <= 3) {
-            Instant newScheduleDate =
-                    new DateTime().plusSeconds(e.getRecommendedDelay())
-                            .toInstant();
-            mail.scheduleDate = newScheduleDate.toDate();
+            Instant newScheduleDate = Instant.now().plusSeconds(e.getRecommendedDelay());
+            mail.scheduleDate = newScheduleDate;
             retryTransmitter.transmit(mail);
             logger.debug("Delivery must be postponed to all hosts. "
                     + "Rescheduling the attempt. This is the " + mail.postpones
@@ -121,7 +122,7 @@ public class RetryPolicy {
     /**
      * @x.category GETSET
      */
-    public void setRetryPeriods(List<Period> retryPeriods) {
+    public void setRetryPeriods(List<Duration> retryPeriods) {
         this.retryPeriods = retryPeriods;
     }
 
@@ -160,6 +161,13 @@ public class RetryPolicy {
      */
     public void setRetryTransmitter(Transmitter retryTransmitter) {
         this.retryTransmitter = retryTransmitter;
+    }
+
+    /**
+     * @x.category GETSET
+     */
+    public void setNoDsn(boolean noDsn) {
+        this.noDsn = noDsn;
     }
 
     private class RecipientsRejectedFailureHandler extends FailureHandler {
@@ -293,6 +301,12 @@ public class RetryPolicy {
 
             if (reports.isEmpty())
                 return;
+            if (noDsn) {
+                logger.error(
+                        "Failure or delay, but this retry policy does not send DSN messages. {}",
+                        mail.toString());
+                return;
+            }
             if (mail.from.isNull()) {
                 logger.error("Failure or delay, but reverse-path is null, "
                         + "DSN must not be sent. "
@@ -312,10 +326,9 @@ public class RetryPolicy {
                 throws LocalMailSystemException {
             if (transientFailures.isEmpty())
                 return;
-            Period waitingPeriod = retryPeriods.get(mail.deliveryAttempts - 1);
-            Instant newScheduleDate =
-                    new DateTime().plus(waitingPeriod).toInstant();
-            mail.scheduleDate = newScheduleDate.toDate();
+            Duration waitingPeriod = retryPeriods.get(mail.deliveryAttempts - 1);
+            Instant newScheduleDate = Instant.now().plus(waitingPeriod);
+            mail.scheduleDate = newScheduleDate;
             mail.recipients = calculateTemporarilyRejectedRecipientList();
             retryTransmitter.transmit(mail);
             logger.debug("Transient failure, the mail is scheduled for a "
